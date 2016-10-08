@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">BiathlonTimer</string>
+    <string name="app_name">Timer for biathlon</string>
+    <string name="labelTest">Hello, World!</string>
 </resources>
