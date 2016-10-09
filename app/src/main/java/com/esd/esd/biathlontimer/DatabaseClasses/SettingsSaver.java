@@ -5,7 +5,8 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.provider.ContactsContract;
+
+import com.esd.esd.biathlontimer.DatabaseProvider;
 
 
 // Класс отвечающий за сохранение настроек в базе данных
@@ -24,9 +25,11 @@ public class SettingsSaver
     {
         _database = _dbProvider.getWritableDatabase();
         ContentValues val = new ContentValues();
-        val.put(DatabaseProvider.DbSettings.COLUMN_SETTING_NAME,settingName);
+        val.put(DatabaseProvider.DbSettings.COLUMN_SETTING_NAME, settingName);
         val.put(DatabaseProvider.DbSettings.COLUMN_SETTING_DATA, settingVal);
-        _database.update(DatabaseProvider.DbSettings.TABLE_NAME,val,null,null);
+        _database.update(DatabaseProvider.DbSettings.TABLE_NAME, val, DatabaseProvider.DbSettings.COLUMN_SETTING_NAME +
+                " = ?", new String[]{settingName});
+        _database.close();
     }
 
     // Метод получения данных из базы данных по имени настройки
@@ -38,16 +41,10 @@ public class SettingsSaver
                         DatabaseProvider.DbSettings.COLUMN_SETTING_NAME,
                         DatabaseProvider.DbSettings.COLUMN_SETTING_DATA
                 };
-        String order = DatabaseProvider.DbSettings.COLUMN_SETTING_NAME + " DESC";
-        Cursor cursor = _database.query(DatabaseProvider.DbSettings.TABLE_NAME, projection, null, null, null, null, order);
+        Cursor cursor = _database.query(DatabaseProvider.DbSettings.TABLE_NAME, projection, DatabaseProvider.DbSettings.COLUMN_SETTING_NAME+
+                " = ?", new String[]{settingsName}, null, null, null);
         cursor.moveToFirst();
-        for(int i = 0; i<cursor.getCount(); i++)
-        {
-            if(cursor.getString(0).contentEquals(settingsName))
-            {
-                return cursor.getString(1);
-            }
-        }
-        return "БЕДА";
+        _database.close();
+        return cursor.getString(1);
     }
 }
