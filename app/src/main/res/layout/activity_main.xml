@@ -67,7 +67,7 @@
         android:id="@+id/addFileBtn"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:src="@mipmap/ic_launcher"
+        android:src="@drawable/ic_stat_name"
         android:layout_marginBottom="@dimen/fab_margin"
         android:layout_marginRight="@dimen/fab_margin"
         android:layout_alignParentRight="true"
