@@ -1,6 +1,8 @@
 package com.esd.esd.biathlontimer.Activities;
 
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -8,9 +10,11 @@ import android.view.View;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-
 import com.esd.esd.biathlontimer.DatabaseClasses.DatabaseProvider;
+import com.esd.esd.biathlontimer.ExcelHelper;
 import com.esd.esd.biathlontimer.R;
+import java.io.File;
+import java.net.URI;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -19,6 +23,8 @@ public class MainActivity extends AppCompatActivity {
     private TextView _dateTextView;
     private int _counter;
     private TableLayout _tableLayout;
+    private File _chosenXLSFile;
+    private ExcelHelper _excelHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -32,9 +38,16 @@ public class MainActivity extends AppCompatActivity {
 
     public void addFileBtn_OnClick(View view)
     {
+        Intent xlsIntent = new Intent(Intent.ACTION_GET_CONTENT);
+        xlsIntent.setType("application/vnd.ms-excel");
+        startActivityForResult(xlsIntent,1);
+    }
+
+    private void AddCompetitionRow(String nameCompetition)
+    {
         TableRow newRow = new TableRow(this);
         TextView newTextView = new TextView(this);
-        newTextView.setText(Integer.toString(_counter++));
+        newTextView.setText("Соревнование №" + Integer.toString(++_counter));
         newTextView.setGravity(Gravity.CENTER);
         newTextView.setBackgroundColor(Color.WHITE);
         newTextView.setLayoutParams(new TableRow.LayoutParams(_nameTextView.getMeasuredWidth(),_nameTextView.getMeasuredHeight(), 0.666f));
@@ -48,9 +61,26 @@ public class MainActivity extends AppCompatActivity {
         newRow.addView(newTextView);
         newRow.addView(newTextView2);
         _tableLayout.addView(newRow);
-
+        _excelHelper = new ExcelHelper(_chosenXLSFile);
     }
-//    public void SaveDataOnClick(View view)
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode)
+        {
+            case 1:
+                if(resultCode == RESULT_OK)
+                {
+                    Uri chosenFile = data.getData();
+                    _chosenXLSFile = new File(chosenFile);
+                    AddCompetitionRow(chosenFile.toString());
+                }
+                break;
+        }
+    }
+
+    //    public void SaveDataOnClick(View view)
 //    {
 //        SQLiteDatabase db = myDatabase.getWritableDatabase();
 //        ContentValues values = new ContentValues();
