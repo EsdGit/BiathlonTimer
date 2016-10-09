@@ -4,8 +4,8 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-              android:orientation="vertical"
-    tools:context="com.esd.esd.biathlontimer.MainActivity">
+    android:orientation="vertical"
+    tools:context="com.esd.esd.biathlontimer.Activities.MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"

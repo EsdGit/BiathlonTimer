@@ -1,5 +1,6 @@
-package com.esd.esd.biathlontimer;
+package com.esd.esd.biathlontimer.DatabaseClasses;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -14,10 +15,9 @@ public class DatabaseProvider extends SQLiteOpenHelper
 
     private static final String TEXT_TYPE = " TEXT";
     private static final String COMMA_SEP = ",";
-    private static final String SQL_CREATE_TABLE = "CREATE TABLE " + DbSettings.TABLE_NAME+
-            " (" + DbSettings._ID + " INTEGER PRIMARY KEY," + DbSettings.COLUMN_SETTING_ID +
-            TEXT_TYPE + COMMA_SEP + DbSettings.COLUMN_SETTING_NAME + TEXT_TYPE + COMMA_SEP +
-            DbSettings.COLUMN_SETTING_DATA + TEXT_TYPE + ")";
+    private static final String SQL_CREATE_TABLE = "CREATE TABLE " + DbSettings.TABLE_NAME +
+            " (" + DbSettings._ID + " INTEGER PRIMARY KEY," + DbSettings.COLUMN_SETTING_NAME + TEXT_TYPE +
+            COMMA_SEP + DbSettings.COLUMN_SETTING_DATA + TEXT_TYPE + ")";
     private static final String SQL_DELETE_TABLE = "DROP TABLE IF EXISTS " + DbSettings.TABLE_NAME;
 
     public DatabaseProvider(Context context)
@@ -28,7 +28,6 @@ public class DatabaseProvider extends SQLiteOpenHelper
     public static abstract class DbSettings implements BaseColumns
     {
         public static final String TABLE_NAME = "settings";
-        public static final String COLUMN_SETTING_ID = "settingId";
         public static final String COLUMN_SETTING_NAME = "settingName";
         public static final String COLUMN_SETTING_DATA = "settingData";
     }
@@ -37,6 +36,13 @@ public class DatabaseProvider extends SQLiteOpenHelper
     public void onCreate(SQLiteDatabase db)
     {
         db.execSQL(SQL_CREATE_TABLE);
+        ContentValues val = new ContentValues();
+        val.put(DatabaseProvider.DbSettings.COLUMN_SETTING_NAME, "Интервал");
+        val.put(DatabaseProvider.DbSettings.COLUMN_SETTING_DATA, "30");
+        db.insert(DbSettings.TABLE_NAME,null,val);
+        val.put(DatabaseProvider.DbSettings.COLUMN_SETTING_NAME, "Количество КП");
+        val.put(DatabaseProvider.DbSettings.COLUMN_SETTING_DATA, "5");
+        db.insert(DbSettings.TABLE_NAME,null,val);
     }
 
     @Override
