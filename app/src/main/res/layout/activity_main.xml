@@ -69,17 +69,16 @@
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:src="@drawable/ic_add_file"
-        app:fabSize="normal"
-        app:backgroundTint="@color/colorPrimaryDark"
         android:layout_marginBottom="@dimen/fab_margin"
         android:layout_marginRight="@dimen/fab_margin"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:onClick="addFileBtn_OnClick"/>
+        android:onClick="addFileBtn_OnClick" />
+
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:scrollbars="vertical"
         android:layout_below="@+id/head_table">
@@ -92,6 +91,8 @@
             android:scrollbars="vertical">
 
         </TableLayout>
+
+
     </ScrollView>
 
 
