@@ -6,12 +6,17 @@ import android.icu.text.MessagePattern;
 import java.util.ArrayList;
 
 // Класс реализующий таблицу участников
-public class ParticipantTable
+public class Competition
 {
     private ArrayList<Participant> _participants;
-    public ParticipantTable()
+    private String _competitionName;
+    private String _filePath;
+    private String _competitionDate;
+
+    public Competition()
     {
         _participants = new ArrayList<Participant>();
+        // Здесь будем вводить название, дату и путь
     }
 
     // Метод добавления участников соревнований, если такого участника нет
@@ -26,5 +31,20 @@ public class ParticipantTable
         }
         _participants.add(participant);
         return true;
+    }
+
+    public String getName()
+    {
+        return _competitionName;
+    }
+
+    public String getFilePath()
+    {
+        return _filePath;
+    }
+
+    public String getDate()
+    {
+        return _competitionDate;
     }
 }

@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
     {
         TableRow newRow = new TableRow(this);
         TextView newTextView = new TextView(this);
-        newTextView.setText("Соревнование №" + Integer.toString(++_counter));
+        newTextView.setText(nameCompetition);
         newTextView.setGravity(Gravity.CENTER);
         newTextView.setBackgroundColor(Color.WHITE);
         newTextView.setLayoutParams(new TableRow.LayoutParams(_nameTextView.getMeasuredWidth(),_nameTextView.getMeasuredHeight(), 0.666f));
@@ -77,11 +77,10 @@ public class MainActivity extends AppCompatActivity {
             case 1:
                 if(resultCode == RESULT_OK)
                 {
-                    String FileName = data.getData().getLastPathSegment();
-                    String[] pathString = FileName.split(":");
-                    Log.i("XLS", pathString[pathString.length-1]);
-                    AddCompetitionRow(FileName);
-                    _excelHelper = new ExcelHelper(pathString[pathString.length-1]);
+                    String filePath = data.getData().getPath();
+                    String fileName = data.getData().getLastPathSegment();
+                    AddCompetitionRow(fileName);
+                    ExcelHelper.OpenExcelFile(filePath);
                 }
                 break;
         }
