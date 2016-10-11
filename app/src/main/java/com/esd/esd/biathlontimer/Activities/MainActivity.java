@@ -3,8 +3,10 @@ package com.esd.esd.biathlontimer.Activities;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -24,7 +26,9 @@ public class MainActivity extends AppCompatActivity {
     private TextView _dateTextView;
     private int _counter;
     private TableLayout _tableLayout;
-    private File _chosenXLSFile;
+    private String _chosenXLSFile;
+    private String _pathXLSFile;
+
     private ExcelHelper _excelHelper;
 
     @Override
@@ -41,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
     public void addFileBtn_OnClick(View view)
     {
         Intent xlsIntent = new Intent(Intent.ACTION_GET_CONTENT);
-        xlsIntent.setType("application/vnd.ms-excel .xls");
+        xlsIntent.setType("application/vnd.ms-excel");
         startActivityForResult(xlsIntent,1);
     }
 
@@ -63,7 +67,6 @@ public class MainActivity extends AppCompatActivity {
         newRow.addView(newTextView);
         newRow.addView(newTextView2);
         _tableLayout.addView(newRow);
-        _excelHelper = new ExcelHelper(_chosenXLSFile);
     }
 
     @Override
@@ -74,10 +77,11 @@ public class MainActivity extends AppCompatActivity {
             case 1:
                 if(resultCode == RESULT_OK)
                 {
-                    Uri chosenFile = data.getData();
-                    _chosenXLSFile = new File(chosenFile.getPath());
-                    _excelHelper = new ExcelHelper(_chosenXLSFile);
-                    AddCompetitionRow(chosenFile.toString());
+                    String FileName = data.getData().getLastPathSegment();
+                    String[] pathString = FileName.split(":");
+                    Log.i("XLS", pathString[pathString.length-1]);
+                    AddCompetitionRow(FileName);
+                    _excelHelper = new ExcelHelper(pathString[pathString.length-1]);
                 }
                 break;
         }

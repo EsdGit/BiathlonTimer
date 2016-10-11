@@ -14,11 +14,11 @@ public class ExcelHelper
 {
     private InputStream _inputStreamFile;
 
-    public ExcelHelper(File nameXLSFile)
+    public ExcelHelper(String nameXLSFile)
     {
         try
         {
-            HSSFWorkbook MyExcelBook = new HSSFWorkbook(new FileInputStream(Environment.getExternalStorageDirectory().getPath() + "/Test.xls"));
+            HSSFWorkbook MyExcelBook = new HSSFWorkbook(new FileInputStream(Environment.getExternalStorageDirectory().getPath() +  "/" + nameXLSFile));
             //Environment.getExternalStorageDirectory().getPath() + "/rating.xls"
             Log.i("XLS","Работаем");
         }catch (Exception e)
