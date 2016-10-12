@@ -45,7 +45,9 @@ public class MainActivity extends AppCompatActivity {
     public void addFileBtn_OnClick(View view)
     {
         Intent xlsIntent = new Intent(Intent.ACTION_GET_CONTENT);
-        xlsIntent.setType("application/vnd.ms-excel");
+        xlsIntent.setType("*/*");
+        String[] mimeTypes = {"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/vnd.ms-excel"};
+        xlsIntent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
         startActivityForResult(xlsIntent,1);
     }
 

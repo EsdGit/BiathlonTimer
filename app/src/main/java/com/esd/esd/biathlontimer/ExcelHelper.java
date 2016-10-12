@@ -11,6 +11,9 @@ import com.esd.esd.biathlontimer.Activities.MainActivity;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -32,12 +35,27 @@ public class ExcelHelper
     {
         try
         {
+            String path = Environment.getExternalStorageDirectory().getPath();
             HSSFWorkbook MyExcelBook = new HSSFWorkbook(new FileInputStream(fullPath));
+
             // Здесь необходимо добавить xlsx расширение и потом уже создавать объект типа Competition
             Log.i("XLS","Работаем");
         }catch (Exception e)
         {
-            Log.i("XLS","Не открылся!");
+            try
+            {
+                File localFile = new File(fullPath);
+                localFile.canRead();
+                FileInputStream fis = new FileInputStream(new File(fullPath));
+                XSSFWorkbook MyExcelFile = (XSSFWorkbook) WorkbookFactory.create(localFile);
+                MyExcelFile.getName("Жопа");
+               // MyExcelFile.getSheetAt(0).getRow(0).getCell(0).
+            }
+            catch (Exception e1)
+            {
+                Log.i("XLS","Не открылся!");
+            }
+
         }
     }
 
