@@ -18,6 +18,8 @@ import com.esd.esd.biathlontimer.ExcelHelper;
 import com.esd.esd.biathlontimer.R;
 import java.io.File;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -45,7 +47,9 @@ public class MainActivity extends AppCompatActivity {
     public void addFileBtn_OnClick(View view)
     {
         Intent xlsIntent = new Intent(Intent.ACTION_GET_CONTENT);
-        xlsIntent.setType("application/vnd.ms-excel");
+        xlsIntent.setType("files/*");
+        String[] mimeType = {"application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"};
+        xlsIntent.putExtra(Intent.EXTRA_MIME_TYPES,mimeType);
         startActivityForResult(xlsIntent,1);
     }
 
@@ -79,8 +83,12 @@ public class MainActivity extends AppCompatActivity {
                 {
                     String filePath = data.getData().getPath();
                     String fileName = data.getData().getLastPathSegment();
-                    AddCompetitionRow(fileName);
-                    ExcelHelper.OpenExcelFile(filePath);
+                    String[] pathFile = filePath.split(":");
+                    if(ExcelHelper.CheckChooseFile(fileName,this))
+                    {
+                        AddCompetitionRow(fileName);
+                        ExcelHelper.OpenExcelFile(pathFile[pathFile.length - 1]);
+                    }
                 }
                 break;
         }

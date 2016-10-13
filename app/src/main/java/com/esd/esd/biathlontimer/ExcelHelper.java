@@ -23,16 +23,30 @@ import java.io.InputStream;
 // Класс для работы с excel файлом
 public class ExcelHelper
 {
+
     public ExcelHelper()
     {
 
+    }
+
+    public static boolean CheckChooseFile(String nameFile, Context context)
+    {
+        if(nameFile.endsWith(".xls") || nameFile.endsWith(".xlsx"))
+        {
+            return true;
+        }
+        else
+        {
+            Toast.makeText(context,"Неверный формат файла, выберите .xls или .xlsx",Toast.LENGTH_LONG).show();
+            return false;
+        }
     }
 
     public static void OpenExcelFile(String fullPath)
     {
         try
         {
-            HSSFWorkbook MyExcelBook = new HSSFWorkbook(new FileInputStream(fullPath));
+            HSSFWorkbook MyExcelBook = new HSSFWorkbook(new FileInputStream(Environment.getExternalStorageDirectory().getPath() + "/" + fullPath));
             // Здесь необходимо добавить xlsx расширение и потом уже создавать объект типа Competition
             Log.i("XLS","Работаем");
         }catch (Exception e)
