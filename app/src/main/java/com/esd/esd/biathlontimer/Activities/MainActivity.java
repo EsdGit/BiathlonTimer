@@ -2,24 +2,18 @@ package com.esd.esd.biathlontimer.Activities;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
-import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.esd.esd.biathlontimer.DatabaseClasses.DatabaseProvider;
 import com.esd.esd.biathlontimer.ExcelHelper;
 import com.esd.esd.biathlontimer.R;
-import java.io.File;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -84,10 +78,13 @@ public class MainActivity extends AppCompatActivity {
                     String filePath = data.getData().getPath();
                     String fileName = data.getData().getLastPathSegment();
                     String[] pathFile = filePath.split(":");
-                    if(ExcelHelper.CheckChooseFile(fileName,this))
+                    if(ExcelHelper.IsRightFile(pathFile[pathFile.length - 1]))
                     {
                         AddCompetitionRow(fileName);
-                        ExcelHelper.OpenExcelFile(pathFile[pathFile.length - 1]);
+                    }
+                    else
+                    {
+                        Toast.makeText(getApplicationContext(),"Неверный формат файла, выберите .xls или .xlsx",Toast.LENGTH_LONG).show();
                     }
                 }
                 break;

@@ -1,27 +1,18 @@
 package com.esd.esd.biathlontimer;
 
 import android.content.Context;
-import android.content.res.AssetManager;
 import android.os.Environment;
 import android.util.Log;
-import android.widget.Toast;
-
-import com.esd.esd.biathlontimer.Activities.MainActivity;
 
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 
 // Класс для работы с excel файлом
 public class ExcelHelper
@@ -32,43 +23,58 @@ public class ExcelHelper
 
     }
 
-    public static boolean CheckChooseFile(String nameFile, Context context)
+    public static boolean IsRightFile(String nameFile)
     {
-        if(nameFile.endsWith(".xls") || nameFile.endsWith(".xlsx"))
+        if(nameFile.endsWith(".xls"))
         {
+            OpenXlsFile(nameFile);
+            return true;
+        }
+        if(nameFile.endsWith(".xlsx"))
+        {
+            OpenXlsxFile(nameFile);
             return true;
         }
         else
         {
-            Toast.makeText(context,"Неверный формат файла, выберите .xls или .xlsx",Toast.LENGTH_LONG).show();
             return false;
         }
     }
 
-    public static void OpenExcelFile(String fullPath)
+    private static void OpenXlsFile(String fullPath)
     {
         try
         {
-            HSSFWorkbook MyExcelBook = new HSSFWorkbook(new FileInputStream(Environment.getExternalStorageDirectory().getPath() + "/" + fullPath));
+            String pathFile = Environment.getExternalStorageDirectory().getPath() + "/" + fullPath;
+            HSSFWorkbook MyExcelBook = new HSSFWorkbook(new FileInputStream(pathFile));
             // Здесь необходимо добавить xlsx расширение и потом уже создавать объект типа Competition
+            // Выхов парсера
             Log.i("XLS","Работаем");
-        }catch (Exception e)
-        {
-            try
-            {
-                File localFile = new File(fullPath);
-                localFile.canRead();
-                FileInputStream fis = new FileInputStream(new File(fullPath));
-                XSSFWorkbook MyExcelFile = (XSSFWorkbook) WorkbookFactory.create(localFile);
-                MyExcelFile.getName("Жопа");
-               // MyExcelFile.getSheetAt(0).getRow(0).getCell(0).
-            }
-            catch (Exception e1)
-            {
-                Log.i("XLS","Не открылся!");
-            }
-
         }
+        catch (Exception e)
+        {
+            Log.i("XLS","Не работает");
+        }
+    }
+
+    private static void OpenXlsxFile(String fullPath)
+    {
+        try
+        {
+            String pathFile = Environment.getExternalStorageDirectory().getPath() + "/" + fullPath;
+            XSSFWorkbook MyExcelFile = new XSSFWorkbook(new FileInputStream(pathFile));
+            Log.i("XLSX","Работаем");
+            // MyExcelFile.getSheetAt(0).getRow(0).getCell(0).
+        }
+        catch (Exception e1)
+        {
+            Log.i("XLSX","Не открылся!");
+        }
+    }
+
+    private static void ParserFile(HSSFWorkbook myEcelBook)
+    {
+
     }
 
     // Метод создаёт excel файл и сохраняет его в папку приложения
