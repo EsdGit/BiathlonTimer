@@ -22,8 +22,6 @@ public class MainActivity extends AppCompatActivity {
     private TextView _dateTextView;
     private int _counter;
     private TableLayout _tableLayout;
-    private String _chosenXLSFile;
-    private String _pathXLSFile;
 
     private ExcelHelper _excelHelper;
 
@@ -40,11 +38,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void addFileBtn_OnClick(View view)
     {
-        Intent xlsIntent = new Intent(Intent.ACTION_GET_CONTENT);
-        xlsIntent.setType("files/*");
-        String[] mimeType = {"application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"};
-        xlsIntent.putExtra(Intent.EXTRA_MIME_TYPES,mimeType);
-        startActivityForResult(xlsIntent,1);
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
     }
 
     private void AddCompetitionRow(String nameCompetition)
@@ -65,29 +60,5 @@ public class MainActivity extends AppCompatActivity {
         newRow.addView(newTextView);
         newRow.addView(newTextView2);
         _tableLayout.addView(newRow);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode)
-        {
-            case 1:
-                if(resultCode == RESULT_OK)
-                {
-                    String filePath = data.getData().getPath();
-                    String fileName = data.getData().getLastPathSegment();
-                    String[] pathFile = filePath.split(":");
-                    if(ExcelHelper.IsRightFile(pathFile[pathFile.length - 1]))
-                    {
-                        AddCompetitionRow(fileName);
-                    }
-                    else
-                    {
-                        Toast.makeText(getApplicationContext(),"Неверный формат файла, выберите .xls или .xlsx",Toast.LENGTH_LONG).show();
-                    }
-                }
-                break;
-        }
     }
 }

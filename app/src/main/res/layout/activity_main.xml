@@ -73,22 +73,38 @@
         android:layout_marginRight="@dimen/fab_margin"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:onClick="addFileBtn_OnClick" />
+        android:onClick="addFileBtn_OnClick"
+        android:elevation="50dp"
+        app:borderWidth="0dp"/>
 
+    <!--<com.shamanland.fab.FloatingActionButton-->
+        <!--android:id="@+id/addFileBtn"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:src="@drawable/ic_add_file"-->
+        <!--android:layout_marginBottom="@dimen/fab_margin"-->
+        <!--android:layout_marginRight="@dimen/fab_margin"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:onClick="addFileBtn_OnClick"-->
+        <!--app:borderWidth="0dp"-->
+        <!--/>-->
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_centerHorizontal="true"
         android:scrollbars="vertical"
-        android:layout_below="@+id/head_table">
+        android:layout_below="@+id/head_table"
+        android:elevation="2dp">
 
         <TableLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#000000"
             android:id="@+id/tablelayout"
-            android:scrollbars="vertical">
+            android:scrollbars="vertical"
+            android:elevation="4dp">
 
         </TableLayout>
 

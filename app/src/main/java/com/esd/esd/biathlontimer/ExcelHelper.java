@@ -23,59 +23,6 @@ public class ExcelHelper
 
     }
 
-    public static boolean IsRightFile(String nameFile)
-    {
-        if(nameFile.endsWith(".xls"))
-        {
-            OpenXlsFile(nameFile);
-            return true;
-        }
-        if(nameFile.endsWith(".xlsx"))
-        {
-            OpenXlsxFile(nameFile);
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    private static void OpenXlsFile(String fullPath)
-    {
-        try
-        {
-            String pathFile = Environment.getExternalStorageDirectory().getPath() + "/" + fullPath;
-            HSSFWorkbook MyExcelBook = new HSSFWorkbook(new FileInputStream(pathFile));
-            // Здесь необходимо добавить xlsx расширение и потом уже создавать объект типа Competition
-            // Выхов парсера
-            Log.i("XLS","Работаем");
-        }
-        catch (Exception e)
-        {
-            Log.i("XLS","Не работает");
-        }
-    }
-
-    private static void OpenXlsxFile(String fullPath)
-    {
-        try
-        {
-            String pathFile = Environment.getExternalStorageDirectory().getPath() + "/" + fullPath;
-            XSSFWorkbook MyExcelFile = new XSSFWorkbook(new FileInputStream(pathFile));
-            Log.i("XLSX","Работаем");
-            // MyExcelFile.getSheetAt(0).getRow(0).getCell(0).
-        }
-        catch (Exception e1)
-        {
-            Log.i("XLSX","Не открылся!");
-        }
-    }
-
-    private static void ParserFile(HSSFWorkbook myEcelBook)
-    {
-
-    }
 
     // Метод создаёт excel файл и сохраняет его в папку приложения
     public static void CreateFileWithResult(Context context)
