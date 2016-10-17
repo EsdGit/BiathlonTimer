@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         _counter=0;
-        _tableLayout = (TableLayout)findViewById(R.id.tablelayout);
+        _tableLayout = (TableLayout)findViewById(R.id.table);
         _nameTextView = (TextView) findViewById(R.id.CompetitionsNameTextView);
         _dateTextView = (TextView) findViewById(R.id.CompetitionsDateTextView);
     }
@@ -44,9 +44,14 @@ public class MainActivity extends AppCompatActivity {
 
     private void AddCompetitionRow(String nameCompetition)
     {
+
+    }
+
+    public void OnClick(View view)
+    {
         TableRow newRow = new TableRow(this);
         TextView newTextView = new TextView(this);
-        newTextView.setText(nameCompetition);
+        newTextView.setText("ghbdtn");
         newTextView.setGravity(Gravity.CENTER);
         newTextView.setBackgroundColor(Color.WHITE);
         newTextView.setLayoutParams(new TableRow.LayoutParams(_nameTextView.getMeasuredWidth(),_nameTextView.getMeasuredHeight(), 0.666f));
