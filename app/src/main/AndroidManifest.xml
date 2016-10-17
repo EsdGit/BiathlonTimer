@@ -20,7 +20,9 @@
         </activity>
         <activity android:name=".Activities.SettingsActivity"
             android:screenOrientation="landscape">
-
+        </activity>
+        <activity android:name=".Activities.ParticipantListActivity"
+            android:screenOrientation="landscape">
         </activity>
     </application>
 
