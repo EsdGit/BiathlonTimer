@@ -24,6 +24,9 @@
         <activity android:name=".Activities.ParticipantListActivity"
             android:screenOrientation="landscape">
         </activity>
+        <activity android:name=".Activities.DataBaseActivity"
+                  android:screenOrientation="landscape">
+        </activity>
     </application>
 
 </manifest>

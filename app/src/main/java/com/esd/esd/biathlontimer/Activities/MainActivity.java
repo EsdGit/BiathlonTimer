@@ -44,14 +44,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void AddCompetitionRow(String nameCompetition)
     {
-
-    }
-
-    public void OnClick(View view)
-    {
         TableRow newRow = new TableRow(this);
         TextView newTextView = new TextView(this);
-        newTextView.setText("ghbdtn");
+        newTextView.setText(nameCompetition);
         newTextView.setGravity(Gravity.CENTER);
         newTextView.setBackgroundColor(Color.WHITE);
         newTextView.setLayoutParams(new TableRow.LayoutParams(_nameTextView.getMeasuredWidth(),_nameTextView.getMeasuredHeight(), 0.666f));
@@ -66,4 +61,12 @@ public class MainActivity extends AppCompatActivity {
         newRow.addView(newTextView2);
         _tableLayout.addView(newRow);
     }
+
+    public void OnClick(View view)
+    {
+        Intent participantList = new Intent(this, ParticipantListActivity.class);
+        startActivity(participantList);
+    }
+
+
 }
