@@ -12,7 +12,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.esd.esd.biathlontimer.DatabaseClasses.DatabaseProvider;
+import com.esd.esd.biathlontimer.DatabaseClasses.ParticipantSaver;
 import com.esd.esd.biathlontimer.ExcelHelper;
+import com.esd.esd.biathlontimer.Participant;
 import com.esd.esd.biathlontimer.R;
 
 public class MainActivity extends AppCompatActivity {
@@ -24,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private TableLayout _tableLayout;
 
     private ExcelHelper _excelHelper;
+    private ParticipantSaver _saver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -34,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
         _tableLayout = (TableLayout)findViewById(R.id.table);
         _nameTextView = (TextView) findViewById(R.id.CompetitionsNameTextView);
         _dateTextView = (TextView) findViewById(R.id.CompetitionsDateTextView);
+
+        _saver = new ParticipantSaver(this);
     }
 
     public void addFileBtn_OnClick(View view)
@@ -67,6 +72,4 @@ public class MainActivity extends AppCompatActivity {
         Intent participantList = new Intent(this, ParticipantListActivity.class);
         startActivity(participantList);
     }
-
-
 }
