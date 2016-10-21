@@ -14,7 +14,8 @@
             android:gravity="center"
             android:id="@+id/dialogName"
             android:inputType="textCapWords"
-            android:textAppearance="?android:attr/textAppearanceMedium"/>
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:imeOptions="actionNext"/>
     </LinearLayout>
 
     <LinearLayout
@@ -24,6 +25,7 @@
         android:id="@+id/dialogBirthdayCountryLayout"
         android:layout_below="@+id/dialogNameLayout"
         android:weightSum="2">
+
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -31,7 +33,8 @@
             android:id="@+id/dialogBirthday"
             android:inputType="date"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:imeOptions="actionNext"/>
 
         <EditText
             android:layout_width="wrap_content"
@@ -40,9 +43,8 @@
             android:id="@+id/dialogCountry"
             android:inputType="textCapSentences"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:imeOptions="actionDone"/>
     </LinearLayout>
-
-
 
 </RelativeLayout>
