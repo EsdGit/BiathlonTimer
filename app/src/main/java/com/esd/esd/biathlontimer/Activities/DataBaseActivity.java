@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,8 +36,7 @@ public class DataBaseActivity extends AppCompatActivity
         _nameTextView = (TextView) findViewById(R.id.nameDataBase);
         _birthdayTextView = (TextView) findViewById(R.id.birthdayDataBase);
         _countryTextView = (TextView) findViewById(R.id.countryDataBase);
-
-
+        Log.i("onCreate","BL");
     }
 
     public void OnClick(View view)

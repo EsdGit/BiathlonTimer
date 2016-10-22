@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
@@ -29,10 +30,7 @@ public class ParticipantListActivity extends AppCompatActivity
     private EditText _nameEditText;
     private EditText _birthdayEditText;
     private  EditText _countryEditText;
-    private ViewFlipper flipper;
     private View _form;
-    private float lastY;
-    private float currentY;
 
     private static String Title = "Добавление участника";
     private static String AddDialogBtn = "Добавить";
@@ -43,39 +41,7 @@ public class ParticipantListActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_participant_list);
-
-        // Получаем объект ViewFlipper
-//        flipper = (ViewFlipper) findViewById(R.id.flipper);
-//
-//        LinearLayout start = (LinearLayout) findViewById(R.id.flipperLayout);
-//        start.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event)
-//            {
-//                switch (event.getAction())
-//                {
-//                    case MotionEvent.ACTION_DOWN:
-//                        lastY = event.getY();
-//                        break;
-//                    case MotionEvent.ACTION_UP:
-//                        currentY = event.getY();
-//                        if (lastY < currentY)
-//                        {
-//                            flipper.setInAnimation(v.getContext(), R.anim.slide_in_from_left);
-//                            flipper.setOutAnimation(v.getContext(), R.anim.slide_out_to_right);
-//                            flipper.showNext();
-//                        }
-//                        if (lastY > currentY)
-//                        {
-//                            flipper.setInAnimation(v.getContext(), R.anim.slide_in_from_right);
-//                            flipper.setOutAnimation(v.getContext(), R.anim.slide_out_to_left);
-//                            flipper.showPrevious();
-//                        }
-//                        break;
-//                }
-//                return false;
-//            }
-//        });
+        Log.i("onCreate","PL");
 
         _form = this.getLayoutInflater().inflate(R.layout.dialog_activity_add_participant, null);
         _context = ParticipantListActivity.this;

@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void OnClick(View view)
     {
-        Intent participantList = new Intent(this, ParticipantListActivity.class);
-        startActivity(participantList);
+        Intent viewPager = new Intent(this, ViewPagerActivity.class);
+        startActivity(viewPager);
     }
 }
