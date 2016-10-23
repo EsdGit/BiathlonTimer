@@ -3,6 +3,7 @@ package com.esd.esd.biathlontimer.Activities;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.icu.text.MessagePattern;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -14,13 +15,19 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.esd.esd.biathlontimer.DatabaseClasses.ParticipantSaver;
 import com.esd.esd.biathlontimer.PagerAdapterHelper;
+import com.esd.esd.biathlontimer.Participant;
 import com.esd.esd.biathlontimer.R;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ViewPagerActivity extends AppCompatActivity
 {
+    private ParticipantSaver _dbSaver;
+    private boolean _isFirstLoad = true;
+
     private AlertDialog.Builder _addDialogBuilder;
     private AlertDialog _addDialog;
 
@@ -45,11 +52,13 @@ public class ViewPagerActivity extends AppCompatActivity
     private View _dialogForm;
     private static String TitleDialog = "Добавление участника";
     private static String AddDialogBtn = "Добавить";
-    private static String CancelDialogBtn = "Отмена";
+    private static String CancelDialogBtn = "Отменить";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        _dbSaver = new ParticipantSaver(this);
 
         LayoutInflater inflater = LayoutInflater.from(this);
         List<View> pages = new ArrayList<>();
@@ -78,19 +87,26 @@ public class ViewPagerActivity extends AppCompatActivity
         {
             public void onClick(DialogInterface dialog, int arg1)
             {
-                AddRowParticipantList();
+
+                Participant participant = new Participant(_nameDialog.getText().toString(),
+                        _countryDialog.getText().toString(), _birthdayDialog.getText().toString());
+                AddRowParticipantList(participant);
+                _dbSaver.SaveParticipantToDatabase(participant);
+                _nameDialog.setText("");
+                _birthdayDialog.setText("");
+                _countryDialog.setText("");
+                Toast.makeText(getApplicationContext(), "Участник добавлен",
+                        Toast.LENGTH_LONG).show();
             }
 
         });
 
-        // Действия по кнопке "Отмента"
         _addDialogBuilder.setNegativeButton(CancelDialogBtn, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int arg1) {
-                Toast.makeText(getApplicationContext(), "Думать надо перед тем как нажимать", Toast.LENGTH_LONG)
-                        .show();
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
             }
         });
-
         //Запрет на выход с диалогового окна кнопкой "Back"
         _addDialogBuilder.setCancelable(false);
         _addDialog = _addDialogBuilder.create();
@@ -111,33 +127,41 @@ public class ViewPagerActivity extends AppCompatActivity
         setContentView(viewPager);
     }
 
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if(_isFirstLoad) {
+            Participant[] localArr = _dbSaver.GetAllParticipants();
+            for (int i = 0; i < localArr.length; i++) {
+                AddRowParticipantFromBase(localArr[i]);
+            }
+            _isFirstLoad = false;
+        }
+    }
+
     public void OnClick(View view)
     {
         _addDialog.show();
     }
 
     // Добавление участника в ParticipantList
-    private void AddRowParticipantList()
+    private void AddRowParticipantList(Participant participant)
     {
-        String name = _nameDialog.getText().toString();
-        String birthday = _birthdayDialog.getText().toString();
-        String country = _countryDialog.getText().toString();
-
         TableRow newRow = new TableRow(this);
         TextView newTextView = new TextView(this);
-        newTextView.setText(name);
+        newTextView.setText(participant.GetFIO());
         newTextView.setGravity(Gravity.CENTER);
         newTextView.setBackgroundColor(Color.WHITE);
         newTextView.setLayoutParams(new TableRow.LayoutParams(_nameParticipantList.getMeasuredWidth(), _nameParticipantList.getMeasuredHeight(), 3f));
         ((TableRow.LayoutParams)newTextView.getLayoutParams()).setMargins(2,0,2,2);
         TextView newTextView2 = new TextView(this);
-        newTextView2.setText(birthday);
+        newTextView2.setText(participant.GetBirthYear());
         newTextView2.setGravity(Gravity.CENTER);
         newTextView2.setBackgroundColor(Color.WHITE);
         newTextView2.setLayoutParams(new TableRow.LayoutParams(_birthdayParticipantList.getMeasuredWidth(), _birthdayParticipantList.getMeasuredHeight(), 0.5f));
         ((TableRow.LayoutParams)newTextView2.getLayoutParams()).setMargins(0,0,2,2);
         TextView newTextView3 = new TextView(this);
-        newTextView3.setText(country);
+        newTextView3.setText(participant.GetCountry());
         newTextView3.setGravity(Gravity.CENTER);
         newTextView3.setBackgroundColor(Color.WHITE);
         newTextView3.setLayoutParams(new TableRow.LayoutParams(_countryParticipantList.getMeasuredWidth(), _countryParticipantList.getMeasuredHeight(), 0.5f));
@@ -146,12 +170,32 @@ public class ViewPagerActivity extends AppCompatActivity
         newRow.addView(newTextView2);
         newRow.addView(newTextView3);
         _tableLayoutParticipantList.addView(newRow);
+    }
 
-        _nameDialog.setText("");
-        _birthdayDialog.setText("");
-        _countryDialog.setText("");
-
-        Toast.makeText(getApplicationContext(), "Добавил участника",
-                Toast.LENGTH_LONG).show();
+    private void AddRowParticipantFromBase(Participant participant)
+    {
+        TableRow newRow = new TableRow(this);
+        TextView newTextView = new TextView(this);
+        newTextView.setText(participant.GetFIO());
+        newTextView.setGravity(Gravity.CENTER);
+        newTextView.setBackgroundColor(Color.WHITE);
+        newTextView.setLayoutParams(new TableRow.LayoutParams(_nameDataBaseList.getMeasuredWidth(), _nameDataBaseList.getMeasuredHeight(), 3f));
+        ((TableRow.LayoutParams)newTextView.getLayoutParams()).setMargins(2,0,2,2);
+        TextView newTextView2 = new TextView(this);
+        newTextView2.setText(participant.GetBirthYear());
+        newTextView2.setGravity(Gravity.CENTER);
+        newTextView2.setBackgroundColor(Color.WHITE);
+        newTextView2.setLayoutParams(new TableRow.LayoutParams(_birthdayDataBaseList.getMeasuredWidth(), _birthdayDataBaseList.getMeasuredHeight(), 0.5f));
+        ((TableRow.LayoutParams)newTextView2.getLayoutParams()).setMargins(0,0,2,2);
+        TextView newTextView3 = new TextView(this);
+        newTextView3.setText(participant.GetCountry());
+        newTextView3.setGravity(Gravity.CENTER);
+        newTextView3.setBackgroundColor(Color.WHITE);
+        newTextView3.setLayoutParams(new TableRow.LayoutParams(_countryDataBaseList.getMeasuredWidth(), _countryDataBaseList.getMeasuredHeight(), 0.5f));
+        ((TableRow.LayoutParams)newTextView3.getLayoutParams()).setMargins(0,0,2,2);
+        newRow.addView(newTextView);
+        newRow.addView(newTextView2);
+        newRow.addView(newTextView3);
+        _tableLayoutDataBaseList.addView(newRow);
     }
 }

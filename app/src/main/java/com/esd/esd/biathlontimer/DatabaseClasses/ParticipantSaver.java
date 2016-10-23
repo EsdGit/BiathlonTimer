@@ -48,7 +48,7 @@ public class ParticipantSaver
         localArr = new Participant[rowsCount];
         for(int i = 0; i < rowsCount; i++)
         {
-            localArr[i] = new Participant(cursor.getString(0), cursor.getString(1),1996);
+            localArr[i] = new Participant(cursor.getString(0), cursor.getString(1), cursor.getString(2));
             if(i < rowsCount - 1) cursor.moveToNext();
         }
 
@@ -59,6 +59,7 @@ public class ParticipantSaver
     {
         _db = _dbProvider.getWritableDatabase();
         _db.delete(DatabaseProvider.DbParticipant.TABLE_NAME, DatabaseProvider.DbParticipant.COLUMN_NAME + "=?" + " and " + DatabaseProvider.DbParticipant.COLUMN_COUNTRY
-                + "=?", new String[]{participant.GetFIO(), participant.GetCountry()});
+                + "=?"+" and " + DatabaseProvider.DbParticipant.COLUMN_COUNTRY
+                + "=?", new String[]{participant.GetFIO(), participant.GetCountry(), participant.GetBirthYear()});
     }
 }

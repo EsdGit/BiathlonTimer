@@ -40,7 +40,7 @@
             android:layout_width="wrap_content"
             android:gravity="center"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Название соревнований"
+            android:text="@string/main_activity_name_col"
             android:typeface="serif"
             android:layout_weight="2.5"
             android:background="#ffffff">
@@ -55,7 +55,7 @@
             android:layout_width="wrap_content"
             android:gravity="center"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Дата соревнования"
+            android:text="@string/main_activity_date_col"
             android:typeface="serif"
             android:layout_weight="0.5"
             android:background="#ffffff">

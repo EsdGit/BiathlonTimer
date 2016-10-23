@@ -14,7 +14,6 @@ public class DatabaseProvider extends SQLiteOpenHelper
 
 
     private static final String TEXT_TYPE = " TEXT";
-    private static final String INT_TYPE = " INTEGER";
     private static final String COMMA_SEP = ",";
 
     private static final String SQL_CREATE_SETTINGS_TABLE = "CREATE TABLE " + DbSettings.TABLE_NAME +
@@ -25,7 +24,7 @@ public class DatabaseProvider extends SQLiteOpenHelper
 
     private static final String SQL_CREATE_PARTICIPANT_TABLE = "CREATE TABLE " + DbParticipant.TABLE_NAME +
             " (" + DbParticipant._ID + " INTEGER PRIMARY KEY," + DbParticipant.COLUMN_NAME + TEXT_TYPE +
-            COMMA_SEP + DbParticipant.COLUMN_COUNTRY + TEXT_TYPE + COMMA_SEP + DbParticipant.COLUMN_YEAR + INT_TYPE + ")";
+            COMMA_SEP + DbParticipant.COLUMN_COUNTRY + TEXT_TYPE + COMMA_SEP + DbParticipant.COLUMN_YEAR + TEXT_TYPE + ")";
     private static final String SQL_DELETE_PARTICIPANT_TABLE = "DROP TABLE IF EXISTS " + DbParticipant.TABLE_NAME;
 
     public DatabaseProvider(Context context)

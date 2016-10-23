@@ -10,7 +10,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="ФИО"
+            android:hint="@string/fio_col_title"
             android:gravity="center"
             android:id="@+id/dialogName"
             android:inputType="textCapWords"
@@ -29,7 +29,7 @@
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="Дата рождения"
+            android:hint="@string/year_col_title"
             android:id="@+id/dialogBirthday"
             android:inputType="date"
             android:textAppearance="?android:attr/textAppearanceMedium"
@@ -39,7 +39,7 @@
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="Страна/Регион"
+            android:hint="@string/country_col_title"
             android:id="@+id/dialogCountry"
             android:inputType="textCapSentences"
             android:textAppearance="?android:attr/textAppearanceMedium"

@@ -1,4 +1,13 @@
 <resources>
     <string name="app_name">BiathlonTimer</string>
-    <string name="main_activity_head">Файлы</string>
+    <string name="main_activity_head">Files</string>
+    <string name="main_activity_name_col">Competition title</string>
+    <string name="main_activity_date_col">Date</string>
+    <string name="db_list_activity_head">Participants database</string>
+    <string name="participant_list_actvity_head">List of partcipants</string>
+    <string name="fio_col_title">Full name</string>
+    <string name="year_col_title">Year of birth</string>
+    <string name="country_col_title">Country</string>
+    <string name="dialog_add_btn">Add</string>
+    <string name="dialog_cancel_btn">Cancel</string>
 </resources>

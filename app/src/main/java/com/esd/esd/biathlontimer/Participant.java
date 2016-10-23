@@ -16,10 +16,10 @@ public class Participant
     public String GetCountry(){return _country;}
 
 
-    private int _birthYear;
-    public int GetBirthYear(){return _birthYear;}
+    private String _birthYear;
+    public String GetBirthYear(){return _birthYear;}
 
-    public Participant(String fio, String country, int birthYear )
+    public Participant(String fio, String country, String birthYear )
     {
         _FIO = fio;
         _country = country;

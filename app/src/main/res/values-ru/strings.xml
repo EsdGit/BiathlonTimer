@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">Таймер для биатлона</string>
+    <string name="main_activity_head">Файлы</string>
+    <string name="main_activity_name_col">Название соревнования</string>
+    <string name="main_activity_date_col">Дата</string>
+    <string name="db_list_activity_head">Список участников соревнования</string>
+    <string name="participant_list_actvity_head">База данных участников</string>
+    <string name="fio_col_title">ФИО</string>
+    <string name="year_col_title">Год рождения</string>
+    <string name="country_col_title">Страна</string>
+    <string name="dialog_add_btn">Добавить</string>
+    <string name="dialog_cancel_btn">Отмена</string>
 </resources>
