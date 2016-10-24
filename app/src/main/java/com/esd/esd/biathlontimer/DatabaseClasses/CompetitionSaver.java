@@ -47,7 +47,7 @@ public class CompetitionSaver
         localArr = new Competition[rowsCount];
         for(int i = 0; i < rowsCount; i++)
         {
-            localArr[i] = new Competition(cursor.getString(0), cursor.getString(1), cursor.getString(2));
+            localArr[i] = new Competition(cursor.getString(0), cursor.getString(1), Boolean.valueOf(cursor.getString(2)), cursor.getString(3));
             if(i < rowsCount - 1) cursor.moveToNext();
         }
 
@@ -58,7 +58,8 @@ public class CompetitionSaver
     {
         _db = _dbProvider.getWritableDatabase();
         _db.delete(DatabaseProvider.DbCompetitions.TABLE_NAME, DatabaseProvider.DbCompetitions.COLUMN_COMPETITION_NAME + "=?" + " and "+
-                DatabaseProvider.DbCompetitions.COLUMN_COMPETITION_DATE + "=?"+" and "+ DatabaseProvider.DbCompetitions.COLUMN_COMPETITION_STATE+"=?",
-                new String[]{competition.GetName(), competition.GetDate(), competition.GetState()});
+                DatabaseProvider.DbCompetitions.COLUMN_COMPETITION_DATE + "=?"+" and "+ DatabaseProvider.DbCompetitions.COLUMN_COMPETITION_STATE+"=?"+" and "+
+                        DatabaseProvider.DbCompetitions.COLUMN_DB_PATH+"=?", new String[]{competition.GetName(), competition.GetDate(), String.valueOf(competition.GetState()),
+                        competition.GetDbParticipantPath()});
     }
 }

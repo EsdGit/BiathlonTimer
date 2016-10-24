@@ -63,6 +63,7 @@ public class DatabaseProvider extends SQLiteOpenHelper
         public static final String COLUMN_COMPETITION_NAME= "CompetitionName";
         public static final String COLUMN_COMPETITION_DATE = "Date";
         public static final String COLUMN_COMPETITION_STATE = "State";
+        public static final String COLUMN_DB_PATH = "DbParticipantPath";
     }
 
     @Override

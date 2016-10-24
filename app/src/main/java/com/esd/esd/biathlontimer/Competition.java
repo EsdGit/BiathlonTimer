@@ -22,14 +22,19 @@ public class Competition
         return _competitionDate;
     }
 
-    private String _competitionState;
-    public String GetState(){return _competitionState;}
+    private boolean _competitionState;
+    public boolean GetState(){return _competitionState;}
 
-    public Competition(String name, String date, String state)
+    private String _dbParticipantPath;
+    public String GetDbParticipantPath(){return _dbParticipantPath;};
+
+    public Competition(String name, String date, boolean state, String dbPath)
     {
         _participants = new ArrayList<Participant>();
         _competitionName = name;
         _competitionDate = date;
+        _competitionState = state;
+        _dbParticipantPath = dbPath;
     }
 
     // Метод добавления участников соревнований, если такого участника нет
