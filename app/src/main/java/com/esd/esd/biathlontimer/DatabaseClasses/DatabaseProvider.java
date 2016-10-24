@@ -27,6 +27,13 @@ public class DatabaseProvider extends SQLiteOpenHelper
             COMMA_SEP + DbParticipant.COLUMN_COUNTRY + TEXT_TYPE + COMMA_SEP + DbParticipant.COLUMN_YEAR + TEXT_TYPE + ")";
     private static final String SQL_DELETE_PARTICIPANT_TABLE = "DROP TABLE IF EXISTS " + DbParticipant.TABLE_NAME;
 
+
+    private static final String SQL_CREATE_COMPETITION_TABLE = "CREATE TABLE " + DbCompetitions.TABLE_NAME +
+            " (" + DbCompetitions._ID + " INTEGER PRIMARY KEY," + DbCompetitions.COLUMN_COMPETITION_NAME + TEXT_TYPE +
+            COMMA_SEP + DbCompetitions.COLUMN_COMPETITION_DATE + TEXT_TYPE + COMMA_SEP + DbCompetitions.COLUMN_COMPETITION_STATE +
+            TEXT_TYPE + ")";
+    private static final String SQL_DELETE_COMPETITION_TABLE = "DROP TABLE IF EXISTS " + DbCompetitions.TABLE_NAME;
+
     public DatabaseProvider(Context context)
     {
         super(context, DatabaseName, null, DatabaseVersion);
@@ -47,21 +54,23 @@ public class DatabaseProvider extends SQLiteOpenHelper
         public static final String COLUMN_NAME = "Name";
         public static final String COLUMN_COUNTRY = "Country";
         public static final String COLUMN_YEAR = "BirthYear";
+    }
 
+    // Абстрактный класс базы данных соревнований
+    public static abstract class DbCompetitions implements BaseColumns
+    {
+        public static final String TABLE_NAME = "competitions";
+        public static final String COLUMN_COMPETITION_NAME= "CompetitionName";
+        public static final String COLUMN_COMPETITION_DATE = "Date";
+        public static final String COLUMN_COMPETITION_STATE = "State";
     }
 
     @Override
     public void onCreate(SQLiteDatabase db)
     {
+        db.execSQL(SQL_CREATE_COMPETITION_TABLE);
         db.execSQL(SQL_CREATE_PARTICIPANT_TABLE);
         db.execSQL(SQL_CREATE_SETTINGS_TABLE);
-        ContentValues val = new ContentValues();
-        val.put(DatabaseProvider.DbSettings.COLUMN_SETTING_NAME, "Интервал");
-        val.put(DatabaseProvider.DbSettings.COLUMN_SETTING_DATA, "30");
-        db.insert(DbSettings.TABLE_NAME,null,val);
-        val.put(DatabaseProvider.DbSettings.COLUMN_SETTING_NAME, "Количество КП");
-        val.put(DatabaseProvider.DbSettings.COLUMN_SETTING_DATA, "5");
-        db.insert(DbSettings.TABLE_NAME,null,val);
     }
 
     @Override
@@ -69,6 +78,7 @@ public class DatabaseProvider extends SQLiteOpenHelper
     {
         db.execSQL(SQL_DELETE_SETTINGS_TABLE);
         db.execSQL(SQL_DELETE_PARTICIPANT_TABLE);
+        db.execSQL(SQL_DELETE_COMPETITION_TABLE);
         onCreate(db);
     }
 }

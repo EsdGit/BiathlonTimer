@@ -9,14 +9,27 @@ import java.util.ArrayList;
 public class Competition
 {
     private ArrayList<Participant> _participants;
-    private String _competitionName;
-    private String _filePath;
-    private String _competitionDate;
 
-    public Competition()
+    private String _competitionName;
+    public String GetName()
+    {
+        return _competitionName;
+    }
+
+    private String _competitionDate;
+    public String GetDate()
+    {
+        return _competitionDate;
+    }
+
+    private String _competitionState;
+    public String GetState(){return _competitionState;}
+
+    public Competition(String name, String date, String state)
     {
         _participants = new ArrayList<Participant>();
-        // Здесь будем вводить название, дату и путь
+        _competitionName = name;
+        _competitionDate = date;
     }
 
     // Метод добавления участников соревнований, если такого участника нет
@@ -33,18 +46,11 @@ public class Competition
         return true;
     }
 
-    public String getName()
+    public int GetParticipantCount()
     {
-        return _competitionName;
+        return _participants.size();
     }
 
-    public String getFilePath()
-    {
-        return _filePath;
-    }
 
-    public String getDate()
-    {
-        return _competitionDate;
-    }
+    public Participant[] GetAllParticipants(){return _participants.toArray(new Participant[_participants.size()]);}
 }
