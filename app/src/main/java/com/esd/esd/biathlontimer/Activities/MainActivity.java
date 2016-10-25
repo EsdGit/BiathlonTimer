@@ -5,7 +5,12 @@ import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.ImageButton;
+import android.widget.PopupMenu;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -13,32 +18,32 @@ import android.widget.Toast;
 
 import com.esd.esd.biathlontimer.Competition;
 import com.esd.esd.biathlontimer.DatabaseClasses.CompetitionSaver;
-import com.esd.esd.biathlontimer.DatabaseClasses.DatabaseProvider;
-import com.esd.esd.biathlontimer.DatabaseClasses.ParticipantSaver;
-import com.esd.esd.biathlontimer.ExcelHelper;
-import com.esd.esd.biathlontimer.Participant;
 import com.esd.esd.biathlontimer.R;
-
-import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
     private TextView _nameTextView;
     private TextView _dateTextView;
     private TableLayout _tableLayout;
+    private ImageButton _menuMainImBtn;
+    private PopupMenu _popupMenu;
 
     private boolean _isFirstLoad = true;
 
     private CompetitionSaver _saver;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         _tableLayout = (TableLayout)findViewById(R.id.table);
         _nameTextView = (TextView) findViewById(R.id.CompetitionsNameTextView);
         _dateTextView = (TextView) findViewById(R.id.CompetitionsDateTextView);
+        _menuMainImBtn = (ImageButton) findViewById(R.id.menu);
 
         _saver = new CompetitionSaver(this);
     }
@@ -86,5 +91,33 @@ public class MainActivity extends AppCompatActivity {
     {
         Intent viewPager = new Intent(this, ViewPagerActivity.class);
         startActivity(viewPager);
+    }
+
+    public void OnClickMainMenu(View view)
+    {
+        if(_popupMenu == null)
+        {
+        _popupMenu = new PopupMenu(this, view);
+        MenuInflater menuInflater = _popupMenu.getMenuInflater();
+        menuInflater.inflate(R.menu.main_sort_menu, _popupMenu.getMenu());
+        _popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item)
+            {
+                switch (item.getItemId())
+                {
+                    case R.id.mainManuNameSort:
+                        Toast.makeText(getApplicationContext(),"Сортировка файлов по имени",Toast.LENGTH_SHORT).show();
+                        return true;
+                    case R.id.mainMenuDataSort:
+                        Toast.makeText(getApplicationContext(),"Сортировка файлов по дате",Toast.LENGTH_SHORT).show();
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+        });
+        }
+        _popupMenu.show();
     }
 }

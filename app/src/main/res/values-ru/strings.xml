@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Таймер для биатлона</string>
-    <string name="main_activity_head">Файлы</string>
+    <string name="main_activity_head">Список файлов соревнований</string>
     <string name="main_activity_name_col">Название соревнования</string>
     <string name="main_activity_date_col">Дата</string>
     <string name="db_list_activity_head">База данных участников</string>

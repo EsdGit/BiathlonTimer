@@ -9,8 +9,13 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.PopupMenu;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -30,12 +35,17 @@ public class ViewPagerActivity extends AppCompatActivity {
 
     private AlertDialog.Builder _addDialogBuilder;
     private AlertDialog _addDialog;
+    private PopupMenu _participantPopupMenu;
+    private PopupMenu _dataBasePopupMenu;
 
     // Элементы ParticipantList
     private TableLayout _tableLayoutParticipantList;
     private TextView _nameParticipantList;
     private TextView _birthdayParticipantList;
     private TextView _countryParticipantList;
+    private ImageButton _acceptParticipantImBtn;
+    private ImageButton _deleteParticipantImBtn;
+    private ImageButton _menuParticipantImBtn;
 
     // Элементы AlertDialog
     private EditText _nameDialog;
@@ -47,6 +57,9 @@ public class ViewPagerActivity extends AppCompatActivity {
     private TextView _nameDataBaseList;
     private TextView _birthdayDataBaseList;
     private TextView _countryDataBaseList;
+    private ImageButton _acceptDataBaseImBtn;
+    private ImageButton _deleteDataBaseImBtn;
+    private ImageButton _menuDataBaseImBtn;
 
     //Диалог добавления
     private View _dialogForm;
@@ -57,7 +70,7 @@ public class ViewPagerActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         _dbSaver = new ParticipantSaver(this);
 
         FindAllViews();
@@ -180,6 +193,10 @@ public class ViewPagerActivity extends AppCompatActivity {
         _nameParticipantList = (TextView) page1.findViewById(R.id.nameParticipantList);
         _birthdayParticipantList = (TextView) page1.findViewById(R.id.birthdayParticipantList);
         _countryParticipantList = (TextView) page1.findViewById(R.id.countryParticipantList);
+        _acceptParticipantImBtn = (ImageButton) page1.findViewById(R.id.accept_participant);
+        _deleteParticipantImBtn = (ImageButton) page1.findViewById(R.id.delete_participant);
+        _menuParticipantImBtn = (ImageButton) page1.findViewById(R.id.menu_participant);
+
 
         _nameDialog = (EditText) _dialogForm.findViewById(R.id.dialogName);
         _birthdayDialog = (EditText) _dialogForm.findViewById(R.id.dialogBirthday);
@@ -193,6 +210,9 @@ public class ViewPagerActivity extends AppCompatActivity {
         _nameDataBaseList = (TextView) page2.findViewById(R.id.nameDataBase);
         _birthdayDataBaseList = (TextView) page2.findViewById(R.id.birthdayDataBase);
         _countryDataBaseList = (TextView) page2.findViewById(R.id.countryDataBase);
+        _acceptDataBaseImBtn = (ImageButton) page2.findViewById(R.id.accept_database);
+        _deleteDataBaseImBtn = (ImageButton) page2.findViewById(R.id.delete_database);
+        _menuDataBaseImBtn = (ImageButton) page2.findViewById(R.id.menu_database);
 
         PagerAdapterHelper pagerAdapter = new PagerAdapterHelper(pages);
         ViewPager viewPager = new ViewPager(this);
@@ -205,5 +225,74 @@ public class ViewPagerActivity extends AppCompatActivity {
     {
         Competition competition = new Competition("NewCompetition", "29.02.2017", true, "NewCompetition");
         // Создаём соревнование, генерируем новую таблицу в БД, туда закидываем участников и так далее...
+    }
+
+    // Обработка нажатий меню сортировок
+    public void OnClickMenu(View view)
+    {
+        switch (view.getId())
+        {
+            case R.id.menu_participant:
+                if(_participantPopupMenu == null)
+                {
+                    _participantPopupMenu = new PopupMenu(this, view);
+                    MenuInflater menuInflater = _participantPopupMenu.getMenuInflater();
+                    menuInflater.inflate(R.menu.sort_menu, _participantPopupMenu.getMenu());
+                    _participantPopupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
+                    {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item)
+                        {
+                            switch (item.getItemId())
+                            {
+                                case R.id.nameSort:
+                                    Toast.makeText(getApplicationContext(),"Сортировка списка участников по имени",Toast.LENGTH_SHORT).show();
+                                    return true;
+                                case R.id.dataSort:
+                                    Toast.makeText(getApplicationContext(),"Сортировка списка участников по дате",Toast.LENGTH_SHORT).show();
+                                    return true;
+                                case R.id.countrySort:
+                                    Toast.makeText(getApplicationContext(),"Сортировка списка участников по региону",Toast.LENGTH_SHORT).show();
+                                    return true;
+                                default:
+                                    return false;
+                            }
+                        }
+                    });
+                }
+                _participantPopupMenu.show();
+                return;
+            case R.id.menu_database:
+                if(_dataBasePopupMenu == null)
+                {
+                    _dataBasePopupMenu = new PopupMenu(this, view);
+                    MenuInflater menuInflater = _dataBasePopupMenu.getMenuInflater();
+                    menuInflater.inflate(R.menu.sort_menu, _dataBasePopupMenu.getMenu());
+                    _dataBasePopupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
+                    {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item)
+                        {
+                            switch (item.getItemId())
+                            {
+                                case R.id.nameSort:
+                                    Toast.makeText(getApplicationContext(),"Сортировка базы данных по имени",Toast.LENGTH_SHORT).show();
+                                    return true;
+                                case R.id.dataSort:
+                                    Toast.makeText(getApplicationContext(),"Сортировка базы данных по дате",Toast.LENGTH_SHORT).show();
+                                    return true;
+                                case R.id.countrySort:
+                                    Toast.makeText(getApplicationContext(),"Сортировка базы данных по региону",Toast.LENGTH_SHORT).show();
+                                    return true;
+                                default:
+                                    return false;
+                            }
+                        }
+                    });
+                }
+                _dataBasePopupMenu.show();
+                return;
+
+        }
     }
 }
