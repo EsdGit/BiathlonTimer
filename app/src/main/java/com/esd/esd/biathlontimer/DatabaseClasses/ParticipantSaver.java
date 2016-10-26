@@ -22,17 +22,18 @@ public class ParticipantSaver
         _dbProvider = new DatabaseProvider(context);
     }
 
-    public void SaveParticipantToDatabase(Participant participant)
+    public void SaveParticipantToDatabase(Participant participant, String tableName)
     {
         _db = _dbProvider.getWritableDatabase();
         ContentValues val = new ContentValues();
         val.put(DatabaseProvider.DbParticipant.COLUMN_NAME, participant.GetFIO());
         val.put(DatabaseProvider.DbParticipant.COLUMN_COUNTRY, participant.GetCountry());
         val.put(DatabaseProvider.DbParticipant.COLUMN_YEAR, participant.GetBirthYear());
-        _db.insert(DatabaseProvider.DbParticipant.TABLE_NAME, null, val);
+        _db.insert(tableName, null, val);
+        _db.close();
     }
 
-    public Participant[] GetAllParticipants()
+    public Participant[] GetAllParticipants(String tableName)
     {
         Participant[] localArr;
         _db = _dbProvider.getReadableDatabase();
@@ -42,7 +43,7 @@ public class ParticipantSaver
                         DatabaseProvider.DbParticipant.COLUMN_COUNTRY,
                         DatabaseProvider.DbParticipant.COLUMN_YEAR
                 };
-        Cursor cursor = _db.query(DatabaseProvider.DbParticipant.TABLE_NAME, proj, null, null, null, null, DatabaseProvider.DbParticipant.COLUMN_NAME);
+        Cursor cursor = _db.query(tableName, proj, null, null, null, null, DatabaseProvider.DbParticipant.COLUMN_NAME);
         cursor.moveToFirst();
         int rowsCount = cursor.getCount();
         localArr = new Participant[rowsCount];
@@ -51,15 +52,16 @@ public class ParticipantSaver
             localArr[i] = new Participant(cursor.getString(0), cursor.getString(1), cursor.getString(2));
             if(i < rowsCount - 1) cursor.moveToNext();
         }
-
+        _db.close();
         return localArr;
     }
 
-    public void DeleteParticipant(Participant participant)
+    public void DeleteParticipant(Participant participant, String tableName)
     {
         _db = _dbProvider.getWritableDatabase();
-        _db.delete(DatabaseProvider.DbParticipant.TABLE_NAME, DatabaseProvider.DbParticipant.COLUMN_NAME + "=?" + " and " + DatabaseProvider.DbParticipant.COLUMN_COUNTRY
+        _db.delete(tableName, DatabaseProvider.DbParticipant.COLUMN_NAME + "=?" + " and " + DatabaseProvider.DbParticipant.COLUMN_COUNTRY
                 + "=?"+" and " + DatabaseProvider.DbParticipant.COLUMN_COUNTRY
                 + "=?", new String[]{participant.GetFIO(), participant.GetCountry(), participant.GetBirthYear()});
+        _db.close();
     }
 }

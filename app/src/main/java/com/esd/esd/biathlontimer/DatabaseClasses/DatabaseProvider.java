@@ -82,4 +82,12 @@ public class DatabaseProvider extends SQLiteOpenHelper
         db.execSQL(SQL_DELETE_COMPETITION_TABLE);
         onCreate(db);
     }
+
+    public void AddNewTable(String name)
+    {
+        String sql = "CREATE TABLE IF NOT EXISTS " + name +
+                " (" + DbParticipant._ID + " INTEGER PRIMARY KEY," + DbParticipant.COLUMN_NAME + TEXT_TYPE +
+                COMMA_SEP + DbParticipant.COLUMN_COUNTRY + TEXT_TYPE + COMMA_SEP + DbParticipant.COLUMN_YEAR + TEXT_TYPE + ")";
+        this.getWritableDatabase().execSQL(sql);
+    }
 }

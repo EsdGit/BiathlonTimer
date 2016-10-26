@@ -27,8 +27,9 @@ public class CompetitionSaver
         ContentValues val = new ContentValues();
         val.put(DatabaseProvider.DbCompetitions.COLUMN_COMPETITION_NAME, competition.GetName());
         val.put(DatabaseProvider.DbCompetitions.COLUMN_COMPETITION_DATE, competition.GetDate());
-        val.put(DatabaseProvider.DbCompetitions.COLUMN_COMPETITION_STATE, competition.GetState());
+        val.put(DatabaseProvider.DbCompetitions.COLUMN_COMPETITION_STATE, competition.GetSettingsPath());
         _db.insert(DatabaseProvider.DbCompetitions.TABLE_NAME, null, val);
+        _db.close();
     }
 
     public Competition[] GetAllCompetitions()
@@ -47,10 +48,10 @@ public class CompetitionSaver
         localArr = new Competition[rowsCount];
         for(int i = 0; i < rowsCount; i++)
         {
-            localArr[i] = new Competition(cursor.getString(0), cursor.getString(1), Boolean.valueOf(cursor.getString(2)), cursor.getString(3));
+            localArr[i] = new Competition(cursor.getString(0), cursor.getString(1),cursor.getString(2), cursor.getString(3));
             if(i < rowsCount - 1) cursor.moveToNext();
         }
-
+        _db.close();
         return localArr;
     }
 
@@ -59,7 +60,8 @@ public class CompetitionSaver
         _db = _dbProvider.getWritableDatabase();
         _db.delete(DatabaseProvider.DbCompetitions.TABLE_NAME, DatabaseProvider.DbCompetitions.COLUMN_COMPETITION_NAME + "=?" + " and "+
                 DatabaseProvider.DbCompetitions.COLUMN_COMPETITION_DATE + "=?"+" and "+ DatabaseProvider.DbCompetitions.COLUMN_COMPETITION_STATE+"=?"+" and "+
-                        DatabaseProvider.DbCompetitions.COLUMN_DB_PATH+"=?", new String[]{competition.GetName(), competition.GetDate(), String.valueOf(competition.GetState()),
+                        DatabaseProvider.DbCompetitions.COLUMN_DB_PATH+"=?", new String[]{competition.GetName(), competition.GetDate(), competition.GetSettingsPath(),
                         competition.GetDbParticipantPath()});
+        _db.close();
     }
 }

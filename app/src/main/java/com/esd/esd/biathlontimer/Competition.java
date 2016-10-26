@@ -22,18 +22,18 @@ public class Competition
         return _competitionDate;
     }
 
-    private boolean _competitionState;
-    public boolean GetState(){return _competitionState;}
+    private String _settingsPath;
+    public String GetSettingsPath(){return _settingsPath;}
 
     private String _dbParticipantPath;
     public String GetDbParticipantPath(){return _dbParticipantPath;};
 
-    public Competition(String name, String date, boolean state, String dbPath)
+    public Competition(String name, String date, String settingsPath, String dbPath)
     {
         _participants = new ArrayList<Participant>();
         _competitionName = name;
         _competitionDate = date;
-        _competitionState = state;
+        _settingsPath = settingsPath;
         _dbParticipantPath = dbPath;
     }
 
@@ -51,6 +51,11 @@ public class Competition
         return true;
     }
 
+    public void GenerateSettingsDb()
+    {
+
+    }
+
     public int GetParticipantCount()
     {
         return _participants.size();
@@ -58,4 +63,9 @@ public class Competition
 
 
     public Participant[] GetAllParticipants(){return _participants.toArray(new Participant[_participants.size()]);}
+
+    public void FinishCompetition()
+    {
+        _settingsPath = "null";
+    }
 }

@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.esd.esd.biathlontimer.Competition;
+import com.esd.esd.biathlontimer.DatabaseClasses.DatabaseProvider;
 import com.esd.esd.biathlontimer.DatabaseClasses.ParticipantSaver;
 import com.esd.esd.biathlontimer.PagerAdapterHelper;
 import com.esd.esd.biathlontimer.Participant;
@@ -83,11 +84,10 @@ public class ViewPagerActivity extends AppCompatActivity {
         // Действия по кнопке "Добавить"
         _addDialogBuilder.setPositiveButton(AddDialogBtn, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int arg1) {
-
                 Participant participant = new Participant(_nameDialog.getText().toString(),
                         _countryDialog.getText().toString(), _birthdayDialog.getText().toString());
                 AddRowParticipantList(participant);
-                _dbSaver.SaveParticipantToDatabase(participant);
+                _dbSaver.SaveParticipantToDatabase(participant, DatabaseProvider.DbParticipant.TABLE_NAME);
                 _nameDialog.setText("");
                 _birthdayDialog.setText("");
                 _countryDialog.setText("");
@@ -115,9 +115,14 @@ public class ViewPagerActivity extends AppCompatActivity {
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         if (_isFirstLoad) {
-            Participant[] localArr = _dbSaver.GetAllParticipants();
+            Participant[] localArr = _dbSaver.GetAllParticipants(DatabaseProvider.DbParticipant.TABLE_NAME);
             for (int i = 0; i < localArr.length; i++) {
                 AddRowParticipantFromBase(localArr[i]);
+            }
+
+            localArr = _dbSaver.GetAllParticipants("TEST");
+            for (int i = 0; i < localArr.length; i++) {
+                AddRowParticipantList(localArr[i]);
             }
             _isFirstLoad = false;
         }
@@ -223,7 +228,7 @@ public class ViewPagerActivity extends AppCompatActivity {
 
     private void MakeNewCompetition()
     {
-        Competition competition = new Competition("NewCompetition", "29.02.2017", true, "NewCompetition");
+        Competition competition = new Competition("NewCompetition", "29.02.2017", "", "NewCompetition");
         // Создаём соревнование, генерируем новую таблицу в БД, туда закидываем участников и так далее...
     }
 
