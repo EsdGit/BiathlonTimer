@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
         android:orientation="horizontal"
-        android:weightSum="4"
+        android:weightSum="3"
         android:id="@+id/headDataBaseLayout">
         <TextView
             android:layout_width="wrap_content"
@@ -21,37 +21,76 @@
             android:layout_marginLeft="@dimen/normal_indent"
             android:textColor="#ffffff"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:layout_weight="3.1"/>
+            android:layout_weight="2.7"/>
 
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:src="@drawable/ic_accept"
             android:background="@null"
+            android:layout_gravity="center"
             android:tint="#ffffff"
-            android:id="@+id/accept_database"
-            android:layout_weight="0.3"/>
+            android:visibility="gone"
+            android:layout_weight="0.1"
+            android:onClick="OnClickAcceptDataBase"
+            android:id="@+id/second_accept_database"/>
 
-
-        <ImageButton
+        <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_delete"
-            android:background="@null"
-            android:tint="#ffffff"
-            android:id="@+id/delete_database"
-            android:layout_weight="0.3"/>
+            android:layout_weight="0.1">
 
-        <ImageButton
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_accept"
+                android:background="@null"
+                android:layout_gravity="center"
+                android:tint="#ffffff"
+                android:visibility="gone"
+                android:onClick="OnClickAcceptDataBase"
+                android:id="@+id/accept_database"/>
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_edit"
+                android:background="@null"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                android:tint="#ffffff"
+                android:onClick="OnClickEditDataBase"
+                android:id="@+id/edit_database"/>
+
+        </FrameLayout>
+
+        <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_menu"
-            android:tint="#ffffff"
-            android:background="@null"
-            android:id="@+id/menu_database"
-            android:onClick="OnClickMenu"
-            android:layout_weight="0.3"/>
+            android:layout_weight="0.1">
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_delete"
+                android:background="@null"
+                android:visibility="gone"
+                android:layout_gravity="center"
+                android:tint="#ffffff"
+                android:onClick="OnClickDeleteDataBAse"
+                android:id="@+id/delete_database"/>
 
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_menu"
+                android:tint="#ffffff"
+                android:background="@null"
+                android:id="@+id/menu_database"
+                android:onClick="OnClickMenu"/>
+        </FrameLayout>
     </LinearLayout>
 
     <LinearLayout

@@ -3,7 +3,7 @@ package com.esd.esd.biathlontimer.Activities;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
-import android.icu.text.MessagePattern;
+import android.graphics.drawable.PaintDrawable;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -33,6 +33,10 @@ import java.util.List;
 public class ViewPagerActivity extends AppCompatActivity {
     private ParticipantSaver _dbSaver;
     private boolean _isFirstLoad = true;
+    private boolean _haveMarkedParticipant = false;
+    private boolean _haveMarkedDataBase = false;
+    private int _counterMarkedParticipant;
+    private int _counterMarkedDataBase;
 
     private AlertDialog.Builder _addDialogBuilder;
     private AlertDialog _addDialog;
@@ -47,6 +51,7 @@ public class ViewPagerActivity extends AppCompatActivity {
     private ImageButton _acceptParticipantImBtn;
     private ImageButton _deleteParticipantImBtn;
     private ImageButton _menuParticipantImBtn;
+    private ImageButton _editParticipantImBtn;
 
     // Элементы AlertDialog
     private EditText _nameDialog;
@@ -61,6 +66,8 @@ public class ViewPagerActivity extends AppCompatActivity {
     private ImageButton _acceptDataBaseImBtn;
     private ImageButton _deleteDataBaseImBtn;
     private ImageButton _menuDataBaseImBtn;
+    private ImageButton _editDataBaseImBtn;
+    private ImageButton _secondAcceptDataBaseImBtn;
 
     //Диалог добавления
     private View _dialogForm;
@@ -120,10 +127,10 @@ public class ViewPagerActivity extends AppCompatActivity {
                 AddRowParticipantFromBase(localArr[i]);
             }
 
-            localArr = _dbSaver.GetAllParticipants("TEST");
-            for (int i = 0; i < localArr.length; i++) {
-                AddRowParticipantList(localArr[i]);
-            }
+            //localArr = _dbSaver.GetAllParticipants("TEST");
+            //for (int i = 0; i < localArr.length; i++) {
+            //    AddRowParticipantList(localArr[i]);
+            //}
             _isFirstLoad = false;
         }
     }
@@ -138,24 +145,101 @@ public class ViewPagerActivity extends AppCompatActivity {
         TextView newTextView = new TextView(this);
         newTextView.setText(participant.GetFIO());
         newTextView.setGravity(Gravity.CENTER);
-        newTextView.setBackgroundColor(Color.WHITE);
+        newTextView.setBackground(new PaintDrawable(Color.WHITE));
         newTextView.setLayoutParams(new TableRow.LayoutParams(_nameParticipantList.getMeasuredWidth(), _nameParticipantList.getMeasuredHeight(), 3f));
         ((TableRow.LayoutParams) newTextView.getLayoutParams()).setMargins(2, 0, 2, 2);
         TextView newTextView2 = new TextView(this);
         newTextView2.setText(participant.GetBirthYear());
         newTextView2.setGravity(Gravity.CENTER);
-        newTextView2.setBackgroundColor(Color.WHITE);
+        newTextView2.setBackground(new PaintDrawable(Color.WHITE));
         newTextView2.setLayoutParams(new TableRow.LayoutParams(_birthdayParticipantList.getMeasuredWidth(), _birthdayParticipantList.getMeasuredHeight(), 0.5f));
         ((TableRow.LayoutParams) newTextView2.getLayoutParams()).setMargins(0, 0, 2, 2);
         TextView newTextView3 = new TextView(this);
         newTextView3.setText(participant.GetCountry());
         newTextView3.setGravity(Gravity.CENTER);
-        newTextView3.setBackgroundColor(Color.WHITE);
+        newTextView3.setBackground(new PaintDrawable(Color.WHITE));
         newTextView3.setLayoutParams(new TableRow.LayoutParams(_countryParticipantList.getMeasuredWidth(), _countryParticipantList.getMeasuredHeight(), 0.5f));
         ((TableRow.LayoutParams) newTextView3.getLayoutParams()).setMargins(0, 0, 2, 2);
         newRow.addView(newTextView);
         newRow.addView(newTextView2);
         newRow.addView(newTextView3);
+        newRow.setOnLongClickListener(new View.OnLongClickListener()
+        {
+            @Override
+            public boolean onLongClick(View v)
+            {
+                if(!_haveMarkedParticipant)
+                {
+                    _haveMarkedParticipant = true;
+                }
+                return false;
+            }
+        });
+        newRow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                ArrayList<View> rowView = new ArrayList<View>();
+                v.addChildrenForAccessibility(rowView);
+                if(_haveMarkedParticipant)
+                {
+                    if (_counterMarkedParticipant == 0) {
+                        // Если отмечен первый
+                        _counterMarkedParticipant++;
+                        _haveMarkedParticipant = true;
+                        for (int i = 0; i < rowView.size(); i++)
+                        {
+                            rowView.get(i).setBackground(new PaintDrawable(getResources().getColor(R.color.colorPrimary)));
+                        }
+                        _acceptParticipantImBtn.setVisibility(View.GONE);
+                        _editParticipantImBtn.setVisibility(View.VISIBLE);
+                        _menuParticipantImBtn.setVisibility(View.GONE);
+                        _deleteParticipantImBtn.setVisibility(View.VISIBLE);
+                    }
+                    else
+                    {
+                        // Есди уже были отмечены
+                        for (int i = 0; i < rowView.size(); i++)
+                        {
+                            PaintDrawable drawable = (PaintDrawable) rowView.get(i).getBackground();
+                            if (drawable.getPaint().getColor() == getResources().getColor(R.color.colorPrimary))
+                            {
+                                if(i == 0)
+                                {
+                                    _counterMarkedParticipant--;
+                                }
+                                rowView.get(i).setBackground(new PaintDrawable(Color.WHITE));
+                            }
+                            else
+                            {
+                                if(i == 0)
+                                {
+                                    _counterMarkedParticipant++;
+                                }
+                                rowView.get(i).setBackground(new PaintDrawable(getResources().getColor(R.color.colorPrimary)));
+                            }
+                        }
+                        switch (_counterMarkedParticipant)
+                        {
+                            case 0:
+                                _editParticipantImBtn.setVisibility(View.GONE);
+                                _acceptParticipantImBtn.setVisibility(View.VISIBLE);
+                                _deleteParticipantImBtn.setVisibility(View.GONE);
+                                _menuParticipantImBtn.setVisibility(View.VISIBLE);
+                                _haveMarkedParticipant = false;
+                                break;
+                            case 1:
+                                _acceptParticipantImBtn.setVisibility(View.GONE);
+                                _editParticipantImBtn.setVisibility(View.VISIBLE);
+                                break;
+                            default:
+                                _editParticipantImBtn.setVisibility(View.GONE);
+                                break;
+                        }
+                    }
+                }
+            }
+        });
         _tableLayoutParticipantList.addView(newRow);
     }
 
@@ -164,24 +248,106 @@ public class ViewPagerActivity extends AppCompatActivity {
         TextView newTextView = new TextView(this);
         newTextView.setText(participant.GetFIO());
         newTextView.setGravity(Gravity.CENTER);
-        newTextView.setBackgroundColor(Color.WHITE);
+        newTextView.setBackground(new PaintDrawable(Color.WHITE));
         newTextView.setLayoutParams(new TableRow.LayoutParams(_nameDataBaseList.getMeasuredWidth(), _nameDataBaseList.getMeasuredHeight(), 3f));
         ((TableRow.LayoutParams) newTextView.getLayoutParams()).setMargins(2, 0, 2, 2);
         TextView newTextView2 = new TextView(this);
         newTextView2.setText(participant.GetBirthYear());
         newTextView2.setGravity(Gravity.CENTER);
-        newTextView2.setBackgroundColor(Color.WHITE);
+        newTextView2.setBackground(new PaintDrawable(Color.WHITE));
         newTextView2.setLayoutParams(new TableRow.LayoutParams(_birthdayDataBaseList.getMeasuredWidth(), _birthdayDataBaseList.getMeasuredHeight(), 0.5f));
         ((TableRow.LayoutParams) newTextView2.getLayoutParams()).setMargins(0, 0, 2, 2);
         TextView newTextView3 = new TextView(this);
         newTextView3.setText(participant.GetCountry());
         newTextView3.setGravity(Gravity.CENTER);
-        newTextView3.setBackgroundColor(Color.WHITE);
+        newTextView3.setBackground(new PaintDrawable(Color.WHITE));
         newTextView3.setLayoutParams(new TableRow.LayoutParams(_countryDataBaseList.getMeasuredWidth(), _countryDataBaseList.getMeasuredHeight(), 0.5f));
         ((TableRow.LayoutParams) newTextView3.getLayoutParams()).setMargins(0, 0, 2, 2);
         newRow.addView(newTextView);
         newRow.addView(newTextView2);
         newRow.addView(newTextView3);
+        newRow.setOnLongClickListener(new View.OnLongClickListener()
+        {
+            @Override
+            public boolean onLongClick(View v)
+            {
+                if(!_haveMarkedDataBase)
+                {
+                    _haveMarkedDataBase = true;
+                }
+                return false;
+            }
+        });
+        newRow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                ArrayList<View> rowView = new ArrayList<View>();
+                v.addChildrenForAccessibility(rowView);
+                if(_haveMarkedDataBase)
+                {
+                    if (_counterMarkedDataBase == 0) {
+                        // Если отмечен первый
+                        _counterMarkedDataBase++;
+                        _haveMarkedDataBase = true;
+                        for (int i = 0; i < rowView.size(); i++)
+                        {
+                            rowView.get(i).setBackground(new PaintDrawable(getResources().getColor(R.color.colorPrimary)));
+                        }
+                        _secondAcceptDataBaseImBtn.setVisibility(View.VISIBLE);
+                        _acceptDataBaseImBtn.setVisibility(View.GONE);
+                        _editDataBaseImBtn.setVisibility(View.VISIBLE);
+                        _menuDataBaseImBtn.setVisibility(View.GONE);
+                        _deleteDataBaseImBtn.setVisibility(View.VISIBLE);
+                    }
+                    else
+                    {
+                        // Есди уже были отмечены
+                        for (int i = 0; i < rowView.size(); i++)
+                        {
+                            PaintDrawable drawable = (PaintDrawable) rowView.get(i).getBackground();
+                            if (drawable.getPaint().getColor() == getResources().getColor(R.color.colorPrimary))
+                            {
+                                if(i == 0)
+                                {
+                                    _counterMarkedDataBase--;
+                                }
+                                rowView.get(i).setBackground(new PaintDrawable(Color.WHITE));
+                            }
+                            else
+                            {
+                                if(i == 0)
+                                {
+                                    _counterMarkedDataBase++;
+                                }
+                                rowView.get(i).setBackground(new PaintDrawable(getResources().getColor(R.color.colorPrimary)));
+                            }
+                        }
+                        switch (_counterMarkedDataBase)
+                        {
+                            case 0:
+                                _secondAcceptDataBaseImBtn.setVisibility(View.GONE);
+                                _editDataBaseImBtn.setVisibility(View.GONE);
+                                _acceptDataBaseImBtn.setVisibility(View.VISIBLE);
+                                _deleteDataBaseImBtn.setVisibility(View.GONE);
+                                _menuDataBaseImBtn.setVisibility(View.VISIBLE);
+                                _haveMarkedDataBase = false;
+                                break;
+                            case 1:
+                                _secondAcceptDataBaseImBtn.setVisibility(View.VISIBLE);
+                                _acceptDataBaseImBtn.setVisibility(View.GONE);
+                                _editDataBaseImBtn.setVisibility(View.VISIBLE);
+                                break;
+                            default:
+                                _secondAcceptDataBaseImBtn.setVisibility(View.GONE);
+                                _editDataBaseImBtn.setVisibility(View.GONE);
+                                _acceptDataBaseImBtn.setVisibility(View.VISIBLE);
+                                break;
+                        }
+                    }
+                }
+            }
+        });
         _tableLayoutDataBaseList.addView(newRow);
     }
 
@@ -199,8 +365,9 @@ public class ViewPagerActivity extends AppCompatActivity {
         _birthdayParticipantList = (TextView) page1.findViewById(R.id.birthdayParticipantList);
         _countryParticipantList = (TextView) page1.findViewById(R.id.countryParticipantList);
         _acceptParticipantImBtn = (ImageButton) page1.findViewById(R.id.accept_participant);
-        _deleteParticipantImBtn = (ImageButton) page1.findViewById(R.id.delete_participant);
         _menuParticipantImBtn = (ImageButton) page1.findViewById(R.id.menu_participant);
+        _deleteParticipantImBtn = (ImageButton) page1.findViewById(R.id.delete_participant);
+        _editParticipantImBtn = (ImageButton) page1.findViewById(R.id.edit_participant);
 
 
         _nameDialog = (EditText) _dialogForm.findViewById(R.id.dialogName);
@@ -218,6 +385,9 @@ public class ViewPagerActivity extends AppCompatActivity {
         _acceptDataBaseImBtn = (ImageButton) page2.findViewById(R.id.accept_database);
         _deleteDataBaseImBtn = (ImageButton) page2.findViewById(R.id.delete_database);
         _menuDataBaseImBtn = (ImageButton) page2.findViewById(R.id.menu_database);
+        _deleteDataBaseImBtn = (ImageButton) page2.findViewById(R.id.delete_database);
+        _editDataBaseImBtn = (ImageButton) page2.findViewById(R.id.edit_database);
+        _secondAcceptDataBaseImBtn = (ImageButton) page2.findViewById(R.id.second_accept_database);
 
         PagerAdapterHelper pagerAdapter = new PagerAdapterHelper(pages);
         ViewPager viewPager = new ViewPager(this);
@@ -299,5 +469,35 @@ public class ViewPagerActivity extends AppCompatActivity {
                 return;
 
         }
+    }
+
+    public void OnClickAcceptParticipant(View view)
+    {
+        Toast.makeText(getApplicationContext(),"Сохранить список и перейти к соревнованию",Toast.LENGTH_SHORT).show();
+    }
+
+    public void OnClickEditParticipant(View view)
+    {
+        Toast.makeText(getApplicationContext(),"Редактировать участника",Toast.LENGTH_SHORT).show();
+    }
+
+    public void OnClickDeleteParticipant(View view)
+    {
+        Toast.makeText(getApplicationContext(),"Удаление участника",Toast.LENGTH_SHORT).show();
+    }
+
+    public void OnClickDeleteDataBAse(View view)
+    {
+        Toast.makeText(getApplicationContext(),"Удалить участника из базы данных",Toast.LENGTH_SHORT).show();
+    }
+
+    public void OnClickEditDataBase(View view)
+    {
+        Toast.makeText(getApplicationContext(),"Редактировать участника в базе данных",Toast.LENGTH_SHORT).show();
+    }
+
+    public void OnClickAcceptDataBase(View view)
+    {
+        Toast.makeText(getApplicationContext(),"Перенести фамилии из базы данных",Toast.LENGTH_SHORT).show();
     }
 }

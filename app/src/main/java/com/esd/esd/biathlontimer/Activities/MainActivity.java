@@ -84,11 +84,11 @@ public class MainActivity extends AppCompatActivity {
     public void OnClick(View view)
     {
         //Competition competition = new Competition("Чм России среди юношей", "25.10.2016", "");
-        DatabaseProvider db = new DatabaseProvider(this);
-        db.AddNewTable("TEST");
-        ParticipantSaver pS = new ParticipantSaver(this);
-        pS.SaveParticipantToDatabase(new Participant("Жуков Юрий", "1975", "Россия"), "TEST");
-        pS.SaveParticipantToDatabase(new Participant("Слободзян Никитос", "1990", "Казахстан"), "TEST");
+        //DatabaseProvider db = new DatabaseProvider(this);
+        //db.AddNewTable("TEST");
+        //ParticipantSaver pS = new ParticipantSaver(this);
+        //pS.SaveParticipantToDatabase(new Participant("Жуков Юрий", "1975", "Россия"), "TEST");
+        //pS.SaveParticipantToDatabase(new Participant("Слободзян Никитос", "1990", "Казахстан"), "TEST");
         Intent viewPager = new Intent(this, ViewPagerActivity.class);
         startActivity(viewPager);
     }
