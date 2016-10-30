@@ -33,7 +33,7 @@ public class ParticipantSaver
         _db.close();
     }
 
-    public Participant[] GetAllParticipants(String tableName)
+    public Participant[] GetAllParticipants(String tableName, String orderBy)
     {
         Participant[] localArr;
         _db = _dbProvider.getReadableDatabase();
@@ -60,7 +60,7 @@ public class ParticipantSaver
     {
         _db = _dbProvider.getWritableDatabase();
         _db.delete(tableName, DatabaseProvider.DbParticipant.COLUMN_NAME + "=?" + " and " + DatabaseProvider.DbParticipant.COLUMN_COUNTRY
-                + "=?"+" and " + DatabaseProvider.DbParticipant.COLUMN_COUNTRY
+                + "=?"+" and " + DatabaseProvider.DbParticipant.COLUMN_YEAR
                 + "=?", new String[]{participant.GetFIO(), participant.GetCountry(), participant.GetBirthYear()});
         _db.close();
     }

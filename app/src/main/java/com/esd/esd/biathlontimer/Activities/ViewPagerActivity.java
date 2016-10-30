@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.PaintDrawable;
+import android.icu.text.MessagePattern;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -122,7 +123,7 @@ public class ViewPagerActivity extends AppCompatActivity {
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         if (_isFirstLoad) {
-            Participant[] localArr = _dbSaver.GetAllParticipants(DatabaseProvider.DbParticipant.TABLE_NAME);
+            Participant[] localArr = _dbSaver.GetAllParticipants(DatabaseProvider.DbParticipant.TABLE_NAME, DatabaseProvider.DbParticipant.COLUMN_NAME);
             for (int i = 0; i < localArr.length; i++) {
                 AddRowParticipantFromBase(localArr[i]);
             }
@@ -471,8 +472,73 @@ public class ViewPagerActivity extends AppCompatActivity {
         }
     }
 
+    private void RemoveParticipantsFromTable(Participant[] participants, TableLayout table)
+    {
+
+    }
+
+    private Participant[] GetParticipantsFromTable()
+    {
+        int participantCount = _tableLayoutParticipantList.getChildCount();
+        Participant[] localArr = new Participant[participantCount];
+        String[] dataArr = new String[3];
+        for(int i = 0; i<participantCount; i++)
+        {
+            for(int j = 0; j < 3; j++)
+            {
+                dataArr[j] = ((TextView)((TableRow) _tableLayoutParticipantList.getChildAt(i)).getChildAt(j)).getText().toString();
+            }
+            localArr[i] = new Participant(dataArr[0], dataArr[1], dataArr[2]);
+        }
+
+        return localArr;
+    }
+
+    private Participant[] GetCheckedParticipants(TableLayout table)
+    {
+        int participantCount = table.getChildCount();
+        TableRow row;
+        TextView textView;
+        String[] dataArr = new String[3];
+        ArrayList<Participant> localArr = new ArrayList<Participant>();
+        boolean flag = false;
+        int k = 0;
+        for(int i = 0; i < participantCount - k; i++)
+        {
+            row = (TableRow) table.getChildAt(i);
+            for(int j = 0; j < 3; j++)
+            {
+                textView = (TextView) row.getChildAt(j);
+                if(((PaintDrawable)(textView).getBackground()).getPaint().getColor() ==
+                        getResources().getColor(R.color.colorPrimary))
+                {
+                    dataArr[j] = textView.getText().toString();
+                    flag = true;
+                }
+            }
+            if(flag)
+            {
+                flag = false;
+                localArr.add(new Participant(dataArr[0], dataArr[2], dataArr[1]));
+                table.removeViewAt(i);
+                k++;
+                i--;
+            }
+        }
+        return localArr.toArray(new Participant[localArr.size()]);
+    }
+
     public void OnClickAcceptParticipant(View view)
     {
+        Competition competition = new Competition("Чм России 2015", "28.09.2017", "Test1", "TEST" );
+        DatabaseProvider databaseProvider = new DatabaseProvider(this);
+        databaseProvider.AddNewTable("TEST");
+        Participant[] localArr = GetParticipantsFromTable();
+        competition.AddParticipants(localArr);
+        for(int i = 0; i < localArr.length; i++)
+        {
+            _dbSaver.SaveParticipantToDatabase(localArr[i], "TEST");
+        }
         Toast.makeText(getApplicationContext(),"Сохранить список и перейти к соревнованию",Toast.LENGTH_SHORT).show();
     }
 
@@ -483,12 +549,18 @@ public class ViewPagerActivity extends AppCompatActivity {
 
     public void OnClickDeleteParticipant(View view)
     {
+        Participant[] myArr = GetCheckedParticipants(_tableLayoutParticipantList);
         Toast.makeText(getApplicationContext(),"Удаление участника",Toast.LENGTH_SHORT).show();
     }
 
     public void OnClickDeleteDataBAse(View view)
     {
-        Toast.makeText(getApplicationContext(),"Удалить участника из базы данных",Toast.LENGTH_SHORT).show();
+        Participant[] myArr = GetCheckedParticipants(_tableLayoutDataBaseList);
+        for(int i = 0; i<myArr.length;i++)
+        {
+            _dbSaver.DeleteParticipant(myArr[i], DatabaseProvider.DbParticipant.TABLE_NAME);
+        }
+        Toast.makeText(getApplicationContext(),"Участники удалены",Toast.LENGTH_SHORT).show();
     }
 
     public void OnClickEditDataBase(View view)
