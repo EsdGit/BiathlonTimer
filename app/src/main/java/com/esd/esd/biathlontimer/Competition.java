@@ -8,7 +8,7 @@ import java.util.ArrayList;
 // Класс реализующий таблицу участников
 public class Competition
 {
-    private Participant[] _participants;
+    private ArrayList<Participant> _participants;
 
     private String _competitionName;
     public String GetName()
@@ -34,12 +34,16 @@ public class Competition
         _competitionDate = date;
         _settingsPath = settingsPath;
         _dbParticipantPath = dbPath;
+        _participants = new ArrayList<Participant>();
     }
 
     // Метод добавления участников соревнований, если такого участника нет
     public void AddParticipants(Participant[] participant)
     {
-        _participants = participant;
+        for(int i = 0; i<participant.length; i++)
+        {
+            _participants.add(participant[i]);
+        }
     }
 
     public void GenerateSettingsDb()
@@ -47,16 +51,32 @@ public class Competition
 
     }
 
+    public void DeleteParticipantsFromCompetition(Participant[] participants)
+    {
+        // ЗДЕСЬ НЕПРАВИЛЬНОЕ УСЛОВИЕ НАДО ПОДУМАТЬ
+        for(int i = 0; i < participants.length; i++)
+        {
+            if(_participants.contains(participants[i]))
+            {
+                _participants.remove(participants[i]);
+            }
+        }
+    }
+
     public int GetParticipantCount()
     {
-        return _participants.length;
+        return _participants.size();
     }
 
 
-    public Participant[] GetAllParticipants(){return _participants;}
+    public Participant[] GetAllParticipants()
+    {
+        return _participants.toArray(new Participant[_participants.size()]);
+    }
 
     public void FinishCompetition()
     {
         _settingsPath = "null";
+        // Удалить базу данных с настройками соревнования
     }
 }

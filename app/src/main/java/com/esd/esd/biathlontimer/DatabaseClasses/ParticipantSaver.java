@@ -24,6 +24,7 @@ public class ParticipantSaver
 
     public void SaveParticipantToDatabase(Participant participant, String tableName)
     {
+        // Необходимо проверить нет ли таких участников уже
         _db = _dbProvider.getWritableDatabase();
         ContentValues val = new ContentValues();
         val.put(DatabaseProvider.DbParticipant.COLUMN_NAME, participant.GetFIO());

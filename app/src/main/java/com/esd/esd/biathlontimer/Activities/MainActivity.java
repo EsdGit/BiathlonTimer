@@ -3,6 +3,7 @@ package com.esd.esd.biathlontimer.Activities;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.PaintDrawable;
+import android.icu.text.MessagePattern;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 import com.esd.esd.biathlontimer.Competition;
 import com.esd.esd.biathlontimer.DatabaseClasses.CompetitionSaver;
 import com.esd.esd.biathlontimer.DatabaseClasses.DatabaseProvider;
+import com.esd.esd.biathlontimer.Participant;
 import com.esd.esd.biathlontimer.R;
 
 import java.util.ArrayList;
@@ -57,6 +59,11 @@ public class MainActivity extends AppCompatActivity {
         _deleteMainImBtn = (ImageButton) findViewById(R.id.delete);
         _editMainImBtn = (ImageButton) findViewById(R.id.edit);
 
+        Competition competition = new Competition("","","","");
+        competition.AddParticipants(new Participant[]{new Participant("","",""), new Participant("JFKF", "", "")});
+        competition.DeleteParticipantsFromCompetition(new Participant[]{new Participant("","","")});
+        Participant[] arr = competition.GetAllParticipants();
+        arr[0] = arr[1];
         _saver = new CompetitionSaver(this);
     }
 

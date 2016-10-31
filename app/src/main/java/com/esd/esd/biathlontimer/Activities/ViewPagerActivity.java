@@ -10,6 +10,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.GestureDetector;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -119,9 +120,6 @@ public class ViewPagerActivity extends AppCompatActivity
 
             }
         });
-
-        MakeNewCompetition();
-
         //Запрет на выход с диалогового окна кнопкой "Back"
         _addDialogBuilder.setCancelable(false);
         _addDialog = _addDialogBuilder.create();
@@ -585,8 +583,8 @@ public class ViewPagerActivity extends AppCompatActivity
     {
         final AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setTitle("Удаление");
-        dialog.setMessage("Вы уверены, что вы хотите удалить участников из базы данных?");
-
+        dialog.setMessage("Вы уверены, что хотите удалить участников из базы данных?");
+        dialog.setCancelable(false);
         dialog.setPositiveButton("Да", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i)
@@ -596,6 +594,7 @@ public class ViewPagerActivity extends AppCompatActivity
                 {
                     _dbSaver.DeleteParticipant(myArr[j], DatabaseProvider.DbParticipant.TABLE_NAME);
                 }
+                SetStartPosition(_tableLayoutDataBaseList);
                 Toast.makeText(getApplicationContext(),"Участники удалены",Toast.LENGTH_SHORT).show();
             }
         });
@@ -607,7 +606,7 @@ public class ViewPagerActivity extends AppCompatActivity
             }
         });
         dialog.show();
-        SetStartPosition(_tableLayoutDataBaseList);
+
 
     }
 
@@ -618,12 +617,19 @@ public class ViewPagerActivity extends AppCompatActivity
 
     public void OnClickAcceptDataBase(View view)
     {
-
+        Participant[] localArr = GetCheckedParticipants(_tableLayoutDataBaseList);
+        // Надо проверять нет ли таких уже участников
+        for(int i = 0; i<localArr.length; i++)
+        {
+            AddRowParticipantList(localArr[i]);
+        }
+        SetStartPosition(_tableLayoutDataBaseList);
         Toast.makeText(getApplicationContext(),"Перенести фамилии из базы данных",Toast.LENGTH_SHORT).show();
     }
 
     private void SetStartPosition(TableLayout table)
     {
+
         if(table == _tableLayoutParticipantList)
         {
             if(table.getChildCount()== 0)
@@ -637,9 +643,11 @@ public class ViewPagerActivity extends AppCompatActivity
             _editParticipantImBtn.setVisibility(View.GONE);
             _menuParticipantImBtn.setVisibility(View.VISIBLE);
             _deleteParticipantImBtn.setVisibility(View.GONE);
+            _haveMarkedParticipant = false;
         }
         else
         {
+            _haveMarkedDataBase = false;
             _secondAcceptDataBaseImBtn.setVisibility(View.GONE);
             _editDataBaseImBtn.setVisibility(View.GONE);
             _acceptDataBaseImBtn.setVisibility(View.GONE);
@@ -684,5 +692,31 @@ public class ViewPagerActivity extends AppCompatActivity
             _menuDataBaseImBtn.setVisibility(View.GONE);
             _deleteDataBaseImBtn.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == (KeyEvent.KEYCODE_BACK))
+        {
+            AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+            dialog.setTitle("Предупреждение");
+            dialog.setMessage("Вы уверены, что хотите выйти?");
+            dialog.setPositiveButton("Да", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    // возможно всё надо сохранить)
+                    ViewPagerActivity.this.finish();
+                }
+            });
+            dialog.setNegativeButton("Нет", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                }
+            });
+            dialog.setCancelable(false);
+            dialog.show();
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }
