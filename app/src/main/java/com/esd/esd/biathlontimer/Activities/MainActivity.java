@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.esd.esd.biathlontimer.Competition;
 import com.esd.esd.biathlontimer.DatabaseClasses.CompetitionSaver;
+import com.esd.esd.biathlontimer.DatabaseClasses.DatabaseProvider;
 import com.esd.esd.biathlontimer.R;
 
 public class MainActivity extends AppCompatActivity {
@@ -52,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         if(_isFirstLoad) {
-            Competition[] localArr = _saver.GetAllCompetitions();
+            Competition[] localArr = _saver.GetAllCompetitions(DatabaseProvider.DbCompetitions.COLUMN_COMPETITION_DATE);
             for(int i = 0; i < localArr.length; i++)
             {
                 AddCompetitionRow(localArr[i]);
@@ -83,12 +84,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void OnClick(View view)
     {
-        //Competition competition = new Competition("Чм России среди юношей", "25.10.2016", "");
-        //DatabaseProvider db = new DatabaseProvider(this);
-        //db.AddNewTable("TEST");
-        //ParticipantSaver pS = new ParticipantSaver(this);
-        //pS.SaveParticipantToDatabase(new Participant("Жуков Юрий", "1975", "Россия"), "TEST");
-        //pS.SaveParticipantToDatabase(new Participant("Слободзян Никитос", "1990", "Казахстан"), "TEST");
         Intent viewPager = new Intent(this, ViewPagerActivity.class);
         startActivity(viewPager);
     }

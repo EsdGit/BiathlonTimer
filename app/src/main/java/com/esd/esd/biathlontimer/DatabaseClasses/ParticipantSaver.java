@@ -43,7 +43,7 @@ public class ParticipantSaver
                         DatabaseProvider.DbParticipant.COLUMN_COUNTRY,
                         DatabaseProvider.DbParticipant.COLUMN_YEAR
                 };
-        Cursor cursor = _db.query(tableName, proj, null, null, null, null, DatabaseProvider.DbParticipant.COLUMN_NAME);
+        Cursor cursor = _db.query(tableName, proj, null, null, null, null, orderBy);
         cursor.moveToFirst();
         int rowsCount = cursor.getCount();
         localArr = new Participant[rowsCount];

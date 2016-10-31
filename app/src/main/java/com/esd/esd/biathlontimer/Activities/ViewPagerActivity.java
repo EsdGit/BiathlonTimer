@@ -404,6 +404,34 @@ public class ViewPagerActivity extends AppCompatActivity {
         // Создаём соревнование, генерируем новую таблицу в БД, туда закидываем участников и так далее...
     }
 
+    private void SortTableBy(TableLayout table, String orderBy, boolean sortState)
+    {
+        String localOrderString;
+        String localTableName = "";
+        if(table == _tableLayoutDataBaseList)
+        {
+            localTableName = DatabaseProvider.DbParticipant.TABLE_NAME;
+        }
+        else
+        {
+            // Из объекта competition
+        }
+        if(sortState)
+        {
+            localOrderString = orderBy + " ASC";
+        }
+        else
+        {
+            localOrderString = orderBy + " DESC";
+        }
+        table.removeAllViews();
+        Participant[] localArr = _dbSaver.GetAllParticipants(localTableName, localOrderString);
+        for(int i = 0; i < localArr.length; i++)
+        {
+            AddRowParticipantFromBase(localArr[i]);
+        }
+    }
+
     // Обработка нажатий меню сортировок
     public void OnClickMenu(View view)
     {
@@ -420,9 +448,11 @@ public class ViewPagerActivity extends AppCompatActivity {
                         @Override
                         public boolean onMenuItemClick(MenuItem item)
                         {
+                            item.setChecked(!item.isChecked());
                             switch (item.getItemId())
                             {
                                 case R.id.nameSort:
+                                    SortTableBy(_tableLayoutParticipantList, DatabaseProvider.DbParticipant.COLUMN_NAME, item.isChecked());
                                     Toast.makeText(getApplicationContext(),"Сортировка списка участников по имени",Toast.LENGTH_SHORT).show();
                                     return true;
                                 case R.id.dataSort:
@@ -450,15 +480,19 @@ public class ViewPagerActivity extends AppCompatActivity {
                         @Override
                         public boolean onMenuItemClick(MenuItem item)
                         {
+                            item.setChecked(!item.isChecked());
                             switch (item.getItemId())
                             {
                                 case R.id.nameSort:
+                                    SortTableBy(_tableLayoutDataBaseList, DatabaseProvider.DbParticipant.COLUMN_NAME, item.isChecked());
                                     Toast.makeText(getApplicationContext(),"Сортировка базы данных по имени",Toast.LENGTH_SHORT).show();
                                     return true;
                                 case R.id.dataSort:
+                                    SortTableBy(_tableLayoutDataBaseList, DatabaseProvider.DbParticipant.COLUMN_YEAR, item.isChecked());
                                     Toast.makeText(getApplicationContext(),"Сортировка базы данных по дате",Toast.LENGTH_SHORT).show();
                                     return true;
                                 case R.id.countrySort:
+                                    SortTableBy(_tableLayoutDataBaseList, DatabaseProvider.DbParticipant.COLUMN_COUNTRY, item.isChecked());
                                     Toast.makeText(getApplicationContext(),"Сортировка базы данных по региону",Toast.LENGTH_SHORT).show();
                                     return true;
                                 default:
@@ -471,11 +505,6 @@ public class ViewPagerActivity extends AppCompatActivity {
                 return;
 
         }
-    }
-
-    private void RemoveParticipantsFromTable(Participant[] participants, TableLayout table)
-    {
-
     }
 
     private Participant[] GetParticipantsFromTable()

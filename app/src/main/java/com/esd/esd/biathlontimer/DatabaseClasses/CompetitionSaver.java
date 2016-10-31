@@ -33,7 +33,7 @@ public class CompetitionSaver
         _db.close();
     }
 
-    public Competition[] GetAllCompetitions()
+    public Competition[] GetAllCompetitions(String orderBy)
     {
         Competition[] localArr;
         _db = _dbProvider.getReadableDatabase();
@@ -44,7 +44,7 @@ public class CompetitionSaver
                         DatabaseProvider.DbCompetitions.COLUMN_SETTINGS_PATH,
                         DatabaseProvider.DbCompetitions.COLUMN_DB_PATH
                 };
-        Cursor cursor = _db.query(DatabaseProvider.DbCompetitions.TABLE_NAME, proj, null,null,null,null, DatabaseProvider.DbCompetitions.COLUMN_COMPETITION_DATE);
+        Cursor cursor = _db.query(DatabaseProvider.DbCompetitions.TABLE_NAME, proj, null,null,null,null, orderBy);
         cursor.moveToFirst();
         int rowsCount = cursor.getCount();
         localArr = new Competition[rowsCount];
