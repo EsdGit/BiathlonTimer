@@ -7,10 +7,12 @@ import android.graphics.drawable.PaintDrawable;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -94,6 +96,7 @@ public class ViewPagerActivity extends AppCompatActivity {
                 Participant participant = new Participant(_nameDialog.getText().toString(),
                         _countryDialog.getText().toString(), _birthdayDialog.getText().toString());
                 AddRowParticipantList(participant);
+                _acceptParticipantImBtn.setVisibility(View.VISIBLE);
                 _dbSaver.SaveParticipantToDatabase(participant, DatabaseProvider.DbParticipant.TABLE_NAME);
                 _nameDialog.setText("");
                 _birthdayDialog.setText("");
@@ -181,61 +184,59 @@ public class ViewPagerActivity extends AppCompatActivity {
             {
                 ArrayList<View> rowView = new ArrayList<View>();
                 v.addChildrenForAccessibility(rowView);
-                if(_haveMarkedParticipant)
+                if(!_haveMarkedParticipant)return;
+                if (_counterMarkedParticipant == 0) {
+                    // Если отмечен первый
+                    _counterMarkedParticipant++;
+                    _haveMarkedParticipant = true;
+                    for (int i = 0; i < rowView.size(); i++)
+                    {
+                        rowView.get(i).setBackground(new PaintDrawable(getResources().getColor(R.color.colorPrimary)));
+                    }
+                    _acceptParticipantImBtn.setVisibility(View.GONE);
+                    _editParticipantImBtn.setVisibility(View.VISIBLE);
+                    _menuParticipantImBtn.setVisibility(View.GONE);
+                    _deleteParticipantImBtn.setVisibility(View.VISIBLE);
+                }
+                else
                 {
-                    if (_counterMarkedParticipant == 0) {
-                        // Если отмечен первый
-                        _counterMarkedParticipant++;
-                        _haveMarkedParticipant = true;
-                        for (int i = 0; i < rowView.size(); i++)
+                    // Есди уже были отмечены
+                    for (int i = 0; i < rowView.size(); i++)
+                    {
+                        PaintDrawable drawable = (PaintDrawable) rowView.get(i).getBackground();
+                        if (drawable.getPaint().getColor() == getResources().getColor(R.color.colorPrimary))
                         {
+                            if(i == 0)
+                            {
+                                _counterMarkedParticipant--;
+                            }
+                            rowView.get(i).setBackground(new PaintDrawable(Color.WHITE));
+                        }
+                        else
+                        {
+                            if(i == 0)
+                            {
+                                _counterMarkedParticipant++;
+                            }
                             rowView.get(i).setBackground(new PaintDrawable(getResources().getColor(R.color.colorPrimary)));
                         }
-                        _acceptParticipantImBtn.setVisibility(View.GONE);
-                        _editParticipantImBtn.setVisibility(View.VISIBLE);
-                        _menuParticipantImBtn.setVisibility(View.GONE);
-                        _deleteParticipantImBtn.setVisibility(View.VISIBLE);
                     }
-                    else
+                    switch (_counterMarkedParticipant)
                     {
-                        // Есди уже были отмечены
-                        for (int i = 0; i < rowView.size(); i++)
-                        {
-                            PaintDrawable drawable = (PaintDrawable) rowView.get(i).getBackground();
-                            if (drawable.getPaint().getColor() == getResources().getColor(R.color.colorPrimary))
-                            {
-                                if(i == 0)
-                                {
-                                    _counterMarkedParticipant--;
-                                }
-                                rowView.get(i).setBackground(new PaintDrawable(Color.WHITE));
-                            }
-                            else
-                            {
-                                if(i == 0)
-                                {
-                                    _counterMarkedParticipant++;
-                                }
-                                rowView.get(i).setBackground(new PaintDrawable(getResources().getColor(R.color.colorPrimary)));
-                            }
-                        }
-                        switch (_counterMarkedParticipant)
-                        {
-                            case 0:
-                                _editParticipantImBtn.setVisibility(View.GONE);
-                                _acceptParticipantImBtn.setVisibility(View.VISIBLE);
-                                _deleteParticipantImBtn.setVisibility(View.GONE);
-                                _menuParticipantImBtn.setVisibility(View.VISIBLE);
-                                _haveMarkedParticipant = false;
-                                break;
-                            case 1:
-                                _acceptParticipantImBtn.setVisibility(View.GONE);
-                                _editParticipantImBtn.setVisibility(View.VISIBLE);
-                                break;
-                            default:
-                                _editParticipantImBtn.setVisibility(View.GONE);
-                                break;
-                        }
+                        case 0:
+                            _editParticipantImBtn.setVisibility(View.GONE);
+                            _acceptParticipantImBtn.setVisibility(View.VISIBLE);
+                            _deleteParticipantImBtn.setVisibility(View.GONE);
+                            _menuParticipantImBtn.setVisibility(View.VISIBLE);
+                            _haveMarkedParticipant = false;
+                            break;
+                        case 1:
+                            _acceptParticipantImBtn.setVisibility(View.GONE);
+                            _editParticipantImBtn.setVisibility(View.VISIBLE);
+                            break;
+                        default:
+                            _editParticipantImBtn.setVisibility(View.GONE);
+                            break;
                     }
                 }
             }
@@ -284,66 +285,65 @@ public class ViewPagerActivity extends AppCompatActivity {
             {
                 ArrayList<View> rowView = new ArrayList<View>();
                 v.addChildrenForAccessibility(rowView);
-                if(_haveMarkedDataBase)
+                if(!_haveMarkedDataBase) return;
+                if (_counterMarkedDataBase == 0)
                 {
-                    if (_counterMarkedDataBase == 0) {
-                        // Если отмечен первый
-                        _counterMarkedDataBase++;
-                        _haveMarkedDataBase = true;
-                        for (int i = 0; i < rowView.size(); i++)
+                    // Если отмечен первый
+                    _counterMarkedDataBase++;
+                    _haveMarkedDataBase = true;
+                    for (int i = 0; i < rowView.size(); i++)
+                    {
+                        rowView.get(i).setBackground(new PaintDrawable(getResources().getColor(R.color.colorPrimary)));
+                    }
+                    _secondAcceptDataBaseImBtn.setVisibility(View.VISIBLE);
+                    _acceptDataBaseImBtn.setVisibility(View.GONE);
+                    _editDataBaseImBtn.setVisibility(View.VISIBLE);
+                    _menuDataBaseImBtn.setVisibility(View.GONE);
+                    _deleteDataBaseImBtn.setVisibility(View.VISIBLE);
+                }
+                else
+                {
+                    // Есди уже были отмечены
+                    for (int i = 0; i < rowView.size(); i++)
+                    {
+                        PaintDrawable drawable = (PaintDrawable) rowView.get(i).getBackground();
+                        if (drawable.getPaint().getColor() == getResources().getColor(R.color.colorPrimary))
                         {
+                            if(i == 0)
+                            {
+                                _counterMarkedDataBase--;
+                            }
+                            rowView.get(i).setBackground(new PaintDrawable(Color.WHITE));
+                        }
+                        else
+                        {
+                            if(i == 0)
+                            {
+                                _counterMarkedDataBase++;
+                            }
                             rowView.get(i).setBackground(new PaintDrawable(getResources().getColor(R.color.colorPrimary)));
                         }
-                        _secondAcceptDataBaseImBtn.setVisibility(View.VISIBLE);
-                        _acceptDataBaseImBtn.setVisibility(View.GONE);
-                        _editDataBaseImBtn.setVisibility(View.VISIBLE);
-                        _menuDataBaseImBtn.setVisibility(View.GONE);
-                        _deleteDataBaseImBtn.setVisibility(View.VISIBLE);
                     }
-                    else
+                    switch (_counterMarkedDataBase)
                     {
-                        // Есди уже были отмечены
-                        for (int i = 0; i < rowView.size(); i++)
-                        {
-                            PaintDrawable drawable = (PaintDrawable) rowView.get(i).getBackground();
-                            if (drawable.getPaint().getColor() == getResources().getColor(R.color.colorPrimary))
-                            {
-                                if(i == 0)
-                                {
-                                    _counterMarkedDataBase--;
-                                }
-                                rowView.get(i).setBackground(new PaintDrawable(Color.WHITE));
-                            }
-                            else
-                            {
-                                if(i == 0)
-                                {
-                                    _counterMarkedDataBase++;
-                                }
-                                rowView.get(i).setBackground(new PaintDrawable(getResources().getColor(R.color.colorPrimary)));
-                            }
-                        }
-                        switch (_counterMarkedDataBase)
-                        {
-                            case 0:
-                                _secondAcceptDataBaseImBtn.setVisibility(View.GONE);
-                                _editDataBaseImBtn.setVisibility(View.GONE);
-                                _acceptDataBaseImBtn.setVisibility(View.VISIBLE);
-                                _deleteDataBaseImBtn.setVisibility(View.GONE);
-                                _menuDataBaseImBtn.setVisibility(View.VISIBLE);
-                                _haveMarkedDataBase = false;
-                                break;
-                            case 1:
-                                _secondAcceptDataBaseImBtn.setVisibility(View.VISIBLE);
-                                _acceptDataBaseImBtn.setVisibility(View.GONE);
-                                _editDataBaseImBtn.setVisibility(View.VISIBLE);
-                                break;
-                            default:
-                                _secondAcceptDataBaseImBtn.setVisibility(View.GONE);
-                                _editDataBaseImBtn.setVisibility(View.GONE);
-                                _acceptDataBaseImBtn.setVisibility(View.VISIBLE);
-                                break;
-                        }
+                        case 0:
+                            _secondAcceptDataBaseImBtn.setVisibility(View.GONE);
+                            _editDataBaseImBtn.setVisibility(View.GONE);
+                            _acceptDataBaseImBtn.setVisibility(View.VISIBLE);
+                            _deleteDataBaseImBtn.setVisibility(View.GONE);
+                            _menuDataBaseImBtn.setVisibility(View.VISIBLE);
+                            _haveMarkedDataBase = false;
+                            break;
+                        case 1:
+                            _secondAcceptDataBaseImBtn.setVisibility(View.VISIBLE);
+                            _acceptDataBaseImBtn.setVisibility(View.GONE);
+                            _editDataBaseImBtn.setVisibility(View.VISIBLE);
+                            break;
+                        default:
+                            _secondAcceptDataBaseImBtn.setVisibility(View.GONE);
+                            _editDataBaseImBtn.setVisibility(View.GONE);
+                            _acceptDataBaseImBtn.setVisibility(View.VISIBLE);
+                            break;
                     }
                 }
             }
@@ -483,6 +483,10 @@ public class ViewPagerActivity extends AppCompatActivity {
 
     public void OnClickDeleteParticipant(View view)
     {
+        if(_tableLayoutParticipantList.getChildCount() == 0)
+        {
+            _acceptParticipantImBtn.setVisibility(View.GONE);
+        }
         Toast.makeText(getApplicationContext(),"Удаление участника",Toast.LENGTH_SHORT).show();
     }
 
