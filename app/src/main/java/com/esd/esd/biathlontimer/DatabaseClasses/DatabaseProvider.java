@@ -30,8 +30,8 @@ public class DatabaseProvider extends SQLiteOpenHelper
 
     private static final String SQL_CREATE_COMPETITION_TABLE = "CREATE TABLE " + DbCompetitions.TABLE_NAME +
             " (" + DbCompetitions._ID + " INTEGER PRIMARY KEY," + DbCompetitions.COLUMN_COMPETITION_NAME + TEXT_TYPE +
-            COMMA_SEP + DbCompetitions.COLUMN_COMPETITION_DATE + TEXT_TYPE + COMMA_SEP + DbCompetitions.COLUMN_COMPETITION_STATE +
-            TEXT_TYPE + ")";
+            COMMA_SEP + DbCompetitions.COLUMN_COMPETITION_DATE + TEXT_TYPE + COMMA_SEP + DbCompetitions.COLUMN_SETTINGS_PATH +
+            TEXT_TYPE + COMMA_SEP + DbCompetitions.COLUMN_DB_PATH + TEXT_TYPE + ")";
     private static final String SQL_DELETE_COMPETITION_TABLE = "DROP TABLE IF EXISTS " + DbCompetitions.TABLE_NAME;
 
     public DatabaseProvider(Context context)
@@ -62,7 +62,7 @@ public class DatabaseProvider extends SQLiteOpenHelper
         public static final String TABLE_NAME = "competitions";
         public static final String COLUMN_COMPETITION_NAME= "CompetitionName";
         public static final String COLUMN_COMPETITION_DATE = "Date";
-        public static final String COLUMN_COMPETITION_STATE = "State";
+        public static final String COLUMN_SETTINGS_PATH = "SettingsDb";
         public static final String COLUMN_DB_PATH = "DbParticipantPath";
     }
 

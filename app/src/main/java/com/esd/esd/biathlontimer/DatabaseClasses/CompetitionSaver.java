@@ -27,7 +27,8 @@ public class CompetitionSaver
         ContentValues val = new ContentValues();
         val.put(DatabaseProvider.DbCompetitions.COLUMN_COMPETITION_NAME, competition.GetName());
         val.put(DatabaseProvider.DbCompetitions.COLUMN_COMPETITION_DATE, competition.GetDate());
-        val.put(DatabaseProvider.DbCompetitions.COLUMN_COMPETITION_STATE, competition.GetSettingsPath());
+        val.put(DatabaseProvider.DbCompetitions.COLUMN_SETTINGS_PATH, competition.GetSettingsPath());
+        val.put(DatabaseProvider.DbCompetitions.COLUMN_DB_PATH, competition.GetDbParticipantPath());
         _db.insert(DatabaseProvider.DbCompetitions.TABLE_NAME, null, val);
         _db.close();
     }
@@ -40,7 +41,8 @@ public class CompetitionSaver
                 {
                         DatabaseProvider.DbCompetitions.COLUMN_COMPETITION_NAME,
                         DatabaseProvider.DbCompetitions.COLUMN_COMPETITION_DATE,
-                        DatabaseProvider.DbCompetitions.COLUMN_COMPETITION_STATE
+                        DatabaseProvider.DbCompetitions.COLUMN_SETTINGS_PATH,
+                        DatabaseProvider.DbCompetitions.COLUMN_DB_PATH
                 };
         Cursor cursor = _db.query(DatabaseProvider.DbCompetitions.TABLE_NAME, proj, null,null,null,null, DatabaseProvider.DbCompetitions.COLUMN_COMPETITION_DATE);
         cursor.moveToFirst();
@@ -59,7 +61,7 @@ public class CompetitionSaver
     {
         _db = _dbProvider.getWritableDatabase();
         _db.delete(DatabaseProvider.DbCompetitions.TABLE_NAME, DatabaseProvider.DbCompetitions.COLUMN_COMPETITION_NAME + "=?" + " and "+
-                DatabaseProvider.DbCompetitions.COLUMN_COMPETITION_DATE + "=?"+" and "+ DatabaseProvider.DbCompetitions.COLUMN_COMPETITION_STATE+"=?"+" and "+
+                DatabaseProvider.DbCompetitions.COLUMN_COMPETITION_DATE + "=?"+" and "+ DatabaseProvider.DbCompetitions.COLUMN_SETTINGS_PATH+"=?"+" and "+
                         DatabaseProvider.DbCompetitions.COLUMN_DB_PATH+"=?", new String[]{competition.GetName(), competition.GetDate(), competition.GetSettingsPath(),
                         competition.GetDbParticipantPath()});
         _db.close();

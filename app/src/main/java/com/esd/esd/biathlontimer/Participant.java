@@ -19,7 +19,7 @@ public class Participant
     private String _birthYear;
     public String GetBirthYear(){return _birthYear;}
 
-    public Participant(String fio, String country, String birthYear )
+    public Participant(String fio, String country,String birthYear )
     {
         _FIO = fio;
         _country = country;
