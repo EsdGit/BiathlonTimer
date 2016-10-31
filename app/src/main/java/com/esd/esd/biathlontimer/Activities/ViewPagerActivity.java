@@ -15,6 +15,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -34,7 +35,8 @@ import com.esd.esd.biathlontimer.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ViewPagerActivity extends AppCompatActivity {
+public class ViewPagerActivity extends AppCompatActivity
+{
     private ParticipantSaver _dbSaver;
     private boolean _isFirstLoad = true;
     private boolean _haveMarkedParticipant = false;
@@ -79,6 +81,8 @@ public class ViewPagerActivity extends AppCompatActivity {
     private static String AddDialogBtn = "Добавить";
     private static String CancelDialogBtn = "Отменить";
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -121,6 +125,7 @@ public class ViewPagerActivity extends AppCompatActivity {
         //Запрет на выход с диалогового окна кнопкой "Back"
         _addDialogBuilder.setCancelable(false);
         _addDialog = _addDialogBuilder.create();
+
     }
 
     @Override
@@ -173,9 +178,15 @@ public class ViewPagerActivity extends AppCompatActivity {
             @Override
             public boolean onLongClick(View v)
             {
+                ArrayList<View> rowView = new ArrayList<View>();
+                v.addChildrenForAccessibility(rowView);
                 if(!_haveMarkedParticipant)
                 {
                     _haveMarkedParticipant = true;
+                    for (int i = 0; i < rowView.size(); i++)
+                    {
+                        rowView.get(i).setBackground(new PaintDrawable(getResources().getColor(R.color.colorPrimary)));
+                    }
                 }
                 return false;
             }
@@ -190,15 +201,7 @@ public class ViewPagerActivity extends AppCompatActivity {
                 if (_counterMarkedParticipant == 0) {
                     // Если отмечен первый
                     _counterMarkedParticipant++;
-                    _haveMarkedParticipant = true;
-                    for (int i = 0; i < rowView.size(); i++)
-                    {
-                        rowView.get(i).setBackground(new PaintDrawable(getResources().getColor(R.color.colorPrimary)));
-                    }
-                    _acceptParticipantImBtn.setVisibility(View.GONE);
-                    _editParticipantImBtn.setVisibility(View.VISIBLE);
-                    _menuParticipantImBtn.setVisibility(View.GONE);
-                    _deleteParticipantImBtn.setVisibility(View.VISIBLE);
+                    SetEditPosition(_tableLayoutParticipantList);
                 }
                 else
                 {
@@ -226,18 +229,14 @@ public class ViewPagerActivity extends AppCompatActivity {
                     switch (_counterMarkedParticipant)
                     {
                         case 0:
-                            _editParticipantImBtn.setVisibility(View.GONE);
-                            _acceptParticipantImBtn.setVisibility(View.VISIBLE);
-                            _deleteParticipantImBtn.setVisibility(View.GONE);
-                            _menuParticipantImBtn.setVisibility(View.VISIBLE);
+                            SetStartPosition(_tableLayoutParticipantList);
                             _haveMarkedParticipant = false;
                             break;
                         case 1:
-                            _acceptParticipantImBtn.setVisibility(View.GONE);
-                            _editParticipantImBtn.setVisibility(View.VISIBLE);
+                            SetEditPosition(_tableLayoutParticipantList);
                             break;
                         default:
-                            _editParticipantImBtn.setVisibility(View.GONE);
+                            SetDelPosition(_tableLayoutParticipantList);
                             break;
                     }
                 }
@@ -274,9 +273,15 @@ public class ViewPagerActivity extends AppCompatActivity {
             @Override
             public boolean onLongClick(View v)
             {
+                ArrayList<View> rowView = new ArrayList<View>();
+                v.addChildrenForAccessibility(rowView);
                 if(!_haveMarkedDataBase)
                 {
                     _haveMarkedDataBase = true;
+                    for (int i = 0; i < rowView.size(); i++)
+                    {
+                        rowView.get(i).setBackground(new PaintDrawable(getResources().getColor(R.color.colorPrimary)));
+                    }
                 }
                 return false;
             }
@@ -292,16 +297,7 @@ public class ViewPagerActivity extends AppCompatActivity {
                 {
                     // Если отмечен первый
                     _counterMarkedDataBase++;
-                    _haveMarkedDataBase = true;
-                    for (int i = 0; i < rowView.size(); i++)
-                    {
-                        rowView.get(i).setBackground(new PaintDrawable(getResources().getColor(R.color.colorPrimary)));
-                    }
-                    _secondAcceptDataBaseImBtn.setVisibility(View.VISIBLE);
-                    _acceptDataBaseImBtn.setVisibility(View.GONE);
-                    _editDataBaseImBtn.setVisibility(View.VISIBLE);
-                    _menuDataBaseImBtn.setVisibility(View.GONE);
-                    _deleteDataBaseImBtn.setVisibility(View.VISIBLE);
+                    SetEditPosition(_tableLayoutDataBaseList);
                 }
                 else
                 {
@@ -329,22 +325,14 @@ public class ViewPagerActivity extends AppCompatActivity {
                     switch (_counterMarkedDataBase)
                     {
                         case 0:
-                            _secondAcceptDataBaseImBtn.setVisibility(View.GONE);
-                            _editDataBaseImBtn.setVisibility(View.GONE);
-                            _acceptDataBaseImBtn.setVisibility(View.VISIBLE);
-                            _deleteDataBaseImBtn.setVisibility(View.GONE);
-                            _menuDataBaseImBtn.setVisibility(View.VISIBLE);
+                            SetStartPosition(_tableLayoutDataBaseList);
                             _haveMarkedDataBase = false;
                             break;
                         case 1:
-                            _secondAcceptDataBaseImBtn.setVisibility(View.VISIBLE);
-                            _acceptDataBaseImBtn.setVisibility(View.GONE);
-                            _editDataBaseImBtn.setVisibility(View.VISIBLE);
+                            SetEditPosition(_tableLayoutDataBaseList);
                             break;
                         default:
-                            _secondAcceptDataBaseImBtn.setVisibility(View.GONE);
-                            _editDataBaseImBtn.setVisibility(View.GONE);
-                            _acceptDataBaseImBtn.setVisibility(View.VISIBLE);
+                            SetDelPosition(_tableLayoutDataBaseList);
                             break;
                     }
                 }
@@ -353,7 +341,8 @@ public class ViewPagerActivity extends AppCompatActivity {
         _tableLayoutDataBaseList.addView(newRow);
     }
 
-    private void FindAllViews() {
+    private void FindAllViews()
+    {
         LayoutInflater inflater = LayoutInflater.from(this);
         List<View> pages = new ArrayList<>();
 
@@ -588,6 +577,7 @@ public class ViewPagerActivity extends AppCompatActivity {
         }
         Participant[] myArr = GetCheckedParticipants(_tableLayoutParticipantList);
         // Удаление из локальной базы
+        SetStartPosition(_tableLayoutParticipantList);
         Toast.makeText(getApplicationContext(),"Удаление участника",Toast.LENGTH_SHORT).show();
     }
 
@@ -617,6 +607,7 @@ public class ViewPagerActivity extends AppCompatActivity {
             }
         });
         dialog.show();
+        SetStartPosition(_tableLayoutDataBaseList);
 
     }
 
@@ -629,5 +620,69 @@ public class ViewPagerActivity extends AppCompatActivity {
     {
 
         Toast.makeText(getApplicationContext(),"Перенести фамилии из базы данных",Toast.LENGTH_SHORT).show();
+    }
+
+    private void SetStartPosition(TableLayout table)
+    {
+        if(table == _tableLayoutParticipantList)
+        {
+            if(table.getChildCount()== 0)
+            {
+                _acceptParticipantImBtn.setVisibility(View.GONE);
+            }
+            else
+            {
+                _acceptParticipantImBtn.setVisibility(View.VISIBLE);
+            }
+            _editParticipantImBtn.setVisibility(View.GONE);
+            _menuParticipantImBtn.setVisibility(View.VISIBLE);
+            _deleteParticipantImBtn.setVisibility(View.GONE);
+        }
+        else
+        {
+            _secondAcceptDataBaseImBtn.setVisibility(View.GONE);
+            _editDataBaseImBtn.setVisibility(View.GONE);
+            _acceptDataBaseImBtn.setVisibility(View.GONE);
+            _deleteDataBaseImBtn.setVisibility(View.GONE);
+            _menuDataBaseImBtn.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void SetEditPosition(TableLayout table)
+    {
+        if(table == _tableLayoutParticipantList)
+        {
+            _acceptParticipantImBtn.setVisibility(View.GONE);
+            _editParticipantImBtn.setVisibility(View.VISIBLE);
+            _menuParticipantImBtn.setVisibility(View.GONE);
+            _deleteParticipantImBtn.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            _secondAcceptDataBaseImBtn.setVisibility(View.VISIBLE);
+            _acceptDataBaseImBtn.setVisibility(View.GONE);
+            _editDataBaseImBtn.setVisibility(View.VISIBLE);
+            _menuDataBaseImBtn.setVisibility(View.GONE);
+            _deleteDataBaseImBtn.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void SetDelPosition(TableLayout table)
+    {
+        if(table == _tableLayoutParticipantList)
+        {
+            _acceptParticipantImBtn.setVisibility(View.GONE);
+            _editParticipantImBtn.setVisibility(View.GONE);
+            _menuParticipantImBtn.setVisibility(View.GONE);
+            _deleteParticipantImBtn.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            _secondAcceptDataBaseImBtn.setVisibility(View.GONE);
+            _editDataBaseImBtn.setVisibility(View.GONE);
+            _acceptDataBaseImBtn.setVisibility(View.VISIBLE);
+            _menuDataBaseImBtn.setVisibility(View.GONE);
+            _deleteDataBaseImBtn.setVisibility(View.VISIBLE);
+        }
     }
 }

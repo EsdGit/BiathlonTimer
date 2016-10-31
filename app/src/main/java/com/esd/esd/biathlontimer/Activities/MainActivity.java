@@ -2,13 +2,16 @@ package com.esd.esd.biathlontimer.Activities;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.PaintDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.TableLayout;
@@ -21,14 +24,20 @@ import com.esd.esd.biathlontimer.DatabaseClasses.CompetitionSaver;
 import com.esd.esd.biathlontimer.DatabaseClasses.DatabaseProvider;
 import com.esd.esd.biathlontimer.R;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
 
     private TextView _nameTextView;
     private TextView _dateTextView;
     private TableLayout _tableLayout;
     private ImageButton _menuMainImBtn;
+    private ImageButton _deleteMainImBtn;
+    private ImageButton _editMainImBtn;
     private PopupMenu _popupMenu;
+    private int _counterMarkedCompetition;
 
+    private boolean _haveMarkedCompetition = false;
     private boolean _isFirstLoad = true;
 
     private CompetitionSaver _saver;
@@ -45,6 +54,8 @@ public class MainActivity extends AppCompatActivity {
         _nameTextView = (TextView) findViewById(R.id.CompetitionsNameTextView);
         _dateTextView = (TextView) findViewById(R.id.CompetitionsDateTextView);
         _menuMainImBtn = (ImageButton) findViewById(R.id.menu);
+        _deleteMainImBtn = (ImageButton) findViewById(R.id.delete);
+        _editMainImBtn = (ImageButton) findViewById(R.id.edit);
 
         _saver = new CompetitionSaver(this);
     }
@@ -79,6 +90,73 @@ public class MainActivity extends AppCompatActivity {
         ((TableRow.LayoutParams)newTextView2.getLayoutParams()).setMargins(0,0,2,2);
         newRow.addView(newTextView);
         newRow.addView(newTextView2);
+        newRow.setOnLongClickListener(new View.OnLongClickListener()
+        {
+            @Override
+            public boolean onLongClick(View v)
+            {
+                ArrayList<View> rowView = new ArrayList<View>();
+                v.addChildrenForAccessibility(rowView);
+                if(!_haveMarkedCompetition)
+                {
+                    _haveMarkedCompetition = true;
+                    for (int i = 0; i < rowView.size(); i++)
+                    {
+                        rowView.get(i).setBackground(new PaintDrawable(getResources().getColor(R.color.colorPrimary)));
+                    }
+                }
+                return false;
+            }
+        });
+        newRow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                ArrayList<View> rowView = new ArrayList<View>();
+                v.addChildrenForAccessibility(rowView);
+                if(!_haveMarkedCompetition)return;
+                if(_counterMarkedCompetition == 0)
+                {
+                    _counterMarkedCompetition++;
+                    SetEditPosition();
+                }
+                else
+                {
+                    for(int i = 0; i < rowView.size(); i++)
+                    {
+                        PaintDrawable drawable = (PaintDrawable) rowView.get(i).getBackground();
+                        if (drawable.getPaint().getColor() == getResources().getColor(R.color.colorPrimary))
+                        {
+                            if(i == 0)
+                            {
+                                _counterMarkedCompetition--;
+                            }
+                            rowView.get(i).setBackground(new PaintDrawable(Color.WHITE));
+                        }
+                        else
+                        {
+                            if(i == 0)
+                            {
+                                _counterMarkedCompetition++;
+                            }
+                            rowView.get(i).setBackground(new PaintDrawable(getResources().getColor(R.color.colorPrimary)));
+                        }
+                    }
+                    switch (_counterMarkedCompetition)
+                    {
+                        case 0:
+                            SetStarPosition();
+                            break;
+                        case 1:
+                            SetEditPosition();
+                            break;
+                        default:
+                            SetDelPosition();
+                            break;
+                    }
+                }
+            }
+        });
         _tableLayout.addView(newRow);
     }
 
@@ -114,5 +192,31 @@ public class MainActivity extends AppCompatActivity {
         });
         }
         _popupMenu.show();
+    }
+
+    private void SetStarPosition()
+    {
+        _deleteMainImBtn.setVisibility(View.GONE);
+        _editMainImBtn.setVisibility(View.GONE);
+    }
+
+    private void SetEditPosition()
+    {
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.gravity = Gravity.LEFT;
+        _deleteMainImBtn.setVisibility(View.VISIBLE);
+        _deleteMainImBtn.setLayoutParams(params);
+        params.gravity = Gravity.RIGHT;
+        _editMainImBtn.setVisibility(View.VISIBLE);
+        _editMainImBtn.setLayoutParams(params);
+    }
+
+    private void SetDelPosition()
+    {
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.gravity = Gravity.RIGHT;
+        _deleteMainImBtn.setVisibility(View.VISIBLE);
+        _deleteMainImBtn.setLayoutParams(params);
+        _editMainImBtn.setVisibility(View.GONE);
     }
 }
