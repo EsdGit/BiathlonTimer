@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.esd.esd.biathlontimer.Competition;
+import com.esd.esd.biathlontimer.DatabaseClasses.CompetitionSaver;
 import com.esd.esd.biathlontimer.DatabaseClasses.DatabaseProvider;
 import com.esd.esd.biathlontimer.DatabaseClasses.ParticipantSaver;
 import com.esd.esd.biathlontimer.PagerAdapterHelper;
@@ -531,6 +532,7 @@ public class ViewPagerActivity extends AppCompatActivity {
     public void OnClickAcceptParticipant(View view)
     {
         Competition competition = new Competition("Чм России 2015", "28.09.2017", "Test1", "TEST" );
+
         DatabaseProvider databaseProvider = new DatabaseProvider(this);
         databaseProvider.AddNewTable("TEST");
         Participant[] localArr = GetParticipantsFromTable();
@@ -539,6 +541,8 @@ public class ViewPagerActivity extends AppCompatActivity {
         {
             _dbSaver.SaveParticipantToDatabase(localArr[i], "TEST");
         }
+        CompetitionSaver _competitionSaver = new CompetitionSaver(this);
+        _competitionSaver.SaveCompetitionToDatabase(competition);
         Toast.makeText(getApplicationContext(),"Сохранить список и перейти к соревнованию",Toast.LENGTH_SHORT).show();
     }
 
@@ -550,17 +554,37 @@ public class ViewPagerActivity extends AppCompatActivity {
     public void OnClickDeleteParticipant(View view)
     {
         Participant[] myArr = GetCheckedParticipants(_tableLayoutParticipantList);
+        // Удаление из локальной базы
         Toast.makeText(getApplicationContext(),"Удаление участника",Toast.LENGTH_SHORT).show();
     }
 
     public void OnClickDeleteDataBAse(View view)
     {
-        Participant[] myArr = GetCheckedParticipants(_tableLayoutDataBaseList);
-        for(int i = 0; i<myArr.length;i++)
-        {
-            _dbSaver.DeleteParticipant(myArr[i], DatabaseProvider.DbParticipant.TABLE_NAME);
-        }
-        Toast.makeText(getApplicationContext(),"Участники удалены",Toast.LENGTH_SHORT).show();
+        final AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.setTitle("Удаление");
+        dialog.setMessage("Вы уверены, что вы хотите удалить участников из базы данных?");
+
+        dialog.setPositiveButton("Да", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i)
+            {
+                Participant[] myArr = GetCheckedParticipants(_tableLayoutDataBaseList);
+                for(int j = 0; j<myArr.length;j++)
+                {
+                    _dbSaver.DeleteParticipant(myArr[j], DatabaseProvider.DbParticipant.TABLE_NAME);
+                }
+                Toast.makeText(getApplicationContext(),"Участники удалены",Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        dialog.setNegativeButton("Нет", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+        dialog.show();
+
     }
 
     public void OnClickEditDataBase(View view)
@@ -570,6 +594,7 @@ public class ViewPagerActivity extends AppCompatActivity {
 
     public void OnClickAcceptDataBase(View view)
     {
+
         Toast.makeText(getApplicationContext(),"Перенести фамилии из базы данных",Toast.LENGTH_SHORT).show();
     }
 }
