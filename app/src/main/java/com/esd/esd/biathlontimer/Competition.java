@@ -38,12 +38,15 @@ public class Competition
     }
 
     // Метод добавления участников соревнований, если такого участника нет
-    public void AddParticipants(Participant[] participant)
+    public void AddParticipant(Participant participant)
     {
-        for(int i = 0; i<participant.length; i++)
+        // Нет ли уже такого участника
+        Participant[] localArr = _participants.toArray(new Participant[_participants.size()]);
+        for(int i = 0; i < localArr.length; i++)
         {
-            _participants.add(participant[i]);
+            if(localArr[i] == participant) return;
         }
+        _participants.add(participant);
     }
 
     public void GenerateSettingsDb()
@@ -51,16 +54,23 @@ public class Competition
 
     }
 
-    public void DeleteParticipantsFromCompetition(Participant[] participants)
+    public void DeleteParticipantsFromCompetition(Participant participant)
     {
-        // ЗДЕСЬ НЕПРАВИЛЬНОЕ УСЛОВИЕ НАДО ПОДУМАТЬ
-        for(int i = 0; i < participants.length; i++)
+        Participant[] localArr = _participants.toArray(new Participant[_participants.size()]);
+        for(int i = 0; i < localArr.length; i++)
         {
-            if(_participants.contains(participants[i]))
+            if(localArr[i].equals(participant))
             {
-                _participants.remove(participants[i]);
+                _participants.remove(participant);
             }
         }
+//        for(Participant part : _participants)
+//        {
+//            if(part.equals(participant))
+//            {
+//                _participants.remove(participant);
+//            }
+//        }
     }
 
     public int GetParticipantCount()

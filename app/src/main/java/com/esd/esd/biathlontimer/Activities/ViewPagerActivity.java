@@ -552,7 +552,7 @@ public class ViewPagerActivity extends AppCompatActivity
         DatabaseProvider databaseProvider = new DatabaseProvider(this);
         databaseProvider.AddNewTable("TEST");
         Participant[] localArr = GetParticipantsFromTable();
-        competition.AddParticipants(localArr);
+        //competition.AddParticipant(localArr);
         for(int i = 0; i < localArr.length; i++)
         {
             _dbSaver.SaveParticipantToDatabase(localArr[i], "TEST");

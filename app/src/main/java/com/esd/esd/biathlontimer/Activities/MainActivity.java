@@ -60,8 +60,9 @@ public class MainActivity extends AppCompatActivity {
         _editMainImBtn = (ImageButton) findViewById(R.id.edit);
 
         Competition competition = new Competition("","","","");
-        competition.AddParticipants(new Participant[]{new Participant("","",""), new Participant("JFKF", "", "")});
-        competition.DeleteParticipantsFromCompetition(new Participant[]{new Participant("","","")});
+        competition.AddParticipant(new Participant("","",""));
+        competition.AddParticipant(new Participant("JKIO","",""));
+        competition.DeleteParticipantsFromCompetition(new Participant("","",""));
         Participant[] arr = competition.GetAllParticipants();
         arr[0] = arr[1];
         _saver = new CompetitionSaver(this);

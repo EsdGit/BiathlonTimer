@@ -11,7 +11,6 @@ public class Participant
         return _FIO;
     }
 
-    private Color _color;
     private String _country;
     public String GetCountry(){return _country;}
 
@@ -26,4 +25,16 @@ public class Participant
         _birthYear = birthYear;
     }
 
+    @Override
+    public boolean equals(Object obj)
+    {
+       // super.equals(obj);
+        if(!(obj instanceof Participant)) return false;
+        Participant localObj = (Participant) obj;
+        if(this.GetFIO() == localObj.GetFIO() && this.GetBirthYear() == localObj.GetBirthYear() && this.GetCountry() == localObj.GetCountry())
+        {
+            return true;
+        }
+        return false;
+    }
 }
