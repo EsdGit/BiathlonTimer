@@ -22,9 +22,18 @@ public class ParticipantSaver
         _dbProvider = new DatabaseProvider(context);
     }
 
-    public void SaveParticipantToDatabase(Participant participant, String tableName)
+    public boolean SaveParticipantToDatabase(Participant participant, String tableName)
     {
         // Необходимо проверить нет ли таких участников уже
+        Participant[] localArr = GetAllParticipants(tableName, DatabaseProvider.DbParticipant.COLUMN_NAME);
+        for(int i = 0; i<localArr.length; i++)
+        {
+            if(localArr[i].equals(participant))
+            {
+                return false;
+            }
+        }
+
         _db = _dbProvider.getWritableDatabase();
         ContentValues val = new ContentValues();
         val.put(DatabaseProvider.DbParticipant.COLUMN_NAME, participant.GetFIO());
@@ -32,6 +41,7 @@ public class ParticipantSaver
         val.put(DatabaseProvider.DbParticipant.COLUMN_YEAR, participant.GetBirthYear());
         _db.insert(tableName, null, val);
         _db.close();
+        return true;
     }
 
     public Participant[] GetAllParticipants(String tableName, String orderBy)

@@ -31,7 +31,11 @@ public class Participant
        // super.equals(obj);
         if(!(obj instanceof Participant)) return false;
         Participant localObj = (Participant) obj;
-        if(this.GetFIO() == localObj.GetFIO() && this.GetBirthYear() == localObj.GetBirthYear() && this.GetCountry() == localObj.GetCountry())
+//        if(this.GetFIO().toString() == localObj.GetFIO().toString() && this.GetBirthYear().toString() == localObj.GetBirthYear().toString() && this.GetCountry().toString() == localObj.GetCountry().toString())
+//        {
+//            return true;
+//        }
+        if(this.GetFIO().equals(localObj.GetFIO()) && this.GetBirthYear().equals(localObj.GetBirthYear()) && this.GetCountry().equals(localObj.GetCountry()))
         {
             return true;
         }

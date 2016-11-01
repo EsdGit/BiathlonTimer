@@ -15,14 +15,24 @@ public class CompetitionSaver
 {
     private static DatabaseProvider _dbProvider;
     private static SQLiteDatabase _db;
+    private Context _localContext;
 
     public CompetitionSaver(Context context)
     {
+        _localContext = context;
         _dbProvider = new DatabaseProvider(context);
     }
 
-    public void SaveCompetitionToDatabase(Competition competition)
+    public boolean SaveCompetitionToDatabase(Competition competition)
     {
+        Competition[] localArr = GetAllCompetitions(DatabaseProvider.DbCompetitions.COLUMN_COMPETITION_NAME);
+        for(int i = 0; i<localArr.length; i++)
+        {
+            if(localArr[i].equals(competition))
+            {
+                return false;
+            }
+        }
         _db = _dbProvider.getWritableDatabase();
         ContentValues val = new ContentValues();
         val.put(DatabaseProvider.DbCompetitions.COLUMN_COMPETITION_NAME, competition.GetName());
@@ -31,6 +41,7 @@ public class CompetitionSaver
         val.put(DatabaseProvider.DbCompetitions.COLUMN_DB_PATH, competition.GetDbParticipantPath());
         _db.insert(DatabaseProvider.DbCompetitions.TABLE_NAME, null, val);
         _db.close();
+        return true;
     }
 
     public Competition[] GetAllCompetitions(String orderBy)
@@ -41,8 +52,6 @@ public class CompetitionSaver
                 {
                         DatabaseProvider.DbCompetitions.COLUMN_COMPETITION_NAME,
                         DatabaseProvider.DbCompetitions.COLUMN_COMPETITION_DATE,
-                        DatabaseProvider.DbCompetitions.COLUMN_SETTINGS_PATH,
-                        DatabaseProvider.DbCompetitions.COLUMN_DB_PATH
                 };
         Cursor cursor = _db.query(DatabaseProvider.DbCompetitions.TABLE_NAME, proj, null,null,null,null, orderBy);
         cursor.moveToFirst();
@@ -50,7 +59,7 @@ public class CompetitionSaver
         localArr = new Competition[rowsCount];
         for(int i = 0; i < rowsCount; i++)
         {
-            localArr[i] = new Competition(cursor.getString(0), cursor.getString(1),cursor.getString(2), cursor.getString(3));
+            localArr[i] = new Competition(cursor.getString(0), cursor.getString(1), _localContext);
             if(i < rowsCount - 1) cursor.moveToNext();
         }
         _db.close();

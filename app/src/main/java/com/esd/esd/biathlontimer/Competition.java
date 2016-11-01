@@ -1,7 +1,13 @@
 package com.esd.esd.biathlontimer;
 
 
+import android.content.Context;
 import android.icu.text.MessagePattern;
+import android.icu.text.TimeZoneFormat;
+
+import com.esd.esd.biathlontimer.Activities.MainActivity;
+import com.esd.esd.biathlontimer.DatabaseClasses.DatabaseProvider;
+import com.esd.esd.biathlontimer.DatabaseClasses.ParticipantSaver;
 
 import java.util.ArrayList;
 
@@ -28,30 +34,44 @@ public class Competition
     private String _dbParticipantPath;
     public String GetDbParticipantPath(){return _dbParticipantPath;};
 
-    public Competition(String name, String date, String settingsPath, String dbPath)
+    private Context _localContext;
+    public Competition(String name, String date, Context context)
     {
         _competitionName = name;
         _competitionDate = date;
-        _settingsPath = settingsPath;
-        _dbParticipantPath = dbPath;
+        _settingsPath = "settings"+name+date;
+        _dbParticipantPath = "participants"+name+date;
         _participants = new ArrayList<Participant>();
+        _localContext = context;
+        GenerateParticipantDb();
     }
 
     // Метод добавления участников соревнований, если такого участника нет
     public void AddParticipant(Participant participant)
     {
-        // Нет ли уже такого участника
         Participant[] localArr = _participants.toArray(new Participant[_participants.size()]);
         for(int i = 0; i < localArr.length; i++)
         {
-            if(localArr[i] == participant) return;
+            if(localArr[i].equals(participant)) return;
         }
+
         _participants.add(participant);
+
+        ParticipantSaver ps = new ParticipantSaver(_localContext);
+        ps.SaveParticipantToDatabase(participant, _dbParticipantPath);
     }
 
     public void GenerateSettingsDb()
     {
+        DatabaseProvider dbProvider = new DatabaseProvider(_localContext);
+        dbProvider.AddNewTable(_settingsPath);
+        // Сохраняем все настройки
+    }
 
+    private void GenerateParticipantDb()
+    {
+        DatabaseProvider dbProvider = new DatabaseProvider(_localContext);
+        dbProvider.AddNewTable(_dbParticipantPath);
     }
 
     public void DeleteParticipantsFromCompetition(Participant participant)
@@ -64,13 +84,6 @@ public class Competition
                 _participants.remove(participant);
             }
         }
-//        for(Participant part : _participants)
-//        {
-//            if(part.equals(participant))
-//            {
-//                _participants.remove(participant);
-//            }
-//        }
     }
 
     public int GetParticipantCount()
@@ -88,5 +101,18 @@ public class Competition
     {
         _settingsPath = "null";
         // Удалить базу данных с настройками соревнования
+    }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if(!(obj instanceof Competition)) return false;
+        Competition localObj = (Competition) obj;
+        if(this.GetName().equals(localObj.GetName()) && this.GetDate().equals(localObj.GetDate()) &&
+                this.GetSettingsPath().equals(localObj.GetSettingsPath()) && this.GetDbParticipantPath().equals(localObj.GetDbParticipantPath()))
+        {
+            return true;
+        }
+        return false;
     }
 }

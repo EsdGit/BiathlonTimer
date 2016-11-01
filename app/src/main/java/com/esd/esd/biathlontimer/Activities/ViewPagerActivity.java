@@ -104,12 +104,20 @@ public class ViewPagerActivity extends AppCompatActivity
                         _countryDialog.getText().toString(), _birthdayDialog.getText().toString());
                 AddRowParticipantList(participant);
                 _acceptParticipantImBtn.setVisibility(View.VISIBLE);
-                _dbSaver.SaveParticipantToDatabase(participant, DatabaseProvider.DbParticipant.TABLE_NAME);
+                if(_dbSaver.SaveParticipantToDatabase(participant, DatabaseProvider.DbParticipant.TABLE_NAME))
+                {
+                    Toast.makeText(getApplicationContext(), "Участник добавлен",
+                            Toast.LENGTH_LONG).show();
+                }
+                else
+                {
+                    Toast.makeText(getApplicationContext(), "Такой участник уже есть в базе данных",
+                            Toast.LENGTH_LONG).show();
+                }
                 _nameDialog.setText("");
                 _birthdayDialog.setText("");
                 _countryDialog.setText("");
-                Toast.makeText(getApplicationContext(), "Участник добавлен",
-                        Toast.LENGTH_LONG).show();
+
             }
 
         });
@@ -387,7 +395,7 @@ public class ViewPagerActivity extends AppCompatActivity
 
     private void MakeNewCompetition()
     {
-        Competition competition = new Competition("NewCompetition", "29.02.2017", "", "NewCompetition");
+        //Competition competition = new Competition("NewCompetition", "29.02.2017", "", "NewCompetition");
         // Создаём соревнование, генерируем новую таблицу в БД, туда закидываем участников и так далее...
     }
 
@@ -547,18 +555,18 @@ public class ViewPagerActivity extends AppCompatActivity
 
     public void OnClickAcceptParticipant(View view)
     {
-        Competition competition = new Competition("Чм России 2015", "28.09.2017", "Test1", "TEST" );
-
-        DatabaseProvider databaseProvider = new DatabaseProvider(this);
-        databaseProvider.AddNewTable("TEST");
-        Participant[] localArr = GetParticipantsFromTable();
-        //competition.AddParticipant(localArr);
-        for(int i = 0; i < localArr.length; i++)
-        {
-            _dbSaver.SaveParticipantToDatabase(localArr[i], "TEST");
-        }
-        CompetitionSaver _competitionSaver = new CompetitionSaver(this);
-        _competitionSaver.SaveCompetitionToDatabase(competition);
+//        Competition competition = new Competition("Чм России 2015", "28.09.2017", "Test1", "TEST" );
+//
+//        DatabaseProvider databaseProvider = new DatabaseProvider(this);
+//        databaseProvider.AddNewTable("TEST");
+//        Participant[] localArr = GetParticipantsFromTable();
+//        //competition.AddParticipant(localArr);
+//        for(int i = 0; i < localArr.length; i++)
+//        {
+//            _dbSaver.SaveParticipantToDatabase(localArr[i], "TEST");
+//        }
+//        CompetitionSaver _competitionSaver = new CompetitionSaver(this);
+//        _competitionSaver.SaveCompetitionToDatabase(competition);
         Toast.makeText(getApplicationContext(),"Сохранить список и перейти к соревнованию",Toast.LENGTH_SHORT).show();
     }
 

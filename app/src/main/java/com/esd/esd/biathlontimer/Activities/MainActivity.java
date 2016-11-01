@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
     private CompetitionSaver _saver;
 
-
+    private Competition[] _competitions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -59,12 +59,13 @@ public class MainActivity extends AppCompatActivity {
         _deleteMainImBtn = (ImageButton) findViewById(R.id.delete);
         _editMainImBtn = (ImageButton) findViewById(R.id.edit);
 
-        Competition competition = new Competition("","","","");
-        competition.AddParticipant(new Participant("","",""));
-        competition.AddParticipant(new Participant("JKIO","",""));
-        competition.DeleteParticipantsFromCompetition(new Participant("","",""));
-        Participant[] arr = competition.GetAllParticipants();
-        arr[0] = arr[1];
+//        Competition competition = new Competition("","","","");
+//        competition.AddParticipant(new Participant("","",""));
+//        competition.AddParticipant(new Participant("JKIO","",""));
+//        competition.AddParticipant(new Participant("JKIO","",""));
+//        competition.DeleteParticipantsFromCompetition(new Participant("","",""));
+//        Participant[] arr = competition.GetAllParticipants();
+//        arr[0] = arr[1];
         _saver = new CompetitionSaver(this);
     }
 
@@ -73,8 +74,10 @@ public class MainActivity extends AppCompatActivity {
         super.onWindowFocusChanged(hasFocus);
         if(_isFirstLoad) {
             Competition[] localArr = _saver.GetAllCompetitions(DatabaseProvider.DbCompetitions.COLUMN_COMPETITION_DATE);
+            _competitions = new Competition[localArr.length];
             for(int i = 0; i < localArr.length; i++)
             {
+                _competitions[i] = localArr[i];
                 AddCompetitionRow(localArr[i]);
             }
             _isFirstLoad = false;
