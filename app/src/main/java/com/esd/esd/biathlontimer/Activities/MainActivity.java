@@ -173,8 +173,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void OnClick(View view)
     {
-        Intent viewPager = new Intent(this, SettingsActivity.class);
-        startActivity(viewPager);
+        Intent settingPager = new Intent(this, SettingsActivity.class);
+        startActivity(settingPager);
     }
 
     public void OnClickMainMenu(View view)

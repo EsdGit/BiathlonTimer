@@ -5,7 +5,9 @@ import android.app.ActionBar;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -74,6 +76,7 @@ public class SettingsActivity extends PreferenceActivity
     public boolean onCreateOptionsMenu(Menu menu)
     {
         getMenuInflater().inflate(R.menu.setting_action_bar, menu);
+        menu.getItem(menu.size() - 1).getIcon().setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -82,7 +85,9 @@ public class SettingsActivity extends PreferenceActivity
     {
         if(item.getItemId() == R.id.accept_setting)
         {
-            Toast.makeText(getApplicationContext(),"работает",Toast.LENGTH_LONG).show();
+            Intent viewPager = new Intent(this, ViewPagerActivity.class);
+            startActivity(viewPager);
+            Toast.makeText(getApplicationContext(),"Работает",Toast.LENGTH_LONG).show();
         }
         return super.onOptionsItemSelected(item);
     }

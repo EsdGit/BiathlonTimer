@@ -13,6 +13,7 @@ import android.widget.TimePicker;
 
 import com.esd.esd.biathlontimer.Activities.MainActivity;
 import com.esd.esd.biathlontimer.Activities.SettingsActivity;
+import com.ikovac.timepickerwithseconds.MyTimePickerDialog;
 
 import java.util.Calendar;
 
@@ -37,6 +38,13 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
         _countCheckPoint = (EditTextPreference) findPreference("countCheckPointSetting");
         _nameCompetition = (EditTextPreference) findPreference("nameCompetitionSetting");
         _typeStart = (ListPreference) findPreference("typeStartSetting");
+        final test _test = new test(getActivity(), (new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int i, int i1) {
+
+            }
+        }),0,0);
+
         _setData.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
         @Override
         public boolean onPreferenceClick(Preference preference)
@@ -48,7 +56,8 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
         @Override
         public boolean onPreferenceClick(Preference preference)
         {
-            ShowTimeDialog();
+            _test.show();
+            //ShowTimeDialog();
             return false;
         }});
         _nameCompetition.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
