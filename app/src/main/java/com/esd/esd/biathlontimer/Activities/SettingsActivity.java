@@ -1,46 +1,89 @@
 package com.esd.esd.biathlontimer.Activities;
 
-
+import android.annotation.TargetApi;
+import android.app.ActionBar;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
+import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.TextView;
+import android.preference.Preference;
+import android.preference.PreferenceActivity;
+import android.preference.PreferenceFragment;
+import android.preference.PreferenceScreen;
+import android.text.Html;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.WindowManager;
+import android.widget.DatePicker;
+import android.widget.TimePicker;
+import android.widget.Toast;
+import android.widget.Toolbar;
 
-import com.esd.esd.biathlontimer.DatabaseClasses.SettingsSaver;
 import com.esd.esd.biathlontimer.R;
+import com.esd.esd.biathlontimer.SettingsFragment;
 
-import org.w3c.dom.Text;
 
-public class SettingsActivity extends AppCompatActivity
+public class SettingsActivity extends PreferenceActivity
 {
-    TextView _intervalTextView;
-    EditText _intervalEditText;
-    TextView _countTextView;
-    EditText _countEditText;
-    SettingsSaver _settingsSaver;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
-        _intervalTextView = (TextView) findViewById(R.id.intervalTextView);
-        _intervalEditText = (EditText) findViewById(R.id.intervalEditText);
-        _countTextView = (TextView) findViewById(R.id.KPcountTextView);
-        _countEditText = (EditText) findViewById(R.id.KPcountEditText);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        ActionBar actionBar;
+        actionBar = getActionBar();
+        actionBar.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorPrimary)));
+        actionBar.setTitle((Html.fromHtml("<font color=\"#FFFFFF\">"  + "<big>" + "Настройки соревнования" + "</big>" + "</font>")));
 
-        _settingsSaver = new SettingsSaver(this);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB)
+        {
+            onCreatePreferenceActivity();
+        }
+        else
+        {
+            onCreatePreferenceFragment();
+        }
+        getFragmentManager().beginTransaction().replace(android.R.id.content, new SettingsFragment()).commit();
     }
 
-    public void btnSave_OnClick(View view)
+
+    /**
+     * code for Android < 3 (i.e. API lvl < 11)
+     */
+    @SuppressWarnings("deprecation")
+    private void onCreatePreferenceActivity()
     {
-        _settingsSaver.SaveDataToDatabase("Интервал", _intervalEditText.getText().toString());
-        _settingsSaver.SaveDataToDatabase("Количество КП", _countEditText.getText().toString());
+        addPreferencesFromResource(R.xml.activity_setting);
     }
 
-    public void btnGet_OnClick(View view)
+    /**
+     * code for Android >= 3 (i.e. API lvl >= 11)
+     */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    private void onCreatePreferenceFragment()
     {
-        _intervalTextView.setText(_settingsSaver.GetDataFromDatabase("Интервал"));
-        _countTextView.setText(_settingsSaver.GetDataFromDatabase("Количество КП"));
+        getFragmentManager().beginTransaction().replace(android.R.id.content, new SettingsFragment()).commit();
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        getMenuInflater().inflate(R.menu.setting_action_bar, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        if(item.getItemId() == R.id.accept_setting)
+        {
+            Toast.makeText(getApplicationContext(),"работает",Toast.LENGTH_LONG).show();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

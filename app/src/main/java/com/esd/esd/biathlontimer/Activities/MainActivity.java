@@ -173,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void OnClick(View view)
     {
-        Intent viewPager = new Intent(this, ViewPagerActivity.class);
+        Intent viewPager = new Intent(this, SettingsActivity.class);
         startActivity(viewPager);
     }
 
