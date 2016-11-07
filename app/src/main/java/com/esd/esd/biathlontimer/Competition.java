@@ -64,14 +64,14 @@ public class Competition
     public void GenerateSettingsDb()
     {
         DatabaseProvider dbProvider = new DatabaseProvider(_localContext);
-        dbProvider.AddNewTable(_settingsPath);
+        dbProvider.AddNewSettingsTable(_settingsPath);
         // Сохраняем все настройки
     }
 
     private void GenerateParticipantDb()
     {
         DatabaseProvider dbProvider = new DatabaseProvider(_localContext);
-        dbProvider.AddNewTable(_dbParticipantPath);
+        dbProvider.AddNewParticipantTable(_dbParticipantPath);
     }
 
     public void DeleteParticipantsFromCompetition(Participant participant)

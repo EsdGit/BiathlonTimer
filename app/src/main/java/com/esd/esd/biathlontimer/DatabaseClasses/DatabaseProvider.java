@@ -83,11 +83,19 @@ public class DatabaseProvider extends SQLiteOpenHelper
         onCreate(db);
     }
 
-    public void AddNewTable(String name)
+    public void AddNewParticipantTable(String name)
     {
         String sql = "CREATE TABLE IF NOT EXISTS " + name +
                 " (" + DbParticipant._ID + " INTEGER PRIMARY KEY," + DbParticipant.COLUMN_NAME + TEXT_TYPE +
                 COMMA_SEP + DbParticipant.COLUMN_COUNTRY + TEXT_TYPE + COMMA_SEP + DbParticipant.COLUMN_YEAR + TEXT_TYPE + ")";
+        this.getWritableDatabase().execSQL(sql);
+    }
+
+    public void AddNewSettingsTable(String name)
+    {
+        String sql = "CREATE TABLE IF NOT EXISTS " + name +
+                " (" + DbSettings._ID + " INTEGER PRIMARY KEY," + DbSettings.COLUMN_SETTING_NAME + TEXT_TYPE +
+                COMMA_SEP + DbSettings.COLUMN_SETTING_DATA + TEXT_TYPE + ")";
         this.getWritableDatabase().execSQL(sql);
     }
 }

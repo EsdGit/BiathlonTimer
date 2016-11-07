@@ -44,6 +44,7 @@ public class ViewPagerActivity extends AppCompatActivity
     private boolean _haveMarkedDataBase = false;
     private int _counterMarkedParticipant;
     private int _counterMarkedDataBase;
+    private TableRow _renameTableRow;
 
     private AlertDialog.Builder _addDialogBuilder;
     private AlertDialog _addDialog;
@@ -64,6 +65,13 @@ public class ViewPagerActivity extends AppCompatActivity
     private EditText _nameDialog;
     private EditText _birthdayDialog;
     private EditText _countryDialog;
+
+    private View _renameForm;
+    private EditText _nameRenameDialog;
+    private EditText _birthdayRenameDialog;
+    private EditText _countryRenameDialog;
+    private AlertDialog.Builder _renameDialogBuilder;
+    private AlertDialog _renameDialog;
 
     // Элементы DataBaseList
     private TableLayout _tableLayoutDataBaseList;
@@ -99,11 +107,13 @@ public class ViewPagerActivity extends AppCompatActivity
 
         // Действия по кнопке "Добавить"
         _addDialogBuilder.setPositiveButton(AddDialogBtn, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int arg1) {
+            public void onClick(DialogInterface dialog, int arg1)
+            {
                 Participant participant = new Participant(_nameDialog.getText().toString(),
                         _countryDialog.getText().toString(), _birthdayDialog.getText().toString());
                 AddRowParticipantList(participant);
                 _acceptParticipantImBtn.setVisibility(View.VISIBLE);
+                _dbSaver.DeleteParticipant(participant, DatabaseProvider.DbParticipant.TABLE_NAME);
                 if(_dbSaver.SaveParticipantToDatabase(participant, DatabaseProvider.DbParticipant.TABLE_NAME))
                 {
                     Toast.makeText(getApplicationContext(), "Участник добавлен",
@@ -114,6 +124,7 @@ public class ViewPagerActivity extends AppCompatActivity
                     Toast.makeText(getApplicationContext(), "Такой участник уже есть в базе данных",
                             Toast.LENGTH_LONG).show();
                 }
+                SetStartPosition(_tableLayoutParticipantList);
                 _nameDialog.setText("");
                 _birthdayDialog.setText("");
                 _countryDialog.setText("");
@@ -132,6 +143,40 @@ public class ViewPagerActivity extends AppCompatActivity
         _addDialogBuilder.setCancelable(false);
         _addDialog = _addDialogBuilder.create();
 
+        _renameDialogBuilder = new AlertDialog.Builder(this);
+        _renameDialogBuilder.setTitle("Редактирование");
+        _renameDialogBuilder.setView(_renameForm);
+        _renameDialogBuilder.setPositiveButton(AddDialogBtn, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                TableLayout currTable = (TableLayout) _renameTableRow.getParent();
+                String name = ((TextView)_renameTableRow.getChildAt(0)).getText().toString();
+                String year = ((TextView)_renameTableRow.getChildAt(1)).getText().toString();
+                String country = ((TextView)_renameTableRow.getChildAt(2)).getText().toString();
+
+                Participant localParticipant = new Participant(name, country, year);
+                ((TextView) _renameTableRow.getChildAt(0)).setText(_nameRenameDialog.getText());
+                ((TextView) _renameTableRow.getChildAt(1)).setText(_birthdayRenameDialog.getText());
+                ((TextView) _renameTableRow.getChildAt(2)).setText(_countryRenameDialog.getText());
+                _dbSaver.DeleteParticipant(localParticipant, DatabaseProvider.DbParticipant.TABLE_NAME);
+                // Удаление из локальной базы
+                localParticipant = new Participant(_nameRenameDialog.getText().toString(), _countryRenameDialog.getText().toString(), _birthdayRenameDialog.getText().toString());
+                _dbSaver.SaveParticipantToDatabase(localParticipant, DatabaseProvider.DbParticipant.TABLE_NAME);
+                if(currTable == _tableLayoutParticipantList)
+                {
+                    // Сохранение в локальную базу
+                }
+                SetStartPosition(currTable);
+            }
+        });
+        _renameDialogBuilder.setNegativeButton(CancelDialogBtn, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                SetStartPosition((TableLayout) _renameTableRow.getParent());
+            }
+        });
+        _renameDialogBuilder.setCancelable(false);
+        _renameDialog = _renameDialogBuilder.create();
     }
 
     @Override
@@ -356,6 +401,12 @@ public class ViewPagerActivity extends AppCompatActivity
         View page1 = inflater.inflate(R.layout.activity_participant_list, null);
         pages.add(page1);
 
+        _renameForm = inflater.inflate(R.layout.dialog_activity_add_participant, null);
+        _nameRenameDialog = (EditText) _renameForm.findViewById(R.id.dialogName);
+        _birthdayRenameDialog = (EditText) _renameForm.findViewById(R.id.dialogBirthday);
+        _countryRenameDialog = (EditText) _renameForm.findViewById(R.id.dialogCountry);
+
+
         _dialogForm = inflater.inflate(R.layout.dialog_activity_add_participant, null);
         _tableLayoutParticipantList = (TableLayout) page1.findViewById(R.id.tableParticipantListLayout);
         _nameParticipantList = (TextView) page1.findViewById(R.id.nameParticipantList);
@@ -519,7 +570,7 @@ public class ViewPagerActivity extends AppCompatActivity
         return localArr;
     }
 
-    private Participant[] GetCheckedParticipants(TableLayout table)
+    private Participant[] GetCheckedParticipants(TableLayout table, boolean needDelete)
     {
         int participantCount = table.getChildCount();
         TableRow row;
@@ -545,7 +596,11 @@ public class ViewPagerActivity extends AppCompatActivity
             {
                 flag = false;
                 localArr.add(new Participant(dataArr[0], dataArr[2], dataArr[1]));
-                table.removeViewAt(i);
+                if(needDelete) table.removeViewAt(i);
+                else
+                {
+                    _renameTableRow = row;
+                }
                 k++;
                 i--;
             }
@@ -572,6 +627,11 @@ public class ViewPagerActivity extends AppCompatActivity
 
     public void OnClickEditParticipant(View view)
     {
+        Participant[] currentParticipant = GetCheckedParticipants(_tableLayoutParticipantList, false);
+        _nameRenameDialog.setText(currentParticipant[0].GetFIO());
+        _birthdayRenameDialog.setText(currentParticipant[0].GetBirthYear());
+        _countryRenameDialog.setText(currentParticipant[0].GetCountry());
+        _renameDialog.show();
         Toast.makeText(getApplicationContext(),"Редактировать участника",Toast.LENGTH_SHORT).show();
     }
 
@@ -581,8 +641,8 @@ public class ViewPagerActivity extends AppCompatActivity
         {
             _acceptParticipantImBtn.setVisibility(View.GONE);
         }
-        Participant[] myArr = GetCheckedParticipants(_tableLayoutParticipantList);
-        // Удаление из локальной базы
+        Participant[] myArr = GetCheckedParticipants(_tableLayoutParticipantList, true);
+        // Удаление из локальной базы, но не удаляем из основной
         SetStartPosition(_tableLayoutParticipantList);
         Toast.makeText(getApplicationContext(),"Удаление участника",Toast.LENGTH_SHORT).show();
     }
@@ -597,7 +657,7 @@ public class ViewPagerActivity extends AppCompatActivity
             @Override
             public void onClick(DialogInterface dialogInterface, int i)
             {
-                Participant[] myArr = GetCheckedParticipants(_tableLayoutDataBaseList);
+                Participant[] myArr = GetCheckedParticipants(_tableLayoutDataBaseList, true);
                 for(int j = 0; j<myArr.length;j++)
                 {
                     _dbSaver.DeleteParticipant(myArr[j], DatabaseProvider.DbParticipant.TABLE_NAME);
@@ -620,12 +680,17 @@ public class ViewPagerActivity extends AppCompatActivity
 
     public void OnClickEditDataBase(View view)
     {
+        Participant[] currentParticipant = GetCheckedParticipants(_tableLayoutDataBaseList, false);
+        _nameRenameDialog.setText(currentParticipant[0].GetFIO());
+        _birthdayRenameDialog.setText(currentParticipant[0].GetBirthYear());
+        _countryRenameDialog.setText(currentParticipant[0].GetCountry());
+        _renameDialog.show();
         Toast.makeText(getApplicationContext(),"Редактировать участника в базе данных",Toast.LENGTH_SHORT).show();
     }
 
     public void OnClickAcceptDataBase(View view)
     {
-        Participant[] localArr = GetCheckedParticipants(_tableLayoutDataBaseList);
+        Participant[] localArr = GetCheckedParticipants(_tableLayoutDataBaseList, true);
         // Надо проверять нет ли таких уже участников
         for(int i = 0; i<localArr.length; i++)
         {
@@ -726,5 +791,10 @@ public class ViewPagerActivity extends AppCompatActivity
             dialog.show();
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    private void InitDialogForAdd()
+    {
+
     }
 }
