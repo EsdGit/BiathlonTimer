@@ -2,6 +2,7 @@ package com.esd.esd.biathlontimer.Activities;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.PaintDrawable;
 import android.icu.text.MessagePattern;
@@ -33,6 +34,8 @@ import com.esd.esd.biathlontimer.DatabaseClasses.ParticipantSaver;
 import com.esd.esd.biathlontimer.PagerAdapterHelper;
 import com.esd.esd.biathlontimer.Participant;
 import com.esd.esd.biathlontimer.R;
+
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -98,6 +101,13 @@ public class ViewPagerActivity extends AppCompatActivity
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         _dbSaver = new ParticipantSaver(this);
 
+        Intent intent = getIntent();
+        String name = intent.getStringExtra("CompetitionName");
+        String date = intent.getStringExtra("CompetitionDate");
+        String startType = intent.getStringExtra("CompetitionStartType");
+        String interval = intent.getStringExtra("CompetititonInterval");
+        String checkPoints = intent.getStringExtra("CompetitionCheckPointsCount");
+        // СОЗДАЁМ СОРЕВНОВАНИЕ
         FindAllViews();
 
         // Создание диалогового окна
