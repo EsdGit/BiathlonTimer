@@ -40,10 +40,15 @@ public class Competition
         _competitionName = name;
         _competitionDate = date;
         _settingsPath = "settings"+name+date;
-        _dbParticipantPath = "participants"+name+date;
+        _dbParticipantPath = "participants"+name;
         _participants = new ArrayList<Participant>();
         _localContext = context;
         GenerateParticipantDb();
+    }
+
+    public void SetCompetitionSettings(String startType, String interval, String checkPointsCount)
+    {
+
     }
 
     // Метод добавления участников соревнований, если такого участника нет
@@ -65,7 +70,6 @@ public class Competition
     {
         DatabaseProvider dbProvider = new DatabaseProvider(_localContext);
         dbProvider.AddNewSettingsTable(_settingsPath);
-        // Сохраняем все настройки
     }
 
     private void GenerateParticipantDb()
@@ -76,12 +80,14 @@ public class Competition
 
     public void DeleteParticipantsFromCompetition(Participant participant)
     {
+        ParticipantSaver ps = new ParticipantSaver(_localContext);
         Participant[] localArr = _participants.toArray(new Participant[_participants.size()]);
         for(int i = 0; i < localArr.length; i++)
         {
             if(localArr[i].equals(participant))
             {
                 _participants.remove(participant);
+                ps.DeleteParticipant(participant, _dbParticipantPath);
             }
         }
     }
