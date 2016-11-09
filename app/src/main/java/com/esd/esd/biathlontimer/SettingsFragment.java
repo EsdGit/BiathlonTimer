@@ -1,14 +1,19 @@
 package com.esd.esd.biathlontimer;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.DatePicker;
+import android.widget.NumberPicker;
 import android.widget.TimePicker;
 
 import com.esd.esd.biathlontimer.Activities.MainActivity;
@@ -16,7 +21,7 @@ import com.esd.esd.biathlontimer.Activities.SettingsActivity;
 import com.ikovac.timepickerwithseconds.MyTimePickerDialog;
 
 import java.util.Calendar;
-
+import java.util.zip.Inflater;
 
 
 public class SettingsFragment extends PreferenceFragment implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener
@@ -26,6 +31,12 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
     private EditTextPreference _nameCompetition;
     private ListPreference _typeStart;
     private EditTextPreference _countCheckPoint;
+
+    private View _dialogForm;
+    private AlertDialog.Builder _dialogBuilder;
+    private AlertDialog _dialog;
+    private NumberPicker _minute;
+    private NumberPicker _seconds;
 
 
     @Override
@@ -38,12 +49,34 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
         _countCheckPoint = (EditTextPreference) findPreference("countCheckPointSetting");
         _nameCompetition = (EditTextPreference) findPreference("nameCompetitionSetting");
         _typeStart = (ListPreference) findPreference("typeStartSetting");
-        final test _test = new test(getActivity(), (new TimePickerDialog.OnTimeSetListener() {
+
+
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
+        _dialogForm = inflater.inflate(R.layout.dialog_interval_setting_activity, null);
+        _minute = (NumberPicker) _dialogForm.findViewById(R.id.dialog_minute);
+        _seconds= (NumberPicker) _dialogForm.findViewById(R.id.dialog_seconds);
+        _minute.setMinValue(0);
+        _minute.setMaxValue(60);
+        _seconds.setMinValue(0);
+        _seconds.setMaxValue(60);
+        _dialogBuilder = new AlertDialog.Builder(getActivity());
+        _dialogBuilder.setTitle("Установите интервал");
+        _dialogBuilder.setView(_dialogForm);
+        _dialogBuilder.setPositiveButton("Принять", new DialogInterface.OnClickListener() {
             @Override
-            public void onTimeSet(TimePicker timePicker, int i, int i1) {
+            public void onClick(DialogInterface dialogInterface, int i)
+            {
+                _setInterval.setSummary(_minute.getValue() + ":" + _seconds.getValue());
+            }
+        });
+        _dialogBuilder.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
 
             }
-        }),0,0);
+        });
+        _dialogBuilder.setCancelable(false);
+        _dialog = _dialogBuilder.create();
 
         _setData.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
         @Override
@@ -56,7 +89,7 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
         @Override
         public boolean onPreferenceClick(Preference preference)
         {
-            _test.show();
+            _dialog.show();
             //ShowTimeDialog();
             return false;
         }});
