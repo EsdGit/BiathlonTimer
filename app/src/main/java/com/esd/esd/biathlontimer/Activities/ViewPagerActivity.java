@@ -585,7 +585,7 @@ public class ViewPagerActivity extends AppCompatActivity
             {
                 dataArr[j] = ((TextView)((TableRow) _tableLayoutParticipantList.getChildAt(i)).getChildAt(j)).getText().toString();
             }
-            localArr[i] = new Participant(dataArr[0], dataArr[1], dataArr[2]);
+            localArr[i] = new Participant(dataArr[0], dataArr[2], dataArr[1]);
         }
 
         return localArr;
@@ -706,13 +706,27 @@ public class ViewPagerActivity extends AppCompatActivity
     public void OnClickAcceptDataBase(View view)
     {
         Participant[] localArr = GetCheckedParticipants(_tableLayoutDataBaseList, true);
-        // Надо проверять нет ли таких уже участников
+        Participant[] localCompParticipants = GetParticipantsFromTable();
+        boolean localFlag;
         for(int i = 0; i<localArr.length; i++)
         {
-            AddRowParticipantList(localArr[i]);
+            localFlag = true;
+            for(int j = 0; j<localCompParticipants.length; j++)
+            {
+                if(localArr[i].equals(localCompParticipants[j]))
+                {
+                    localFlag = false;
+                    break;
+                }
+            }
+            if(localFlag)
+            {
+                AddRowParticipantList(localArr[i]);
+                _currentCompetition.AddParticipant(localArr[i]);
+            }
         }
         SetStartPosition(_tableLayoutDataBaseList);
-        Toast.makeText(getApplicationContext(),"Перенести фамилии из базы данных",Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(),"Участники были добавлены в соревнование",Toast.LENGTH_SHORT).show();
     }
 
     private void SetStartPosition(TableLayout table)

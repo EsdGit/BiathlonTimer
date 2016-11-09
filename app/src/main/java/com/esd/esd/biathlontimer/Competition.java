@@ -37,13 +37,29 @@ public class Competition
     private Context _localContext;
     public Competition(String name, String date, Context context)
     {
+        // Необходимо у имени убирать пробелы и всякие знаки
         _competitionName = name;
         _competitionDate = date;
+        name = removePunct(name);
+        date = removePunct(date);
         _settingsPath = "settings"+name+date;
-        _dbParticipantPath = "participants"+name;
+        _dbParticipantPath = "participants"+name+date;
         _participants = new ArrayList<Participant>();
         _localContext = context;
         GenerateParticipantDb();
+    }
+
+    private static final String PUNCT = "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~ ";
+
+    public static String removePunct(String str) {
+        StringBuilder result = new StringBuilder(str.length());
+        for (int i = 0; i < str.length(); i++) {
+            char c = str.charAt(i);
+            if (PUNCT.indexOf(c) < 0) {
+                result.append(c);
+            }
+        }
+        return result.toString();
     }
 
     public void SetCompetitionSettings(String startType, String interval, String checkPointsCount)
