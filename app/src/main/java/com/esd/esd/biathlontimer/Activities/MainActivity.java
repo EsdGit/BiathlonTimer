@@ -58,14 +58,6 @@ public class MainActivity extends AppCompatActivity {
         _menuMainImBtn = (ImageButton) findViewById(R.id.menu);
         _deleteMainImBtn = (ImageButton) findViewById(R.id.delete);
         _editMainImBtn = (ImageButton) findViewById(R.id.edit);
-
-//        Competition competition = new Competition("","","","");
-//        competition.AddParticipant(new Participant("","",""));
-//        competition.AddParticipant(new Participant("JKIO","",""));
-//        competition.AddParticipant(new Participant("JKIO","",""));
-//        competition.DeleteParticipantsFromCompetition(new Participant("","",""));
-//        Participant[] arr = competition.GetAllParticipants();
-//        arr[0] = arr[1];
         _saver = new CompetitionSaver(this);
     }
 

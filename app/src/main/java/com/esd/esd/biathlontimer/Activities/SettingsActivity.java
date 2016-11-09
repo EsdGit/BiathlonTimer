@@ -11,6 +11,8 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.EditTextPreference;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
@@ -39,6 +41,7 @@ public class SettingsActivity extends PreferenceActivity
         ActionBar actionBar;
         actionBar = getActionBar();
         actionBar.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorPrimary)));
+        actionBar.setTitle((Html.fromHtml("<font color=\"#FFFFFF\">"  + "<big>" + "Настройки соревнования" + "</big>" + "</font>")));
         actionBar.setTitle((Html.fromHtml("<font color=\"#FFFFFF\">"  + "<big>" + "Настройки соревнования" + "</big>" + "</font>")));
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB)
@@ -85,9 +88,8 @@ public class SettingsActivity extends PreferenceActivity
     {
         if(item.getItemId() == R.id.accept_setting)
         {
-            Intent viewPager = new Intent(this, ViewPagerActivity.class);
-            startActivity(viewPager);
-            Toast.makeText(getApplicationContext(),"Работает",Toast.LENGTH_LONG).show();
+            Intent myIntent = SettingsFragment.GetIntent(this);
+            startActivity(myIntent);
         }
         return super.onOptionsItemSelected(item);
     }

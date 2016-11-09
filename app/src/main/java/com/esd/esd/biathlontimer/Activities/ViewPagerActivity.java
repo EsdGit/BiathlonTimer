@@ -2,6 +2,7 @@ package com.esd.esd.biathlontimer.Activities;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.PaintDrawable;
 import android.icu.text.MessagePattern;
@@ -33,6 +34,8 @@ import com.esd.esd.biathlontimer.DatabaseClasses.ParticipantSaver;
 import com.esd.esd.biathlontimer.PagerAdapterHelper;
 import com.esd.esd.biathlontimer.Participant;
 import com.esd.esd.biathlontimer.R;
+
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -90,6 +93,7 @@ public class ViewPagerActivity extends AppCompatActivity
     private static String AddDialogBtn = "Добавить";
     private static String CancelDialogBtn = "Отменить";
 
+    private Competition _currentCompetition;
 
 
     @Override
@@ -98,6 +102,14 @@ public class ViewPagerActivity extends AppCompatActivity
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         _dbSaver = new ParticipantSaver(this);
 
+        Intent intent = getIntent();
+        String name = intent.getStringExtra("CompetitionName");
+        String date = intent.getStringExtra("CompetitionDate");
+        String startType = intent.getStringExtra("CompetitionStartType");
+        String interval = intent.getStringExtra("CompetititonInterval");
+        String checkPoints = intent.getStringExtra("CompetitionCheckPointsCount");
+        _currentCompetition = new Competition(name, date, this);
+        _currentCompetition.SetCompetitionSettings(startType, interval, checkPoints);
         FindAllViews();
 
         // Создание диалогового окна
@@ -113,7 +125,6 @@ public class ViewPagerActivity extends AppCompatActivity
                         _countryDialog.getText().toString(), _birthdayDialog.getText().toString());
                 AddRowParticipantList(participant);
                 _acceptParticipantImBtn.setVisibility(View.VISIBLE);
-                _dbSaver.DeleteParticipant(participant, DatabaseProvider.DbParticipant.TABLE_NAME);
                 if(_dbSaver.SaveParticipantToDatabase(participant, DatabaseProvider.DbParticipant.TABLE_NAME))
                 {
                     Toast.makeText(getApplicationContext(), "Участник добавлен",
@@ -124,6 +135,7 @@ public class ViewPagerActivity extends AppCompatActivity
                     Toast.makeText(getApplicationContext(), "Такой участник уже есть в базе данных",
                             Toast.LENGTH_LONG).show();
                 }
+                _currentCompetition.AddParticipant(participant);
                 SetStartPosition(_tableLayoutParticipantList);
                 _nameDialog.setText("");
                 _birthdayDialog.setText("");
@@ -159,12 +171,16 @@ public class ViewPagerActivity extends AppCompatActivity
                 ((TextView) _renameTableRow.getChildAt(1)).setText(_birthdayRenameDialog.getText());
                 ((TextView) _renameTableRow.getChildAt(2)).setText(_countryRenameDialog.getText());
                 _dbSaver.DeleteParticipant(localParticipant, DatabaseProvider.DbParticipant.TABLE_NAME);
-                // Удаление из локальной базы
+                _dbSaver.DeleteParticipant(localParticipant, _currentCompetition.GetDbParticipantPath());
                 localParticipant = new Participant(_nameRenameDialog.getText().toString(), _countryRenameDialog.getText().toString(), _birthdayRenameDialog.getText().toString());
                 _dbSaver.SaveParticipantToDatabase(localParticipant, DatabaseProvider.DbParticipant.TABLE_NAME);
                 if(currTable == _tableLayoutParticipantList)
                 {
-                    // Сохранение в локальную базу
+                    _dbSaver.SaveParticipantToDatabase(localParticipant, _currentCompetition.GetDbParticipantPath());
+                }
+                for(int j = 0; j < 3; j++)
+                {
+                    ((TextView) _renameTableRow.getChildAt(j)).setBackground(new PaintDrawable(getResources().getColor(R.color.white)));
                 }
                 SetStartPosition(currTable);
             }
@@ -188,10 +204,10 @@ public class ViewPagerActivity extends AppCompatActivity
                 AddRowParticipantFromBase(localArr[i]);
             }
 
-            //localArr = _dbSaver.GetAllParticipants("TEST");
-            //for (int i = 0; i < localArr.length; i++) {
-            //    AddRowParticipantList(localArr[i]);
-            //}
+            localArr = _dbSaver.GetAllParticipants(_currentCompetition.GetDbParticipantPath(), DatabaseProvider.DbParticipant.COLUMN_NAME);
+            for (int i = 0; i < localArr.length; i++) {
+                AddRowParticipantList(localArr[i]);
+            }
             _isFirstLoad = false;
         }
     }
@@ -444,24 +460,11 @@ public class ViewPagerActivity extends AppCompatActivity
         setContentView(viewPager);
     }
 
-    private void MakeNewCompetition()
-    {
-        //Competition competition = new Competition("NewCompetition", "29.02.2017", "", "NewCompetition");
-        // Создаём соревнование, генерируем новую таблицу в БД, туда закидываем участников и так далее...
-    }
-
     private void SortTableBy(TableLayout table, String orderBy, boolean sortState)
     {
         String localOrderString;
         String localTableName = "";
-        if(table == _tableLayoutDataBaseList)
-        {
-            localTableName = DatabaseProvider.DbParticipant.TABLE_NAME;
-        }
-        else
-        {
-            // Из объекта competition
-        }
+        Participant[] localArr;
         if(sortState)
         {
             localOrderString = orderBy + " ASC";
@@ -471,11 +474,27 @@ public class ViewPagerActivity extends AppCompatActivity
             localOrderString = orderBy + " DESC";
         }
         table.removeAllViews();
-        Participant[] localArr = _dbSaver.GetAllParticipants(localTableName, localOrderString);
-        for(int i = 0; i < localArr.length; i++)
+
+        if(table == _tableLayoutDataBaseList)
         {
-            AddRowParticipantFromBase(localArr[i]);
+            localTableName = DatabaseProvider.DbParticipant.TABLE_NAME;
+            localArr = _dbSaver.GetAllParticipants(localTableName, localOrderString);
+            for(int i = 0; i < localArr.length; i++)
+            {
+                AddRowParticipantFromBase(localArr[i]);
+            }
         }
+        else
+        {
+            localTableName = _currentCompetition.GetDbParticipantPath();
+            localArr = _dbSaver.GetAllParticipants(localTableName, localOrderString);
+            for(int i = 0; i < localArr.length; i++)
+            {
+                AddRowParticipantList(localArr[i]);
+            }
+        }
+
+
     }
 
     // Обработка нажатий меню сортировок
@@ -502,9 +521,11 @@ public class ViewPagerActivity extends AppCompatActivity
                                     Toast.makeText(getApplicationContext(),"Сортировка списка участников по имени",Toast.LENGTH_SHORT).show();
                                     return true;
                                 case R.id.dataSort:
+                                    SortTableBy(_tableLayoutParticipantList, DatabaseProvider.DbParticipant.COLUMN_NAME, item.isChecked());
                                     Toast.makeText(getApplicationContext(),"Сортировка списка участников по дате",Toast.LENGTH_SHORT).show();
                                     return true;
                                 case R.id.countrySort:
+                                    SortTableBy(_tableLayoutParticipantList, DatabaseProvider.DbParticipant.COLUMN_NAME, item.isChecked());
                                     Toast.makeText(getApplicationContext(),"Сортировка списка участников по региону",Toast.LENGTH_SHORT).show();
                                     return true;
                                 default:
@@ -610,18 +631,9 @@ public class ViewPagerActivity extends AppCompatActivity
 
     public void OnClickAcceptParticipant(View view)
     {
-//        Competition competition = new Competition("Чм России 2015", "28.09.2017", "Test1", "TEST" );
-//
-//        DatabaseProvider databaseProvider = new DatabaseProvider(this);
-//        databaseProvider.AddNewTable("TEST");
-//        Participant[] localArr = GetParticipantsFromTable();
-//        //competition.AddParticipant(localArr);
-//        for(int i = 0; i < localArr.length; i++)
-//        {
-//            _dbSaver.SaveParticipantToDatabase(localArr[i], "TEST");
-//        }
-//        CompetitionSaver _competitionSaver = new CompetitionSaver(this);
-//        _competitionSaver.SaveCompetitionToDatabase(competition);
+        CompetitionSaver competitionSaver = new CompetitionSaver(this);
+        competitionSaver.SaveCompetitionToDatabase(_currentCompetition);
+
         Toast.makeText(getApplicationContext(),"Сохранить список и перейти к соревнованию",Toast.LENGTH_SHORT).show();
     }
 
@@ -642,7 +654,10 @@ public class ViewPagerActivity extends AppCompatActivity
             _acceptParticipantImBtn.setVisibility(View.GONE);
         }
         Participant[] myArr = GetCheckedParticipants(_tableLayoutParticipantList, true);
-        // Удаление из локальной базы, но не удаляем из основной
+        for(int i = 0; i<myArr.length; i++)
+        {
+            _currentCompetition.DeleteParticipantsFromCompetition(myArr[i]);
+        }
         SetStartPosition(_tableLayoutParticipantList);
         Toast.makeText(getApplicationContext(),"Удаление участника",Toast.LENGTH_SHORT).show();
     }
@@ -717,6 +732,7 @@ public class ViewPagerActivity extends AppCompatActivity
             _menuParticipantImBtn.setVisibility(View.VISIBLE);
             _deleteParticipantImBtn.setVisibility(View.GONE);
             _haveMarkedParticipant = false;
+            _counterMarkedParticipant = 0;
         }
         else
         {
@@ -726,6 +742,7 @@ public class ViewPagerActivity extends AppCompatActivity
             _acceptDataBaseImBtn.setVisibility(View.GONE);
             _deleteDataBaseImBtn.setVisibility(View.GONE);
             _menuDataBaseImBtn.setVisibility(View.VISIBLE);
+            _counterMarkedDataBase = 0;
         }
     }
 

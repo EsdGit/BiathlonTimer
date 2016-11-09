@@ -86,7 +86,7 @@ public class DatabaseProvider extends SQLiteOpenHelper
     public void AddNewParticipantTable(String name)
     {
         String sql = "CREATE TABLE IF NOT EXISTS " + name +
-                " (" + DbParticipant._ID + " INTEGER PRIMARY KEY," + DbParticipant.COLUMN_NAME + TEXT_TYPE +
+                " (" + DbParticipant._ID + " INTEGER PRIMARY KEY, " + DbParticipant.COLUMN_NAME + TEXT_TYPE +
                 COMMA_SEP + DbParticipant.COLUMN_COUNTRY + TEXT_TYPE + COMMA_SEP + DbParticipant.COLUMN_YEAR + TEXT_TYPE + ")";
         this.getWritableDatabase().execSQL(sql);
     }
