@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
@@ -16,21 +18,19 @@ import android.widget.DatePicker;
 import android.widget.NumberPicker;
 import android.widget.TimePicker;
 
-import com.esd.esd.biathlontimer.Activities.MainActivity;
-import com.esd.esd.biathlontimer.Activities.SettingsActivity;
-import com.ikovac.timepickerwithseconds.MyTimePickerDialog;
+import com.esd.esd.biathlontimer.Activities.ViewPagerActivity;
+
 
 import java.util.Calendar;
-import java.util.zip.Inflater;
 
 
 public class SettingsFragment extends PreferenceFragment implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener
 {
-    private Preference _setData;
-    private Preference _setInterval;
-    private EditTextPreference _nameCompetition;
-    private ListPreference _typeStart;
-    private EditTextPreference _countCheckPoint;
+    private static Preference _setData;
+    private static Preference _setInterval;
+    private static EditTextPreference _nameCompetition;
+    private static ListPreference _typeStart;
+    private static EditTextPreference _countCheckPoint;
 
     private View _dialogForm;
     private AlertDialog.Builder _dialogBuilder;
@@ -89,6 +89,7 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
         @Override
         public boolean onPreferenceClick(Preference preference)
         {
+
             _dialog.show();
             //ShowTimeDialog();
             return false;
@@ -159,5 +160,16 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
         int hour = 0;
         int minute = 10;
         new TimePickerDialog(getActivity(),this,hour,minute,true).show();
+    }
+
+    public static Intent GetIntent(Context context)
+    {
+        Intent intent = new Intent(context, ViewPagerActivity.class);
+        intent.putExtra("CompetitionName", _nameCompetition.getSummary().toString());
+        intent.putExtra("CompetitionDate", _setData.getSummary().toString());
+        intent.putExtra("CompetitionStartType", _typeStart.getSummary().toString());
+        intent.putExtra("CompetititonInterval", _setInterval.getSummary().toString());
+        intent.putExtra("CompetitionCheckPointsCount", _countCheckPoint.getSummary().toString());
+        return intent;
     }
 }
