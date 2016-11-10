@@ -125,19 +125,22 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else
                 {
-                    if (_counterMarkedCompetition == 0) {
+                    if (_counterMarkedCompetition == 0)
+                    {
                         _counterMarkedCompetition++;
                         SetEditPosition();
                     } else {
                         for (int i = 0; i < rowView.size(); i++) {
                             PaintDrawable drawable = (PaintDrawable) rowView.get(i).getBackground();
                             if (drawable.getPaint().getColor() == getResources().getColor(R.color.colorPrimary)) {
-                                if (i == 0) {
+                                if (i == 0)
+                                {
                                     _counterMarkedCompetition--;
                                 }
                                 rowView.get(i).setBackground(new PaintDrawable(Color.WHITE));
                             } else {
-                                if (i == 0) {
+                                if (i == 0)
+                                {
                                     _counterMarkedCompetition++;
                                 }
                                 rowView.get(i).setBackground(new PaintDrawable(getResources().getColor(R.color.colorPrimary)));
@@ -146,6 +149,7 @@ public class MainActivity extends AppCompatActivity {
                         switch (_counterMarkedCompetition) {
                             case 0:
                                 SetStarPosition();
+                                _haveMarkedCompetition = false;
                                 break;
                             case 1:
                                 SetEditPosition();
@@ -198,12 +202,15 @@ public class MainActivity extends AppCompatActivity {
 
     private void SetStarPosition()
     {
+        _menuMainImBtn.setVisibility(View.VISIBLE);
         _deleteMainImBtn.setVisibility(View.GONE);
         _editMainImBtn.setVisibility(View.GONE);
+        _counterMarkedCompetition = 0;
     }
 
     private void SetEditPosition()
     {
+        _menuMainImBtn.setVisibility(View.GONE);
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.gravity = Gravity.LEFT;
         _deleteMainImBtn.setVisibility(View.VISIBLE);
