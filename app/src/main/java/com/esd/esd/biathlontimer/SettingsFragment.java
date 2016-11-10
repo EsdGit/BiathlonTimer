@@ -31,6 +31,8 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
     private static EditTextPreference _nameCompetition;
     private static ListPreference _typeStart;
     private static EditTextPreference _countCheckPoint;
+    private static Preference _setStartTimer;
+    private static EditTextPreference _countGroup;
 
     private View _dialogForm;
     private AlertDialog.Builder _dialogBuilder;
@@ -49,6 +51,8 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
         _countCheckPoint = (EditTextPreference) findPreference("countCheckPointSetting");
         _nameCompetition = (EditTextPreference) findPreference("nameCompetitionSetting");
         _typeStart = (ListPreference) findPreference("typeStartSetting");
+        _setStartTimer = (Preference) findPreference("startTimer");
+        _countGroup = (EditTextPreference) findPreference("groupCounter");
 
 
         LayoutInflater inflater = LayoutInflater.from(getActivity());
@@ -66,6 +70,7 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
             @Override
             public void onClick(DialogInterface dialogInterface, int i)
             {
+
                 _setInterval.setSummary(_minute.getValue() + ":" + _seconds.getValue());
             }
         });
@@ -91,7 +96,6 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
         {
 
             _dialog.show();
-            //ShowTimeDialog();
             return false;
         }});
         _nameCompetition.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
@@ -128,6 +132,25 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
                         _setInterval.setEnabled(false);
                         break;
                 }
+                return false;
+            }
+        });
+
+        _setStartTimer.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference)
+            {
+                _dialog.setTitle("Установите время до старта");
+                _dialog.show();
+                _dialog.setTitle("Установаите интервал");
+                return false;
+            }
+        });
+        _countGroup.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue)
+            {
+                _countGroup.setSummary((String)newValue);
                 return false;
             }
         });

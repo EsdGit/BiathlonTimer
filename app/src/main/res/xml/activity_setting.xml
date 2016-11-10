@@ -10,12 +10,17 @@
 
     <Preference
         android:key="dataSetting"
-        android:title="Установить дату соревнования"
+        android:title="Дата соревнования"
         android:summary="Устанавливает дату проведения соревования"/>
+
+    <Preference
+        android:key="startTimer"
+        android:title="Время до начала старта"
+        android:summary="Устанавливает время до начала старта"/>
 
     <ListPreference
         android:key="typeStartSetting"
-        android:title="Установить тип старта"
+        android:title="Тип старта"
         android:dialogTitle="Выберите тип старта"
         android:summary="Устанавливает тип старта спортсменов"
         android:defaultValue="0"
@@ -24,14 +29,20 @@
 
     <Preference
         android:key="intervalSetting"
-        android:summary="Установить интервал старта спортсменов"
+        android:summary="Устанавливает интервал старта спортсменов"
         android:title="Интервал старта"
         android:dialogTitle="Установите интервал"/>
 
     <EditTextPreference
+        android:key="groupCounter"
+        android:title="Количесвто групп на соревнованиях"
+        android:summary="Устанавливает количество групп, которое будет на соревнованиях"
+        android:dialogTitle="Введите количество групп "/>
+
+    <EditTextPreference
         android:key="countCheckPointSetting"
-        android:title="Введите количество КП"
-        android:summary="Установиь количество контрольных пунктов"
+        android:title="Количество КП"
+        android:summary="Устанавливает количество контрольных пунктов"
         android:dialogTitle="Введите количество КП"/>
 
 
