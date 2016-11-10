@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton _menuMainImBtn;
     private ImageButton _deleteMainImBtn;
     private ImageButton _editMainImBtn;
+    private ImageButton _secondDelImBtn;
     private PopupMenu _popupMenu;
     private int _counterMarkedCompetition;
 
@@ -58,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
         _menuMainImBtn = (ImageButton) findViewById(R.id.menu);
         _deleteMainImBtn = (ImageButton) findViewById(R.id.delete);
         _editMainImBtn = (ImageButton) findViewById(R.id.edit);
+        _secondDelImBtn = (ImageButton) findViewById(R.id.second_delete);
         _saver = new CompetitionSaver(this);
     }
 
@@ -82,13 +84,13 @@ public class MainActivity extends AppCompatActivity {
         TextView newTextView = new TextView(this);
         newTextView.setText(competition.GetName());
         newTextView.setGravity(Gravity.CENTER);
-        newTextView.setBackgroundColor(Color.WHITE);
+        newTextView.setBackground(new PaintDrawable(Color.WHITE));
         newTextView.setLayoutParams(new TableRow.LayoutParams(_nameTextView.getMeasuredWidth(),_nameTextView.getMeasuredHeight(), 0.666f));
         ((TableRow.LayoutParams)newTextView.getLayoutParams()).setMargins(2,0,2,2);
         TextView newTextView2 = new TextView(this);
         newTextView2.setText(competition.GetDate());
         newTextView2.setGravity(Gravity.CENTER);
-        newTextView2.setBackgroundColor(Color.WHITE);
+        newTextView2.setBackground(new PaintDrawable(Color.WHITE));
         newTextView2.setLayoutParams(new TableRow.LayoutParams(_dateTextView.getMeasuredWidth(),_dateTextView.getMeasuredHeight(), 0.334f));
         ((TableRow.LayoutParams)newTextView2.getLayoutParams()).setMargins(0,0,2,2);
         newRow.addView(newTextView);
@@ -203,29 +205,26 @@ public class MainActivity extends AppCompatActivity {
     private void SetStarPosition()
     {
         _menuMainImBtn.setVisibility(View.VISIBLE);
-        _deleteMainImBtn.setVisibility(View.GONE);
+        _deleteMainImBtn.setVisibility(View.INVISIBLE);
         _editMainImBtn.setVisibility(View.GONE);
+        _secondDelImBtn.setVisibility(View.GONE);
         _counterMarkedCompetition = 0;
     }
 
     private void SetEditPosition()
     {
         _menuMainImBtn.setVisibility(View.GONE);
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        params.gravity = Gravity.LEFT;
         _deleteMainImBtn.setVisibility(View.VISIBLE);
-        _deleteMainImBtn.setLayoutParams(params);
-        params.gravity = Gravity.RIGHT;
         _editMainImBtn.setVisibility(View.VISIBLE);
-        _editMainImBtn.setLayoutParams(params);
+        _secondDelImBtn.setVisibility(View.GONE);
     }
 
     private void SetDelPosition()
     {
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        params.gravity = Gravity.RIGHT;
-        _deleteMainImBtn.setVisibility(View.VISIBLE);
-        _deleteMainImBtn.setLayoutParams(params);
+
+        _deleteMainImBtn.setVisibility(View.INVISIBLE);
         _editMainImBtn.setVisibility(View.GONE);
+        _secondDelImBtn.setVisibility(View.VISIBLE);
+        _menuMainImBtn.setVisibility(View.GONE);
     }
 }

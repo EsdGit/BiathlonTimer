@@ -59,6 +59,7 @@ public class ViewPagerActivity extends AppCompatActivity
     private TextView _nameParticipantList;
     private TextView _birthdayParticipantList;
     private TextView _countryParticipantList;
+    private TextView _numberParticipantList;
     private ImageButton _acceptParticipantImBtn;
     private ImageButton _deleteParticipantImBtn;
     private ImageButton _menuParticipantImBtn;
@@ -68,6 +69,7 @@ public class ViewPagerActivity extends AppCompatActivity
     private EditText _nameDialog;
     private EditText _birthdayDialog;
     private EditText _countryDialog;
+    private EditText _numberDialog;
 
     private View _renameForm;
     private EditText _nameRenameDialog;
@@ -106,7 +108,7 @@ public class ViewPagerActivity extends AppCompatActivity
         String name = intent.getStringExtra("CompetitionName");
         String date = intent.getStringExtra("CompetitionDate");
         String startType = intent.getStringExtra("CompetitionStartType");
-        String interval = intent.getStringExtra("CompetititonInterval");
+        String interval = intent.getStringExtra("CompetitionInterval");
         String checkPoints = intent.getStringExtra("CompetitionCheckPointsCount");
         _currentCompetition = new Competition(name, date, this);
         _currentCompetition.SetCompetitionSettings(startType, interval, checkPoints);
@@ -140,6 +142,7 @@ public class ViewPagerActivity extends AppCompatActivity
                 _nameDialog.setText("");
                 _birthdayDialog.setText("");
                 _countryDialog.setText("");
+                _nameDialog.setText("");
 
             }
 
@@ -219,12 +222,18 @@ public class ViewPagerActivity extends AppCompatActivity
     // Добавление участника в ParticipantList
     private void AddRowParticipantList(Participant participant) {
         TableRow newRow = new TableRow(this);
-        TextView newTextView = new TextView(this);
-        newTextView.setText(participant.GetFIO());
-        newTextView.setGravity(Gravity.CENTER);
-        newTextView.setBackground(new PaintDrawable(Color.WHITE));
-        newTextView.setLayoutParams(new TableRow.LayoutParams(_nameParticipantList.getMeasuredWidth(), _nameParticipantList.getMeasuredHeight(), 3f));
-        ((TableRow.LayoutParams) newTextView.getLayoutParams()).setMargins(2, 0, 2, 2);
+        TextView newTextView0 = new TextView(this);
+        newTextView0.setText(_numberDialog.getText());/*participant.GetFIO()*/
+        newTextView0.setGravity(Gravity.CENTER);
+        newTextView0.setBackground(new PaintDrawable(Color.WHITE));
+        newTextView0.setLayoutParams(new TableRow.LayoutParams(_numberParticipantList.getMeasuredWidth(), _numberParticipantList.getMeasuredHeight(), 0.3f));
+        ((TableRow.LayoutParams) newTextView0.getLayoutParams()).setMargins(2, 0, 2, 2);
+        TextView newTextView1 = new TextView(this);
+        newTextView1.setText(participant.GetFIO());
+        newTextView1.setGravity(Gravity.CENTER);
+        newTextView1.setBackground(new PaintDrawable(Color.WHITE));
+        newTextView1.setLayoutParams(new TableRow.LayoutParams(_nameParticipantList.getMeasuredWidth(), _nameParticipantList.getMeasuredHeight(), 2.7f));
+        ((TableRow.LayoutParams) newTextView1.getLayoutParams()).setMargins(0, 0, 2, 2);
         TextView newTextView2 = new TextView(this);
         newTextView2.setText(participant.GetBirthYear());
         newTextView2.setGravity(Gravity.CENTER);
@@ -237,7 +246,8 @@ public class ViewPagerActivity extends AppCompatActivity
         newTextView3.setBackground(new PaintDrawable(Color.WHITE));
         newTextView3.setLayoutParams(new TableRow.LayoutParams(_countryParticipantList.getMeasuredWidth(), _countryParticipantList.getMeasuredHeight(), 0.5f));
         ((TableRow.LayoutParams) newTextView3.getLayoutParams()).setMargins(0, 0, 2, 2);
-        newRow.addView(newTextView);
+        newRow.addView(newTextView0);
+        newRow.addView(newTextView1);
         newRow.addView(newTextView2);
         newRow.addView(newTextView3);
         newRow.setOnLongClickListener(new View.OnLongClickListener()
@@ -310,16 +320,17 @@ public class ViewPagerActivity extends AppCompatActivity
             }
         });
         _tableLayoutParticipantList.addView(newRow);
+        SetStartPosition(_tableLayoutParticipantList);
     }
 
     private void AddRowParticipantFromBase(Participant participant) {
         TableRow newRow = new TableRow(this);
-        TextView newTextView = new TextView(this);
-        newTextView.setText(participant.GetFIO());
-        newTextView.setGravity(Gravity.CENTER);
-        newTextView.setBackground(new PaintDrawable(Color.WHITE));
-        newTextView.setLayoutParams(new TableRow.LayoutParams(_nameDataBaseList.getMeasuredWidth(), _nameDataBaseList.getMeasuredHeight(), 3f));
-        ((TableRow.LayoutParams) newTextView.getLayoutParams()).setMargins(2, 0, 2, 2);
+        TextView newTextView1 = new TextView(this);
+        newTextView1.setText(participant.GetFIO());
+        newTextView1.setGravity(Gravity.CENTER);
+        newTextView1.setBackground(new PaintDrawable(Color.WHITE));
+        newTextView1.setLayoutParams(new TableRow.LayoutParams(_nameDataBaseList.getMeasuredWidth(), _nameDataBaseList.getMeasuredHeight(), 3f));
+        ((TableRow.LayoutParams) newTextView1.getLayoutParams()).setMargins(2, 0, 2, 2);
         TextView newTextView2 = new TextView(this);
         newTextView2.setText(participant.GetBirthYear());
         newTextView2.setGravity(Gravity.CENTER);
@@ -332,7 +343,7 @@ public class ViewPagerActivity extends AppCompatActivity
         newTextView3.setBackground(new PaintDrawable(Color.WHITE));
         newTextView3.setLayoutParams(new TableRow.LayoutParams(_countryDataBaseList.getMeasuredWidth(), _countryDataBaseList.getMeasuredHeight(), 0.5f));
         ((TableRow.LayoutParams) newTextView3.getLayoutParams()).setMargins(0, 0, 2, 2);
-        newRow.addView(newTextView);
+        newRow.addView(newTextView1);
         newRow.addView(newTextView2);
         newRow.addView(newTextView3);
         newRow.setOnLongClickListener(new View.OnLongClickListener()
@@ -428,6 +439,7 @@ public class ViewPagerActivity extends AppCompatActivity
         _nameParticipantList = (TextView) page1.findViewById(R.id.nameParticipantList);
         _birthdayParticipantList = (TextView) page1.findViewById(R.id.birthdayParticipantList);
         _countryParticipantList = (TextView) page1.findViewById(R.id.countryParticipantList);
+        _numberParticipantList = (TextView) page1.findViewById(R.id.numberParticipantList);
         _acceptParticipantImBtn = (ImageButton) page1.findViewById(R.id.accept_participant);
         _menuParticipantImBtn = (ImageButton) page1.findViewById(R.id.menu_participant);
         _deleteParticipantImBtn = (ImageButton) page1.findViewById(R.id.delete_participant);
@@ -437,6 +449,7 @@ public class ViewPagerActivity extends AppCompatActivity
         _nameDialog = (EditText) _dialogForm.findViewById(R.id.dialogName);
         _birthdayDialog = (EditText) _dialogForm.findViewById(R.id.dialogBirthday);
         _countryDialog = (EditText) _dialogForm.findViewById(R.id.dialogCountry);
+        _numberDialog = (EditText) _dialogForm.findViewById(R.id.dialogNumber);
 
         //Работа с DataBaseList
         View page2 = inflater.inflate(R.layout.activity_database_list, null);

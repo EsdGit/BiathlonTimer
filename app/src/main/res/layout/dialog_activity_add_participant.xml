@@ -6,16 +6,29 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:id="@+id/dialogNameLayout">
+        android:id="@+id/dialogNameLayout"
+        android:weightSum="2">
         <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:hint="@string/fio_col_title"
             android:gravity="center"
             android:id="@+id/dialogName"
             android:inputType="textCapWords"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:imeOptions="actionNext"/>
+            android:imeOptions="actionNext"
+            android:layout_weight="1.8"/>
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:hint="Номер"
+            android:gravity="center"
+            android:id="@+id/dialogNumber"
+            android:inputType="number"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:imeOptions="actionNext"
+            android:layout_weight="0.2"/>
     </LinearLayout>
 
     <LinearLayout
@@ -34,6 +47,7 @@
             android:inputType="date"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:layout_weight="1"
+            android:gravity="center"
             android:imeOptions="actionNext"/>
 
         <EditText
@@ -44,6 +58,7 @@
             android:inputType="textCapSentences"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:layout_weight="1"
+            android:gravity="center"
             android:imeOptions="actionDone"/>
     </LinearLayout>
 

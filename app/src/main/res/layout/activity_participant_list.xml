@@ -95,14 +95,28 @@
         android:weightSum="4">
 
         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_margin="1dp"
+            android:id="@+id/numberParticipantList"
+            android:text="№"
+            android:gravity="center"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:typeface="serif"
+            android:background="#ffffff"
+            android:layout_weight="0.3"/>
+
+        <TextView
+            android:layout_marginRight="1dp"
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="1dp"
             android:id="@+id/nameParticipantList"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/fio_col_title"
             android:gravity="center"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_weight="3"
+            android:layout_weight="2.7"
             android:typeface="serif"
             android:background="#ffffff"/>
 
