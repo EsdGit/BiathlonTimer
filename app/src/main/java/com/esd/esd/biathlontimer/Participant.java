@@ -18,17 +18,20 @@ public class Participant
     private String _birthYear;
     public String GetBirthYear(){return _birthYear;}
 
+    private String _number;
+    public String GetNumber(){return _number;}
+
     public Participant(String fio, String country,String birthYear )
     {
         _FIO = fio;
         _country = country;
         _birthYear = birthYear;
+        //_number = number;
     }
 
     @Override
     public boolean equals(Object obj)
     {
-       // super.equals(obj);
         if(!(obj instanceof Participant)) return false;
         Participant localObj = (Participant) obj;
         if(this.GetFIO().equals(localObj.GetFIO()) && this.GetBirthYear().equals(localObj.GetBirthYear()) && this.GetCountry().equals(localObj.GetCountry()))

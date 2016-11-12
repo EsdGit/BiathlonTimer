@@ -31,6 +31,7 @@ import com.esd.esd.biathlontimer.Competition;
 import com.esd.esd.biathlontimer.DatabaseClasses.CompetitionSaver;
 import com.esd.esd.biathlontimer.DatabaseClasses.DatabaseProvider;
 import com.esd.esd.biathlontimer.DatabaseClasses.ParticipantSaver;
+import com.esd.esd.biathlontimer.DatabaseClasses.SettingsSaver;
 import com.esd.esd.biathlontimer.PagerAdapterHelper;
 import com.esd.esd.biathlontimer.Participant;
 import com.esd.esd.biathlontimer.R;
@@ -111,7 +112,10 @@ public class ViewPagerActivity extends AppCompatActivity
         String interval = intent.getStringExtra("CompetitionInterval");
         String checkPoints = intent.getStringExtra("CompetitionCheckPointsCount");
         _currentCompetition = new Competition(name, date, this);
-        _currentCompetition.SetCompetitionSettings(startType, interval, checkPoints);
+        _currentCompetition.SetCompetitionSettings(startType, interval, checkPoints, "");
+        SettingsSaver saver = new SettingsSaver(this);
+        String data = saver.GetSetting(_currentCompetition, DatabaseProvider.DbSettings.COLUMN_INTERVAL);
+        Toast.makeText(this, data, Toast.LENGTH_LONG).show();
         FindAllViews();
 
         // Создание диалогового окна
@@ -142,7 +146,7 @@ public class ViewPagerActivity extends AppCompatActivity
                 _nameDialog.setText("");
                 _birthdayDialog.setText("");
                 _countryDialog.setText("");
-                _nameDialog.setText("");
+                _numberDialog.setText("");
 
             }
 
@@ -177,11 +181,13 @@ public class ViewPagerActivity extends AppCompatActivity
                 _dbSaver.DeleteParticipant(localParticipant, _currentCompetition.GetDbParticipantPath());
                 localParticipant = new Participant(_nameRenameDialog.getText().toString(), _countryRenameDialog.getText().toString(), _birthdayRenameDialog.getText().toString());
                 _dbSaver.SaveParticipantToDatabase(localParticipant, DatabaseProvider.DbParticipant.TABLE_NAME);
+                int cellsCount = 3;
                 if(currTable == _tableLayoutParticipantList)
                 {
+                    cellsCount = 4;
                     _dbSaver.SaveParticipantToDatabase(localParticipant, _currentCompetition.GetDbParticipantPath());
                 }
-                for(int j = 0; j < 3; j++)
+                for(int j = 0; j < cellsCount; j++)
                 {
                     ((TextView) _renameTableRow.getChildAt(j)).setBackground(new PaintDrawable(getResources().getColor(R.color.white)));
                 }
@@ -191,7 +197,17 @@ public class ViewPagerActivity extends AppCompatActivity
         _renameDialogBuilder.setNegativeButton(CancelDialogBtn, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                int cellsCount = 4;
+                if((TableLayout)_renameTableRow.getParent() == _tableLayoutDataBaseList)
+                {
+                    cellsCount = 3;
+                }
+                for(int j = 0; j < cellsCount; j++)
+                {
+                    ((TextView) _renameTableRow.getChildAt(j)).setBackground(new PaintDrawable(getResources().getColor(R.color.white)));
+                }
                 SetStartPosition((TableLayout) _renameTableRow.getParent());
+
             }
         });
         _renameDialogBuilder.setCancelable(false);
@@ -670,6 +686,7 @@ public class ViewPagerActivity extends AppCompatActivity
         for(int i = 0; i<myArr.length; i++)
         {
             _currentCompetition.DeleteParticipantsFromCompetition(myArr[i]);
+            _dbSaver.DeleteParticipant(myArr[i], _currentCompetition.GetDbParticipantPath());
         }
         SetStartPosition(_tableLayoutParticipantList);
         Toast.makeText(getApplicationContext(),"Удаление участника",Toast.LENGTH_SHORT).show();
@@ -821,7 +838,9 @@ public class ViewPagerActivity extends AppCompatActivity
             dialog.setPositiveButton("Да", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    // возможно всё надо сохранить)
+                    DatabaseProvider provider = new DatabaseProvider(ViewPagerActivity.this);
+                    provider.DeleteTable(_currentCompetition.GetDbParticipantPath());
+                    provider.DeleteTable(_currentCompetition.GetSettingsPath());
                     ViewPagerActivity.this.finish();
                 }
             });

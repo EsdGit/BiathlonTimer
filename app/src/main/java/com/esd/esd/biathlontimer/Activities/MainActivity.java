@@ -78,6 +78,31 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private Competition[] GetCheckedCompetitions()
+    {
+        ArrayList<Competition> localArr = new ArrayList<Competition>();
+        int competitionsCount = _tableLayout.getChildCount();
+        TableRow row;
+        TextView name;
+        TextView date;
+        int k = 0;
+        for(int i = 0; i < competitionsCount - k; i++)
+        {
+            row = (TableRow) _tableLayout.getChildAt(i);
+            name = (TextView) row.getChildAt(0);
+            date = (TextView) row.getChildAt(1);
+            if(((PaintDrawable)(name).getBackground()).getPaint().getColor() ==
+                    getResources().getColor(R.color.colorPrimary))
+            {
+                localArr.add(new Competition(name.getText().toString(), date.getText().toString(), this));
+                _tableLayout.removeViewAt(i);
+                k++;
+                i--;
+            }
+        }
+        return localArr.toArray(new Competition[localArr.size()]);
+    }
+
     private void AddCompetitionRow(Competition competition)
     {
         TableRow newRow = new TableRow(this);
@@ -123,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
                 {
                     Intent myIntent = new Intent(MainActivity.this, ViewPagerActivity.class);
                     // Необходимо передавать Extra c данными
-                    startActivity(myIntent);
+                    //startActivity(myIntent);
                 }
                 else
                 {
@@ -168,10 +193,47 @@ public class MainActivity extends AppCompatActivity {
         _tableLayout.addView(newRow);
     }
 
+    private void SortCompetitionsBy(String orderBy, boolean sortState)
+    {
+        String localOrderString;
+        Competition[] localArr;
+        if(sortState)
+        {
+            localOrderString = orderBy + " ASC";
+        }
+        else
+        {
+            localOrderString = orderBy + " DESC";
+        }
+
+        _tableLayout.removeAllViews();
+
+        localArr = _saver.GetAllCompetitions(localOrderString);
+        for(int i = 0; i < localArr.length; i++)
+        {
+            AddCompetitionRow(localArr[i]);
+        }
+
+    }
+
     public void OnClick(View view)
     {
         Intent settingPager = new Intent(this, SettingsActivity.class);
         startActivity(settingPager);
+    }
+
+    public void OnClickDeleteCompetition(View view)
+    {
+        Competition[] localArr = GetCheckedCompetitions();
+        for(int i = 0; i<localArr.length; i++)
+        {
+            _saver.DeleteCompetitionFromDatabase(localArr[i]);
+        }
+    }
+
+    public void OnClickEditCompetition(View view)
+    {
+        // Удалить старое и изменить на новое
     }
 
     public void OnClickMainMenu(View view)
@@ -185,13 +247,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onMenuItemClick(MenuItem item)
             {
+                item.setChecked(!item.isChecked());
                 switch (item.getItemId())
                 {
                     case R.id.mainManuNameSort:
-                        Toast.makeText(getApplicationContext(),"Сортировка файлов по имени",Toast.LENGTH_SHORT).show();
+                        SortCompetitionsBy(DatabaseProvider.DbCompetitions.COLUMN_COMPETITION_NAME, item.isChecked());
                         return true;
                     case R.id.mainMenuDataSort:
-                        Toast.makeText(getApplicationContext(),"Сортировка файлов по дате",Toast.LENGTH_SHORT).show();
+                        SortCompetitionsBy(DatabaseProvider.DbCompetitions.COLUMN_COMPETITION_DATE, item.isChecked());
                         return true;
                     default:
                         return false;

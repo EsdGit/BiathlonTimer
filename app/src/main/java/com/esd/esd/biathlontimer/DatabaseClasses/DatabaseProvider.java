@@ -16,12 +16,6 @@ public class DatabaseProvider extends SQLiteOpenHelper
     private static final String TEXT_TYPE = " TEXT";
     private static final String COMMA_SEP = ",";
 
-    private static final String SQL_CREATE_SETTINGS_TABLE = "CREATE TABLE " + DbSettings.TABLE_NAME +
-            " (" + DbSettings._ID + " INTEGER PRIMARY KEY," + DbSettings.COLUMN_SETTING_NAME + TEXT_TYPE +
-            COMMA_SEP + DbSettings.COLUMN_SETTING_DATA + TEXT_TYPE + ")";
-    private static final String SQL_DELETE_SETTINGS_TABLE = "DROP TABLE IF EXISTS " + DbSettings.TABLE_NAME;
-
-
     private static final String SQL_CREATE_PARTICIPANT_TABLE = "CREATE TABLE " + DbParticipant.TABLE_NAME +
             " (" + DbParticipant._ID + " INTEGER PRIMARY KEY," + DbParticipant.COLUMN_NAME + TEXT_TYPE +
             COMMA_SEP + DbParticipant.COLUMN_COUNTRY + TEXT_TYPE + COMMA_SEP + DbParticipant.COLUMN_YEAR + TEXT_TYPE + ")";
@@ -42,9 +36,10 @@ public class DatabaseProvider extends SQLiteOpenHelper
     // Абстрактный класс базы данных с настройками
     public static abstract class DbSettings implements BaseColumns
     {
-        public static final String TABLE_NAME = "settings";
-        public static final String COLUMN_SETTING_NAME = "settingName";
-        public static final String COLUMN_SETTING_DATA = "settingData";
+        public static final String COLUMN_INTERVAL = "Interval";
+        public static final String COLUMN_TIME_TO_START = "TimeToStart";
+        public static final String COLUMN_START_TYPE = "StartType";
+        public static final String COLUMN_CHECK_POINTS = "CheckPointsCount";
     }
 
     // Абстрактный класс базы данных участников
@@ -71,13 +66,11 @@ public class DatabaseProvider extends SQLiteOpenHelper
     {
         db.execSQL(SQL_CREATE_COMPETITION_TABLE);
         db.execSQL(SQL_CREATE_PARTICIPANT_TABLE);
-        db.execSQL(SQL_CREATE_SETTINGS_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
     {
-        db.execSQL(SQL_DELETE_SETTINGS_TABLE);
         db.execSQL(SQL_DELETE_PARTICIPANT_TABLE);
         db.execSQL(SQL_DELETE_COMPETITION_TABLE);
         onCreate(db);
@@ -94,8 +87,15 @@ public class DatabaseProvider extends SQLiteOpenHelper
     public void AddNewSettingsTable(String name)
     {
         String sql = "CREATE TABLE IF NOT EXISTS " + name +
-                " (" + DbSettings._ID + " INTEGER PRIMARY KEY," + DbSettings.COLUMN_SETTING_NAME + TEXT_TYPE +
-                COMMA_SEP + DbSettings.COLUMN_SETTING_DATA + TEXT_TYPE + ")";
+                " (" + DbSettings._ID + " INTEGER PRIMARY KEY," + DbSettings.COLUMN_INTERVAL + TEXT_TYPE +
+                COMMA_SEP + DbSettings.COLUMN_CHECK_POINTS + TEXT_TYPE + COMMA_SEP + DbSettings.COLUMN_START_TYPE + TEXT_TYPE +
+                COMMA_SEP + DbSettings.COLUMN_TIME_TO_START + TEXT_TYPE + ")";
+        this.getWritableDatabase().execSQL(sql);
+    }
+
+    public void DeleteTable(String name)
+    {
+        String sql = "DROP TABLE IF EXISTS "+name;
         this.getWritableDatabase().execSQL(sql);
     }
 }

@@ -8,6 +8,7 @@ import android.icu.text.TimeZoneFormat;
 import com.esd.esd.biathlontimer.Activities.MainActivity;
 import com.esd.esd.biathlontimer.DatabaseClasses.DatabaseProvider;
 import com.esd.esd.biathlontimer.DatabaseClasses.ParticipantSaver;
+import com.esd.esd.biathlontimer.DatabaseClasses.SettingsSaver;
 
 import java.util.ArrayList;
 
@@ -35,9 +36,22 @@ public class Competition
     public String GetDbParticipantPath(){return _dbParticipantPath;};
 
     private Context _localContext;
+
+    // Настройки
+    private String _interval;
+    public String GetInterval(){return _interval;}
+
+    private String _timeToStart;
+    public String GetTimeToStart(){return _timeToStart;}
+
+    private String _checkPointsCount;
+    public String GetCheckPointsCount(){return _checkPointsCount;}
+
+    private String _startType;
+    public String GetStartType(){return _startType;}
+
     public Competition(String name, String date, Context context)
     {
-        // Необходимо у имени убирать пробелы и всякие знаки
         _competitionName = name;
         _competitionDate = date;
         name = removePunct(name);
@@ -47,6 +61,7 @@ public class Competition
         _participants = new ArrayList<Participant>();
         _localContext = context;
         GenerateParticipantDb();
+        GenerateSettingsDb();
     }
 
     private static final String PUNCT = "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~ ";
@@ -62,9 +77,14 @@ public class Competition
         return result.toString();
     }
 
-    public void SetCompetitionSettings(String startType, String interval, String checkPointsCount)
+    public void SetCompetitionSettings(String startType, String interval, String checkPointsCount, String timeToStart)
     {
-
+        _interval = interval;
+        _checkPointsCount = checkPointsCount;
+        _startType = startType;
+        _timeToStart = timeToStart;
+        SettingsSaver saver = new SettingsSaver(_localContext);
+        saver.SaveSettingsToDb(this);
     }
 
     // Метод добавления участников соревнований, если такого участника нет
