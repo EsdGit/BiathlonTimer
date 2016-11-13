@@ -23,8 +23,7 @@
         </activity>
         <activity android:name=".Activities.SettingsActivity"
                   android:screenOrientation="landscape"
-                  android:theme="@style/PreferenceScreen"
-                  android:label="Настройки">
+                  android:theme="@style/PreferenceScreen">
         </activity>
 
 

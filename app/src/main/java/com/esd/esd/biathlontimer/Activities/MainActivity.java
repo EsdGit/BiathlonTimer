@@ -1,12 +1,17 @@
 package com.esd.esd.biathlontimer.Activities;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.PaintDrawable;
 import android.icu.text.MessagePattern;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.Gravity;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,11 +38,10 @@ public class MainActivity extends AppCompatActivity {
     private TextView _nameTextView;
     private TextView _dateTextView;
     private TableLayout _tableLayout;
-    private ImageButton _menuMainImBtn;
-    private ImageButton _deleteMainImBtn;
-    private ImageButton _editMainImBtn;
-    private ImageButton _secondDelImBtn;
-    private PopupMenu _popupMenu;
+    private MenuItem _editMenuItem;
+    private MenuItem _deleteMenuItem;
+    private MenuItem _sortNameMenuItem;
+    private MenuItem _sortDataMenuItem;
     private int _counterMarkedCompetition;
 
     private boolean _haveMarkedCompetition = false;
@@ -53,13 +57,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getSupportActionBar().setTitle((Html.fromHtml("<font color=\"#FFFFFF\">"  + "<big>" + getResources().getString(R.string.main_activity_head) + "</big>" + "</font>")));
         _tableLayout = (TableLayout)findViewById(R.id.table);
         _nameTextView = (TextView) findViewById(R.id.CompetitionsNameTextView);
         _dateTextView = (TextView) findViewById(R.id.CompetitionsDateTextView);
-        _menuMainImBtn = (ImageButton) findViewById(R.id.menu);
-        _deleteMainImBtn = (ImageButton) findViewById(R.id.delete);
-        _editMainImBtn = (ImageButton) findViewById(R.id.edit);
-        _secondDelImBtn = (ImageButton) findViewById(R.id.second_delete);
         _saver = new CompetitionSaver(this);
     }
 
@@ -222,7 +223,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(settingPager);
     }
 
-    public void OnClickDeleteCompetition(View view)
+    public void OnClickDeleteCompetition()
     {
         Competition[] localArr = GetCheckedCompetitions();
         for(int i = 0; i<localArr.length; i++)
@@ -231,63 +232,73 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void OnClickEditCompetition(View view)
+    public void OnClickEditCompetition()
     {
         // Удалить старое и изменить на новое
     }
 
-    public void OnClickMainMenu(View view)
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
     {
-        if(_popupMenu == null)
+        getMenuInflater().inflate(R.menu.main_action_bar, menu);
+        for(int i = 0; i<menu.size(); i++)
         {
-        _popupMenu = new PopupMenu(this, view);
-        MenuInflater menuInflater = _popupMenu.getMenuInflater();
-        menuInflater.inflate(R.menu.main_sort_menu, _popupMenu.getMenu());
-        _popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item)
-            {
-                item.setChecked(!item.isChecked());
-                switch (item.getItemId())
-                {
-                    case R.id.mainManuNameSort:
-                        SortCompetitionsBy(DatabaseProvider.DbCompetitions.COLUMN_COMPETITION_NAME, item.isChecked());
-                        return true;
-                    case R.id.mainMenuDataSort:
-                        SortCompetitionsBy(DatabaseProvider.DbCompetitions.COLUMN_COMPETITION_DATE, item.isChecked());
-                        return true;
-                    default:
-                        return false;
-                }
-            }
-        });
+            if( menu.getItem(i).getIcon() != null)
+                menu.getItem(i).getIcon().setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
         }
-        _popupMenu.show();
+        _deleteMenuItem = (MenuItem) menu.findItem(R.id.mainDeleteCompetition);
+        _editMenuItem = (MenuItem) menu.findItem(R.id.mainEditCompetition);
+        _sortDataMenuItem = (MenuItem) menu.findItem(R.id.mainMenuDataSort);
+        _sortNameMenuItem = (MenuItem) menu.findItem(R.id.mainMenuNameSort);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch (item.getItemId())
+        {
+            case R.id.mainMenuNameSort:
+                Toast.makeText(getApplicationContext(),"Сортировка по названию", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.mainMenuDataSort:
+                Toast.makeText(getApplicationContext(),"Сортировка по дате", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.mainEditCompetition:
+                OnClickEditCompetition();
+                SetStarPosition();
+                break;
+            case R.id.mainDeleteCompetition:
+                OnClickDeleteCompetition();
+                SetStarPosition();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void SetStarPosition()
     {
-        _menuMainImBtn.setVisibility(View.VISIBLE);
-        _deleteMainImBtn.setVisibility(View.INVISIBLE);
-        _editMainImBtn.setVisibility(View.GONE);
-        _secondDelImBtn.setVisibility(View.GONE);
+        _sortNameMenuItem.setVisible(true);
+        _sortDataMenuItem.setVisible(true);
+        _deleteMenuItem.setVisible(false);
+        _editMenuItem.setVisible(false);
+        _haveMarkedCompetition = false;
         _counterMarkedCompetition = 0;
     }
 
     private void SetEditPosition()
     {
-        _menuMainImBtn.setVisibility(View.GONE);
-        _deleteMainImBtn.setVisibility(View.VISIBLE);
-        _editMainImBtn.setVisibility(View.VISIBLE);
-        _secondDelImBtn.setVisibility(View.GONE);
+        _sortNameMenuItem.setVisible(false);
+        _sortDataMenuItem.setVisible(false);
+        _deleteMenuItem.setVisible(true);
+        _editMenuItem.setVisible(true);
     }
 
     private void SetDelPosition()
     {
-
-        _deleteMainImBtn.setVisibility(View.INVISIBLE);
-        _editMainImBtn.setVisibility(View.GONE);
-        _secondDelImBtn.setVisibility(View.VISIBLE);
-        _menuMainImBtn.setVisibility(View.GONE);
+        _sortNameMenuItem.setVisible(false);
+        _sortDataMenuItem.setVisible(false);
+        _deleteMenuItem.setVisible(true);
+        _editMenuItem.setVisible(false);
     }
 }

@@ -42,7 +42,6 @@ public class SettingsActivity extends PreferenceActivity
         actionBar = getActionBar();
         actionBar.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorPrimary)));
         actionBar.setTitle((Html.fromHtml("<font color=\"#FFFFFF\">"  + "<big>" + "Настройки соревнования" + "</big>" + "</font>")));
-        actionBar.setTitle((Html.fromHtml("<font color=\"#FFFFFF\">"  + "<big>" + "Настройки соревнования" + "</big>" + "</font>")));
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB)
         {

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:title="@string/main_activity_name_sort"
+        android:id="@+id/mainMenuNameSort"
+        android:showAsAction="never"
+        android:orderInCategory="100"
+        android:visible="true"/>
+
+    <item
+        android:title="@string/main_activity_data_sort"
+        android:id="@+id/mainMenuDataSort"
+        android:showAsAction="never"
+        android:orderInCategory="100"
+        android:visible="true"/>
+
+    <item
+        android:icon="@drawable/ic_edit"
+        android:title="@string/main_activity_edit"
+        app:showAsAction="always"
+        android:id="@+id/mainEditCompetition"
+        android:orderInCategory="100"
+        android:visible="false"/>
+
+    <item
+        android:icon="@drawable/ic_delete"
+        android:title="@string/main_activity_del"
+        app:showAsAction="always"
+        android:id="@+id/mainDeleteCompetition"
+        android:orderInCategory="100"
+        android:visible="false"/>
+
+
+
+
+</menu>
