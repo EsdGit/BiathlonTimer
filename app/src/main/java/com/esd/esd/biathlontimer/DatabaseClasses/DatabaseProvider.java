@@ -17,7 +17,7 @@ public class DatabaseProvider extends SQLiteOpenHelper
     private static final String COMMA_SEP = ",";
 
     private static final String SQL_CREATE_PARTICIPANT_TABLE = "CREATE TABLE " + DbParticipant.TABLE_NAME +
-            " (" + DbParticipant._ID + " INTEGER PRIMARY KEY," + DbParticipant.COLUMN_NAME + TEXT_TYPE +
+            " (" + DbParticipant._ID + " INTEGER PRIMARY KEY," + DbParticipant.COLUMN_NUMBER + TEXT_TYPE +COMMA_SEP+ DbParticipant.COLUMN_NAME + TEXT_TYPE +
             COMMA_SEP + DbParticipant.COLUMN_COUNTRY + TEXT_TYPE + COMMA_SEP + DbParticipant.COLUMN_YEAR + TEXT_TYPE + ")";
     private static final String SQL_DELETE_PARTICIPANT_TABLE = "DROP TABLE IF EXISTS " + DbParticipant.TABLE_NAME;
 
@@ -46,6 +46,7 @@ public class DatabaseProvider extends SQLiteOpenHelper
     public static abstract class DbParticipant implements BaseColumns
     {
         public static final String TABLE_NAME = "participants";
+        public static final String COLUMN_NUMBER = "Number";
         public static final String COLUMN_NAME = "Name";
         public static final String COLUMN_COUNTRY = "Country";
         public static final String COLUMN_YEAR = "BirthYear";
@@ -79,8 +80,9 @@ public class DatabaseProvider extends SQLiteOpenHelper
     public void AddNewParticipantTable(String name)
     {
         String sql = "CREATE TABLE IF NOT EXISTS " + name +
-                " (" + DbParticipant._ID + " INTEGER PRIMARY KEY, " + DbParticipant.COLUMN_NAME + TEXT_TYPE +
-                COMMA_SEP + DbParticipant.COLUMN_COUNTRY + TEXT_TYPE + COMMA_SEP + DbParticipant.COLUMN_YEAR + TEXT_TYPE + ")";
+                " (" + DbParticipant._ID + " INTEGER PRIMARY KEY, " + DbParticipant.COLUMN_NUMBER + TEXT_TYPE + COMMA_SEP+
+                DbParticipant.COLUMN_NAME + TEXT_TYPE + COMMA_SEP + DbParticipant.COLUMN_COUNTRY + TEXT_TYPE + COMMA_SEP
+                + DbParticipant.COLUMN_YEAR + TEXT_TYPE + ")";
         this.getWritableDatabase().execSQL(sql);
     }
 

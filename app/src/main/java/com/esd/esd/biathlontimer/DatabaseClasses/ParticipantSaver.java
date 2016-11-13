@@ -24,7 +24,6 @@ public class ParticipantSaver
 
     public boolean SaveParticipantToDatabase(Participant participant, String tableName)
     {
-        // Необходимо проверить нет ли таких участников уже
         Participant[] localArr = GetAllParticipants(tableName, DatabaseProvider.DbParticipant.COLUMN_NAME);
         for(int i = 0; i<localArr.length; i++)
         {
@@ -36,6 +35,7 @@ public class ParticipantSaver
 
         _db = _dbProvider.getWritableDatabase();
         ContentValues val = new ContentValues();
+        val.put(DatabaseProvider.DbParticipant.COLUMN_NUMBER, participant.GetNumber());
         val.put(DatabaseProvider.DbParticipant.COLUMN_NAME, participant.GetFIO());
         val.put(DatabaseProvider.DbParticipant.COLUMN_COUNTRY, participant.GetCountry());
         val.put(DatabaseProvider.DbParticipant.COLUMN_YEAR, participant.GetBirthYear());
@@ -50,6 +50,7 @@ public class ParticipantSaver
         _db = _dbProvider.getReadableDatabase();
         String[] proj=
                 {
+                        DatabaseProvider.DbParticipant.COLUMN_NUMBER,
                         DatabaseProvider.DbParticipant.COLUMN_NAME,
                         DatabaseProvider.DbParticipant.COLUMN_COUNTRY,
                         DatabaseProvider.DbParticipant.COLUMN_YEAR
@@ -60,7 +61,7 @@ public class ParticipantSaver
         localArr = new Participant[rowsCount];
         for(int i = 0; i < rowsCount; i++)
         {
-            localArr[i] = new Participant(cursor.getString(0), cursor.getString(1), cursor.getString(2));
+            localArr[i] = new Participant(cursor.getString(0), cursor.getString(1), cursor.getString(2),cursor.getString(3));
             if(i < rowsCount - 1) cursor.moveToNext();
         }
         _db.close();

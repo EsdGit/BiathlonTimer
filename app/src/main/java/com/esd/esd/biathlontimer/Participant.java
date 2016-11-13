@@ -21,12 +21,12 @@ public class Participant
     private String _number;
     public String GetNumber(){return _number;}
 
-    public Participant(String fio, String country,String birthYear )
+    public Participant(String number,String fio, String country,String birthYear )
     {
         _FIO = fio;
         _country = country;
         _birthYear = birthYear;
-        //_number = number;
+        _number = number;
     }
 
     @Override
