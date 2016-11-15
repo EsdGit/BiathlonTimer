@@ -9,6 +9,7 @@ import android.icu.text.MessagePattern;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -61,6 +62,7 @@ public class ViewPagerActivity extends AppCompatActivity
     private TextView _birthdayParticipantList;
     private TextView _countryParticipantList;
     private TextView _numberParticipantList;
+    private TextView _nameOfParticipantList;
     private ImageButton _acceptParticipantImBtn;
     private ImageButton _deleteParticipantImBtn;
     private ImageButton _menuParticipantImBtn;
@@ -85,6 +87,7 @@ public class ViewPagerActivity extends AppCompatActivity
     private TextView _nameDataBaseList;
     private TextView _birthdayDataBaseList;
     private TextView _countryDataBaseList;
+    private TextView _nameOfDataBaseList;
     private ImageButton _acceptDataBaseImBtn;
     private ImageButton _deleteDataBaseImBtn;
     private ImageButton _menuDataBaseImBtn;
@@ -115,9 +118,6 @@ public class ViewPagerActivity extends AppCompatActivity
         String checkPoints = intent.getStringExtra("CompetitionCheckPointsCount");
         _currentCompetition = new Competition(name, date, this);
         _currentCompetition.SetCompetitionSettings(startType, interval, checkPoints, "");
-        SettingsSaver saver = new SettingsSaver(this);
-        String data = saver.GetSetting(_currentCompetition, DatabaseProvider.DbSettings.COLUMN_INTERVAL);
-        Toast.makeText(this, data, Toast.LENGTH_LONG).show();
         FindAllViews();
 
         // Создание диалогового окна
@@ -483,10 +483,13 @@ public class ViewPagerActivity extends AppCompatActivity
         _birthdayParticipantList = (TextView) page1.findViewById(R.id.birthdayParticipantList);
         _countryParticipantList = (TextView) page1.findViewById(R.id.countryParticipantList);
         _numberParticipantList = (TextView) page1.findViewById(R.id.numberParticipantList);
+        _nameOfParticipantList = (TextView) page1.findViewById(R.id.participant_list_head);
         _acceptParticipantImBtn = (ImageButton) page1.findViewById(R.id.accept_participant);
         _menuParticipantImBtn = (ImageButton) page1.findViewById(R.id.menu_participant);
         _deleteParticipantImBtn = (ImageButton) page1.findViewById(R.id.delete_participant);
         _editParticipantImBtn = (ImageButton) page1.findViewById(R.id.edit_participant);
+
+        _nameOfParticipantList.setText(Html.fromHtml("<font>"  + "<big>" + getResources().getString(R.string.participant_list_actvity_head) + "</big>" + "</font>"));
 
 
         _nameDialog = (EditText) _dialogForm.findViewById(R.id.dialogName);
@@ -502,12 +505,15 @@ public class ViewPagerActivity extends AppCompatActivity
         _nameDataBaseList = (TextView) page2.findViewById(R.id.nameDataBase);
         _birthdayDataBaseList = (TextView) page2.findViewById(R.id.birthdayDataBase);
         _countryDataBaseList = (TextView) page2.findViewById(R.id.countryDataBase);
+        _nameOfDataBaseList = (TextView) page2.findViewById(R.id.database_list_head);
         _acceptDataBaseImBtn = (ImageButton) page2.findViewById(R.id.accept_database);
         _deleteDataBaseImBtn = (ImageButton) page2.findViewById(R.id.delete_database);
         _menuDataBaseImBtn = (ImageButton) page2.findViewById(R.id.menu_database);
         _deleteDataBaseImBtn = (ImageButton) page2.findViewById(R.id.delete_database);
         _editDataBaseImBtn = (ImageButton) page2.findViewById(R.id.edit_database);
         _secondAcceptDataBaseImBtn = (ImageButton) page2.findViewById(R.id.second_accept_database);
+
+        _nameOfDataBaseList.setText(Html.fromHtml("<font>"  + "<big>" + getResources().getString(R.string.db_list_activity_head) + "</big>" + "</font>"));
 
         PagerAdapterHelper pagerAdapter = new PagerAdapterHelper(pages);
         ViewPager viewPager = new ViewPager(this);
@@ -564,6 +570,7 @@ public class ViewPagerActivity extends AppCompatActivity
                     _participantPopupMenu = new PopupMenu(this, view);
                     MenuInflater menuInflater = _participantPopupMenu.getMenuInflater();
                     menuInflater.inflate(R.menu.sort_menu, _participantPopupMenu.getMenu());
+
                     _participantPopupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
                     {
                         @Override
@@ -584,6 +591,9 @@ public class ViewPagerActivity extends AppCompatActivity
                                     SortTableBy(_tableLayoutParticipantList, DatabaseProvider.DbParticipant.COLUMN_NAME, item.isChecked());
                                     Toast.makeText(getApplicationContext(),"Сортировка списка участников по региону",Toast.LENGTH_SHORT).show();
                                     return true;
+                                case R.id.numberSort:
+                                    Toast.makeText(getApplicationContext(),"Сортировка списка участников по номеру",Toast.LENGTH_SHORT).show();
+                                    return true;
                                 default:
                                     return false;
                             }
@@ -598,6 +608,7 @@ public class ViewPagerActivity extends AppCompatActivity
                     _dataBasePopupMenu = new PopupMenu(this, view);
                     MenuInflater menuInflater = _dataBasePopupMenu.getMenuInflater();
                     menuInflater.inflate(R.menu.sort_menu, _dataBasePopupMenu.getMenu());
+                    _dataBasePopupMenu.getMenu().findItem(R.id.numberSort).setVisible(false);
                     _dataBasePopupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
                     {
                         @Override
@@ -825,7 +836,7 @@ public class ViewPagerActivity extends AppCompatActivity
         else
         {
             _haveMarkedDataBase = false;
-            _secondAcceptDataBaseImBtn.setVisibility(View.GONE);
+            _secondAcceptDataBaseImBtn.setVisibility(View.INVISIBLE);
             _editDataBaseImBtn.setVisibility(View.GONE);
             _acceptDataBaseImBtn.setVisibility(View.GONE);
             _deleteDataBaseImBtn.setVisibility(View.GONE);
@@ -864,7 +875,7 @@ public class ViewPagerActivity extends AppCompatActivity
         }
         else
         {
-            _secondAcceptDataBaseImBtn.setVisibility(View.GONE);
+            _secondAcceptDataBaseImBtn.setVisibility(View.INVISIBLE);
             _editDataBaseImBtn.setVisibility(View.GONE);
             _acceptDataBaseImBtn.setVisibility(View.VISIBLE);
             _menuDataBaseImBtn.setVisibility(View.GONE);

@@ -12,6 +12,7 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
+import android.preference.SwitchPreference;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.DatePicker;
@@ -21,6 +22,7 @@ import android.widget.TimePicker;
 import com.esd.esd.biathlontimer.Activities.ViewPagerActivity;
 
 
+import org.apache.poi.hssf.record.BookBoolRecord;
 import org.apache.poi.util.StringUtil;
 
 import java.util.Calendar;
@@ -28,6 +30,7 @@ import java.util.Calendar;
 
 public class SettingsFragment extends PreferenceFragment implements DatePickerDialog.OnDateSetListener
 {
+    private static SwitchPreference _typeCompetition;
     private static Preference _setData;
     private static Preference _setInterval;
     private static EditTextPreference _nameCompetition;
@@ -53,6 +56,8 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
     {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.activity_setting);
+        _typeCompetition = (SwitchPreference) findPreference("typeCompetition");
+        _typeCompetition.setChecked(false);
         _setData = (Preference) findPreference("dataSetting");
         _setInterval = (Preference) findPreference("intervalSetting");
         _countCheckPoint = (EditTextPreference) findPreference("countCheckPointSetting");
@@ -97,6 +102,25 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
         });
         _dialogBuilder.setCancelable(false);
         _dialog = _dialogBuilder.create();
+
+
+        _typeCompetition.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue)
+            {
+                if(!_typeCompetition.isChecked())
+                {
+                    _typeCompetition.setChecked(true);
+                    _typeCompetition.setSummary("Международные соревнования");
+                }
+                else
+                {
+                    _typeCompetition.setChecked(false);
+                    _typeCompetition.setSummary("Региональные соревнования");
+                }
+                return false;
+            }
+        });
 
         _setData.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
         @Override
@@ -175,7 +199,7 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth)
     {
-        String str = Integer.toString(dayOfMonth)+":"+Integer.toString(month)+":"+Integer.toString(year);
+        String str = Integer.toString(dayOfMonth)+":"+Integer.toString(month + 1)+":"+Integer.toString(year);
         _setData.setSummary(SetNormalFormatDataTime(str , false));
     }
 

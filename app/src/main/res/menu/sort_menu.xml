@@ -9,4 +9,8 @@
     <item android:title="Сортировка по региону"
         android:id="@+id/countrySort"
         android:checked="false"/>
+    <item
+        android:title="Сортировка по номеру"
+        android:id="@+id/numberSort"
+        android:checked="false"/>
 </menu>

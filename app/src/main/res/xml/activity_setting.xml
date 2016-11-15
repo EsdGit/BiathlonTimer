@@ -2,6 +2,12 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:key="preference_screen">
 
+    <SwitchPreference
+        android:key="typeCompetition"
+        android:title="Международные соревнования"
+        android:summary="Устанавливает тип соревнования (по умолчанию: Региональные)"
+        android:checked="false"/>
+
     <EditTextPreference
         android:key="nameCompetitionSetting"
         android:summary="Название соревнования"
