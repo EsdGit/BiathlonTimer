@@ -150,8 +150,7 @@ public class Competition
     {
         if(!(obj instanceof Competition)) return false;
         Competition localObj = (Competition) obj;
-        if(this.GetName().equals(localObj.GetName()) && this.GetDate().equals(localObj.GetDate()) &&
-                this.GetSettingsPath().equals(localObj.GetSettingsPath()) && this.GetDbParticipantPath().equals(localObj.GetDbParticipantPath()))
+        if(this.GetName().equals(localObj.GetName()) && this.GetDate().equals(localObj.GetDate()))
         {
             return true;
         }

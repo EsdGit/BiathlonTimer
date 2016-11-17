@@ -27,6 +27,9 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
+import com.esd.esd.biathlontimer.Competition;
+import com.esd.esd.biathlontimer.DatabaseClasses.CompetitionSaver;
+import com.esd.esd.biathlontimer.DatabaseClasses.DatabaseProvider;
 import com.esd.esd.biathlontimer.R;
 import com.esd.esd.biathlontimer.SettingsFragment;
 
@@ -87,8 +90,24 @@ public class SettingsActivity extends PreferenceActivity
     {
         if(item.getItemId() == R.id.accept_setting)
         {
-            Intent myIntent = SettingsFragment.GetIntent(this);
-            startActivity(myIntent);
+            CompetitionSaver saver = new CompetitionSaver(this);
+            Competition[] localArr = saver.GetAllCompetitions(DatabaseProvider.DbCompetitions.COLUMN_COMPETITION_NAME);
+            Competition newComp = SettingsFragment.GetCurrentCompetition(this);
+            boolean _canAddCompetition = true;
+            for(int i =0;i < localArr.length; i++)
+            {
+                if(newComp.equals(localArr[i]))
+                {
+                    _canAddCompetition= false;
+                    Toast.makeText(this,"Такое соревнование уже существует!",Toast.LENGTH_LONG).show();
+                    break;
+                }
+            }
+            if(_canAddCompetition)
+            {
+                Intent myIntent = SettingsFragment.GetIntent(this);
+                startActivity(myIntent);
+            }
         }
         return super.onOptionsItemSelected(item);
     }

@@ -102,6 +102,7 @@ public class ViewPagerActivity extends AppCompatActivity
 
     private Competition _currentCompetition;
 
+    private boolean _needDeleteTables = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,13 +117,14 @@ public class ViewPagerActivity extends AppCompatActivity
         String startType = intent.getStringExtra("CompetitionStartType");
         String interval = intent.getStringExtra("CompetitionInterval");
         String checkPoints = intent.getStringExtra("CompetitionCheckPointsCount");
+        _needDeleteTables = Boolean.valueOf(intent.getStringExtra("NeedDelete"));
         _currentCompetition = new Competition(name, date, this);
         _currentCompetition.SetCompetitionSettings(startType, interval, checkPoints, "");
         FindAllViews();
 
         // Создание диалогового окна
         _addDialogBuilder = new AlertDialog.Builder(this);
-        _addDialogBuilder.setTitle(TitleDialog);  // заголовок
+        _addDialogBuilder.setTitle(TitleDialog);
         _addDialogBuilder.setView(_dialogForm);
 
         // Действия по кнопке "Добавить"
@@ -130,7 +132,7 @@ public class ViewPagerActivity extends AppCompatActivity
             public void onClick(DialogInterface dialog, int arg1)
             {
                 Participant participant = new Participant(_numberDialog.getText().toString(),_nameDialog.getText().toString(),
-                        _countryDialog.getText().toString(), _birthdayDialog.getText().toString());
+                        _countryDialog.getText().toString(), _birthdayDialog.getText().toString(),"");
                 AddRowParticipantList(participant);
                 _acceptParticipantImBtn.setVisibility(View.VISIBLE);
                 if(_dbSaver.SaveParticipantToDatabase(participant, DatabaseProvider.DbParticipant.TABLE_NAME))
@@ -201,12 +203,12 @@ public class ViewPagerActivity extends AppCompatActivity
                     cellsCount = 3;
                 }
 
-                localParticipant = new Participant(number, name, country, year);
+                localParticipant = new Participant(number, name, country, year, "");
 
                 _dbSaver.DeleteParticipant(localParticipant, DatabaseProvider.DbParticipant.TABLE_NAME);
                 _dbSaver.DeleteParticipant(localParticipant, _currentCompetition.GetDbParticipantPath());
                 localParticipant = new Participant(_numberRenameDialog.getText().toString(), _nameRenameDialog.getText().toString(),
-                        _countryRenameDialog.getText().toString(), _birthdayRenameDialog.getText().toString());
+                        _countryRenameDialog.getText().toString(), _birthdayRenameDialog.getText().toString(), "");
                 _dbSaver.SaveParticipantToDatabase(localParticipant, DatabaseProvider.DbParticipant.TABLE_NAME);
                 if(currTable == _tableLayoutParticipantList)
                 {
@@ -726,8 +728,8 @@ public class ViewPagerActivity extends AppCompatActivity
             {
                 dataArr[j] = ((TextView)((TableRow) table.getChildAt(i)).getChildAt(j)).getText().toString();
             }
-            if(table == _tableLayoutParticipantList) localArr[i] = new Participant(dataArr[0],dataArr[1], dataArr[3], dataArr[2]);
-            else localArr[i] = new Participant("",dataArr[0], dataArr[2], dataArr[1]);
+            if(table == _tableLayoutParticipantList) localArr[i] = new Participant(dataArr[0],dataArr[1], dataArr[3], dataArr[2],"");
+            else localArr[i] = new Participant("",dataArr[0], dataArr[2], dataArr[1], "");
         }
 
         return localArr;
@@ -768,11 +770,11 @@ public class ViewPagerActivity extends AppCompatActivity
                 flag = false;
                 if(table == _tableLayoutParticipantList)
                 {
-                    localArr.add(new Participant(dataArr[0],dataArr[1], dataArr[3], dataArr[2]));
+                    localArr.add(new Participant(dataArr[0],dataArr[1], dataArr[3], dataArr[2],""));
                 }
                 else
                 {
-                    localArr.add(new Participant("",dataArr[0], dataArr[2], dataArr[1]));
+                    localArr.add(new Participant("",dataArr[0], dataArr[2], dataArr[1], ""));
                 }
                 if(needDelete) table.removeViewAt(i);
                 else
@@ -790,7 +792,7 @@ public class ViewPagerActivity extends AppCompatActivity
     {
         CompetitionSaver competitionSaver = new CompetitionSaver(this);
         competitionSaver.SaveCompetitionToDatabase(_currentCompetition);
-
+        _needDeleteTables = false;
         Toast.makeText(getApplicationContext(),"Сохранить список и перейти к соревнованию",Toast.LENGTH_SHORT).show();
     }
 
@@ -968,10 +970,15 @@ public class ViewPagerActivity extends AppCompatActivity
             dialog.setPositiveButton("Да", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    DatabaseProvider provider = new DatabaseProvider(ViewPagerActivity.this);
-                    provider.DeleteTable(_currentCompetition.GetDbParticipantPath());
-                    provider.DeleteTable(_currentCompetition.GetSettingsPath());
+                    if(_needDeleteTables)
+                    {
+                        DatabaseProvider provider = new DatabaseProvider(ViewPagerActivity.this);
+                        provider.DeleteTable(_currentCompetition.GetDbParticipantPath());
+                        provider.DeleteTable(_currentCompetition.GetSettingsPath());
+                    }
+                    Intent intent = new Intent(ViewPagerActivity.this, MainActivity.class);
                     ViewPagerActivity.this.finish();
+                    startActivity(intent);
                 }
             });
             dialog.setNegativeButton("Нет", new DialogInterface.OnClickListener() {
@@ -986,8 +993,4 @@ public class ViewPagerActivity extends AppCompatActivity
         return super.onKeyDown(keyCode, event);
     }
 
-    private void InitDialogForAdd()
-    {
-
-    }
 }
