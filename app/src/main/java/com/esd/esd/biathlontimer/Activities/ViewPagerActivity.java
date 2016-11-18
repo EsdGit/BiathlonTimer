@@ -63,7 +63,6 @@ public class ViewPagerActivity extends AppCompatActivity
     private PopupMenu _participantPopupMenu;
     private PopupMenu _dataBasePopupMenu;
     private ColorPickerDialog _addColorToParticipantDialog;
-    private int _idAddColorToParticipantDialog;
     private int _colorParticipant;
 
     // Элементы ParticipantList
@@ -263,6 +262,28 @@ public class ViewPagerActivity extends AppCompatActivity
         _renameDialog = _renameDialogBuilder.create();
 
         //Диалог выбора цвета
+        _addColorToParticipantDialog = new ColorPickerDialog();
+        _addColorToParticipantDialog.initialize(R.string.color_picker_default_title,
+                new int[] {
+                        Color.RED,
+                        Color.BLACK,
+                        Color.BLUE,
+                        Color.CYAN,
+                        Color.DKGRAY,
+                        Color.GRAY,
+                        Color.YELLOW,
+                        Color.GREEN
+                }, Color.WHITE, 4, 3);
+
+
+        _addColorToParticipantDialog.setOnColorSelectedListener(new ColorPickerSwatch.OnColorSelectedListener() {
+            @Override
+            public void onColorSelected(int colour)
+            {
+                _colorDialog.setBackgroundColor(colour);
+                _colorParticipant = colour;
+            }
+        });
 
     }
 
@@ -1020,28 +1041,8 @@ public class ViewPagerActivity extends AppCompatActivity
 
     public void OnClickColorParticipant(View view)
     {
-        final ColorPickerDialog colorPickerDialog = new ColorPickerDialog();
-        colorPickerDialog.initialize(R.string.color_picker_default_title,
-                new int[] {
-                        Color.RED,
-                        Color.BLACK,
-                        Color.BLUE,
-                        Color.CYAN,
-                        Color.DKGRAY,
-                        Color.GRAY,
-                        Color.YELLOW,
-                        Color.GREEN
-                }, Color.WHITE, 4, 2);
-
-        colorPickerDialog.setOnColorSelectedListener(new ColorPickerSwatch.OnColorSelectedListener() {
-            @Override
-            public void onColorSelected(int colour)
-            {
-                _colorDialog.setBackgroundColor(colour);
-            }
-        });
-
         android.app.FragmentManager fm = this.getFragmentManager();
-        colorPickerDialog.show(fm, "colorpicker");
+        _addColorToParticipantDialog.setSelectedColor(_colorParticipant);
+        _addColorToParticipantDialog.show(fm, "colorpicker");
     }
 }

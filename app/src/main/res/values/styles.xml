@@ -31,6 +31,10 @@
         <item name="android:windowDisablePreview">true</item>
         <item name="overlapAnchor">false</item>
     </style>
+    
+    <style name="MyColorPicker" parent="AlertDialog.AppCompat.Light">
+        <item name="android:alignmentMode">alignBounds</item>
+    </style>
 
 
 
