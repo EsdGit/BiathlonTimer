@@ -24,13 +24,17 @@ public class Participant
     private String _group;
     public String GetGroup(){return _group;}
 
-    public Participant(String number,String fio, String country,String birthYear, String group)
+    private int _color;
+    public int GetColor(){return _color;}
+
+    public Participant(String number,String fio, String country,String birthYear, String group, int color)
     {
         _FIO = fio;
         _country = country;
         _birthYear = birthYear;
         _number = number;
         _group = group;
+        _color = color;
     }
 
     @Override

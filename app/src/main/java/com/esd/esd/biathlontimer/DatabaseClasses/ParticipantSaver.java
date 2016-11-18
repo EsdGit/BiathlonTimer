@@ -40,6 +40,7 @@ public class ParticipantSaver
         val.put(DatabaseProvider.DbParticipant.COLUMN_COUNTRY, participant.GetCountry());
         val.put(DatabaseProvider.DbParticipant.COLUMN_YEAR, participant.GetBirthYear());
         val.put(DatabaseProvider.DbParticipant.COLUMN_GROUP, participant.GetGroup());
+        val.put(DatabaseProvider.DbParticipant.COLUMN_COLOR, String.valueOf(participant.GetColor()));
         _db.insert(tableName, null, val);
         _db.close();
         return true;
@@ -55,7 +56,8 @@ public class ParticipantSaver
                         DatabaseProvider.DbParticipant.COLUMN_NAME,
                         DatabaseProvider.DbParticipant.COLUMN_COUNTRY,
                         DatabaseProvider.DbParticipant.COLUMN_YEAR,
-                        DatabaseProvider.DbParticipant.COLUMN_GROUP
+                        DatabaseProvider.DbParticipant.COLUMN_GROUP,
+                        DatabaseProvider.DbParticipant.COLUMN_COLOR
                 };
         Cursor cursor = _db.query(tableName, proj, null, null, null, null, orderBy);
         cursor.moveToFirst();
@@ -63,7 +65,7 @@ public class ParticipantSaver
         localArr = new Participant[rowsCount];
         for(int i = 0; i < rowsCount; i++)
         {
-            localArr[i] = new Participant(cursor.getString(0), cursor.getString(1), cursor.getString(2),cursor.getString(3), cursor.getString(4));
+            localArr[i] = new Participant(cursor.getString(0), cursor.getString(1), cursor.getString(2),cursor.getString(3), cursor.getString(4), Integer.valueOf(cursor.getString(5)));
             if(i < rowsCount - 1) cursor.moveToNext();
         }
         _db.close();

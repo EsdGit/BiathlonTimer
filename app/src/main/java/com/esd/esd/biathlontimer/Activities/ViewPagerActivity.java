@@ -144,9 +144,9 @@ public class ViewPagerActivity extends AppCompatActivity
             public void onClick(DialogInterface dialog, int arg1)
             {
                 Participant participant = new Participant(_numberDialog.getText().toString(),_nameDialog.getText().toString(),
-                        _countryDialog.getText().toString(), _birthdayDialog.getText().toString(),"");
-                AddRowParticipantList(participant);
-                _acceptParticipantImBtn.setVisibility(View.VISIBLE);
+                        _countryDialog.getText().toString(), _birthdayDialog.getText().toString(),"",_colorParticipant);
+
+                 _acceptParticipantImBtn.setVisibility(View.VISIBLE);
                 if(_dbSaver.SaveParticipantToDatabase(participant, DatabaseProvider.DbParticipant.TABLE_NAME))
                 {
                     Toast.makeText(getApplicationContext(), "Участник добавлен",
@@ -157,6 +157,16 @@ public class ViewPagerActivity extends AppCompatActivity
                     Toast.makeText(getApplicationContext(), "Такой участник уже есть в базе данных",
                             Toast.LENGTH_LONG).show();
                 }
+                Participant[] localArr = GetParticipantsFromTable(_tableLayoutParticipantList);
+                boolean needAdd = true;
+                for(int i = 0; i < localArr.length; i++)
+                {
+                    if(participant.equals(localArr[i]))
+                    {
+                        needAdd = false;
+                    }
+                }
+                if(needAdd) AddRowParticipantList(participant);
                 _currentCompetition.AddParticipant(participant);
                 SetStartPosition(_tableLayoutParticipantList);
                 _nameDialog.setText("");
@@ -215,12 +225,12 @@ public class ViewPagerActivity extends AppCompatActivity
                     cellsCount = 3;
                 }
 
-                localParticipant = new Participant(number, name, country, year, "");
+                localParticipant = new Participant(number, name, country, year, "",1);
 
                 _dbSaver.DeleteParticipant(localParticipant, DatabaseProvider.DbParticipant.TABLE_NAME);
                 _dbSaver.DeleteParticipant(localParticipant, _currentCompetition.GetDbParticipantPath());
                 localParticipant = new Participant(_numberRenameDialog.getText().toString(), _nameRenameDialog.getText().toString(),
-                        _countryRenameDialog.getText().toString(), _birthdayRenameDialog.getText().toString(), "");
+                        _countryRenameDialog.getText().toString(), _birthdayRenameDialog.getText().toString(), "",1);
                 _dbSaver.SaveParticipantToDatabase(localParticipant, DatabaseProvider.DbParticipant.TABLE_NAME);
                 if(currTable == _tableLayoutParticipantList)
                 {
@@ -702,7 +712,6 @@ public class ViewPagerActivity extends AppCompatActivity
                                     Toast.makeText(getApplicationContext(),"Сортировка базы данных по имени",Toast.LENGTH_SHORT).show();
                                     return true;
                                 case R.id.dataSort:
-                                    //SortTableBy(_tableLayoutDataBaseList, DatabaseProvider.DbParticipant.COLUMN_YEAR, item.isChecked());
                                     SortByYear(_tableLayoutDataBaseList, item.isChecked(),true);
                                     Toast.makeText(getApplicationContext(),"Сортировка базы данных по дате",Toast.LENGTH_SHORT).show();
                                     return true;
@@ -744,8 +753,8 @@ public class ViewPagerActivity extends AppCompatActivity
             {
                 dataArr[j] = ((TextView)((TableRow) table.getChildAt(i)).getChildAt(j)).getText().toString();
             }
-            if(table == _tableLayoutParticipantList) localArr[i] = new Participant(dataArr[0],dataArr[1], dataArr[3], dataArr[2],"");
-            else localArr[i] = new Participant("",dataArr[0], dataArr[2], dataArr[1], "");
+            if(table == _tableLayoutParticipantList) localArr[i] = new Participant(dataArr[0],dataArr[1], dataArr[3], dataArr[2],"",1);
+            else localArr[i] = new Participant("",dataArr[0], dataArr[2], dataArr[1], "",1);
         }
 
         return localArr;
@@ -786,11 +795,11 @@ public class ViewPagerActivity extends AppCompatActivity
                 flag = false;
                 if(table == _tableLayoutParticipantList)
                 {
-                    localArr.add(new Participant(dataArr[0],dataArr[1], dataArr[3], dataArr[2],""));
+                    localArr.add(new Participant(dataArr[0],dataArr[1], dataArr[3], dataArr[2],"",1));
                 }
                 else
                 {
-                    localArr.add(new Participant("",dataArr[0], dataArr[2], dataArr[1], ""));
+                    localArr.add(new Participant("",dataArr[0], dataArr[2], dataArr[1], "",1));
                 }
                 if(needDelete) table.removeViewAt(i);
                 else
@@ -1009,10 +1018,6 @@ public class ViewPagerActivity extends AppCompatActivity
         return super.onKeyDown(keyCode, event);
     }
 
-    private void InitDialogForAdd()
-    {
-
-    }
 
     public void OnClickColorParticipant(View view)
     {
