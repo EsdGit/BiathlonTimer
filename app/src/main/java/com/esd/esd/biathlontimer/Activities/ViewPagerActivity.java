@@ -4,7 +4,9 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.PaintDrawable;
+import android.graphics.drawable.ShapeDrawable;
 import android.icu.text.MessagePattern;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -28,6 +30,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+//import com.azeesoft.lib.colorpicker.ColorPickerDialog;
 import com.esd.esd.biathlontimer.Competition;
 import com.esd.esd.biathlontimer.DatabaseClasses.CompetitionSaver;
 import com.esd.esd.biathlontimer.DatabaseClasses.DatabaseProvider;
@@ -36,6 +39,11 @@ import com.esd.esd.biathlontimer.DatabaseClasses.SettingsSaver;
 import com.esd.esd.biathlontimer.PagerAdapterHelper;
 import com.esd.esd.biathlontimer.Participant;
 import com.esd.esd.biathlontimer.R;
+import com.onegravity.colorpicker.ColorPickerDialog;
+import com.onegravity.colorpicker.ColorPickerListener;
+import com.onegravity.colorpicker.SetColorPickerListenerEvent;
+
+import org.w3c.dom.Text;
 
 import java.sql.Date;
 import java.util.ArrayList;
@@ -55,6 +63,9 @@ public class ViewPagerActivity extends AppCompatActivity
     private AlertDialog _addDialog;
     private PopupMenu _participantPopupMenu;
     private PopupMenu _dataBasePopupMenu;
+    private ColorPickerDialog _addColorToParticipantDialog;
+    private int _idAddColorToParticipantDialog;
+    private int _colorParticipant;
 
     // Элементы ParticipantList
     private TableLayout _tableLayoutParticipantList;
@@ -73,6 +84,7 @@ public class ViewPagerActivity extends AppCompatActivity
     private EditText _birthdayDialog;
     private EditText _countryDialog;
     private EditText _numberDialog;
+    private TextView _colorDialog;
 
     private View _renameForm;
     private EditText _numberRenameDialog;
@@ -238,6 +250,9 @@ public class ViewPagerActivity extends AppCompatActivity
         });
         _renameDialogBuilder.setCancelable(false);
         _renameDialog = _renameDialogBuilder.create();
+
+        //Диалог выбора цвета
+
     }
 
     @Override
@@ -496,6 +511,7 @@ public class ViewPagerActivity extends AppCompatActivity
         _birthdayDialog = (EditText) _dialogForm.findViewById(R.id.dialogBirthday);
         _countryDialog = (EditText) _dialogForm.findViewById(R.id.dialogCountry);
         _numberDialog = (EditText) _dialogForm.findViewById(R.id.dialogNumber);
+        _colorDialog = (TextView) _dialogForm.findViewById(R.id.dialogColor);
 
         //Работа с DataBaseList
         View page2 = inflater.inflate(R.layout.activity_database_list, null);
@@ -913,6 +929,49 @@ public class ViewPagerActivity extends AppCompatActivity
 
     private void InitDialogForAdd()
     {
+
+    }
+
+    public void OnClickColorParticipant(View view)
+    {
+        //1 вариант, мне не очень нравится
+        _addColorToParticipantDialog = new ColorPickerDialog(this, Color.WHITE, true);
+        _idAddColorToParticipantDialog = _addColorToParticipantDialog.show();
+        SetColorPickerListenerEvent.setListener(_idAddColorToParticipantDialog, new ColorPickerListener()
+        {
+            @Override
+            public void onDialogClosing()
+            {
+                _colorDialog.setBackgroundColor(_colorParticipant);
+            }
+
+            @Override
+            public void onColorChanged(int color)
+            {
+                if(color != -1)
+                {
+                    _colorParticipant = color;
+                }
+            }
+        });
+
+        //2 вариант
+//        _addColorToParticipantDialog = ColorPickerDialog.createColorPickerDialog(this);
+//        _addColorToParticipantDialog.setOnColorPickedListener(new ColorPickerDialog.OnColorPickedListener() {
+//            @Override
+//            public void onColorPicked(int color, String hexVal)
+//            {
+//                _colorDialog.setBackgroundColor(color);
+//            }
+//        });
+//        _addColorToParticipantDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+//            @Override
+//            public void onCancel(DialogInterface dialog)
+//            {
+//
+//            }
+//        });
+//        _addColorToParticipantDialog.show();
 
     }
 }

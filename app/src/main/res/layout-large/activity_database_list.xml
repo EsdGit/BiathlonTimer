@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+                android:id="@+id/dataBaseListLayout"
+                tools:context="com.esd.esd.biathlontimer.Activities.ViewPagerActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        android:orientation="horizontal"
+        android:weightSum="3"
+        android:id="@+id/headDataBaseLayout">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/small_indent"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#ffffff"
+            android:id="@+id/database_list_head"
+            android:layout_weight="2.7"/>
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_accept"
+            android:background="@null"
+            android:layout_gravity="center"
+            android:tint="#ffffff"
+            android:visibility="invisible"
+            android:layout_weight="0.1"
+            android:onClick="OnClickAcceptDataBase"
+            android:id="@+id/second_accept_database"/>
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            android:layout_gravity="center">
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_accept"
+                android:background="@null"
+                android:layout_gravity="center"
+                android:tint="#ffffff"
+                android:visibility="gone"
+                android:onClick="OnClickAcceptDataBase"
+                android:id="@+id/accept_database"/>
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_edit"
+                android:background="@null"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                android:tint="#ffffff"
+                android:onClick="OnClickEditDataBase"
+                android:id="@+id/edit_database"/>
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            android:layout_gravity="center">
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_delete"
+                android:background="@null"
+                android:visibility="gone"
+                android:layout_gravity="center"
+                android:tint="#ffffff"
+                android:onClick="OnClickDeleteDataBAse"
+                android:id="@+id/delete_database"/>
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_menu"
+                android:tint="#ffffff"
+                android:background="@null"
+                android:id="@+id/menu_database"
+                android:onClick="OnClickMenu"/>
+        </FrameLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:id="@+id/headTableDataBaseLayout"
+        android:layout_below="@id/headDataBaseLayout"
+        android:background="#000000"
+        android:weightSum="4">
+
+        <TextView
+            android:layout_margin="1dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/nameDataBase"
+            android:text="@string/fio_col_title"
+            android:gravity="center"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_weight="3"
+            android:typeface="serif"
+            android:background="#ffffff"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="1dp"
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="1dp"
+            android:text="@string/year_col_title"
+            android:id="@+id/birthdayDataBase"
+            android:gravity="center"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_weight="0.5"
+            android:typeface="serif"
+            android:background="#ffffff"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="1dp"
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="1dp"
+            android:id="@+id/countryDataBase"
+            android:text="@string/country_col_title"
+            android:gravity="center"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_weight="0.5"
+            android:typeface="serif"
+            android:background="#ffffff"/>
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/scrollViewDataBaseLayout"
+        android:scrollbars="vertical"
+        android:layout_below="@+id/headTableDataBaseLayout"
+        android:elevation="2dp">
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#000000"
+            android:id="@+id/tableDataBaseLayout"
+            android:scrollbars="vertical"
+            android:elevation="4dp">
+
+        </TableLayout>
+    </ScrollView>
+</RelativeLayout>
