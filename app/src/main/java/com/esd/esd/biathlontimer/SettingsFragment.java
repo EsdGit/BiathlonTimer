@@ -2,7 +2,6 @@ package com.esd.esd.biathlontimer;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Context;
 import android.content.Intent;
@@ -11,21 +10,20 @@ import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceScreen;
 import android.preference.SwitchPreference;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.NumberPicker;
-import android.widget.TimePicker;
+import android.widget.Toast;
 
-import com.esd.esd.biathlontimer.Activities.SettingsActivity;
 import com.esd.esd.biathlontimer.Activities.ViewPagerActivity;
 
 
-import org.apache.poi.hssf.record.BookBoolRecord;
 import org.apache.poi.util.StringUtil;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 
@@ -38,15 +36,27 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
     private static ListPreference _typeStart;
     private static EditTextPreference _countCheckPoint;
     private static Preference _setStartTimer;
-    private static EditTextPreference _countGroup;
+    private static Preference _group;
 
-    private View _dialogForm;
-    private AlertDialog.Builder _dialogBuilder;
-    private AlertDialog _dialog;
+    private View _dialogFormInterval;
+    private View _dialogFormAddGroup;
+    private AlertDialog.Builder _dialogBuilderInterval;
+    private AlertDialog.Builder _dialogBuilderGroup;
+    private AlertDialog.Builder _dialogBuilderAddGroup;
+    private AlertDialog.Builder _dialogBuilderDelGroup;
+    private AlertDialog _dialogInterval;
+    private AlertDialog _dialogGroup;
+    private AlertDialog _dialogAddGroup;
+    private AlertDialog _dialogDelGroup;
+
     private NumberPicker _minute;
     private NumberPicker _seconds;
+    private EditText _nameAddGroup;
 
     private boolean _isStartTimer = false;
+    private ArrayList<String> _dialogItemsList;
+    private String[] _dialogItems;
+    private int _indexDelGroup;
 
     private static final int MIN_VALUE_MINUTE_AND_SECONDS = 0;
     private static final int MAX_VALUE_MINUTE_AND_SECONDS = 60;
@@ -57,6 +67,11 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
     {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.activity_setting);
+
+        _dialogItemsList = new ArrayList<>();
+        _dialogItemsList.add("Добавить группу");
+        _dialogItems = _dialogItemsList.toArray(new String[_dialogItemsList.size()]);
+
         _typeCompetition = (SwitchPreference) findPreference("typeCompetition");
         _typeCompetition.setChecked(false);
         _setData = (Preference) findPreference("dataSetting");
@@ -65,28 +80,28 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
         _nameCompetition = (EditTextPreference) findPreference("nameCompetitionSetting");
         _typeStart = (ListPreference) findPreference("typeStartSetting");
         _setStartTimer = (Preference) findPreference("startTimer");
-        _countGroup = (EditTextPreference) findPreference("groupCounter");
+        _group = (Preference) findPreference("group");
 
-
+        //Диалог установки интервала
         LayoutInflater inflater = LayoutInflater.from(getActivity());
-        _dialogForm = inflater.inflate(R.layout.dialog_interval_setting_activity, null);
-        _minute = (NumberPicker) _dialogForm.findViewById(R.id.dialog_minute);
-        _seconds= (NumberPicker) _dialogForm.findViewById(R.id.dialog_seconds);
+        _dialogFormInterval = inflater.inflate(R.layout.dialog_interval_setting_activity, null);
+        _minute = (NumberPicker) _dialogFormInterval.findViewById(R.id.dialog_minute);
+        _seconds= (NumberPicker) _dialogFormInterval.findViewById(R.id.dialog_seconds);
         _minute.setMinValue(MIN_VALUE_MINUTE_AND_SECONDS);
         _minute.setMaxValue(MAX_VALUE_MINUTE_AND_SECONDS);
         _seconds.setMinValue(MIN_VALUE_MINUTE_AND_SECONDS);
         _seconds.setMaxValue(MAX_VALUE_MINUTE_AND_SECONDS);
-        _dialogBuilder = new AlertDialog.Builder(getActivity());
-        _dialogBuilder.setTitle("Установите интервал");
-        _dialogBuilder.setView(_dialogForm);
-        _dialogBuilder.setPositiveButton("Принять", new DialogInterface.OnClickListener() {
+        _dialogBuilderInterval = new AlertDialog.Builder(getActivity());
+        _dialogBuilderInterval.setTitle("Установите интервал");
+        _dialogBuilderInterval.setView(_dialogFormInterval);
+        _dialogBuilderInterval.setPositiveButton("Принять", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i)
             {
                 if(_isStartTimer)
                 {
                     _setStartTimer.setSummary(SetNormalFormatDataTime(_minute.getValue() + ":" + _seconds.getValue(), true));
-                    _dialog.setTitle("Установаите интервал");
+                    _dialogInterval.setTitle("Установаите интервал");
                     _isStartTimer = false;
                 }
                 else
@@ -95,15 +110,65 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
                 }
             }
         });
-        _dialogBuilder.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+        _dialogBuilderInterval.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
+            public void onClick(DialogInterface dialogInterface, int i)
+            {
 
             }
         });
-        _dialogBuilder.setCancelable(false);
-        _dialog = _dialogBuilder.create();
+        _dialogBuilderInterval.setCancelable(false);
+        _dialogInterval = _dialogBuilderInterval.create();
 
+
+        //Диалог добавления группы
+        _dialogFormAddGroup = inflater.inflate(R.layout.dialog_add_group_setting_activity, null);
+        _nameAddGroup = (EditText) _dialogFormAddGroup.findViewById(R.id.add_group_setting_activity);
+        _dialogBuilderAddGroup = new AlertDialog.Builder(getActivity());
+        _dialogBuilderAddGroup.setTitle("Название группы");
+        _dialogBuilderAddGroup.setView(_dialogFormAddGroup);
+        _dialogBuilderAddGroup.setPositiveButton("Принять", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+                String getString = _nameAddGroup.getText().toString().replace(" ","");
+                if(_nameAddGroup.getText().toString() != "" && !_dialogItemsList.contains(getString))
+                {
+                    _dialogItemsList.add(_dialogItemsList.size() - 1,getString);
+                    _dialogItems = _dialogItemsList.toArray(new String[_dialogItemsList.size()]);
+                }
+                _nameAddGroup.setText("");
+            }
+        });
+        _dialogBuilderAddGroup.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+
+            }
+        });
+        _dialogAddGroup = _dialogBuilderAddGroup.create();
+
+        //Диалог удаления группы
+        _dialogBuilderDelGroup = new AlertDialog.Builder(getActivity());
+        _dialogBuilderDelGroup.setTitle("Удаление группы");
+        _dialogBuilderDelGroup.setMessage("Вы уверены, что хотите удалить группу?");
+        _dialogBuilderDelGroup.setPositiveButton("Да", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+                _dialogItemsList.remove(_indexDelGroup);
+                _dialogItems = _dialogItemsList.toArray(new String[_dialogItemsList.size()]);
+            }
+        });
+        _dialogBuilderDelGroup.setNegativeButton("Нет", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+                Toast.makeText(getActivity(),"Правильный выбор, чувак)",Toast.LENGTH_SHORT).show();
+            }
+        });
+        _dialogDelGroup = _dialogBuilderDelGroup.create();
 
         _typeCompetition.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
@@ -135,7 +200,7 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
         public boolean onPreferenceClick(Preference preference)
         {
             SetStartPositionInTimeDialog();
-            _dialog.show();
+            _dialogInterval.show();
             return false;
         }});
         _nameCompetition.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
@@ -182,16 +247,35 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
             {
                 SetStartPositionInTimeDialog();
                 _isStartTimer = true;
-                _dialog.setTitle("Установите время до старта");
-                _dialog.show();
+                _dialogInterval.setTitle("Установите время до старта");
+                _dialogInterval.show();
                 return false;
             }
         });
-        _countGroup.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+        _group.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue)
+            public boolean onPreferenceClick(Preference preference)
             {
-                _countGroup.setSummary("Количество групп на соревнованиях: " + (String)newValue);
+                _dialogBuilderGroup = new AlertDialog.Builder(getActivity());
+                _dialogBuilderGroup.setTitle("Группы соревнования");
+                _dialogBuilderGroup.setItems(_dialogItems, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        if(_dialogItems[which] == "Добавить группу")
+                        {
+                            _dialogAddGroup.show();
+                        }
+                        else
+                        {
+                            _nameAddGroup.setText(_dialogItemsList.get(which).toString());
+                            _dialogItemsList.remove(which);
+                            _dialogAddGroup.show();
+                        }
+                    }
+                });
+                _dialogGroup = _dialogBuilderGroup.create();
+                _dialogGroup.show();
                 return false;
             }
         });

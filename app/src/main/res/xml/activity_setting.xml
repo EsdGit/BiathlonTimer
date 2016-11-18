@@ -39,11 +39,11 @@
         android:title="Интервал старта"
         android:dialogTitle="Установите интервал"/>
 
-    <EditTextPreference
-        android:key="groupCounter"
-        android:title="Количесвто групп на соревнованиях"
-        android:summary="Устанавливает количество групп, которое будет на соревнованиях"
-        android:dialogTitle="Введите количество групп "/>
+    <Preference
+        android:key="group"
+        android:title="Группы участников соревнования"
+        android:summary="Создает группы необходимые для соревнования"
+        android:dialogTitle="Группы соревнования"/>
 
     <EditTextPreference
         android:key="countCheckPointSetting"
