@@ -31,6 +31,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 //import com.azeesoft.lib.colorpicker.ColorPickerDialog;
+import com.android.colorpicker.ColorPickerDialog;
+import com.android.colorpicker.ColorPickerSwatch;
 import com.esd.esd.biathlontimer.Competition;
 import com.esd.esd.biathlontimer.DatabaseClasses.CompetitionSaver;
 import com.esd.esd.biathlontimer.DatabaseClasses.DatabaseProvider;
@@ -39,9 +41,6 @@ import com.esd.esd.biathlontimer.DatabaseClasses.SettingsSaver;
 import com.esd.esd.biathlontimer.PagerAdapterHelper;
 import com.esd.esd.biathlontimer.Participant;
 import com.esd.esd.biathlontimer.R;
-import com.onegravity.colorpicker.ColorPickerDialog;
-import com.onegravity.colorpicker.ColorPickerListener;
-import com.onegravity.colorpicker.SetColorPickerListenerEvent;
 
 import org.w3c.dom.Text;
 
@@ -1021,44 +1020,28 @@ public class ViewPagerActivity extends AppCompatActivity
 
     public void OnClickColorParticipant(View view)
     {
-        //1 вариант, мне не очень нравится
-        _addColorToParticipantDialog = new ColorPickerDialog(this, Color.WHITE, true);
-        _idAddColorToParticipantDialog = _addColorToParticipantDialog.show();
-        SetColorPickerListenerEvent.setListener(_idAddColorToParticipantDialog, new ColorPickerListener()
-        {
-            @Override
-            public void onDialogClosing()
-            {
-                _colorDialog.setBackgroundColor(_colorParticipant);
-            }
+        final ColorPickerDialog colorPickerDialog = new ColorPickerDialog();
+        colorPickerDialog.initialize(R.string.color_picker_default_title,
+                new int[] {
+                        Color.RED,
+                        Color.BLACK,
+                        Color.BLUE,
+                        Color.CYAN,
+                        Color.DKGRAY,
+                        Color.GRAY,
+                        Color.YELLOW,
+                        Color.GREEN
+                }, Color.WHITE, 4, 2);
 
+        colorPickerDialog.setOnColorSelectedListener(new ColorPickerSwatch.OnColorSelectedListener() {
             @Override
-            public void onColorChanged(int color)
+            public void onColorSelected(int colour)
             {
-                if(color != -1)
-                {
-                    _colorParticipant = color;
-                }
+                _colorDialog.setBackgroundColor(colour);
             }
         });
 
-        //2 вариант
-//        _addColorToParticipantDialog = ColorPickerDialog.createColorPickerDialog(this);
-//        _addColorToParticipantDialog.setOnColorPickedListener(new ColorPickerDialog.OnColorPickedListener() {
-//            @Override
-//            public void onColorPicked(int color, String hexVal)
-//            {
-//                _colorDialog.setBackgroundColor(color);
-//            }
-//        });
-//        _addColorToParticipantDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-//            @Override
-//            public void onCancel(DialogInterface dialog)
-//            {
-//
-//            }
-//        });
-//        _addColorToParticipantDialog.show();
-
+        android.app.FragmentManager fm = this.getFragmentManager();
+        colorPickerDialog.show(fm, "colorpicker");
     }
 }

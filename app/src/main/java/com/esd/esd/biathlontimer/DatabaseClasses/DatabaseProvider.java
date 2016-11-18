@@ -51,7 +51,7 @@ public class DatabaseProvider extends SQLiteOpenHelper
         public static final String COLUMN_NAME = "Name";
         public static final String COLUMN_COUNTRY = "Country";
         public static final String COLUMN_YEAR = "BirthYear";
-        public static final String COLUMN_GROUP = "Group";
+        public static final String COLUMN_GROUP = "GroupName";
         public static final String COLUMN_COLOR = "Color";
     }
 

@@ -35,8 +35,7 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    //compile 'com.azeesoft.lib.colorpicker:colorpicker:1.0.8@aar'
-    compile 'com.1gravity:android-colorpicker:2.0.2'
+    compile 'uk.co.jordanrobinson:android-color-picker:1.0.1'
     compile 'com.android.support:appcompat-v7:24.2.1'
     compile 'com.android.support:design:24.2.1'
     compile 'com.shamanland:fab:0.0.6'
