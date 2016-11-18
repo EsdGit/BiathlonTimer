@@ -18,7 +18,8 @@ public class DatabaseProvider extends SQLiteOpenHelper
 
     private static final String SQL_CREATE_PARTICIPANT_TABLE = "CREATE TABLE " + DbParticipant.TABLE_NAME +
             " (" + DbParticipant._ID + " INTEGER PRIMARY KEY," + DbParticipant.COLUMN_NUMBER + TEXT_TYPE +COMMA_SEP+ DbParticipant.COLUMN_NAME + TEXT_TYPE +
-            COMMA_SEP + DbParticipant.COLUMN_COUNTRY + TEXT_TYPE + COMMA_SEP + DbParticipant.COLUMN_YEAR + TEXT_TYPE + ")";
+            COMMA_SEP + DbParticipant.COLUMN_COUNTRY + TEXT_TYPE + COMMA_SEP + DbParticipant.COLUMN_YEAR + TEXT_TYPE + COMMA_SEP+
+            DbParticipant.COLUMN_GROUP + TEXT_TYPE + ")";
     private static final String SQL_DELETE_PARTICIPANT_TABLE = "DROP TABLE IF EXISTS " + DbParticipant.TABLE_NAME;
 
 
@@ -50,6 +51,7 @@ public class DatabaseProvider extends SQLiteOpenHelper
         public static final String COLUMN_NAME = "Name";
         public static final String COLUMN_COUNTRY = "Country";
         public static final String COLUMN_YEAR = "BirthYear";
+        public static final String COLUMN_GROUP = "Grou";
     }
 
     // Абстрактный класс базы данных соревнований
@@ -82,7 +84,7 @@ public class DatabaseProvider extends SQLiteOpenHelper
         String sql = "CREATE TABLE IF NOT EXISTS " + name +
                 " (" + DbParticipant._ID + " INTEGER PRIMARY KEY, " + DbParticipant.COLUMN_NUMBER + TEXT_TYPE + COMMA_SEP+
                 DbParticipant.COLUMN_NAME + TEXT_TYPE + COMMA_SEP + DbParticipant.COLUMN_COUNTRY + TEXT_TYPE + COMMA_SEP
-                + DbParticipant.COLUMN_YEAR + TEXT_TYPE + ")";
+                + DbParticipant.COLUMN_YEAR + TEXT_TYPE + COMMA_SEP+DbParticipant.COLUMN_GROUP+TEXT_TYPE+")";
         this.getWritableDatabase().execSQL(sql);
     }
 

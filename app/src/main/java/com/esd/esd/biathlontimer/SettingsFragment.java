@@ -19,6 +19,7 @@ import android.widget.DatePicker;
 import android.widget.NumberPicker;
 import android.widget.TimePicker;
 
+import com.esd.esd.biathlontimer.Activities.SettingsActivity;
 import com.esd.esd.biathlontimer.Activities.ViewPagerActivity;
 
 
@@ -220,7 +221,13 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
         intent.putExtra("CompetitionStartType", _typeStart.getSummary().toString());
         intent.putExtra("CompetitionInterval", _setInterval.getSummary().toString());
         intent.putExtra("CompetitionCheckPointsCount", _countCheckPoint.getSummary().toString());
+        intent.putExtra("NeedDelete", "true");
         return intent;
+    }
+
+    public static Competition GetCurrentCompetition(Context context)
+    {
+        return new Competition(_nameCompetition.getSummary().toString(),_setData.getSummary().toString(), context);
     }
 
     private String SetNormalFormatDataTime(String str, boolean isTime)

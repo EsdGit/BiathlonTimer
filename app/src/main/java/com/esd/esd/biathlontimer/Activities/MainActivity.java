@@ -106,14 +106,14 @@ public class MainActivity extends AppCompatActivity {
 
     private void AddCompetitionRow(Competition competition)
     {
-        TableRow newRow = new TableRow(this);
-        TextView newTextView = new TextView(this);
+        final TableRow newRow = new TableRow(this);
+        final TextView newTextView = new TextView(this);
         newTextView.setText(competition.GetName());
         newTextView.setGravity(Gravity.CENTER);
         newTextView.setBackground(new PaintDrawable(Color.WHITE));
         newTextView.setLayoutParams(new TableRow.LayoutParams(_nameTextView.getMeasuredWidth(),_nameTextView.getMeasuredHeight(), 0.666f));
         ((TableRow.LayoutParams)newTextView.getLayoutParams()).setMargins(2,0,2,2);
-        TextView newTextView2 = new TextView(this);
+        final TextView newTextView2 = new TextView(this);
         newTextView2.setText(competition.GetDate());
         newTextView2.setGravity(Gravity.CENTER);
         newTextView2.setBackground(new PaintDrawable(Color.WHITE));
@@ -148,8 +148,13 @@ public class MainActivity extends AppCompatActivity {
                 if(!_haveMarkedCompetition)
                 {
                     Intent myIntent = new Intent(MainActivity.this, ViewPagerActivity.class);
-                    // Необходимо передавать Extra c данными
-                    //startActivity(myIntent);
+                    myIntent.putExtra("CompetitionName", newTextView.getText());
+                    myIntent.putExtra("CompetitionDate", newTextView2.getText());
+                    myIntent.putExtra("CompetitionStartType", "");
+                    myIntent.putExtra("CompetitionInterval", "");
+                    myIntent.putExtra("CompetitionCheckPointsCount", "");
+                    myIntent.putExtra("NeedDelete", "false");
+                    startActivity(myIntent);
                 }
                 else
                 {
