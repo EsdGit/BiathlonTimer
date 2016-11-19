@@ -50,6 +50,7 @@
             android:gravity="center"
             android:imeOptions="actionNext"/>
 
+
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -60,31 +61,55 @@
             android:layout_weight="1"
             android:gravity="center"
             android:imeOptions="actionDone"/>
+
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:id="@+id/dialogGrupColorLayout"
+        android:id="@+id/dialogGroupColorLayout"
         android:layout_below="@id/dialogBirthdayCountryLayout"
         android:layout_margin="3dp"
         android:weightSum="2">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Группа:"
+            android:layout_weight="0.2"
+            android:gravity="center_horizontal|center_vertical"
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
+
         <Spinner
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1.5">
-
-        </Spinner>
+            android:layout_weight="0.6"
+            android:id="@+id/spinnerOfGroup"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="0.50"
-            android:background="@color/white"
-            android:onClick="OnClickColorParticipant"
-            android:id="@+id/dialogColor"/>
+            android:text="Цвет:"
+            android:layout_weight="0.2"
+            android:gravity="center_horizontal|center_vertical"
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="#000000"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_margin="1.5dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:onClick="OnClickColorParticipant"
+                android:id="@+id/dialogColor"/>
+
+        </FrameLayout>
     </LinearLayout>
 
 </RelativeLayout>

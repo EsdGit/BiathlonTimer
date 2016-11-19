@@ -1,50 +1,44 @@
 package com.esd.esd.biathlontimer.Activities;
 
+import android.animation.ObjectAnimator;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.PaintDrawable;
 import android.graphics.drawable.ShapeDrawable;
-import android.icu.text.MessagePattern;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
-import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
+import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
-
-//import com.azeesoft.lib.colorpicker.ColorPickerDialog;
 import com.android.colorpicker.ColorPickerDialog;
 import com.android.colorpicker.ColorPickerSwatch;
 import com.esd.esd.biathlontimer.Competition;
 import com.esd.esd.biathlontimer.DatabaseClasses.CompetitionSaver;
 import com.esd.esd.biathlontimer.DatabaseClasses.DatabaseProvider;
 import com.esd.esd.biathlontimer.DatabaseClasses.ParticipantSaver;
-import com.esd.esd.biathlontimer.DatabaseClasses.SettingsSaver;
 import com.esd.esd.biathlontimer.PagerAdapterHelper;
 import com.esd.esd.biathlontimer.Participant;
 import com.esd.esd.biathlontimer.R;
 
-import org.w3c.dom.Text;
-
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,6 +58,7 @@ public class ViewPagerActivity extends AppCompatActivity
     private PopupMenu _dataBasePopupMenu;
     private ColorPickerDialog _addColorToParticipantDialog;
     private int _colorParticipant;
+    private String[] _arrayGroup;
 
     // Элементы ParticipantList
     private TableLayout _tableLayoutParticipantList;
@@ -83,6 +78,7 @@ public class ViewPagerActivity extends AppCompatActivity
     private EditText _countryDialog;
     private EditText _numberDialog;
     private TextView _colorDialog;
+    private Spinner _spinnerOfGroup;
 
     private View _renameForm;
     private EditText _numberRenameDialog;
@@ -127,6 +123,16 @@ public class ViewPagerActivity extends AppCompatActivity
         String startType = intent.getStringExtra("CompetitionStartType");
         String interval = intent.getStringExtra("CompetitionInterval");
         String checkPoints = intent.getStringExtra("CompetitionCheckPointsCount");
+        String[] localArray = intent.getStringArrayExtra("ArrayGroup");
+        _arrayGroup = new String[localArray.length + 1];
+        for(int i = 0 ; i<localArray.length;i++)
+        {
+            _arrayGroup[i+1] = localArray[i];
+        }
+        _arrayGroup[0]="Без группы";
+
+
+
         _needDeleteTables = Boolean.valueOf(intent.getStringExtra("NeedDelete"));
         _currentCompetition = new Competition(name, date, this);
         _currentCompetition.SetCompetitionSettings(startType, interval, checkPoints, "");
@@ -171,6 +177,7 @@ public class ViewPagerActivity extends AppCompatActivity
                 _birthdayDialog.setText("");
                 _countryDialog.setText("");
                 _numberDialog.setText("");
+                _spinnerOfGroup.setSelection(0);
 
             }
 
@@ -282,6 +289,27 @@ public class ViewPagerActivity extends AppCompatActivity
             {
                 _colorDialog.setBackgroundColor(colour);
                 _colorParticipant = colour;
+            }
+        });
+
+        //Создание spinner в диалоговом окне добавления участника
+        ArrayAdapter<String> adapterGroupAddParticipant = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, _arrayGroup);
+        adapterGroupAddParticipant.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        _spinnerOfGroup.setAdapter(adapterGroupAddParticipant);
+        _spinnerOfGroup.setSelection(0);
+        _spinnerOfGroup.setScrollContainer(true);
+        _spinnerOfGroup.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+        {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+            {
+                String selected = _spinnerOfGroup.getSelectedItem().toString();
+                Toast.makeText(getApplicationContext(),"Выбранная группа - " + selected, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
 
@@ -544,6 +572,7 @@ public class ViewPagerActivity extends AppCompatActivity
         _countryDialog = (EditText) _dialogForm.findViewById(R.id.dialogCountry);
         _numberDialog = (EditText) _dialogForm.findViewById(R.id.dialogNumber);
         _colorDialog = (TextView) _dialogForm.findViewById(R.id.dialogColor);
+        _spinnerOfGroup = (Spinner) _dialogForm.findViewById(R.id.spinnerOfGroup);
 
         //Работа с DataBaseList
         View page2 = inflater.inflate(R.layout.activity_database_list, null);

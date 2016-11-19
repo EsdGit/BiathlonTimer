@@ -106,6 +106,7 @@ public class SettingsActivity extends PreferenceActivity
             if(_canAddCompetition)
             {
                 Intent myIntent = SettingsFragment.GetIntent(this);
+
                 startActivity(myIntent);
             }
         }
