@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.PaintDrawable;
 import android.graphics.drawable.ShapeDrawable;
@@ -89,6 +91,7 @@ public class ViewPagerActivity extends AppCompatActivity
     private EditText _nameRenameDialog;
     private EditText _birthdayRenameDialog;
     private EditText _countryRenameDialog;
+    private TextView _colorRenameDialog;
     private AlertDialog.Builder _renameDialogBuilder;
     private AlertDialog _renameDialog;
 
@@ -141,6 +144,7 @@ public class ViewPagerActivity extends AppCompatActivity
         _addDialogBuilder.setPositiveButton(AddDialogBtn, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int arg1)
             {
+                _colorParticipant = ((ColorDrawable) _colorDialog.getBackground()).getColor();
                 Participant participant = new Participant(_numberDialog.getText().toString(),_nameDialog.getText().toString(),
                         _countryDialog.getText().toString(), _birthdayDialog.getText().toString(),"",_colorParticipant);
 
@@ -199,6 +203,7 @@ public class ViewPagerActivity extends AppCompatActivity
                 String year;
                 String country;
                 int cellsCount;
+                _colorParticipant = ((ColorDrawable) _colorRenameDialog.getBackground()).getColor();
                 if(currTable == _tableLayoutParticipantList)
                 {
                     number = ((TextView) _renameTableRow.getChildAt(0)).getText().toString();
@@ -233,12 +238,21 @@ public class ViewPagerActivity extends AppCompatActivity
                 if(currTable == _tableLayoutParticipantList)
                 {
                     _dbSaver.SaveParticipantToDatabase(localParticipant, _currentCompetition.GetDbParticipantPath());
+                    ((TextView) _renameTableRow.getChildAt(0)).setBackgroundColor(localParticipant.GetColor());
+                    for(int j = 1; j < cellsCount; j++)
+                    {
+                        ((TextView) _renameTableRow.getChildAt(j)).setBackground(new PaintDrawable(getResources().getColor(R.color.white)));
+                    }
+                }
+                else
+                {
+                    for(int j = 0; j < cellsCount; j++)
+                    {
+                        ((TextView) _renameTableRow.getChildAt(j)).setBackground(new PaintDrawable(getResources().getColor(R.color.white)));
+                    }
                 }
 
-                for(int j = 0; j < cellsCount; j++)
-                {
-                    ((TextView) _renameTableRow.getChildAt(j)).setBackground(new PaintDrawable(getResources().getColor(R.color.white)));
-                }
+
                 SetStartPosition(currTable);
             }
         });
@@ -281,6 +295,7 @@ public class ViewPagerActivity extends AppCompatActivity
             public void onColorSelected(int colour)
             {
                 _colorDialog.setBackgroundColor(colour);
+                _colorRenameDialog.setBackgroundColor(colour);
                 _colorParticipant = colour;
             }
         });
@@ -534,6 +549,7 @@ public class ViewPagerActivity extends AppCompatActivity
         _nameRenameDialog = (EditText) _renameForm.findViewById(R.id.dialogName);
         _birthdayRenameDialog = (EditText) _renameForm.findViewById(R.id.dialogBirthday);
         _countryRenameDialog = (EditText) _renameForm.findViewById(R.id.dialogCountry);
+        _colorRenameDialog = (TextView) _renameForm.findViewById(R.id.dialogColor);
 
 
         _dialogForm = inflater.inflate(R.layout.dialog_activity_add_participant, null);
@@ -621,7 +637,8 @@ public class ViewPagerActivity extends AppCompatActivity
 
     private void SortByYear(TableLayout table,boolean sortState, boolean sortByYear)
     {
-        Participant[] localArr = GetParticipantsFromTable(table);
+        //Participant[] localArr = GetParticipantsFromTable(table);
+        Participant[] localArr = _dbSaver.GetAllParticipants(_currentCompetition.GetDbParticipantPath(), DatabaseProvider.DbParticipant.COLUMN_NAME);
         int participantCount = localArr.length;
         table.removeAllViews();
         int k = 0;
@@ -834,27 +851,28 @@ public class ViewPagerActivity extends AppCompatActivity
                     Participant localPart = new Participant("",dataArr[1], dataArr[3], dataArr[2],"",1);
                     for(int j = 0; j<arrFromBase.length;j++)
                     {
-                        if(localPart.equals(arrFromBase[i]))
+                        if(localPart.equals(arrFromBase[j]))
                         {
-                            color = arrFromBase[i].GetColor();
+                            color = arrFromBase[j].GetColor();
+                            localArr.add(arrFromBase[j]);
                             break;
                         }
                     }
-                    localArr.add(new Participant(dataArr[0],dataArr[1], dataArr[3], dataArr[2],"",color));
+
                 }
                 else
                 {
-                    Participant[] arrFromBase = _dbSaver.GetAllParticipants(DatabaseProvider.DbParticipant.TABLE_NAME, DatabaseProvider.DbParticipant.COLUMN_NAME);
-                    Participant localPart = new Participant("",dataArr[0], dataArr[2], dataArr[1],"",1);
-                    for(int j = 0; j<arrFromBase.length;j++)
-                    {
-                        if(localPart.equals(arrFromBase[i]))
-                        {
-                            color = arrFromBase[i].GetColor();
-                            break;
-                        }
-                    }
-                    localArr.add(new Participant("",dataArr[0], dataArr[2], dataArr[1], "",color));
+//                    Participant[] arrFromBase = _dbSaver.GetAllParticipants(DatabaseProvider.DbParticipant.TABLE_NAME, DatabaseProvider.DbParticipant.COLUMN_NAME);
+//                    Participant localPart = new Participant("",dataArr[0], dataArr[2], dataArr[1],"",1);
+//                    for(int j = 0; j<arrFromBase.length;j++)
+//                    {
+//                        if(localPart.equals(arrFromBase[i]))
+//                        {
+//                            color = arrFromBase[i].GetColor();
+//                            break;
+//                        }
+//                    }
+                    localArr.add(new Participant("",dataArr[0], dataArr[2], dataArr[1], "",-1));
                 }
                 if(needDelete) table.removeViewAt(i);
                 else
@@ -883,6 +901,7 @@ public class ViewPagerActivity extends AppCompatActivity
         _nameRenameDialog.setText(currentParticipant[0].GetFIO());
         _birthdayRenameDialog.setText(currentParticipant[0].GetBirthYear());
         _countryRenameDialog.setText(currentParticipant[0].GetCountry());
+        _colorRenameDialog.setBackgroundColor(currentParticipant[0].GetColor());
         _renameDialog.show();
         Toast.makeText(getApplicationContext(),"Редактировать участника",Toast.LENGTH_SHORT).show();
     }
@@ -941,6 +960,7 @@ public class ViewPagerActivity extends AppCompatActivity
         _nameRenameDialog.setText(currentParticipant[0].GetFIO());
         _birthdayRenameDialog.setText(currentParticipant[0].GetBirthYear());
         _countryRenameDialog.setText(currentParticipant[0].GetCountry());
+        _colorDialog.setBackgroundColor(-1);
         _renameDialog.show();
         Toast.makeText(getApplicationContext(),"Редактировать участника в базе данных",Toast.LENGTH_SHORT).show();
     }
