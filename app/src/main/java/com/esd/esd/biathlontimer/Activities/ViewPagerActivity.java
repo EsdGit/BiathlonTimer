@@ -223,12 +223,12 @@ public class ViewPagerActivity extends AppCompatActivity
                     cellsCount = 3;
                 }
 
-                localParticipant = new Participant(number, name, country, year, "",1);
+                localParticipant = new Participant(number, name, country, year, "",_colorParticipant);
 
                 _dbSaver.DeleteParticipant(localParticipant, DatabaseProvider.DbParticipant.TABLE_NAME);
                 _dbSaver.DeleteParticipant(localParticipant, _currentCompetition.GetDbParticipantPath());
                 localParticipant = new Participant(_numberRenameDialog.getText().toString(), _nameRenameDialog.getText().toString(),
-                        _countryRenameDialog.getText().toString(), _birthdayRenameDialog.getText().toString(), "",1);
+                        _countryRenameDialog.getText().toString(), _birthdayRenameDialog.getText().toString(), "",_colorParticipant);
                 _dbSaver.SaveParticipantToDatabase(localParticipant, DatabaseProvider.DbParticipant.TABLE_NAME);
                 if(currTable == _tableLayoutParticipantList)
                 {
@@ -311,25 +311,26 @@ public class ViewPagerActivity extends AppCompatActivity
     // Добавление участника в ParticipantList
     private void AddRowParticipantList(Participant participant) {
         TableRow newRow = new TableRow(this);
-        TextView newTextView0 = new TextView(this);
+        final TextView newTextView0 = new TextView(this);
         newTextView0.setText(participant.GetNumber());
         newTextView0.setGravity(Gravity.CENTER);
-        newTextView0.setBackground(new PaintDrawable(Color.WHITE));
+        //newTextView0.setBackground(new PaintDrawable(Color.WHITE));
+        newTextView0.setBackgroundColor(participant.GetColor());
         newTextView0.setLayoutParams(new TableRow.LayoutParams(_numberParticipantList.getMeasuredWidth(), _numberParticipantList.getMeasuredHeight(), 0.3f));
         ((TableRow.LayoutParams) newTextView0.getLayoutParams()).setMargins(2, 0, 2, 2);
-        TextView newTextView1 = new TextView(this);
+        final TextView newTextView1 = new TextView(this);
         newTextView1.setText(participant.GetFIO());
         newTextView1.setGravity(Gravity.CENTER);
         newTextView1.setBackground(new PaintDrawable(Color.WHITE));
         newTextView1.setLayoutParams(new TableRow.LayoutParams(_nameParticipantList.getMeasuredWidth(), _nameParticipantList.getMeasuredHeight(), 2.7f));
         ((TableRow.LayoutParams) newTextView1.getLayoutParams()).setMargins(0, 0, 2, 2);
-        TextView newTextView2 = new TextView(this);
+        final TextView newTextView2 = new TextView(this);
         newTextView2.setText(participant.GetBirthYear());
         newTextView2.setGravity(Gravity.CENTER);
         newTextView2.setBackground(new PaintDrawable(Color.WHITE));
         newTextView2.setLayoutParams(new TableRow.LayoutParams(_birthdayParticipantList.getMeasuredWidth(), _birthdayParticipantList.getMeasuredHeight(), 0.5f));
         ((TableRow.LayoutParams) newTextView2.getLayoutParams()).setMargins(0, 0, 2, 2);
-        TextView newTextView3 = new TextView(this);
+        final TextView newTextView3 = new TextView(this);
         newTextView3.setText(participant.GetCountry());
         newTextView3.setGravity(Gravity.CENTER);
         newTextView3.setBackground(new PaintDrawable(Color.WHITE));
@@ -371,25 +372,37 @@ public class ViewPagerActivity extends AppCompatActivity
                 }
                 else
                 {
-                    // Есди уже были отмечены
-                    for (int i = 0; i < rowView.size(); i++)
-                    {
-                        PaintDrawable drawable = (PaintDrawable) rowView.get(i).getBackground();
+                        PaintDrawable drawable = (PaintDrawable) rowView.get(1).getBackground();
                         if (drawable.getPaint().getColor() == getResources().getColor(R.color.colorPrimary))
                         {
-                            if(i == 0)
+                            _counterMarkedParticipant--;
+                            String name = ((TextView) rowView.get(1)).getText().toString();
+                            String year = ((TextView) rowView.get(2)).getText().toString();
+                            String country = ((TextView) rowView.get(3)).getText().toString();
+                            Participant currParticipant = new Participant("",name,country,year,"",1);
+                            Participant[] localArr = _dbSaver.GetAllParticipants(_currentCompetition.GetDbParticipantPath(), DatabaseProvider.DbParticipant.COLUMN_NAME);
+                            for(int i = 0; i < rowView.size(); i++)
                             {
-                                _counterMarkedParticipant--;
+                                rowView.get(i).setBackground(new PaintDrawable(Color.WHITE));
                             }
-                            rowView.get(i).setBackground(new PaintDrawable(Color.WHITE));
+
+                            for(int j = 0; j<localArr.length;j++)
+                            {
+                                if(currParticipant.equals(localArr[j]))
+                                {
+                                    rowView.get(0).setBackgroundColor(localArr[j].GetColor());
+                                    break;
+                                }
+                            }
+
                         }
                         else
                         {
-                            if(i == 0)
+                            _counterMarkedParticipant++;
+                            for(int i = 0; i<4;i++)
                             {
-                                _counterMarkedParticipant++;
+                                rowView.get(i).setBackground(new PaintDrawable(getResources().getColor(R.color.colorPrimary)));
                             }
-                            rowView.get(i).setBackground(new PaintDrawable(getResources().getColor(R.color.colorPrimary)));
                         }
                     }
                     switch (_counterMarkedParticipant)
@@ -405,7 +418,6 @@ public class ViewPagerActivity extends AppCompatActivity
                             SetDelPosition(_tableLayoutParticipantList);
                             break;
                     }
-                }
             }
         });
         _tableLayoutParticipantList.addView(newRow);
@@ -782,6 +794,7 @@ public class ViewPagerActivity extends AppCompatActivity
 
     private Participant[] GetCheckedParticipants(TableLayout table, boolean needDelete)
     {
+        // Переделать!!!
         int participantCount = table.getChildCount();
         TableRow row;
         TextView textView;
@@ -790,6 +803,7 @@ public class ViewPagerActivity extends AppCompatActivity
         ArrayList<Participant> localArr = new ArrayList<Participant>();
         boolean flag = false;
         int k = 0;
+        int color = 1;
         if(table == _tableLayoutParticipantList)
         {
             cellsCount = 4;
@@ -800,26 +814,47 @@ public class ViewPagerActivity extends AppCompatActivity
         for(int i = 0; i < participantCount - k; i++)
         {
             row = (TableRow) table.getChildAt(i);
-            for(int j = 0; j < cellsCount; j++)
+            textView = (TextView) row.getChildAt(1);
+            if(((PaintDrawable)(textView).getBackground()).getPaint().getColor() ==
+                    getResources().getColor(R.color.colorPrimary))
             {
-                textView = (TextView) row.getChildAt(j);
-                if(((PaintDrawable)(textView).getBackground()).getPaint().getColor() ==
-                        getResources().getColor(R.color.colorPrimary))
+                for(int j = 0; j < cellsCount; j++)
                 {
-                    dataArr[j] = textView.getText().toString();
-                    flag = true;
+                    dataArr[j] = ((TextView)row.getChildAt(j)).getText().toString();
                 }
+                flag = true;
             }
+
             if(flag)
             {
                 flag = false;
                 if(table == _tableLayoutParticipantList)
                 {
-                    localArr.add(new Participant(dataArr[0],dataArr[1], dataArr[3], dataArr[2],"",1));
+                    Participant[] arrFromBase = _dbSaver.GetAllParticipants(_currentCompetition.GetDbParticipantPath(), DatabaseProvider.DbParticipant.COLUMN_NAME);
+                    Participant localPart = new Participant("",dataArr[1], dataArr[3], dataArr[2],"",1);
+                    for(int j = 0; j<arrFromBase.length;j++)
+                    {
+                        if(localPart.equals(arrFromBase[i]))
+                        {
+                            color = arrFromBase[i].GetColor();
+                            break;
+                        }
+                    }
+                    localArr.add(new Participant(dataArr[0],dataArr[1], dataArr[3], dataArr[2],"",color));
                 }
                 else
                 {
-                    localArr.add(new Participant("",dataArr[0], dataArr[2], dataArr[1], "",1));
+                    Participant[] arrFromBase = _dbSaver.GetAllParticipants(DatabaseProvider.DbParticipant.TABLE_NAME, DatabaseProvider.DbParticipant.COLUMN_NAME);
+                    Participant localPart = new Participant("",dataArr[0], dataArr[2], dataArr[1],"",1);
+                    for(int j = 0; j<arrFromBase.length;j++)
+                    {
+                        if(localPart.equals(arrFromBase[i]))
+                        {
+                            color = arrFromBase[i].GetColor();
+                            break;
+                        }
+                    }
+                    localArr.add(new Participant("",dataArr[0], dataArr[2], dataArr[1], "",color));
                 }
                 if(needDelete) table.removeViewAt(i);
                 else
