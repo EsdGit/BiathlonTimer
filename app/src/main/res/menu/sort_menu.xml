@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:title="Сортировка по номеру"
+        android:id="@+id/numberSort"
+        android:checked="false"/>
     <item android:title="Сортировка по ФИО"
         android:id="@+id/nameSort"
         android:checked="false"/>
     <item android:title="Сортировка по дате"
         android:id="@+id/dataSort"
         android:checked="false"/>
+    <item android:title="Сортировка по группам"
+          android:id="@+id/groupSort"
+          android:checked="false"/>
     <item android:title="Сортировка по региону"
         android:id="@+id/countrySort"
         android:checked="false"/>
-    <item
-        android:title="Сортировка по номеру"
-        android:id="@+id/numberSort"
-        android:checked="false"/>
+
 </menu>

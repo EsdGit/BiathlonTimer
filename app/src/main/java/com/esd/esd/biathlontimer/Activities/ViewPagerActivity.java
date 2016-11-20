@@ -65,6 +65,7 @@ public class ViewPagerActivity extends AppCompatActivity
     private TextView _countryParticipantList;
     private TextView _numberParticipantList;
     private TextView _nameOfParticipantList;
+    private TextView _groupParticipantList;
     private ImageButton _acceptParticipantImBtn;
     private ImageButton _deleteParticipantImBtn;
     private ImageButton _menuParticipantImBtn;
@@ -355,30 +356,37 @@ public class ViewPagerActivity extends AppCompatActivity
         newTextView0.setGravity(Gravity.CENTER);
         //newTextView0.setBackground(new PaintDrawable(Color.WHITE));
         newTextView0.setBackgroundColor(participant.GetColor());
-        newTextView0.setLayoutParams(new TableRow.LayoutParams(_numberParticipantList.getMeasuredWidth(), _numberParticipantList.getMeasuredHeight(), 0.3f));
+        newTextView0.setLayoutParams(new TableRow.LayoutParams(_numberParticipantList.getMeasuredWidth(), _numberParticipantList.getMeasuredHeight(), 0.4f));
         ((TableRow.LayoutParams) newTextView0.getLayoutParams()).setMargins(2, 0, 2, 2);
         final TextView newTextView1 = new TextView(this);
         newTextView1.setText(participant.GetFIO());
         newTextView1.setGravity(Gravity.CENTER);
         newTextView1.setBackground(new PaintDrawable(Color.WHITE));
-        newTextView1.setLayoutParams(new TableRow.LayoutParams(_nameParticipantList.getMeasuredWidth(), _nameParticipantList.getMeasuredHeight(), 2.7f));
+        newTextView1.setLayoutParams(new TableRow.LayoutParams(_nameParticipantList.getMeasuredWidth(), _nameParticipantList.getMeasuredHeight(), 3.0f));
         ((TableRow.LayoutParams) newTextView1.getLayoutParams()).setMargins(0, 0, 2, 2);
         final TextView newTextView2 = new TextView(this);
         newTextView2.setText(participant.GetBirthYear());
         newTextView2.setGravity(Gravity.CENTER);
         newTextView2.setBackground(new PaintDrawable(Color.WHITE));
-        newTextView2.setLayoutParams(new TableRow.LayoutParams(_birthdayParticipantList.getMeasuredWidth(), _birthdayParticipantList.getMeasuredHeight(), 0.5f));
+        newTextView2.setLayoutParams(new TableRow.LayoutParams(_birthdayParticipantList.getMeasuredWidth(), _birthdayParticipantList.getMeasuredHeight(), 0.4f));
         ((TableRow.LayoutParams) newTextView2.getLayoutParams()).setMargins(0, 0, 2, 2);
         final TextView newTextView3 = new TextView(this);
         newTextView3.setText(participant.GetCountry());
         newTextView3.setGravity(Gravity.CENTER);
         newTextView3.setBackground(new PaintDrawable(Color.WHITE));
-        newTextView3.setLayoutParams(new TableRow.LayoutParams(_countryParticipantList.getMeasuredWidth(), _countryParticipantList.getMeasuredHeight(), 0.5f));
+        newTextView3.setLayoutParams(new TableRow.LayoutParams(_countryParticipantList.getMeasuredWidth(), _countryParticipantList.getMeasuredHeight(), 0.6f));
         ((TableRow.LayoutParams) newTextView3.getLayoutParams()).setMargins(0, 0, 2, 2);
+        final TextView newTextView4 = new TextView(this);
+        newTextView4.setText("Юноши");
+        newTextView4.setGravity(Gravity.CENTER);
+        newTextView4.setBackground(new PaintDrawable(Color.WHITE));
+        newTextView4.setLayoutParams(new TableRow.LayoutParams(_countryParticipantList.getMeasuredWidth(), _countryParticipantList.getMeasuredHeight(), 0.6f));
+        ((TableRow.LayoutParams) newTextView4.getLayoutParams()).setMargins(0, 0, 2, 2);
         newRow.addView(newTextView0);
         newRow.addView(newTextView1);
         newRow.addView(newTextView2);
         newRow.addView(newTextView3);
+        newRow.addView(newTextView4);
         newRow.setOnLongClickListener(new View.OnLongClickListener()
         {
             @Override
@@ -583,6 +591,7 @@ public class ViewPagerActivity extends AppCompatActivity
         _countryParticipantList = (TextView) page1.findViewById(R.id.countryParticipantList);
         _numberParticipantList = (TextView) page1.findViewById(R.id.numberParticipantList);
         _nameOfParticipantList = (TextView) page1.findViewById(R.id.participant_list_head);
+        _groupParticipantList = (TextView) page1.findViewById(R.id.groupParticipantList);
         _acceptParticipantImBtn = (ImageButton) page1.findViewById(R.id.accept_participant);
         _menuParticipantImBtn = (ImageButton) page1.findViewById(R.id.menu_participant);
         _deleteParticipantImBtn = (ImageButton) page1.findViewById(R.id.delete_participant);
@@ -742,6 +751,9 @@ public class ViewPagerActivity extends AppCompatActivity
                             item.setChecked(!item.isChecked());
                             switch (item.getItemId())
                             {
+                                case R.id.groupSort:
+                                    Toast.makeText(getApplicationContext(),"Сортировка списка участников по группам",Toast.LENGTH_SHORT).show();
+                                    return true;
                                 case R.id.nameSort:
                                     SortTableBy(_tableLayoutParticipantList, DatabaseProvider.DbParticipant.COLUMN_NAME, item.isChecked());
                                     Toast.makeText(getApplicationContext(),"Сортировка списка участников по имени",Toast.LENGTH_SHORT).show();
@@ -773,6 +785,7 @@ public class ViewPagerActivity extends AppCompatActivity
                     MenuInflater menuInflater = _dataBasePopupMenu.getMenuInflater();
                     menuInflater.inflate(R.menu.sort_menu, _dataBasePopupMenu.getMenu());
                     _dataBasePopupMenu.getMenu().findItem(R.id.numberSort).setVisible(false);
+                    _dataBasePopupMenu.getMenu().findItem(R.id.groupSort).setVisible(false);
                     _dataBasePopupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
                     {
                         @Override

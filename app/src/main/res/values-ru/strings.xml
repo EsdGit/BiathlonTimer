@@ -9,6 +9,7 @@
     <string name="year_col_title">Год рождения</string>
     <string name="country_col_title">Страна</string>
     <string name="region_col_titile">Регион</string>
+    <string name="group_col_title">Группа</string>
     <string name="dialog_add_btn">Добавить</string>
     <string name="dialog_cancel_btn">Отмена</string>
     <string name="accept_setting">Принять</string>
