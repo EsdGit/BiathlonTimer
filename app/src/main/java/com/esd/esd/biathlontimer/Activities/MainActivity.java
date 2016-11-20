@@ -156,6 +156,7 @@ public class MainActivity extends AppCompatActivity {
                     myIntent.putExtra("CompetitionInterval", "");
                     myIntent.putExtra("CompetitionCheckPointsCount", "");
                     myIntent.putExtra("NeedDelete", "false");
+                    myIntent.putExtra("ArrayGroup", new String[]{});
                     startActivity(myIntent);
                 }
                 else

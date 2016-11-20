@@ -33,7 +33,14 @@ public class Participant
         _country = country;
         _birthYear = birthYear;
         _number = number;
-        _group = group;
+        if(group == "")
+        {
+            _group = "Без группы";
+        }
+        else
+        {
+            _group = group;
+        }
         _color = color;
     }
 
