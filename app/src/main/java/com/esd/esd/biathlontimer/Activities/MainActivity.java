@@ -1,36 +1,25 @@
 package com.esd.esd.biathlontimer.Activities;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.PaintDrawable;
-import android.icu.text.MessagePattern;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.Gravity;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
-import android.widget.PopupMenu;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.android.colorpicker.ColorPickerDialog;
-import com.android.colorpicker.ColorPickerSwatch;
 import com.esd.esd.biathlontimer.Competition;
 import com.esd.esd.biathlontimer.DatabaseClasses.CompetitionSaver;
 import com.esd.esd.biathlontimer.DatabaseClasses.DatabaseProvider;
-import com.esd.esd.biathlontimer.Participant;
 import com.esd.esd.biathlontimer.R;
 
 import java.util.ArrayList;
@@ -39,7 +28,9 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView _nameTextView;
     private TextView _dateTextView;
+    private TextView _emptyText;
     private TableLayout _tableLayout;
+    private LinearLayout _headTableLayout;
     private MenuItem _editMenuItem;
     private MenuItem _deleteMenuItem;
     private MenuItem _sortNameMenuItem;
@@ -63,7 +54,10 @@ public class MainActivity extends AppCompatActivity {
         _tableLayout = (TableLayout)findViewById(R.id.table);
         _nameTextView = (TextView) findViewById(R.id.CompetitionsNameTextView);
         _dateTextView = (TextView) findViewById(R.id.CompetitionsDateTextView);
+        _emptyText = (TextView) findViewById(R.id.emptyListTextView);
+        _headTableLayout = (LinearLayout) findViewById(R.id.headTable);
         _saver = new CompetitionSaver(this);
+
     }
 
     @Override
@@ -79,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
             }
             _isFirstLoad = false;
         }
+       EmptyListCompetition();
     }
 
     private Competition[] GetCheckedCompetitions()
@@ -286,6 +281,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void SetStarPosition()
     {
+        EmptyListCompetition();
         _sortNameMenuItem.setVisible(true);
         _sortDataMenuItem.setVisible(true);
         _deleteMenuItem.setVisible(false);
@@ -308,5 +304,19 @@ public class MainActivity extends AppCompatActivity {
         _sortDataMenuItem.setVisible(false);
         _deleteMenuItem.setVisible(true);
         _editMenuItem.setVisible(false);
+    }
+
+    private void EmptyListCompetition()
+    {
+        if(_tableLayout.getChildCount() == 0)
+        {
+            _emptyText.setVisibility(View.VISIBLE);
+            _headTableLayout.setVisibility(View.INVISIBLE);
+        }
+        else
+        {
+            _emptyText.setVisibility(View.GONE);
+            _headTableLayout.setVisibility(View.VISIBLE);
+        }
     }
 }

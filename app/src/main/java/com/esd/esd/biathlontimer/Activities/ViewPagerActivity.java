@@ -21,6 +21,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.Spinner;
 import android.widget.TableLayout;
@@ -49,7 +50,10 @@ public class ViewPagerActivity extends AppCompatActivity
     private int _counterMarkedParticipant;
     private int _counterMarkedDataBase;
     private TableRow _renameTableRow;
-
+    private TextView _emptyDataBaseList;
+    private TextView _emptyParticipantList;
+    private LinearLayout _headDataBase;
+    private LinearLayout _headParticipant;
     private AlertDialog.Builder _addDialogBuilder;
     private AlertDialog _addDialog;
     private PopupMenu _participantPopupMenu;
@@ -362,6 +366,8 @@ public class ViewPagerActivity extends AppCompatActivity
             }
             _isFirstLoad = false;
         }
+        EmptyDataBaseCompetition();
+        EmptyParticipantCompetition();
     }
 
     public void OnClick(View view) {
@@ -607,12 +613,14 @@ public class ViewPagerActivity extends AppCompatActivity
 
         _dialogForm = inflater.inflate(R.layout.dialog_activity_add_participant, null);
         _tableLayoutParticipantList = (TableLayout) page1.findViewById(R.id.tableParticipantListLayout);
+        _headParticipant = (LinearLayout) page1.findViewById(R.id.headTableParticipantListLayout);
         _nameParticipantList = (TextView) page1.findViewById(R.id.nameParticipantList);
         _birthdayParticipantList = (TextView) page1.findViewById(R.id.birthdayParticipantList);
         _countryParticipantList = (TextView) page1.findViewById(R.id.countryParticipantList);
         _numberParticipantList = (TextView) page1.findViewById(R.id.numberParticipantList);
         _nameOfParticipantList = (TextView) page1.findViewById(R.id.participant_list_head);
         _groupParticipantList = (TextView) page1.findViewById(R.id.groupParticipantList);
+        _emptyParticipantList = (TextView) page1.findViewById(R.id.emptyParticipantListTextView);
         _acceptParticipantImBtn = (ImageButton) page1.findViewById(R.id.accept_participant);
         _menuParticipantImBtn = (ImageButton) page1.findViewById(R.id.menu_participant);
         _deleteParticipantImBtn = (ImageButton) page1.findViewById(R.id.delete_participant);
@@ -633,10 +641,12 @@ public class ViewPagerActivity extends AppCompatActivity
         pages.add(page2);
 
         _tableLayoutDataBaseList = (TableLayout) page2.findViewById(R.id.tableDataBaseLayout);
+        _headDataBase = (LinearLayout) page2.findViewById(R.id.headTableDataBaseLayout);
         _nameDataBaseList = (TextView) page2.findViewById(R.id.nameDataBase);
         _birthdayDataBaseList = (TextView) page2.findViewById(R.id.birthdayDataBase);
         _countryDataBaseList = (TextView) page2.findViewById(R.id.countryDataBase);
         _nameOfDataBaseList = (TextView) page2.findViewById(R.id.database_list_head);
+        _emptyDataBaseList = (TextView) page2.findViewById(R.id.emptyDataBaseistTextView);
         _acceptDataBaseImBtn = (ImageButton) page2.findViewById(R.id.accept_database);
         _deleteDataBaseImBtn = (ImageButton) page2.findViewById(R.id.delete_database);
         _menuDataBaseImBtn = (ImageButton) page2.findViewById(R.id.menu_database);
@@ -1050,6 +1060,8 @@ public class ViewPagerActivity extends AppCompatActivity
         }
         SetStartPosition(_tableLayoutDataBaseList);
         Toast.makeText(getApplicationContext(),"Участники были добавлены в соревнование",Toast.LENGTH_SHORT).show();
+        EmptyDataBaseCompetition();
+        EmptyParticipantCompetition();
     }
 
     private void SetStartPosition(TableLayout table)
@@ -1106,6 +1118,7 @@ public class ViewPagerActivity extends AppCompatActivity
     {
         if(table == _tableLayoutParticipantList)
         {
+            EmptyParticipantCompetition();
             _acceptParticipantImBtn.setVisibility(View.GONE);
             _editParticipantImBtn.setVisibility(View.GONE);
             _menuParticipantImBtn.setVisibility(View.GONE);
@@ -1113,11 +1126,40 @@ public class ViewPagerActivity extends AppCompatActivity
         }
         else
         {
+            EmptyDataBaseCompetition();
             _secondAcceptDataBaseImBtn.setVisibility(View.INVISIBLE);
             _editDataBaseImBtn.setVisibility(View.GONE);
             _acceptDataBaseImBtn.setVisibility(View.VISIBLE);
             _menuDataBaseImBtn.setVisibility(View.GONE);
             _deleteDataBaseImBtn.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void EmptyParticipantCompetition()
+    {
+        if(_tableLayoutParticipantList.getChildCount() == 0)
+        {
+            _emptyParticipantList.setVisibility(View.VISIBLE);
+            _headParticipant.setVisibility(View.INVISIBLE);
+        }
+        else
+        {
+            _emptyParticipantList.setVisibility(View.GONE);
+            _headParticipant.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void EmptyDataBaseCompetition()
+    {
+        if(_tableLayoutDataBaseList.getChildCount() == 0)
+        {
+            _emptyDataBaseList.setVisibility(View.VISIBLE);
+            _headDataBase.setVisibility(View.INVISIBLE);
+        }
+        else
+        {
+            _emptyDataBaseList.setVisibility(View.GONE);
+            _headDataBase.setVisibility(View.VISIBLE);
         }
     }
 
