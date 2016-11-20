@@ -149,7 +149,7 @@ public class ViewPagerActivity extends AppCompatActivity
             {
                 _colorParticipant = ((ColorDrawable) _colorDialog.getBackground()).getColor();
                 Participant participant = new Participant(_numberDialog.getText().toString(),_nameDialog.getText().toString(),
-                        _countryDialog.getText().toString(), _birthdayDialog.getText().toString(),"",_colorParticipant);
+                        _countryDialog.getText().toString(), _birthdayDialog.getText().toString(),_spinnerOfGroup.getSelectedItem().toString(),_colorParticipant);
 
                  _acceptParticipantImBtn.setVisibility(View.VISIBLE);
                 if(_dbSaver.SaveParticipantToDatabase(participant, DatabaseProvider.DbParticipant.TABLE_NAME))
@@ -178,6 +178,8 @@ public class ViewPagerActivity extends AppCompatActivity
                 _birthdayDialog.setText("");
                 _countryDialog.setText("");
                 _numberDialog.setText("");
+                _colorDialog.setBackgroundColor(Color.WHITE);
+                _addColorToParticipantDialog.setSelectedColor(Color.WHITE);
                 _spinnerOfGroup.setSelection(0);
 
             }
@@ -293,7 +295,6 @@ public class ViewPagerActivity extends AppCompatActivity
                         Color.GREEN
                 }, Color.WHITE, 4, 3);
 
-
         _addColorToParticipantDialog.setOnColorSelectedListener(new ColorPickerSwatch.OnColorSelectedListener() {
             @Override
             public void onColorSelected(int colour)
@@ -377,7 +378,7 @@ public class ViewPagerActivity extends AppCompatActivity
         newTextView3.setLayoutParams(new TableRow.LayoutParams(_countryParticipantList.getMeasuredWidth(), _countryParticipantList.getMeasuredHeight(), 0.6f));
         ((TableRow.LayoutParams) newTextView3.getLayoutParams()).setMargins(0, 0, 2, 2);
         final TextView newTextView4 = new TextView(this);
-        newTextView4.setText("Юноши");
+        newTextView4.setText(participant.GetGroup());
         newTextView4.setGravity(Gravity.CENTER);
         newTextView4.setBackground(new PaintDrawable(Color.WHITE));
         newTextView4.setLayoutParams(new TableRow.LayoutParams(_countryParticipantList.getMeasuredWidth(), _countryParticipantList.getMeasuredHeight(), 0.6f));
@@ -1135,7 +1136,8 @@ public class ViewPagerActivity extends AppCompatActivity
     public void OnClickColorParticipant(View view)
     {
         android.app.FragmentManager fm = this.getFragmentManager();
-        _addColorToParticipantDialog.setSelectedColor(_colorParticipant);
+        //Подумать как сделать
+        //_addColorToParticipantDialog.setSelectedColor(_colorParticipant);
         _addColorToParticipantDialog.show(fm, "colorpicker");
     }
 }
