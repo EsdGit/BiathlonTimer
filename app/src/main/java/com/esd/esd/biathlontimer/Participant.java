@@ -35,6 +35,7 @@ public class Participant
         _number = number;
         if(group == "")
         {
+            //Исправить из ресурсов
             _group = "Без группы";
         }
         else

@@ -99,7 +99,7 @@ public class SettingsActivity extends PreferenceActivity
                 if(newComp.equals(localArr[i]))
                 {
                     _canAddCompetition= false;
-                    Toast.makeText(this,"Такое соревнование уже существует!",Toast.LENGTH_LONG).show();
+                    Toast.makeText(this,getResources().getString(R.string.competition_already_exists),Toast.LENGTH_LONG).show();
                     break;
                 }
             }

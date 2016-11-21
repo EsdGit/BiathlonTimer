@@ -17,7 +17,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -108,10 +107,10 @@ public class ViewPagerActivity extends AppCompatActivity
 
     //Диалог добавления
     private View _dialogForm;
-    private static String TitleDialog = "Добавление участника";
-    private static String AddDialogBtn = "Добавить";
-    private static String CancelDialogBtn = "Отменить";
-    private static String DefaultGroup = "Без группы";
+    private static String TitleDialog;
+    private static String AddDialogBtn;
+    private static String CancelDialogBtn;
+    private static String DefaultGroup;
 
     private Competition _currentCompetition;
 
@@ -124,6 +123,10 @@ public class ViewPagerActivity extends AppCompatActivity
         getSupportActionBar().hide();
         _dbSaver = new ParticipantSaver(this);
 
+        TitleDialog = getResources().getString(R.string.add_dialog_title);
+        AddDialogBtn = getResources().getString(R.string.add);
+        CancelDialogBtn = getResources().getString(R.string.cancel);
+        DefaultGroup = getResources().getString(R.string.default_group);
         Intent intent = getIntent();
         String name = intent.getStringExtra("CompetitionName");
         String date = intent.getStringExtra("CompetitionDate");
@@ -137,7 +140,7 @@ public class ViewPagerActivity extends AppCompatActivity
         {
             _arrayGroup[i+1] = localArray[i];
         }
-        _arrayGroup[0]="Без группы";
+        _arrayGroup[0]=getResources().getString(R.string.default_group);;
 
         _needDeleteTables = Boolean.valueOf(intent.getStringExtra("NeedDelete"));
 
@@ -159,12 +162,12 @@ public class ViewPagerActivity extends AppCompatActivity
                  _acceptParticipantImBtn.setVisibility(View.VISIBLE);
                 if(_dbSaver.SaveParticipantToDatabase(participant, DatabaseProvider.DbParticipant.TABLE_NAME))
                 {
-                    Toast.makeText(getApplicationContext(), "Участник добавлен",
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.participant_added),
                             Toast.LENGTH_LONG).show();
                 }
                 else
                 {
-                    Toast.makeText(getApplicationContext(), "Такой участник уже есть в базе данных",
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.participant_already_exists_in_database),
                             Toast.LENGTH_LONG).show();
                 }
                 Participant[] localArr = GetParticipantsFromTable(_tableLayoutParticipantList);
@@ -202,7 +205,7 @@ public class ViewPagerActivity extends AppCompatActivity
         _addDialog = _addDialogBuilder.create();
 
         _renameDialogBuilder = new AlertDialog.Builder(this);
-        _renameDialogBuilder.setTitle("Редактирование");
+        _renameDialogBuilder.setTitle(getResources().getString(R.string.rename_dialog_title));
         _renameDialogBuilder.setView(_renameForm);
         _renameDialogBuilder.setPositiveButton(AddDialogBtn, new DialogInterface.OnClickListener() {
             @Override
@@ -645,7 +648,7 @@ public class ViewPagerActivity extends AppCompatActivity
         _birthdayDataBaseList = (TextView) page2.findViewById(R.id.birthdayDataBase);
         _countryDataBaseList = (TextView) page2.findViewById(R.id.countryDataBase);
         _nameOfDataBaseList = (TextView) page2.findViewById(R.id.database_list_head);
-        _emptyDataBaseList = (TextView) page2.findViewById(R.id.emptyDataBaseistTextView);
+        _emptyDataBaseList = (TextView) page2.findViewById(R.id.emptyDataBaseTextView);
         _acceptDataBaseImBtn = (ImageButton) page2.findViewById(R.id.accept_database);
         _deleteDataBaseImBtn = (ImageButton) page2.findViewById(R.id.delete_database);
         _menuDataBaseImBtn = (ImageButton) page2.findViewById(R.id.menu_database);
@@ -995,10 +998,10 @@ public class ViewPagerActivity extends AppCompatActivity
     public void OnClickDeleteDataBAse(View view)
     {
         final AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-        dialog.setTitle("Удаление");
-        dialog.setMessage("Вы уверены, что хотите удалить участников из базы данных?");
+        dialog.setTitle(getResources().getString(R.string.delete_dialog_title));
+        dialog.setMessage(getResources().getString(R.string.messege_del_dialog_from_database));
         dialog.setCancelable(false);
-        dialog.setPositiveButton("Да", new DialogInterface.OnClickListener() {
+        dialog.setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i)
             {
@@ -1012,7 +1015,7 @@ public class ViewPagerActivity extends AppCompatActivity
             }
         });
 
-        dialog.setNegativeButton("Нет", new DialogInterface.OnClickListener() {
+        dialog.setNegativeButton(getResources().getString(R.string.no), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
 
@@ -1167,9 +1170,9 @@ public class ViewPagerActivity extends AppCompatActivity
         if(keyCode == (KeyEvent.KEYCODE_BACK))
         {
             AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-            dialog.setTitle("Предупреждение");
-            dialog.setMessage("Вы уверены, что хотите выйти?");
-            dialog.setPositiveButton("Да", new DialogInterface.OnClickListener() {
+            dialog.setTitle(getResources().getString(R.string.warning_dialog_title));
+            dialog.setMessage(getResources().getString(R.string.message_dialog_warning));
+            dialog.setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     if(_needDeleteTables)
@@ -1183,7 +1186,7 @@ public class ViewPagerActivity extends AppCompatActivity
                     startActivity(intent);
                 }
             });
-            dialog.setNegativeButton("Нет", new DialogInterface.OnClickListener() {
+            dialog.setNegativeButton(getResources().getString(R.string.no), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
 

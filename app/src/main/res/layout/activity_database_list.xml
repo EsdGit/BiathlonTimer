@@ -9,12 +9,12 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/emptyDataBaseistTextView"
+        android:id="@+id/emptyDataBaseTextView"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:gravity="center"
-        android:text="Список участников пуст, добавьте нового. Удачи."/>
+        android:text="@string/db_list_start_text_view"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -29,6 +29,7 @@
             android:layout_gravity="center"
             android:layout_marginLeft="@dimen/small_indent"
             android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/db_list_activity_head"
             android:textColor="#ffffff"
             android:id="@+id/database_list_head"
             android:layout_weight="2.7"/>

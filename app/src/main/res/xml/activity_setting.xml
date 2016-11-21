@@ -4,52 +4,52 @@
 
     <SwitchPreference
         android:key="typeCompetition"
-        android:title="Международные соревнования"
-        android:summary="Устанавливает тип соревнования (по умолчанию: Региональные)"
+        android:title="@string/summary_international_competition"
+        android:summary="@string/summary_type_competitinon"
         android:checked="false"/>
 
     <EditTextPreference
         android:key="nameCompetitionSetting"
-        android:summary="Название соревнования"
-        android:title="Название соревнования"
-        android:dialogTitle="Введите название соревнования"/>
+        android:summary="@string/main_activity_name_col"
+        android:title="@string/main_activity_name_col"
+        android:dialogTitle="@string/setting_activity_title_name_competition"/>
 
     <Preference
         android:key="dataSetting"
-        android:title="Дата соревнования"
-        android:summary="Устанавливает дату проведения соревования"/>
+        android:title="@string/setting_activity_title_set_data_competition"
+        android:summary="@string/summary_data_competition"/>
 
     <Preference
         android:key="startTimer"
-        android:title="Время до начала старта"
-        android:summary="Устанавливает время до начала старта"/>
+        android:title="@string/setting_activity_title_time_to_start"
+        android:summary="@string/summary_time_to_start"/>
 
     <ListPreference
         android:key="typeStartSetting"
-        android:title="Тип старта"
-        android:dialogTitle="Выберите тип старта"
-        android:summary="Устанавливает тип старта спортсменов"
+        android:title="@string/setting_activity_title_type_start"
+        android:dialogTitle="@string/dialog_title_type_start"
+        android:summary="@string/summary_type_start"
         android:defaultValue="0"
         android:entries="@array/type_start"
         android:entryValues="@array/type_start"/>
 
     <Preference
         android:key="intervalSetting"
-        android:summary="Устанавливает интервал старта спортсменов"
-        android:title="Интервал старта"
-        android:dialogTitle="Установите интервал"/>
+        android:summary="@string/summary_interval"
+        android:title="@string/setting_activity_title_interval"
+        android:dialogTitle="@string/dialog_title_interval"/>
 
     <Preference
         android:key="group"
-        android:title="Группы участников соревнования"
-        android:summary="Создает группы необходимые для соревнования"
-        android:dialogTitle="Группы соревнования"/>
+        android:title="@string/setting_activity_title_group"
+        android:summary="@string/summary_group"
+        android:dialogTitle="@string/dialog_title_group"/>
 
     <EditTextPreference
         android:key="countCheckPointSetting"
-        android:title="Количество КП"
-        android:summary="Устанавливает количество контрольных пунктов"
-        android:dialogTitle="Введите количество КП"/>
+        android:title="@string/setting_activity_title_checkpoint"
+        android:summary="@string/summary_checkpoint"
+        android:dialogTitle="@string/dialog_title_checkpoint"/>
 
 
 </PreferenceScreen>

@@ -69,7 +69,7 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
         addPreferencesFromResource(R.xml.activity_setting);
 
         _dialogItemsList = new ArrayList<>();
-        _dialogItemsList.add("Добавить группу");
+        _dialogItemsList.add(getResources().getString(R.string.add_dialog_item_group));
         _dialogItems = _dialogItemsList.toArray(new String[_dialogItemsList.size()]);
 
         _typeCompetition = (SwitchPreference) findPreference("typeCompetition");
@@ -92,16 +92,16 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
         _seconds.setMinValue(MIN_VALUE_MINUTE_AND_SECONDS);
         _seconds.setMaxValue(MAX_VALUE_MINUTE_AND_SECONDS);
         _dialogBuilderInterval = new AlertDialog.Builder(getActivity());
-        _dialogBuilderInterval.setTitle("Установите интервал");
+        _dialogBuilderInterval.setTitle(getResources().getString(R.string.interval_dialog_title));
         _dialogBuilderInterval.setView(_dialogFormInterval);
-        _dialogBuilderInterval.setPositiveButton("Принять", new DialogInterface.OnClickListener() {
+        _dialogBuilderInterval.setPositiveButton(getResources().getString(R.string.accept), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i)
             {
                 if(_isStartTimer)
                 {
                     _setStartTimer.setSummary(SetNormalFormatDataTime(_minute.getValue() + ":" + _seconds.getValue(), true));
-                    _dialogInterval.setTitle("Установаите интервал");
+                    _dialogInterval.setTitle(getResources().getString(R.string.interval_dialog_title));
                     _isStartTimer = false;
                 }
                 else
@@ -110,7 +110,7 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
                 }
             }
         });
-        _dialogBuilderInterval.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+        _dialogBuilderInterval.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i)
             {
@@ -125,9 +125,9 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
         _dialogFormAddGroup = inflater.inflate(R.layout.dialog_add_group_setting_activity, null);
         _nameAddGroup = (EditText) _dialogFormAddGroup.findViewById(R.id.add_group_setting_activity);
         _dialogBuilderAddGroup = new AlertDialog.Builder(getActivity());
-        _dialogBuilderAddGroup.setTitle("Название группы");
+        _dialogBuilderAddGroup.setTitle(getResources().getString(R.string.add_group_dialog_title));
         _dialogBuilderAddGroup.setView(_dialogFormAddGroup);
-        _dialogBuilderAddGroup.setPositiveButton("Принять", new DialogInterface.OnClickListener() {
+        _dialogBuilderAddGroup.setPositiveButton(getResources().getString(R.string.accept), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which)
             {
@@ -141,7 +141,7 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
                 _group.setSummary(SetSummaryPreferenceGroup());
             }
         });
-        _dialogBuilderAddGroup.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+        _dialogBuilderAddGroup.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which)
             {
@@ -152,9 +152,9 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
 
         //Диалог удаления группы
         _dialogBuilderDelGroup = new AlertDialog.Builder(getActivity());
-        _dialogBuilderDelGroup.setTitle("Удаление группы");
-        _dialogBuilderDelGroup.setMessage("Вы уверены, что хотите удалить группу?");
-        _dialogBuilderDelGroup.setPositiveButton("Да", new DialogInterface.OnClickListener() {
+        _dialogBuilderDelGroup.setTitle(getResources().getString(R.string.delete_dialog_group));
+        _dialogBuilderDelGroup.setMessage(getResources().getString(R.string.message_dialog_delete_group));
+        _dialogBuilderDelGroup.setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which)
             {
@@ -163,7 +163,7 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
                 _group.setSummary(SetSummaryPreferenceGroup());
             }
         });
-        _dialogBuilderDelGroup.setNegativeButton("Нет", new DialogInterface.OnClickListener() {
+        _dialogBuilderDelGroup.setNegativeButton(getResources().getString(R.string.no), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which)
             {
@@ -179,12 +179,12 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
                 if(!_typeCompetition.isChecked())
                 {
                     _typeCompetition.setChecked(true);
-                    _typeCompetition.setSummary("Международные соревнования");
+                    _typeCompetition.setSummary(getResources().getString(R.string.summary_international_competition));
                 }
                 else
                 {
                     _typeCompetition.setChecked(false);
-                    _typeCompetition.setSummary("Региональные соревнования");
+                    _typeCompetition.setSummary(getResources().getString(R.string.summary_regional_competition));
                 }
                 return false;
             }
@@ -216,7 +216,7 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
         _countCheckPoint.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
-                _countCheckPoint.setSummary("Количество контрольный точек: " + (String)newValue);
+                _countCheckPoint.setSummary(getResources().getString(R.string.summary_count_checkpoint) + (String)newValue);
                 return false;
             }
         });
@@ -226,6 +226,7 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
                 _typeStart.setSummary((String)newValue);
                 switch ((String)newValue)
                 {
+                    //Как то сделать
                     case "Одиночный старт":
                         _typeStart.setValueIndex(0);
                         _setInterval.setEnabled(true);
@@ -249,7 +250,7 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
             {
                 SetStartPositionInTimeDialog();
                 _isStartTimer = true;
-                _dialogInterval.setTitle("Установите время до старта");
+                _dialogInterval.setTitle(getResources().getString(R.string.dialog_time_to_start_title));
                 _dialogInterval.show();
                 return false;
             }
@@ -259,11 +260,11 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
             public boolean onPreferenceClick(Preference preference)
             {
                 _dialogBuilderGroup = new AlertDialog.Builder(getActivity());
-                _dialogBuilderGroup.setTitle("Группы соревнования");
+                _dialogBuilderGroup.setTitle(getResources().getString(R.string.dialog_add_group_title));
                 _dialogBuilderGroup.setItems(_dialogItems, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if(_dialogItems[which] == "Добавить группу")
+                        if(_dialogItems[which] == getResources().getString(R.string.add_dialog_item_group))
                         {
                             _dialogAddGroup.show();
                         }
@@ -352,11 +353,11 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
         String result;
         if((_dialogItems.length - 1) == 0)
         {
-            result = "Создает группы необходимые для соревнования";
+            result = getResources().getString(R.string.start_summary_group);
         }
         else
         {
-            result = "Группы соревнования: " + _dialogItems[0];
+            result = getResources().getString(R.string.aftter_add_summary_group) + _dialogItems[0];
             for (int i = 1; i < _dialogItems.length - 1; i++)
             {
                 result = result + ", " + _dialogItems[i];

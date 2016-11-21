@@ -16,7 +16,7 @@
         android:layout_centerVertical="true"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:gravity="center"
-        android:text="Список участников пуст, добавьте нового или загрузите из базы данных. Удачи."/>
+        android:text="@string/participant_list_start_text_view"/>
 
     <LinearLayout
         android:layout_width="match_parent"

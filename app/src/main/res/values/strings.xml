@@ -8,7 +8,7 @@
     <string name="fio_col_title">Full name</string>
     <string name="year_col_title">Year of birth</string>
     <string name="country_col_title">Country</string>
-    <string name="dialog_add_btn">Add</string>
-    <string name="dialog_cancel_btn">Cancel</string>
+    <string name="add">Add</string>
+    <string name="cancel">Cancel</string>
 
 </resources>

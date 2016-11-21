@@ -76,7 +76,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="Группа:"
+            android:text="@string/add_participant_dialog_group_text"
             android:layout_weight="0.2"
             android:gravity="center_horizontal|center_vertical"
             android:textAppearance="?android:attr/textAppearanceMedium"/>
@@ -90,7 +90,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="Цвет:"
+            android:text="@string/add_participant_dialog_color_text"
             android:layout_weight="0.2"
             android:gravity="center_horizontal|center_vertical"
             android:textAppearance="?android:attr/textAppearanceMedium"/>
