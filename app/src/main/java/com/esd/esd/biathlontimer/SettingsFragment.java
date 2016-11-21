@@ -304,9 +304,6 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
         Intent intent = new Intent(context, ViewPagerActivity.class);
         intent.putExtra("CompetitionName", _nameCompetition.getSummary().toString());
         intent.putExtra("CompetitionDate", _setData.getSummary().toString());
-        intent.putExtra("CompetitionStartType", _typeStart.getSummary().toString());
-        intent.putExtra("CompetitionInterval", _setInterval.getSummary().toString());
-        intent.putExtra("CompetitionCheckPointsCount", _countCheckPoint.getSummary().toString());
         intent.putExtra("NeedDelete", "true");
         intent.putExtra("ArrayGroup", _dialogItems);
         return intent;
@@ -314,7 +311,12 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
 
     public static Competition GetCurrentCompetition(Context context)
     {
-        return new Competition(_nameCompetition.getSummary().toString(),_setData.getSummary().toString(), context);
+        String groups = _group.getSummary().toString();
+        groups = groups.split(":")[1];
+        Competition localCompetition = new Competition(_nameCompetition.getSummary().toString(),_setData.getSummary().toString(), context);
+        localCompetition.SetCompetitionSettings(_typeStart.getSummary().toString(), _setInterval.getSummary().toString(),
+                _countCheckPoint.getSummary().toString(),_setStartTimer.getSummary().toString(),groups);
+        return localCompetition;
     }
 
     private String SetNormalFormatDataTime(String str, boolean isTime)

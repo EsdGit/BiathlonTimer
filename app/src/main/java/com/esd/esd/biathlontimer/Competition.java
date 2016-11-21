@@ -50,6 +50,8 @@ public class Competition
     private String _startType;
     public String GetStartType(){return _startType;}
 
+    private String _groups;
+    public String GetGroups(){return _groups;} // потом возвращать массив строк
     public Competition(String name, String date, Context context)
     {
         _competitionName = name;
@@ -77,12 +79,13 @@ public class Competition
         return result.toString();
     }
 
-    public void SetCompetitionSettings(String startType, String interval, String checkPointsCount, String timeToStart)
+    public void SetCompetitionSettings(String startType, String interval, String checkPointsCount, String timeToStart, String groups)
     {
         _interval = interval;
         _checkPointsCount = checkPointsCount;
         _startType = startType;
         _timeToStart = timeToStart;
+        _groups = groups;
         SettingsSaver saver = new SettingsSaver(_localContext);
         saver.SaveSettingsToDb(this);
     }

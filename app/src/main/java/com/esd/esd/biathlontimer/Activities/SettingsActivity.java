@@ -103,10 +103,12 @@ public class SettingsActivity extends PreferenceActivity
                     break;
                 }
             }
+
             if(_canAddCompetition)
             {
-                Intent myIntent = SettingsFragment.GetIntent(this);
 
+
+                Intent myIntent = SettingsFragment.GetIntent(this);
                 startActivity(myIntent);
             }
         }

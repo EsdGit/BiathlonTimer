@@ -41,6 +41,7 @@ public class DatabaseProvider extends SQLiteOpenHelper
         public static final String COLUMN_TIME_TO_START = "TimeToStart";
         public static final String COLUMN_START_TYPE = "StartType";
         public static final String COLUMN_CHECK_POINTS = "CheckPointsCount";
+        public static final String COLUMN_GROUPS = "GroupsNames";
     }
 
     // Абстрактный класс базы данных участников
@@ -94,7 +95,7 @@ public class DatabaseProvider extends SQLiteOpenHelper
         String sql = "CREATE TABLE IF NOT EXISTS " + name +
                 " (" + DbSettings._ID + " INTEGER PRIMARY KEY," + DbSettings.COLUMN_INTERVAL + TEXT_TYPE +
                 COMMA_SEP + DbSettings.COLUMN_CHECK_POINTS + TEXT_TYPE + COMMA_SEP + DbSettings.COLUMN_START_TYPE + TEXT_TYPE +
-                COMMA_SEP + DbSettings.COLUMN_TIME_TO_START + TEXT_TYPE + ")";
+                COMMA_SEP + DbSettings.COLUMN_TIME_TO_START + TEXT_TYPE + COMMA_SEP + DbSettings.COLUMN_GROUPS + TEXT_TYPE+")";
         this.getWritableDatabase().execSQL(sql);
     }
 

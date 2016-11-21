@@ -34,6 +34,7 @@ import com.esd.esd.biathlontimer.Competition;
 import com.esd.esd.biathlontimer.DatabaseClasses.CompetitionSaver;
 import com.esd.esd.biathlontimer.DatabaseClasses.DatabaseProvider;
 import com.esd.esd.biathlontimer.DatabaseClasses.ParticipantSaver;
+import com.esd.esd.biathlontimer.DatabaseClasses.SettingsSaver;
 import com.esd.esd.biathlontimer.PagerAdapterHelper;
 import com.esd.esd.biathlontimer.Participant;
 import com.esd.esd.biathlontimer.R;
@@ -126,10 +127,11 @@ public class ViewPagerActivity extends AppCompatActivity
         Intent intent = getIntent();
         String name = intent.getStringExtra("CompetitionName");
         String date = intent.getStringExtra("CompetitionDate");
-        String startType = intent.getStringExtra("CompetitionStartType");
-        String interval = intent.getStringExtra("CompetitionInterval");
-        String checkPoints = intent.getStringExtra("CompetitionCheckPointsCount");
-        String[] localArray = intent.getStringArrayExtra("ArrayGroup");
+        SettingsSaver saver = new SettingsSaver(this);
+        _currentCompetition = new Competition(name, date, this);
+        //String[] localArray = intent.getStringArrayExtra("ArrayGroup");
+        String groups = saver.GetSetting(_currentCompetition, DatabaseProvider.DbSettings.COLUMN_GROUPS);
+        String[] localArray = groups.split(",");
         _arrayGroup = new String[localArray.length + 1];
         for(int i = 0 ; i<localArray.length;i++)
         {
@@ -137,11 +139,8 @@ public class ViewPagerActivity extends AppCompatActivity
         }
         _arrayGroup[0]="Без группы";
 
-
-
         _needDeleteTables = Boolean.valueOf(intent.getStringExtra("NeedDelete"));
-        _currentCompetition = new Competition(name, date, this);
-        _currentCompetition.SetCompetitionSettings(startType, interval, checkPoints, "");
+
         FindAllViews();
 
         // Создание диалогового окна

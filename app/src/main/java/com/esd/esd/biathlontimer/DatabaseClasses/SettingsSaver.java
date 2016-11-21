@@ -28,6 +28,7 @@ public class SettingsSaver
         val.put(DatabaseProvider.DbSettings.COLUMN_CHECK_POINTS, competition.GetCheckPointsCount());
         val.put(DatabaseProvider.DbSettings.COLUMN_START_TYPE, competition.GetStartType());
         val.put(DatabaseProvider.DbSettings.COLUMN_TIME_TO_START, competition.GetTimeToStart());
+        val.put(DatabaseProvider.DbSettings.COLUMN_GROUPS, competition.GetGroups());
         _db.insert(competition.GetSettingsPath(), null, val);
         _db.close();
     }
@@ -39,7 +40,7 @@ public class SettingsSaver
                 {
                     column
                 };
-        Cursor cursor = _db.query(competition.GetSettingsPath(), proj, null, null, null, null, null);
+        Cursor cursor = _db.query(competition.GetSettingsPath(), proj, null, null, null, null,null);
         cursor.moveToFirst();
         return cursor.getString(0);
     }
