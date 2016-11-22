@@ -59,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
         _emptyText = (TextView) findViewById(R.id.emptyListTextView);
         _headTableLayout = (LinearLayout) findViewById(R.id.headTable);
         _saver = new CompetitionSaver(this);
-
     }
 
     @Override
@@ -78,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
        EmptyListCompetition();
     }
 
-    private Competition[] GetCheckedCompetitions()
+    private Competition[] GetCheckedCompetitions(boolean needDelete)
     {
         ArrayList<Competition> localArr = new ArrayList<Competition>();
         int competitionsCount = _tableLayout.getChildCount();
@@ -95,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
                     getResources().getColor(R.color.colorPrimary))
             {
                 localArr.add(new Competition(name.getText().toString(), date.getText().toString(), this));
-                _tableLayout.removeViewAt(i);
+                if(needDelete) _tableLayout.removeViewAt(i);
                 k++;
                 i--;
             }
@@ -356,12 +355,13 @@ public class MainActivity extends AppCompatActivity {
     public void OnClick(View view)
     {
         Intent settingPager = new Intent(this, SettingsActivity.class);
+        settingPager.putExtra("isEditMode", "false");
         startActivity(settingPager);
     }
 
     public void OnClickDeleteCompetition()
     {
-        Competition[] localArr = GetCheckedCompetitions();
+        Competition[] localArr = GetCheckedCompetitions(true);
         for(int i = 0; i<localArr.length; i++)
         {
             _saver.DeleteCompetitionFromDatabase(localArr[i]);
@@ -371,6 +371,12 @@ public class MainActivity extends AppCompatActivity {
     public void OnClickEditCompetition()
     {
         // Удалить старое и изменить на новое
+        Competition[] localArr = GetCheckedCompetitions(false);
+        Intent intent = new Intent(this, SettingsActivity.class);
+        intent.putExtra("isEditMode", "true");
+        intent.putExtra("Name", localArr[0].GetName());
+        intent.putExtra("Date", localArr[0].GetDate());
+        startActivity(intent);
     }
 
     @Override

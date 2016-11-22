@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.esd.esd.biathlontimer.Activities.ViewPagerActivity;
 
 
+import org.apache.poi.sl.usermodel.Resources;
 import org.apache.poi.util.StringUtil;
 
 import java.util.ArrayList;
@@ -316,15 +317,19 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
 
     public static Competition GetCurrentCompetition(Context context)
     {
+        android.content.res.Resources myRes = context.getResources();
         String groups = _group.getSummary().toString();
-        if(groups != context.getResources().getString(R.string.summary_group))
-        {
+       // if(_nameCompetition.getSummary().toString() == myRes.getString(R.string.)) return null;
+
+        if(_setData.getSummary().toString().equals(myRes.getString(R.string.summary_data_competition))) return null;
+        if(_countCheckPoint.getSummary().toString().equals(myRes.getString(R.string.summary_count_checkpoint))) return null;
+        if(_setInterval.getSummary().toString().equals(myRes.getString(R.string.summary_interval))) return null;
+        if(_setStartTimer.getSummary().toString().equals(myRes.getString(R.string.summary_time_to_start))) return null;
+        if(_typeStart.getSummary().toString().equals(myRes.getString(R.string.summary_type_start))) return null;
+        if(!_group.getSummary().toString().equals(myRes.getString(R.string.summary_group)))
             groups = groups.split(":")[1];
-        }
         else
-        {
             groups = "";
-        }
         Competition localCompetition = new Competition(_nameCompetition.getSummary().toString(),_setData.getSummary().toString(), context);
         localCompetition.SetCompetitionSettings(_typeStart.getSummary().toString(), _setInterval.getSummary().toString(),
                 _countCheckPoint.getSummary().toString(),_setStartTimer.getSummary().toString(),groups);
@@ -376,4 +381,25 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
         }
         return result;
     }
+
+    public static void SetAllSummaries(Context context,String name, String date, String interval, String startType, String groups, String checkPointsCount, String timeToStart)
+    {
+        _nameCompetition.setSummary(name);
+        _setData.setSummary(date);
+        _setInterval.setSummary(interval);
+        _setStartTimer.setSummary(timeToStart);
+        if(groups != "")
+        {
+            _group.setSummary(context.getResources().getString(R.string.aftter_add_summary_group)+groups);
+            String[] allGroups = groups.split(",");
+            for(int i = 0; i < allGroups.length; i++)
+            {
+                _dialogItemsList.add(allGroups[i]);
+            }
+            _dialogItems = _dialogItemsList.toArray(new String[_dialogItemsList.size()]);
+        }
+        _typeStart.setSummary(startType);
+        _countCheckPoint.setSummary(checkPointsCount);
+    }
+
 }

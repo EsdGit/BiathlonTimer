@@ -130,10 +130,9 @@ public class ViewPagerActivity extends AppCompatActivity
         Intent intent = getIntent();
         String name = intent.getStringExtra("CompetitionName");
         String date = intent.getStringExtra("CompetitionDate");
-        SettingsSaver saver = new SettingsSaver(this);
         _currentCompetition = new Competition(name, date, this);
-        //String[] localArray = intent.getStringArrayExtra("ArrayGroup");
-        String groups = saver.GetSetting(_currentCompetition, DatabaseProvider.DbSettings.COLUMN_GROUPS);
+        _currentCompetition.GetAllSettingsToComp();
+        String groups = _currentCompetition.GetGroups();
         if(!groups.isEmpty())
         {
             String[] localArray = groups.split(",");
@@ -710,8 +709,11 @@ public class ViewPagerActivity extends AppCompatActivity
 
     private void SortByYear(TableLayout table,boolean sortState, boolean sortByYear)
     {
-        //Participant[] localArr = GetParticipantsFromTable(table);
-        Participant[] localArr = _dbSaver.GetAllParticipants(_currentCompetition.GetDbParticipantPath(), DatabaseProvider.DbParticipant.COLUMN_NAME);
+        Participant[] localArr;
+        if(table == _tableLayoutParticipantList)
+            localArr = _dbSaver.GetAllParticipants(_currentCompetition.GetDbParticipantPath(), DatabaseProvider.DbParticipant.COLUMN_NAME);
+        else
+            localArr = _dbSaver.GetAllParticipants(DatabaseProvider.DbParticipant.TABLE_NAME, DatabaseProvider.DbParticipant.COLUMN_NAME);
         int participantCount = localArr.length;
         table.removeAllViews();
         int k = 0;
@@ -1183,12 +1185,7 @@ public class ViewPagerActivity extends AppCompatActivity
             dialog.setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    if(_needDeleteTables)
-                    {
-                        DatabaseProvider provider = new DatabaseProvider(ViewPagerActivity.this);
-                        provider.DeleteTable(_currentCompetition.GetDbParticipantPath());
-                        provider.DeleteTable(_currentCompetition.GetSettingsPath());
-                    }
+
                     Intent intent = new Intent(ViewPagerActivity.this, MainActivity.class);
                     ViewPagerActivity.this.finish();
                     startActivity(intent);
@@ -1206,6 +1203,16 @@ public class ViewPagerActivity extends AppCompatActivity
         return super.onKeyDown(keyCode, event);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(_needDeleteTables)
+        {
+            DatabaseProvider provider = new DatabaseProvider(ViewPagerActivity.this);
+            provider.DeleteTable(_currentCompetition.GetDbParticipantPath());
+            provider.DeleteTable(_currentCompetition.GetSettingsPath());
+        }
+    }
 
     public void OnClickColorParticipant(View view)
     {

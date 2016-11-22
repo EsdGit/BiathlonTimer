@@ -30,12 +30,16 @@ import android.widget.Toolbar;
 import com.esd.esd.biathlontimer.Competition;
 import com.esd.esd.biathlontimer.DatabaseClasses.CompetitionSaver;
 import com.esd.esd.biathlontimer.DatabaseClasses.DatabaseProvider;
+import com.esd.esd.biathlontimer.DatabaseClasses.SettingsSaver;
 import com.esd.esd.biathlontimer.R;
 import com.esd.esd.biathlontimer.SettingsFragment;
 
 
 public class SettingsActivity extends PreferenceActivity
 {
+    private boolean isEditMode = false;
+    private Intent _localIntent;
+    private boolean isFirstLoad = true;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -46,6 +50,9 @@ public class SettingsActivity extends PreferenceActivity
         actionBar.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorPrimary)));
         actionBar.setTitle((Html.fromHtml("<font color=\"#FFFFFF\">"  + "<big>" + "Настройки соревнования" + "</big>" + "</font>")));
 
+        _localIntent = getIntent();
+        isEditMode = Boolean.valueOf(_localIntent.getStringExtra("isEditMode"));
+
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB)
         {
             onCreatePreferenceActivity();
@@ -55,6 +62,7 @@ public class SettingsActivity extends PreferenceActivity
             onCreatePreferenceFragment();
         }
         getFragmentManager().beginTransaction().replace(android.R.id.content, new SettingsFragment()).commit();
+
     }
 
 
@@ -76,6 +84,20 @@ public class SettingsActivity extends PreferenceActivity
         getFragmentManager().beginTransaction().replace(android.R.id.content, new SettingsFragment()).commit();
     }
 
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if(isEditMode && isFirstLoad)
+        {
+            String name = _localIntent.getStringExtra("Name");
+            String date = _localIntent.getStringExtra("Date");
+            Competition localComp = new Competition(name, date, this);
+            localComp.GetAllSettingsToComp();
+            SettingsFragment.SetAllSummaries(this, name, date, localComp.GetInterval(), localComp.GetStartType(), localComp.GetGroups(),
+                    localComp.GetCheckPointsCount(), localComp.GetTimeToStart());
+            isFirstLoad = false;
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
@@ -93,6 +115,11 @@ public class SettingsActivity extends PreferenceActivity
             CompetitionSaver saver = new CompetitionSaver(this);
             Competition[] localArr = saver.GetAllCompetitions(DatabaseProvider.DbCompetitions.COLUMN_COMPETITION_NAME);
             Competition newComp = SettingsFragment.GetCurrentCompetition(this);
+            if(newComp == null)
+            {
+                Toast.makeText(this,"Заполните все настройки", Toast.LENGTH_LONG).show();
+                return true;
+            }
             boolean _canAddCompetition = true;
             for(int i =0;i < localArr.length; i++)
             {
@@ -106,10 +133,15 @@ public class SettingsActivity extends PreferenceActivity
 
             if(_canAddCompetition)
             {
-
-
-                Intent myIntent = SettingsFragment.GetIntent(this);
-                startActivity(myIntent);
+                if(!isEditMode) {
+                    Intent myIntent = SettingsFragment.GetIntent(this);
+                    startActivity(myIntent);
+                }
+                else
+                {
+                    // все пересохраняем и капец
+                    this.finish();
+                }
             }
         }
         return super.onOptionsItemSelected(item);

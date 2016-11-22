@@ -90,6 +90,16 @@ public class Competition
         saver.SaveSettingsToDb(this);
     }
 
+    public void GetAllSettingsToComp()
+    {
+        SettingsSaver saver = new SettingsSaver(_localContext);
+        _interval = saver.GetSetting(this, DatabaseProvider.DbSettings.COLUMN_INTERVAL);
+        _timeToStart = saver.GetSetting(this, DatabaseProvider.DbSettings.COLUMN_TIME_TO_START);
+        _checkPointsCount = saver.GetSetting(this, DatabaseProvider.DbSettings.COLUMN_CHECK_POINTS);
+        _groups = saver.GetSetting(this, DatabaseProvider.DbSettings.COLUMN_GROUPS);
+        _startType = saver.GetSetting(this, DatabaseProvider.DbSettings.COLUMN_START_TYPE);
+    }
+
     // Метод добавления участников соревнований, если такого участника нет
     public void AddParticipant(Participant participant)
     {
