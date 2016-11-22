@@ -23,6 +23,8 @@ import com.esd.esd.biathlontimer.DatabaseClasses.DatabaseProvider;
 import com.esd.esd.biathlontimer.R;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -220,6 +222,137 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void SortByDate(boolean sortState)
+    {
+        int rowsCount = _tableLayout.getChildCount();
+        Competition[] localArr = new Competition[rowsCount];
+        String[] dates = new String[rowsCount];
+        for(int i = 0; i < rowsCount; i++)
+        {
+            dates[i] = ((TextView)((TableRow) _tableLayout.getChildAt(i)).getChildAt(1)).getText().toString();
+            localArr[i] = new Competition(((TextView)((TableRow) _tableLayout.getChildAt(i)).getChildAt(0)).getText().toString(), dates[i], this);
+        }
+        _tableLayout.removeAllViews();
+        int k = 0;
+        Competition helper;
+        String strHelper;
+        if(sortState)
+        {
+            while(k != rowsCount - 1)
+            {
+                for (int i = 0; i < rowsCount - k - 1; i++)
+                {
+                    int year1 = Integer.valueOf(dates[i].split("\\.")[2]);
+                    int year2 = Integer.valueOf(dates[i+1].split("\\.")[2]);
+                    int month1 = Integer.valueOf(dates[i].split("\\.")[1]);
+                    int month2 = Integer.valueOf(dates[i+1].split("\\.")[1]);
+                    int day1 = Integer.valueOf(dates[i].split("\\.")[0]);
+                    int day2 = Integer.valueOf(dates[i+1].split("\\.")[0]);
+                    if(year1 >= year2)
+                    {
+                        if(year1 == year2)
+                        {
+                            if(month1 > month2)
+                            {
+                                helper = localArr[i];
+                                localArr[i] = localArr[i + 1];
+                                localArr[i + 1] = helper;
+                                strHelper = dates[i];
+                                dates[i] = dates[i + 1];
+                                dates[i + 1] = strHelper;
+                            }
+                            else
+                            {
+                                if(month1 == month2)
+                                {
+                                    if(day1 > day2)
+                                    {
+                                        helper = localArr[i];
+                                        localArr[i] = localArr[i + 1];
+                                        localArr[i + 1] = helper;
+                                        strHelper = dates[i];
+                                        dates[i] = dates[i + 1];
+                                        dates[i + 1] = strHelper;
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            helper = localArr[i];
+                            localArr[i] = localArr[i + 1];
+                            localArr[i + 1] = helper;
+                            strHelper = dates[i];
+                            dates[i] = dates[i + 1];
+                            dates[i + 1] = strHelper;
+                        }
+                    }
+                }
+                k++;
+            }
+            for (int i = 0; i < rowsCount; i++) {
+                AddCompetitionRow(localArr[i]);
+            }
+        }
+        else
+        {
+            while(k!=rowsCount - 1)
+            {
+                for (int i = 0; i < rowsCount - k - 1; i++) {
+                    int year1 = Integer.valueOf(dates[i].split("\\.")[2]);
+                    int year2 = Integer.valueOf(dates[i+1].split("\\.")[2]);
+                    int month1 = Integer.valueOf(dates[i].split("\\.")[1]);
+                    int month2 = Integer.valueOf(dates[i+1].split("\\.")[1]);
+                    int day1 = Integer.valueOf(dates[i].split("\\.")[0]);
+                    int day2 = Integer.valueOf(dates[i+1].split("\\.")[0]);
+                    if(year1 <= year2)
+                    {
+                        if(year1 == year2)
+                        {
+                            if(month1 < month2)
+                            {
+                                helper = localArr[i];
+                                localArr[i] = localArr[i + 1];
+                                localArr[i + 1] = helper;
+                                strHelper = dates[i];
+                                dates[i] = dates[i + 1];
+                                dates[i + 1] = strHelper;
+                            }
+                            else
+                            {
+                                if(month1 == month2)
+                                {
+                                    if(day1 < day2)
+                                    {
+                                        helper = localArr[i];
+                                        localArr[i] = localArr[i + 1];
+                                        localArr[i + 1] = helper;
+                                        strHelper = dates[i];
+                                        dates[i] = dates[i + 1];
+                                        dates[i + 1] = strHelper;
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            helper = localArr[i];
+                            localArr[i] = localArr[i + 1];
+                            localArr[i + 1] = helper;
+                            strHelper = dates[i];
+                            dates[i] = dates[i + 1];
+                            dates[i + 1] = strHelper;
+                        }
+                    }
+                }
+                k++;
+            }
+            for (int i = 0; i < rowsCount; i++) {
+                AddCompetitionRow(localArr[i]);
+            }
+        }
+    }
+
     public void OnClick(View view)
     {
         Intent settingPager = new Intent(this, SettingsActivity.class);
@@ -259,12 +392,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
+        item.setChecked(!item.isChecked());
         switch (item.getItemId())
         {
             case R.id.mainMenuNameSort:
+                SortCompetitionsBy(DatabaseProvider.DbCompetitions.COLUMN_COMPETITION_NAME, item.isChecked());
                 Toast.makeText(getApplicationContext(),"Сортировка по названию", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.mainMenuDataSort:
+                SortByDate(item.isChecked());
                 Toast.makeText(getApplicationContext(),"Сортировка по дате", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.mainEditCompetition:

@@ -8,10 +8,6 @@ import android.icu.text.MessagePattern;
 
 import com.esd.esd.biathlontimer.Participant;
 
-/**
- * Created by NIL_RIMS_2 on 19.10.2016.
- */
-
 public class ParticipantSaver
 {
     private static DatabaseProvider _dbProvider;
