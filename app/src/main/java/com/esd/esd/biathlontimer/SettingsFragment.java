@@ -394,7 +394,7 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
             String[] allGroups = groups.split(",");
             for(int i = 0; i < allGroups.length; i++)
             {
-                _dialogItemsList.add(allGroups[i]);
+                _dialogItemsList.add(i ,allGroups[i]);
             }
             _dialogItems = _dialogItemsList.toArray(new String[_dialogItemsList.size()]);
         }

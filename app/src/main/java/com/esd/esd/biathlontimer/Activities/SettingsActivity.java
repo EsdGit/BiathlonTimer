@@ -40,6 +40,7 @@ public class SettingsActivity extends PreferenceActivity
     private boolean isEditMode = false;
     private Intent _localIntent;
     private boolean isFirstLoad = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
