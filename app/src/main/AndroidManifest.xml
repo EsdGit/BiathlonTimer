@@ -25,6 +25,9 @@
                   android:screenOrientation="landscape"
                   android:theme="@style/PreferenceScreen">
         </activity>
+        <activity android:name=".Activities.CompetitionsActivity"
+                  android:theme="@style/AppTheme"
+                  android:screenOrientation="landscape"/>
     </application>
 
 </manifest>

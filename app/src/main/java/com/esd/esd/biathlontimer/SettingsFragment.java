@@ -6,16 +6,20 @@ import android.content.DialogInterface;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.SwitchPreference;
+import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.NumberPicker;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.esd.esd.biathlontimer.Activities.ViewPagerActivity;
@@ -25,6 +29,7 @@ import org.apache.poi.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.zip.Inflater;
 
 
 public class SettingsFragment extends PreferenceFragment implements DatePickerDialog.OnDateSetListener
@@ -60,7 +65,6 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
 
     private static final int MIN_VALUE_MINUTE_AND_SECONDS = 0;
     private static final int MAX_VALUE_MINUTE_AND_SECONDS = 60;
-
 
     @Override
     public void onCreate(final Bundle savedInstanceState)
@@ -176,9 +180,9 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue)
             {
-                if(!_typeCompetition.isChecked())
+                if (!_typeCompetition.isChecked())
                 {
-                    _typeCompetition.setChecked(true);
+                   _typeCompetition.setChecked(true);
                     _typeCompetition.setSummary(getResources().getString(R.string.summary_international_competition));
                 }
                 else
@@ -313,7 +317,14 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
     public static Competition GetCurrentCompetition(Context context)
     {
         String groups = _group.getSummary().toString();
-        groups = groups.split(":")[1];
+        if(groups != context.getResources().getString(R.string.summary_group))
+        {
+            groups = groups.split(":")[1];
+        }
+        else
+        {
+            groups = "";
+        }
         Competition localCompetition = new Competition(_nameCompetition.getSummary().toString(),_setData.getSummary().toString(), context);
         localCompetition.SetCompetitionSettings(_typeStart.getSummary().toString(), _setInterval.getSummary().toString(),
                 _countCheckPoint.getSummary().toString(),_setStartTimer.getSummary().toString(),groups);

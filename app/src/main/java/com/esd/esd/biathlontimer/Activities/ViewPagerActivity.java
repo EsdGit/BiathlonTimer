@@ -134,11 +134,17 @@ public class ViewPagerActivity extends AppCompatActivity
         _currentCompetition = new Competition(name, date, this);
         //String[] localArray = intent.getStringArrayExtra("ArrayGroup");
         String groups = saver.GetSetting(_currentCompetition, DatabaseProvider.DbSettings.COLUMN_GROUPS);
-        String[] localArray = groups.split(",");
-        _arrayGroup = new String[localArray.length + 1];
-        for(int i = 0 ; i<localArray.length;i++)
+        if(!groups.isEmpty())
         {
-            _arrayGroup[i+1] = localArray[i];
+            String[] localArray = groups.split(",");
+            _arrayGroup = new String[localArray.length + 1];
+            for (int i = 0; i < localArray.length; i++) {
+                _arrayGroup[i + 1] = localArray[i];
+            }
+        }
+        else
+        {
+            _arrayGroup = new String[1];
         }
         _arrayGroup[0]=getResources().getString(R.string.default_group);;
 
@@ -957,6 +963,8 @@ public class ViewPagerActivity extends AppCompatActivity
         competitionSaver.SaveCompetitionToDatabase(_currentCompetition);
         _needDeleteTables = false;
         Toast.makeText(getApplicationContext(),"Сохранить список и перейти к соревнованию",Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, CompetitionsActivity.class);
+        startActivity(intent);
     }
 
     public void OnClickEditParticipant(View view)

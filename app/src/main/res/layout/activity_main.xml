@@ -9,14 +9,15 @@
                 tools:context="com.esd.esd.biathlontimer.Activities.MainActivity">
 
 
-        <TextView
-            android:id="@+id/emptyListTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/main_activity_start_text_view"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"/>
+    <TextView
+        android:id="@+id/emptyListTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/main_activity_start_text_view"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone"/>
 
 
     <LinearLayout

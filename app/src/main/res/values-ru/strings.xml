@@ -21,7 +21,7 @@
     <string name="item_type_mas_start">Массовый старт</string>
     <string name="start_summary_group">Создает группы необходимые для соревнования</string>
     <string name="aftter_add_summary_group">Группы соревнования: </string>
-    <string name="summary_type_competitinon">Устанавливает тип соревнования (по умолчанию: Региональные)</string>
+    <string name="summary_type_competition">Устанавливает тип соревнования (по умолчанию: Региональные)</string>
     <string name="summary_data_competition">Устанавливает дату проведения соревования</string>
     <string name="summary_time_to_start">Устанавливает время до начала старта</string>
     <string name="setting_activity_title_name_competition">Введите название соревнования</string>
@@ -43,6 +43,7 @@
     <string name="participant_list_group_sort">Сортировка по группам</string>
     <string name="participant_list_country_sort">Сортировка по региону</string>
     <string name="participant_list_start_text_view">Список участников пуст, добавьте нового или загрузите из базы данных. Для перехода к базе данных проведите по экрану.</string>
+    <string name="participant_list_year_sort">Сортировка по году</string>
 
     //База данных
     <string name="db_list_activity_head">База данных участников</string>

@@ -14,7 +14,8 @@
         android:layout_centerVertical="true"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:gravity="center"
-        android:text="@string/db_list_start_text_view"/>
+        android:text="@string/db_list_start_text_view"
+        android:visibility="gone"/>
 
     <LinearLayout
         android:layout_width="match_parent"

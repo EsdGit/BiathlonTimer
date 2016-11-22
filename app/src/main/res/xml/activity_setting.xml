@@ -2,10 +2,11 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:key="preference_screen">
 
+
     <SwitchPreference
         android:key="typeCompetition"
         android:title="@string/summary_international_competition"
-        android:summary="@string/summary_type_competitinon"
+        android:summary="@string/summary_type_competition"
         android:checked="false"/>
 
     <EditTextPreference

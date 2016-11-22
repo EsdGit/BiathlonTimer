@@ -7,7 +7,7 @@
     <item android:title="@string/participant_list_name_sort"
         android:id="@+id/nameSort"
         android:checked="false"/>
-    <item android:title="@string/main_activity_data_sort"
+    <item android:title="@string/participant_list_year_sort"
         android:id="@+id/dataSort"
         android:checked="false"/>
     <item android:title="@string/participant_list_group_sort"
