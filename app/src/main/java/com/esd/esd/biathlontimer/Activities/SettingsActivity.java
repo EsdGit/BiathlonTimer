@@ -126,16 +126,16 @@ public class SettingsActivity extends PreferenceActivity
                 return true;
             }
             boolean _canAddCompetition = true;
-            for(int i =0;i < localArr.length; i++)
+            if(!isEditMode)
             {
-                if(newComp.equals(localArr[i]))
-                {
-                    _canAddCompetition= false;
-                    Toast.makeText(this,getResources().getString(R.string.competition_already_exists),Toast.LENGTH_LONG).show();
-                    break;
+                for (int i = 0; i < localArr.length; i++) {
+                    if (newComp.equals(localArr[i])) {
+                        _canAddCompetition = false;
+                        Toast.makeText(this, getResources().getString(R.string.competition_already_exists), Toast.LENGTH_LONG).show();
+                        break;
+                    }
                 }
             }
-
             if(_canAddCompetition)
             {
                 if(!isEditMode) {
