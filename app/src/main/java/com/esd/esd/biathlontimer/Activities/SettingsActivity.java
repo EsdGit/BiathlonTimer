@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
+import android.icu.text.MessagePattern;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
@@ -30,7 +31,9 @@ import android.widget.Toolbar;
 import com.esd.esd.biathlontimer.Competition;
 import com.esd.esd.biathlontimer.DatabaseClasses.CompetitionSaver;
 import com.esd.esd.biathlontimer.DatabaseClasses.DatabaseProvider;
+import com.esd.esd.biathlontimer.DatabaseClasses.ParticipantSaver;
 import com.esd.esd.biathlontimer.DatabaseClasses.SettingsSaver;
+import com.esd.esd.biathlontimer.Participant;
 import com.esd.esd.biathlontimer.R;
 import com.esd.esd.biathlontimer.SettingsFragment;
 
@@ -41,6 +44,7 @@ public class SettingsActivity extends PreferenceActivity
     private Intent _localIntent;
     private boolean isFirstLoad = true;
 
+    private Competition _oldCompetititon;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -92,10 +96,10 @@ public class SettingsActivity extends PreferenceActivity
         {
             String name = _localIntent.getStringExtra("Name");
             String date = _localIntent.getStringExtra("Date");
-            Competition localComp = new Competition(name, date, this);
-            localComp.GetAllSettingsToComp();
-            SettingsFragment.SetAllSummaries(this, name, date, localComp.GetInterval(), localComp.GetStartType(), localComp.GetGroups(),
-                    localComp.GetCheckPointsCount(), localComp.GetTimeToStart());
+            _oldCompetititon = new Competition(name, date, this);
+            _oldCompetititon.GetAllSettingsToComp();
+            SettingsFragment.SetAllSummaries(this, name, date, _oldCompetititon.GetInterval(), _oldCompetititon.GetStartType(), _oldCompetititon.GetGroups(),
+                    _oldCompetititon.GetCheckPointsCount(), _oldCompetititon.GetTimeToStart());
             isFirstLoad = false;
         }
     }
@@ -140,7 +144,18 @@ public class SettingsActivity extends PreferenceActivity
                 }
                 else
                 {
-                    // все пересохраняем и капец
+                    ParticipantSaver partSaver = new ParticipantSaver(this);
+                    Participant[] participants = partSaver.GetAllParticipants(_oldCompetititon.GetDbParticipantPath(), DatabaseProvider.DbParticipant.COLUMN_NAME);
+                    DatabaseProvider dbProvider = new DatabaseProvider(this);
+                    dbProvider.DeleteTable(_oldCompetititon.GetDbParticipantPath());
+                    dbProvider.DeleteTable(_oldCompetititon.GetSettingsPath());
+                    saver.DeleteCompetitionFromDatabase(_oldCompetititon);
+                    Competition newCompetition = SettingsFragment.GetCurrentCompetition(this);
+                    for(int i = 0; i<participants.length;i++)
+                    {
+                        newCompetition.AddParticipant(participants[i]);
+                    }
+                    saver.SaveCompetitionToDatabase(newCompetition);
                     this.finish();
                 }
             }

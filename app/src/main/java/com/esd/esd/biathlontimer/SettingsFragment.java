@@ -388,7 +388,7 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
         _setData.setSummary(date);
         _setInterval.setSummary(interval);
         _setStartTimer.setSummary(timeToStart);
-        if(groups != "")
+        if(!groups.isEmpty())
         {
             _group.setSummary(context.getResources().getString(R.string.aftter_add_summary_group)+groups);
             String[] allGroups = groups.split(",");

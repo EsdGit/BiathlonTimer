@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        if(_isFirstLoad) {
+        _tableLayout.removeAllViews();
             Competition[] localArr = _saver.GetAllCompetitions(DatabaseProvider.DbCompetitions.COLUMN_COMPETITION_DATE);
             _competitions = new Competition[localArr.length];
             for(int i = 0; i < localArr.length; i++)
@@ -73,7 +73,6 @@ public class MainActivity extends AppCompatActivity {
                 AddCompetitionRow(localArr[i]);
             }
             _isFirstLoad = false;
-        }
        EmptyListCompetition();
     }
 
@@ -95,6 +94,11 @@ public class MainActivity extends AppCompatActivity {
             {
                 localArr.add(new Competition(name.getText().toString(), date.getText().toString(), this));
                 if(needDelete) _tableLayout.removeViewAt(i);
+                else
+                {
+                    name.setBackground(new PaintDrawable(Color.WHITE));
+                    date.setBackground(new PaintDrawable(Color.WHITE));
+                }
                 k++;
                 i--;
             }
