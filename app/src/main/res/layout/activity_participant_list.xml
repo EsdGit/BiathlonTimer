@@ -113,11 +113,12 @@
             android:layout_height="wrap_content"
             android:layout_margin="1dp"
             android:id="@+id/numberParticipantList"
+            android:textColor="#000000"
             android:text="№"
             android:gravity="center"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:typeface="serif"
             android:background="#ffffff"
+            android:typeface="serif"
             android:layout_weight="0.4"/>
 
         <TextView
@@ -127,31 +128,35 @@
             android:id="@+id/nameParticipantList"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="#000000"
+            android:typeface="serif"
             android:text="@string/fio_col_title"
             android:gravity="center"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:layout_weight="3"
-            android:typeface="serif"
             android:background="#ffffff"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/birthdayParticipantList"
+            android:typeface="serif"
             android:layout_marginRight="1dp"
             android:layout_marginTop="1dp"
             android:layout_marginBottom="1dp"
+            android:textColor="#000000"
             android:text="@string/year_col_title"
             android:gravity="center"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:layout_weight="0.4"
-            android:typeface="serif"
             android:background="#ffffff"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/groupParticipantList"
+            android:typeface="serif"
+            android:textColor="#000000"
             android:layout_marginRight="1dp"
             android:layout_marginTop="1dp"
             android:layout_marginBottom="1dp"
@@ -159,21 +164,21 @@
             android:gravity="center"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:layout_weight="0.6"
-            android:typeface="serif"
             android:background="#ffffff"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/countryParticipantList"
+            android:typeface="serif"
             android:layout_marginRight="1dp"
             android:layout_marginTop="1dp"
             android:layout_marginBottom="1dp"
+            android:textColor="#000000"
             android:text="@string/country_col_title"
             android:gravity="center"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:layout_weight="0.6"
-            android:typeface="serif"
             android:background="#ffffff"/>
     </LinearLayout>
 

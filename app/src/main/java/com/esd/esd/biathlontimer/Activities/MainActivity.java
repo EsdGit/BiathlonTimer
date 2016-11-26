@@ -112,12 +112,14 @@ public class MainActivity extends AppCompatActivity {
         final TextView newTextView = new TextView(this);
         newTextView.setText(competition.GetName());
         newTextView.setGravity(Gravity.CENTER);
+        newTextView.setTextColor(Color.BLACK);
         newTextView.setBackground(new PaintDrawable(Color.WHITE));
         newTextView.setLayoutParams(new TableRow.LayoutParams(_nameTextView.getMeasuredWidth(),_nameTextView.getMeasuredHeight(), 0.666f));
         ((TableRow.LayoutParams)newTextView.getLayoutParams()).setMargins(2,0,2,2);
         final TextView newTextView2 = new TextView(this);
         newTextView2.setText(competition.GetDate());
         newTextView2.setGravity(Gravity.CENTER);
+        newTextView2.setTextColor(Color.BLACK);
         newTextView2.setBackground(new PaintDrawable(Color.WHITE));
         newTextView2.setLayoutParams(new TableRow.LayoutParams(_dateTextView.getMeasuredWidth(),_dateTextView.getMeasuredHeight(), 0.334f));
         ((TableRow.LayoutParams)newTextView2.getLayoutParams()).setMargins(0,0,2,2);

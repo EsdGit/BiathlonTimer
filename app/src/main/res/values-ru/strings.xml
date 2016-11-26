@@ -71,6 +71,12 @@
     <string name="add_participant_dialog_color_text">Цвет: </string>
     <string name="add_group_dialog_hint">Введите название группы</string>
 
+    //Соревнование (Таблицы, участники)
+    <string name="number">Номер</string>
+    <string name="position">Позиция</string>
+    <string name="time">Время</string>
+    <string name="lag">Отставание</string>
+
 
 
     //Кнопки
