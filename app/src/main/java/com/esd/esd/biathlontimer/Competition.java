@@ -51,7 +51,8 @@ public class Competition
     public String GetStartType(){return _startType;}
 
     private String _groups;
-    public String GetGroups(){return _groups;} // потом возвращать массив строк
+    public String GetGroups(){return _groups;}
+
     public Competition(String name, String date, Context context)
     {
         _competitionName = name;
@@ -98,6 +99,16 @@ public class Competition
         _checkPointsCount = saver.GetSetting(this, DatabaseProvider.DbSettings.COLUMN_CHECK_POINTS);
         _groups = saver.GetSetting(this, DatabaseProvider.DbSettings.COLUMN_GROUPS);
         _startType = saver.GetSetting(this, DatabaseProvider.DbSettings.COLUMN_START_TYPE);
+    }
+
+    public void GetAllParticipantsToComp()
+    {
+        ParticipantSaver saver = new ParticipantSaver(_localContext);
+        Participant[] localArr = saver.GetAllParticipants(GetDbParticipantPath(), DatabaseProvider.DbParticipant.COLUMN_NUMBER);
+        for(int i = 0; i<localArr.length;i++)
+        {
+            _participants.add(localArr[i]);
+        }
     }
 
     // Метод добавления участников соревнований, если такого участника нет

@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.esd.esd.biathlontimer.Competition;
 import com.esd.esd.biathlontimer.PagerAdapterHelper;
+import com.esd.esd.biathlontimer.Participant;
 import com.esd.esd.biathlontimer.R;
 
 import org.w3c.dom.Text;
@@ -39,6 +40,8 @@ public class CompetitionsActivity extends AppCompatActivity
     private Timer _timer;
     private android.text.format.Time _currentTime;
     private android.text.format.Time _currentInterval;
+    private Participant[] _participants;
+    private int _number = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -52,6 +55,10 @@ public class CompetitionsActivity extends AppCompatActivity
 
         _currentCompetition = new Competition(getIntent().getStringExtra("Name"), getIntent().getStringExtra("Date"), this);
         _currentCompetition.GetAllSettingsToComp();
+        _currentCompetition.GetAllParticipantsToComp();
+
+        _participants = _currentCompetition.GetAllParticipants();
+
         _currentInterval.second = Integer.valueOf(_currentCompetition.GetInterval().split(":")[1]);
         _currentInterval.minute = Integer.valueOf(_currentCompetition.GetInterval().split(":")[0]);
         LayoutInflater inflater = LayoutInflater.from(this);
@@ -82,10 +89,11 @@ public class CompetitionsActivity extends AppCompatActivity
     }
 
 
-    private Button CreateButton(String numberParticipant, String numberCheckPoint)
+    private Button CreateButton(Participant participant, String numberCheckPoint)
     {
         final Button newButton = new Button(this);
-        newButton.setText(numberParticipant + ", " + numberCheckPoint);
+        newButton.setText(participant.GetNumber() + ", " + numberCheckPoint);
+        newButton.setBackgroundColor(participant.GetColor());
         newButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
@@ -128,13 +136,14 @@ public class CompetitionsActivity extends AppCompatActivity
                         {
                             time.second++;
                             ms = 0;
-                            if(android.text.format.Time.compare(time,_currentTime) == 0)
+                            if(android.text.format.Time.compare(time,_currentTime) == 0 && _number < _participants.length)
                             {
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run()
                                     {
-                                        _participantGridLayout.addView(CreateButton("1","1"));
+                                        _participantGridLayout.addView(CreateButton(_participants[_number],"1"));
+                                        _number++;
                                     }
                                 });
                                 _currentTime.second += _currentInterval.second;
@@ -195,6 +204,6 @@ public class CompetitionsActivity extends AppCompatActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        _timer.cancel();
+        if(_timer != null) _timer.cancel();
     }
 }

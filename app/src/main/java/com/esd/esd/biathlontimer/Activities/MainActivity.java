@@ -64,15 +64,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        _tableLayout.removeAllViews();
+        if(_isFirstLoad)
+        {
+            _tableLayout.removeAllViews();
             Competition[] localArr = _saver.GetAllCompetitions(DatabaseProvider.DbCompetitions.COLUMN_COMPETITION_DATE);
             _competitions = new Competition[localArr.length];
-            for(int i = 0; i < localArr.length; i++)
-            {
+            for (int i = 0; i < localArr.length; i++) {
                 _competitions[i] = localArr[i];
                 AddCompetitionRow(localArr[i]);
             }
             _isFirstLoad = false;
+        }
        EmptyListCompetition();
     }
 

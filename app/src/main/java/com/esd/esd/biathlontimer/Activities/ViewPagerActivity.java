@@ -274,7 +274,7 @@ public class ViewPagerActivity extends AppCompatActivity
                     }
                 }
 
-
+                _colorDialog.setBackgroundColor(-1);
                 SetStartPosition(currTable);
             }
         });
@@ -314,6 +314,7 @@ public class ViewPagerActivity extends AppCompatActivity
                     ((TextView) _renameTableRow.getChildAt(j)).setBackground(new PaintDrawable(getResources().getColor(R.color.white)));
                 }
                 SetStartPosition((TableLayout) _renameTableRow.getParent());
+                _colorDialog.setBackgroundColor(-1);
 
             }
         });
