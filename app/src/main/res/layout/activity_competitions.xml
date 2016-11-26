@@ -34,7 +34,8 @@
             android:layout_weight="0.1"
             android:layout_gravity="center"
             android:foregroundGravity="center"
-            android:background="@null"/>
+            android:background="@null"
+            android:onClick="startBtnClick"/>
 
     </LinearLayout>
 
