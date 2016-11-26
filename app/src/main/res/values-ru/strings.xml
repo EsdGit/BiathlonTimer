@@ -35,6 +35,8 @@
     <string name="summary_group">Создает группы необходимые для соревнования</string>
     <string name="setting_activity_title_checkpoint">Количество КП</string>
     <string name="summary_checkpoint">Устанавливает количество контрольных пунктов</string>
+    <string name="setting_activity_title_second_interval">Второй интервал старта</string>
+    <string name="check_input_data">Проверьте введеные данные</string>
 
     //Список участников
     <string name="participant_list_actvity_head">Список участников соревнования</string>

@@ -13,6 +13,7 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.SwitchPreference;
 import android.support.v7.widget.SwitchCompat;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -38,6 +39,7 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
     private static SwitchPreference _typeCompetition;
     private static Preference _setData;
     private static Preference _setInterval;
+    private static Preference _setSecondInterval;
     private static EditTextPreference _nameCompetition;
     private static ListPreference _typeStart;
     private static EditTextPreference _countCheckPoint;
@@ -46,17 +48,23 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
 
     private View _dialogFormInterval;
     private View _dialogFormAddGroup;
+    private View _dialogFormSecondInterval;
     private AlertDialog.Builder _dialogBuilderInterval;
+    private AlertDialog.Builder _dialogBuilderSecondInterval;
     private AlertDialog.Builder _dialogBuilderGroup;
     private AlertDialog.Builder _dialogBuilderAddGroup;
     private AlertDialog.Builder _dialogBuilderDelGroup;
     private AlertDialog _dialogInterval;
+    private AlertDialog _dialogSecondInterval;
     private AlertDialog _dialogGroup;
     private AlertDialog _dialogAddGroup;
     private AlertDialog _dialogDelGroup;
 
     private NumberPicker _minute;
     private NumberPicker _seconds;
+    private NumberPicker _minuteSecondInterval;
+    private NumberPicker _secondsSecondInterval;
+    private EditText _setNumberStartWithSecondInterval;
     private EditText _nameAddGroup;
 
     private boolean _isStartTimer = false;
@@ -81,6 +89,7 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
         _typeCompetition.setChecked(false);
         _setData = (Preference) findPreference("dataSetting");
         _setInterval = (Preference) findPreference("intervalSetting");
+        _setSecondInterval = (Preference) findPreference("secondIntervalSetting");
         _countCheckPoint = (EditTextPreference) findPreference("countCheckPointSetting");
         _nameCompetition = (EditTextPreference) findPreference("nameCompetitionSetting");
         _typeStart = (ListPreference) findPreference("typeStartSetting");
@@ -125,6 +134,37 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
         _dialogBuilderInterval.setCancelable(false);
         _dialogInterval = _dialogBuilderInterval.create();
 
+
+
+        //Диалог установки второго интервала
+        LayoutInflater secondInflater = LayoutInflater.from(getActivity());
+        _dialogFormSecondInterval = secondInflater.inflate(R.layout.dialog_second_interval, null);
+        _minuteSecondInterval = (NumberPicker) _dialogFormSecondInterval.findViewById(R.id.dialog_minute_second_interval);
+        _secondsSecondInterval = (NumberPicker) _dialogFormSecondInterval.findViewById(R.id.dialog_seconds_second_interval);
+        _setNumberStartWithSecondInterval = (EditText) _dialogFormSecondInterval.findViewById(R.id.startPositionWithSecondInterval);
+        _minuteSecondInterval.setMinValue(MIN_VALUE_MINUTE_AND_SECONDS);
+        _minuteSecondInterval.setMaxValue(MAX_VALUE_MINUTE_AND_SECONDS);
+        _secondsSecondInterval.setMinValue(MIN_VALUE_MINUTE_AND_SECONDS);
+        _secondsSecondInterval.setMaxValue(MAX_VALUE_MINUTE_AND_SECONDS);
+        _dialogBuilderSecondInterval = new AlertDialog.Builder(getActivity());
+        _dialogBuilderSecondInterval.setTitle(getResources().getString(R.string.interval_dialog_title));
+        _dialogBuilderSecondInterval.setView(_dialogFormSecondInterval);
+        _dialogBuilderSecondInterval.setPositiveButton(getResources().getString(R.string.accept), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+
+            }
+        });
+        _dialogBuilderSecondInterval.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+
+            }
+        });
+        _dialogBuilderSecondInterval.setCancelable(false);
+        _dialogSecondInterval = _dialogBuilderSecondInterval.create();
 
         //Диалог добавления группы
         _dialogFormAddGroup = inflater.inflate(R.layout.dialog_add_group_setting_activity, null);
@@ -210,18 +250,58 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
             _dialogInterval.show();
             return false;
         }});
+
+        _setSecondInterval.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference)
+            {
+
+                _dialogSecondInterval.show();
+                _dialogSecondInterval.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        String position = _setNumberStartWithSecondInterval.getText().toString();
+                        if(!position.isEmpty())
+                        {
+                            position = _setNumberStartWithSecondInterval.getText().toString();
+                            _setSecondInterval.setSummary(SetNormalFormatDataTime(_minuteSecondInterval.getValue() + ":" + _secondsSecondInterval.getValue(), true) + " с позиции - " + position);
+                            _dialogSecondInterval.dismiss();
+                        }
+                        else
+                        {
+                            Toast.makeText(getActivity(),getResources().getString(R.string.check_input_data),Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+                SetStartPositionInTimeDialog();
+                _setNumberStartWithSecondInterval.setText("");
+                return false;
+            }
+        });
+
         _nameCompetition.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue)
             {
-                _nameCompetition.setSummary((String)newValue);
+                String getString = (String)newValue;
+                if(!getString.isEmpty())
+                {
+                    _nameCompetition.setSummary((String) newValue);
+                }
                 return false;
             }
         });
+        _countCheckPoint.getEditText().setInputType(InputType.TYPE_CLASS_NUMBER);
         _countCheckPoint.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                _countCheckPoint.setSummary(getResources().getString(R.string.summary_count_checkpoint) + (String)newValue);
+            public boolean onPreferenceChange(Preference preference, Object newValue)
+            {
+                String getString = (String)newValue;
+                if(!getString.isEmpty())
+                {
+                    _countCheckPoint.setSummary(getResources().getString(R.string.summary_count_checkpoint) + (String) newValue);
+                }
                 return false;
             }
         });
@@ -324,6 +404,7 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
         if(_setData.getSummary().toString().equals(myRes.getString(R.string.summary_data_competition))) return null;
         if(_countCheckPoint.getSummary().toString().equals(myRes.getString(R.string.summary_count_checkpoint))) return null;
         if(_setInterval.getSummary().toString().equals(myRes.getString(R.string.summary_interval))) return null;
+        if(_setSecondInterval.getSummary().toString().equals(myRes.getString(R.string.summary_interval)))return null;
         if(_setStartTimer.getSummary().toString().equals(myRes.getString(R.string.summary_time_to_start))) return null;
         if(_typeStart.getSummary().toString().equals(myRes.getString(R.string.summary_type_start))) return null;
         if(!_group.getSummary().toString().equals(myRes.getString(R.string.summary_group)))
@@ -362,6 +443,8 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
     {
         _minute.setValue(MIN_VALUE_MINUTE_AND_SECONDS);
         _seconds.setValue(MIN_VALUE_MINUTE_AND_SECONDS);
+        _minuteSecondInterval.setValue(MIN_VALUE_MINUTE_AND_SECONDS);
+        _secondsSecondInterval.setValue(MIN_VALUE_MINUTE_AND_SECONDS);
     }
 
     private String SetSummaryPreferenceGroup()

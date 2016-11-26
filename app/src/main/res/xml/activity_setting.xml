@@ -41,6 +41,12 @@
         android:dialogTitle="@string/dialog_title_interval"/>
 
     <Preference
+        android:key="secondIntervalSetting"
+        android:summary="@string/summary_interval"
+        android:title="@string/setting_activity_title_second_interval"
+        android:dialogTitle="@string/dialog_title_interval"/>
+
+    <Preference
         android:key="group"
         android:title="@string/setting_activity_title_group"
         android:summary="@string/summary_group"
