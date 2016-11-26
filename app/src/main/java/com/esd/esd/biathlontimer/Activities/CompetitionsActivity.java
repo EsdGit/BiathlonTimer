@@ -21,6 +21,7 @@ import com.esd.esd.biathlontimer.R;
 
 import org.w3c.dom.Text;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -36,7 +37,8 @@ public class CompetitionsActivity extends AppCompatActivity
     private Competition _currentCompetition;
     private boolean _isCompetitionStarted = false;
     private Timer _timer;
-
+    private android.text.format.Time _currentTime;
+    private android.text.format.Time _currentInterval;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -45,8 +47,13 @@ public class CompetitionsActivity extends AppCompatActivity
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getSupportActionBar().hide();
 
+        _currentTime = new android.text.format.Time();
+        _currentInterval = new android.text.format.Time();
+
         _currentCompetition = new Competition(getIntent().getStringExtra("Name"), getIntent().getStringExtra("Date"), this);
         _currentCompetition.GetAllSettingsToComp();
+        _currentInterval.second = Integer.valueOf(_currentCompetition.GetInterval().split(":")[1]);
+        _currentInterval.minute = Integer.valueOf(_currentCompetition.GetInterval().split(":")[0]);
         LayoutInflater inflater = LayoutInflater.from(this);
         List<View> pages = new ArrayList<>();
 
@@ -58,6 +65,7 @@ public class CompetitionsActivity extends AppCompatActivity
         _competitionTimer.setText(_currentCompetition.GetTimeToStart());
         _startBtn = (ImageButton) page1.findViewById(R.id.competitionStart);
 
+        _currentTime.set(_currentInterval.second,_currentInterval.minute,0,0,0,0);
         View page2 = inflater.inflate(R.layout.activity_competition_tables, null);
         pages.add(page2);
 
@@ -67,10 +75,10 @@ public class CompetitionsActivity extends AppCompatActivity
         viewPager.setCurrentItem(0);
         setContentView(viewPager);
 
-        for(int i = 0; i < 36; i++)
-        {
-            _participantGridLayout.addView(CreateButton(Integer.toString(i),Integer.toString(i+1)));
-        }
+//        for(int i = 0; i < 36; i++)
+//        {
+//            _participantGridLayout.addView(CreateButton(Integer.toString(i),Integer.toString(i+1)));
+//        }
     }
 
 
@@ -95,73 +103,62 @@ public class CompetitionsActivity extends AppCompatActivity
         startActivity(intent);
     }
 
-    long milliss;
     public void startBtnClick(View view)
     {
         if(!_isCompetitionStarted)
         {
-            int sec = Integer.valueOf(_currentCompetition.GetTimeToStart().split(":")[1]);
-            int min = Integer.valueOf(_currentCompetition.GetTimeToStart().split(":")[0]);
-            long ms = min*60000 + sec*1000;
-            milliss = ms;
+            final android.text.format.Time timeCountDown = new android.text.format.Time();
+            timeCountDown.minute = Integer.valueOf(_currentCompetition.GetTimeToStart().split(":")[0]);
+            timeCountDown.second = Integer.valueOf(_currentCompetition.GetTimeToStart().split(":")[1]);
+            final long ms = timeCountDown.minute*60000+timeCountDown.second*1000;
+
+            final android.text.format.Time time = new android.text.format.Time();
+            time.set(0,0,0,0,0,0);
             CountDownTimer countDownTimer = new CountDownTimer(ms+1000,1000)
             {
-                long sec = (milliss % 60000)/1000;
-                long min = milliss/60000;
-                String secStr;
-                String minStr;
                 TimerTask task = new TimerTask() {
                     int ms = 0;
-                    int sec = 0;
-                    int min = 0;
-                    int hour = 0;
-                    String hourStr;
-                    String minStr;
-                    String secStr;
                     String msStr;
+
                     @Override
                     public void run()
                     {
                         ms++;
                         if(ms>9)
                         {
-                            sec++;
+                            time.second++;
                             ms = 0;
+                            if(android.text.format.Time.compare(time,_currentTime) == 0)
+                            {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run()
+                                    {
+                                        _participantGridLayout.addView(CreateButton("1","1"));
+                                    }
+                                });
+                                _currentTime.second += _currentInterval.second;
+                                _currentTime.minute += _currentInterval.minute;
+                            }
                         }
-                        if(sec>59)
+                        if(time.second > 59)
                         {
-                            min++;
-                            sec = 0;
+                            time.minute++;
+                            time.second = 0;
                         }
-                        if(min>59)
+                        if(time.minute > 59)
                         {
-                            hour++;
-                            min = 0;
+                            time.hour++;
+                            time.minute = 0;
                         }
-                        if(sec < 10)
-                        {
-                            secStr = "0"+String.valueOf(sec);
-                        }
-                        else
-                        {
-                            secStr = String.valueOf(sec);
-                        }
+                        //_currentTime.second++;
 
-                        if(min<10)
-                        {
-                            minStr = "0"+String.valueOf(min);
-                        }
-                        else
-                        {
-                            minStr = String.valueOf(min);
-                        }
 
                         msStr = String.valueOf(ms);
-                        hourStr = String.valueOf(hour);
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                _competitionTimer.setText(hourStr+":"+minStr+":"+secStr+":"+ms);
+                                _competitionTimer.setText(time.format("%H:%M:%S")+":"+msStr);
                             }
                         });
                     }
@@ -169,30 +166,13 @@ public class CompetitionsActivity extends AppCompatActivity
                 @Override
                 public void onTick(long millisUntilFinished)
                 {
-                    sec--;
-                    if(sec < 0)
+                    timeCountDown.second--;
+                    if(timeCountDown.second < 0)
                     {
-                        min--;
-                        sec = 59;
+                        timeCountDown.minute--;
+                        timeCountDown.second = 59;
                     }
-                    if(sec < 10)
-                    {
-                        secStr = "0"+String.valueOf(sec);
-                    }
-                    else
-                    {
-                        secStr = String.valueOf(sec);
-                    }
-                    if(min < 10)
-                    {
-                        minStr = "0"+String.valueOf(min);
-                    }
-                    else
-                    {
-                        minStr = String.valueOf(min);
-                    }
-
-                    _competitionTimer.setText(minStr+":"+secStr);
+                    _competitionTimer.setText(timeCountDown.format("%M:%S"));
                 }
 
                 @Override
