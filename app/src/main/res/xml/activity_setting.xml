@@ -52,6 +52,12 @@
         android:summary="@string/summary_group"
         android:dialogTitle="@string/dialog_title_group"/>
 
+    <Preference
+        android:key="fine"
+        android:title="@string/setting_activity_title_fine"
+        android:summary="@string/summary_fine"
+        android:dialogTitle="@string/dialog_fine_title"/>
+
     <EditTextPreference
         android:key="countCheckPointSetting"
         android:title="@string/setting_activity_title_checkpoint"

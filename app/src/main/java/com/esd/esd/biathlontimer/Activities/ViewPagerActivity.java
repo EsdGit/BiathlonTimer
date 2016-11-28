@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -384,6 +385,7 @@ public class ViewPagerActivity extends AppCompatActivity
 
     // Добавление участника в ParticipantList
     private void AddRowParticipantList(Participant participant) {
+        int maxHeight = 0;
         TableRow newRow = new TableRow(this);
         final TextView newTextView0 = new TextView(this);
         newTextView0.setText(participant.GetNumber());
@@ -391,36 +393,42 @@ public class ViewPagerActivity extends AppCompatActivity
         newTextView0.setTextColor(Color.BLACK);
         //newTextView0.setBackground(new PaintDrawable(Color.WHITE));
         newTextView0.setBackgroundColor(participant.GetColor());
-        newTextView0.setLayoutParams(new TableRow.LayoutParams(_numberParticipantList.getMeasuredWidth(), _numberParticipantList.getMeasuredHeight(), 0.4f));
+        newTextView0.setLayoutParams(new TableRow.LayoutParams(_numberParticipantList.getMeasuredWidth(), ViewGroup.LayoutParams.WRAP_CONTENT/*_numberParticipantList.getMeasuredHeight()*/, 0.4f));
         ((TableRow.LayoutParams) newTextView0.getLayoutParams()).setMargins(2, 0, 2, 2);
+        if(maxHeight < newTextView0.getHeight()) maxHeight = newTextView0.getHeight();
         final TextView newTextView1 = new TextView(this);
         newTextView1.setText(participant.GetFIO());
         newTextView1.setGravity(Gravity.CENTER);
         newTextView1.setTextColor(Color.BLACK);
         newTextView1.setBackground(new PaintDrawable(Color.WHITE));
-        newTextView1.setLayoutParams(new TableRow.LayoutParams(_nameParticipantList.getMeasuredWidth(), _nameParticipantList.getMeasuredHeight(), 3.0f));
+        newTextView1.setLayoutParams(new TableRow.LayoutParams(_nameParticipantList.getMeasuredWidth(),ViewGroup.LayoutParams.WRAP_CONTENT/* _nameParticipantList.getMeasuredHeight()*/, 3.0f));
         ((TableRow.LayoutParams) newTextView1.getLayoutParams()).setMargins(0, 0, 2, 2);
+        if(maxHeight < (newTextView1.getHeight())) maxHeight = newTextView1.getLineHeight() * (newTextView1.getHeight());
         final TextView newTextView2 = new TextView(this);
         newTextView2.setText(participant.GetBirthYear());
         newTextView2.setGravity(Gravity.CENTER);
         newTextView2.setTextColor(Color.BLACK);
         newTextView2.setBackground(new PaintDrawable(Color.WHITE));
-        newTextView2.setLayoutParams(new TableRow.LayoutParams(_birthdayParticipantList.getMeasuredWidth(), _birthdayParticipantList.getMeasuredHeight(), 0.4f));
+        newTextView2.setLayoutParams(new TableRow.LayoutParams(_birthdayParticipantList.getMeasuredWidth(), ViewGroup.LayoutParams.WRAP_CONTENT/* _birthdayParticipantList.getMeasuredHeight()*/, 0.4f));
         ((TableRow.LayoutParams) newTextView2.getLayoutParams()).setMargins(0, 0, 2, 2);
+        if(maxHeight < (newTextView2.getHeight())) maxHeight = newTextView2.getLineHeight() * (newTextView2.getHeight());
         final TextView newTextView3 = new TextView(this);
         newTextView3.setText(participant.GetGroup());
         newTextView3.setGravity(Gravity.CENTER);
         newTextView3.setTextColor(Color.BLACK);
         newTextView3.setBackground(new PaintDrawable(Color.WHITE));
-        newTextView3.setLayoutParams(new TableRow.LayoutParams(_groupParticipantList.getMeasuredWidth(), _groupParticipantList.getMeasuredHeight(), 0.6f));
+        newTextView3.setLayoutParams(new TableRow.LayoutParams(_groupParticipantList.getMeasuredWidth(),ViewGroup.LayoutParams.WRAP_CONTENT/* _groupParticipantList.getMeasuredHeight()*/, 0.6f));
         ((TableRow.LayoutParams) newTextView3.getLayoutParams()).setMargins(0, 0, 2, 2);
+        if(maxHeight < (newTextView3.getHeight())) maxHeight = newTextView3.getLineHeight() * (newTextView3.getHeight());
         final TextView newTextView4 = new TextView(this);
         newTextView4.setText(participant.GetCountry());
         newTextView4.setGravity(Gravity.CENTER);
         newTextView4.setTextColor(Color.BLACK);
         newTextView4.setBackground(new PaintDrawable(Color.WHITE));
-        newTextView4.setLayoutParams(new TableRow.LayoutParams(_countryParticipantList.getMeasuredWidth(), _countryParticipantList.getMeasuredHeight(), 0.6f));
+        newTextView4.setLayoutParams(new TableRow.LayoutParams(_countryParticipantList.getMeasuredWidth(),ViewGroup.LayoutParams.WRAP_CONTENT/* _countryParticipantList.getMeasuredHeight()*/, 0.6f));
         ((TableRow.LayoutParams) newTextView4.getLayoutParams()).setMargins(0, 0, 2, 2);
+        if(maxHeight < (newTextView4.getHeight())) maxHeight = newTextView4.getLineHeight() * (newTextView4.getHeight());
+        SetMaxHeight(newTextView0, newTextView1, newTextView2, newTextView3, newTextView4, maxHeight);
         newRow.addView(newTextView0);
         newRow.addView(newTextView1);
         newRow.addView(newTextView2);
@@ -629,6 +637,7 @@ public class ViewPagerActivity extends AppCompatActivity
 
         _dialogForm = inflater.inflate(R.layout.dialog_activity_add_participant, null);
         _tableLayoutParticipantList = (TableLayout) page1.findViewById(R.id.tableParticipantListLayout);
+        _tableLayoutParticipantList.setShrinkAllColumns(true);
         _headParticipant = (LinearLayout) page1.findViewById(R.id.headTableParticipantListLayout);
         _nameParticipantList = (TextView) page1.findViewById(R.id.nameParticipantList);
         _birthdayParticipantList = (TextView) page1.findViewById(R.id.birthdayParticipantList);
@@ -657,6 +666,7 @@ public class ViewPagerActivity extends AppCompatActivity
         pages.add(page2);
 
         _tableLayoutDataBaseList = (TableLayout) page2.findViewById(R.id.tableDataBaseLayout);
+        _tableLayoutDataBaseList.setShrinkAllColumns(true);
         _headDataBase = (LinearLayout) page2.findViewById(R.id.headTableDataBaseLayout);
         _nameDataBaseList = (TextView) page2.findViewById(R.id.nameDataBase);
         _birthdayDataBaseList = (TextView) page2.findViewById(R.id.birthdayDataBase);
@@ -1232,5 +1242,19 @@ public class ViewPagerActivity extends AppCompatActivity
         //Подумать как сделать
         //_addColorToParticipantDialog.setSelectedColor(_colorParticipant);
         _addColorToParticipantDialog.show(fm, "colorpicker");
+    }
+
+    private void SetMaxHeight(TextView number,TextView name,TextView data,TextView group,TextView country, int max)
+    {
+        ((TableRow.LayoutParams)number.getLayoutParams()).height = max;
+        ((TableRow.LayoutParams)name.getLayoutParams()).height = max;
+        ((TableRow.LayoutParams)data.getLayoutParams()).height = max;
+        ((TableRow.LayoutParams)group.getLayoutParams()).height = max;
+        ((TableRow.LayoutParams)country.getLayoutParams()).height = max;
+//        number.setLayoutParams(new TableRow.LayoutParams(_numberParticipantList.getMeasuredWidth(),max,0.4f));
+//        name.setLayoutParams(new TableRow.LayoutParams(_nameParticipantList.getMeasuredWidth(),max,3.0f));
+//        data.setLayoutParams(new TableRow.LayoutParams(_birthdayParticipantList.getMeasuredWidth(),max,0.4f ));
+//        group.setLayoutParams(new TableRow.LayoutParams(_groupParticipantList.getMeasuredWidth(), max, 0.6f));
+//        country.setLayoutParams(new TableRow.LayoutParams(_countryParticipantList.getMeasuredWidth(), max, 0.6f));
     }
 }

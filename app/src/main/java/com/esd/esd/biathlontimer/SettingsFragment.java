@@ -45,6 +45,7 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
     private static EditTextPreference _countCheckPoint;
     private static Preference _setStartTimer;
     private static Preference _group;
+    private static Preference _fine;//штраф если что
 
     private View _dialogFormInterval;
     private View _dialogFormAddGroup;
@@ -68,6 +69,7 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
     private EditText _nameAddGroup;
 
     private boolean _isStartTimer = false;
+    private boolean _isFine = false;
     private static ArrayList<String> _dialogItemsList;
     private static String[] _dialogItems;
     private int _indexDelGroup;
@@ -95,6 +97,7 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
         _typeStart = (ListPreference) findPreference("typeStartSetting");
         _setStartTimer = (Preference) findPreference("startTimer");
         _group = (Preference) findPreference("group");
+        _fine = (Preference) findPreference("fine");
 
         //Диалог установки интервала
         LayoutInflater inflater = LayoutInflater.from(getActivity());
@@ -120,7 +123,16 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
                 }
                 else
                 {
-                    _setInterval.setSummary(SetNormalFormatDataTime(_minute.getValue() + ":" + _seconds.getValue(), true));
+                    if(_isFine)
+                    {
+                        _fine.setSummary(getResources().getString(R.string.summary_fine_after_set) + " " + SetNormalFormatDataTime(_minute.getValue() + ":" + _seconds.getValue(), true));
+                        _dialogInterval.setTitle(getResources().getString(R.string.interval_dialog_title));
+                        _isFine = false;
+                    }
+                    else
+                    {
+                        _setInterval.setSummary(SetNormalFormatDataTime(_minute.getValue() + ":" + _seconds.getValue(), true));
+                    }
                 }
             }
         });
@@ -315,14 +327,17 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
                     case "Одиночный старт":
                         _typeStart.setValueIndex(0);
                         _setInterval.setEnabled(true);
+                        _setSecondInterval.setEnabled(true);
                         break;
                     case "Парный старт":
                         _typeStart.setValueIndex(1);
                         _setInterval.setEnabled(true);
+                        _setSecondInterval.setEnabled(true);
                         break;
                     case "Массовый старт":
                         _typeStart.setValueIndex(2);
                         _setInterval.setEnabled(false);
+                        _setSecondInterval.setEnabled(false);
                         break;
                 }
                 return false;
@@ -336,6 +351,18 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
                 SetStartPositionInTimeDialog();
                 _isStartTimer = true;
                 _dialogInterval.setTitle(getResources().getString(R.string.dialog_time_to_start_title));
+                _dialogInterval.show();
+                return false;
+            }
+        });
+
+        _fine.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference)
+            {
+                SetStartPositionInTimeDialog();
+                _isFine = true;
+                _dialogInterval.setTitle(getResources().getString(R.string.dialog_fine_title));
                 _dialogInterval.show();
                 return false;
             }
