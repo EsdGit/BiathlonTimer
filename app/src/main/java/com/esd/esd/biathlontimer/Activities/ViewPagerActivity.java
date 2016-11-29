@@ -364,16 +364,18 @@ public class ViewPagerActivity extends AppCompatActivity
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        if (_isFirstLoad) {
+        if (_isFirstLoad)
+        {
             Participant[] localArr = _dbSaver.GetAllParticipants(DatabaseProvider.DbParticipant.TABLE_NAME, DatabaseProvider.DbParticipant.COLUMN_NAME);
             for (int i = 0; i < localArr.length; i++) {
                 AddRowParticipantFromBase(localArr[i]);
             }
 
-            localArr = _dbSaver.GetAllParticipants(_currentCompetition.GetDbParticipantPath(), DatabaseProvider.DbParticipant.COLUMN_NAME);
+            localArr = _dbSaver.GetAllParticipants(_currentCompetition.GetDbParticipantPath(), DatabaseProvider.DbParticipant.COLUMN_NUMBER);
             for (int i = 0; i < localArr.length; i++) {
                 AddRowParticipantList(localArr[i]);
             }
+            SortByYear(_tableLayoutParticipantList,true,false);
             _isFirstLoad = false;
         }
         EmptyDataBaseCompetition();

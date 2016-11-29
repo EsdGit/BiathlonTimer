@@ -235,6 +235,7 @@ public class MainActivity extends AppCompatActivity {
     private void SortByDate(boolean sortState)
     {
         int rowsCount = _tableLayout.getChildCount();
+        if(rowsCount == 0) return;
         Competition[] localArr = new Competition[rowsCount];
         String[] dates = new String[rowsCount];
         for(int i = 0; i < rowsCount; i++)

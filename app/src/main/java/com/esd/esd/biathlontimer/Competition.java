@@ -53,6 +53,15 @@ public class Competition
     private String _groups;
     public String GetGroups(){return _groups;}
 
+    private String _secondInterval;
+    public String GetSecondInterval(){return _secondInterval;}
+
+    private String _numberSecondInterval;
+    public String GetNumberSecondInterval(){return _numberSecondInterval;}
+
+    private String _fineTime;
+    public String GetFineTime(){return _fineTime;}
+
     public Competition(String name, String date, Context context)
     {
         _competitionName = name;
@@ -80,13 +89,17 @@ public class Competition
         return result.toString();
     }
 
-    public void SetCompetitionSettings(String startType, String interval, String checkPointsCount, String timeToStart, String groups)
+    public void SetCompetitionSettings(String startType, String interval, String checkPointsCount, String timeToStart,
+                                       String groups, String secondInterval, String numberSecondInterval, String fineTime)
     {
         _interval = interval;
         _checkPointsCount = checkPointsCount;
         _startType = startType;
         _timeToStart = timeToStart;
         _groups = groups;
+        _secondInterval = secondInterval;
+        _numberSecondInterval = numberSecondInterval;
+        _fineTime = fineTime;
         SettingsSaver saver = new SettingsSaver(_localContext);
         saver.SaveSettingsToDb(this);
     }
@@ -99,18 +112,48 @@ public class Competition
         _checkPointsCount = saver.GetSetting(this, DatabaseProvider.DbSettings.COLUMN_CHECK_POINTS);
         _groups = saver.GetSetting(this, DatabaseProvider.DbSettings.COLUMN_GROUPS);
         _startType = saver.GetSetting(this, DatabaseProvider.DbSettings.COLUMN_START_TYPE);
+        _secondInterval = saver.GetSetting(this, DatabaseProvider.DbSettings.COLUMN_SECOND_INTERVAL);
+        _numberSecondInterval = saver.GetSetting(this, DatabaseProvider.DbSettings.COLUMN_NUMBER_SECOND_INTERVAL);
+        _fineTime = saver.GetSetting(this, DatabaseProvider.DbSettings.COLUMN_FINE);
     }
 
     public void GetAllParticipantsToComp()
     {
         ParticipantSaver saver = new ParticipantSaver(_localContext);
-        Participant[] localArr = saver.GetAllParticipants(GetDbParticipantPath(), DatabaseProvider.DbParticipant.COLUMN_NUMBER);
+        Participant[] localArr = saver.GetAllParticipants(GetDbParticipantPath(), DatabaseProvider.DbParticipant.COLUMN_NAME);
+        localArr = SortByNumber(localArr);
         for(int i = 0; i<localArr.length;i++)
         {
             _participants.add(localArr[i]);
         }
     }
 
+    private Participant[] SortByNumber(Participant[] arr)
+    {
+        Participant[] localArr = arr;
+        int count = localArr.length;
+        if(count == 0) return null;
+        int first;
+        int second;
+        int k = 0;
+        Participant helper;
+        while(k != count)
+        {
+            for(int i = 0; i < count - k - 1; i++)
+            {
+                first = Integer.valueOf(localArr[i].GetNumber());
+                second = Integer.valueOf(localArr[i+1].GetNumber());
+                if(first > second)
+                {
+                    helper = localArr[i];
+                    localArr[i]  = localArr[i+1];
+                    localArr[i+1] = helper;
+                }
+            }
+            k++;
+        }
+        return localArr;
+    }
     // Метод добавления участников соревнований, если такого участника нет
     public void AddParticipant(Participant participant)
     {

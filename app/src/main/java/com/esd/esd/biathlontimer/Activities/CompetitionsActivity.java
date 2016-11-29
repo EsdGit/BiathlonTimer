@@ -82,10 +82,6 @@ public class CompetitionsActivity extends AppCompatActivity
         viewPager.setCurrentItem(0);
         setContentView(viewPager);
 
-//        for(int i = 0; i < 36; i++)
-//        {
-//            _participantGridLayout.addView(CreateButton(Integer.toString(i),Integer.toString(i+1)));
-//        }
     }
 
 
@@ -136,19 +132,31 @@ public class CompetitionsActivity extends AppCompatActivity
                         {
                             time.second++;
                             ms = 0;
+
+
                             if(android.text.format.Time.compare(time,_currentTime) == 0 && _number < _participants.length)
                             {
-                                runOnUiThread(new Runnable() {
+                                if(_number == Integer.valueOf(_currentCompetition.GetNumberSecondInterval()) - 1)
+                                {
+                                    _currentInterval.second = Integer.valueOf(_currentCompetition.GetSecondInterval().split(":")[1]);
+                                    _currentInterval.minute = Integer.valueOf(_currentCompetition.GetSecondInterval().split(":")[0]);
+                                }
+                                runOnUiThread(new Runnable()
+                                {
                                     @Override
                                     public void run()
                                     {
                                         _participantGridLayout.addView(CreateButton(_participants[_number],"1"));
                                         _number++;
+
                                     }
                                 });
                                 _currentTime.second += _currentInterval.second;
                                 _currentTime.minute += _currentInterval.minute;
                             }
+
+
+
                         }
                         if(time.second > 59)
                         {

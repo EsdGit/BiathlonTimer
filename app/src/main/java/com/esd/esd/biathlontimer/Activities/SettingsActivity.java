@@ -99,7 +99,7 @@ public class SettingsActivity extends PreferenceActivity
             _oldCompetititon = new Competition(name, date, this);
             _oldCompetititon.GetAllSettingsToComp();
             SettingsFragment.SetAllSummaries(this, name, date, _oldCompetititon.GetInterval(), _oldCompetititon.GetStartType(), _oldCompetititon.GetGroups(),
-                    _oldCompetititon.GetCheckPointsCount(), _oldCompetititon.GetTimeToStart());
+                    _oldCompetititon.GetCheckPointsCount(), _oldCompetititon.GetTimeToStart(), _oldCompetititon.GetSecondInterval(), _oldCompetititon.GetNumberSecondInterval(), _oldCompetititon.GetFineTime());
             isFirstLoad = false;
         }
     }

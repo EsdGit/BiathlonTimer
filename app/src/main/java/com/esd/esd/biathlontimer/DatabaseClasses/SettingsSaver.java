@@ -29,6 +29,9 @@ public class SettingsSaver
         val.put(DatabaseProvider.DbSettings.COLUMN_START_TYPE, competition.GetStartType());
         val.put(DatabaseProvider.DbSettings.COLUMN_TIME_TO_START, competition.GetTimeToStart());
         val.put(DatabaseProvider.DbSettings.COLUMN_GROUPS, competition.GetGroups());
+        val.put(DatabaseProvider.DbSettings.COLUMN_SECOND_INTERVAL, competition.GetSecondInterval());
+        val.put(DatabaseProvider.DbSettings.COLUMN_NUMBER_SECOND_INTERVAL, competition.GetNumberSecondInterval());
+        val.put(DatabaseProvider.DbSettings.COLUMN_FINE, competition.GetFineTime());
         _db.insert(competition.GetSettingsPath(), null, val);
         _db.close();
     }

@@ -277,7 +277,8 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
                         if(!position.isEmpty())
                         {
                             position = _setNumberStartWithSecondInterval.getText().toString();
-                            _setSecondInterval.setSummary(SetNormalFormatDataTime(_minuteSecondInterval.getValue() + ":" + _secondsSecondInterval.getValue(), true) + " с позиции - " + position);
+                            _setSecondInterval.setSummary(SetNormalFormatDataTime(_minuteSecondInterval.getValue() + ":" +
+                                    _secondsSecondInterval.getValue(), true) + getResources().getString(R.string.summary_second_interval_helper) + position);
                             _dialogSecondInterval.dismiss();
                         }
                         else
@@ -321,25 +322,46 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 _typeStart.setSummary((String)newValue);
-                switch ((String)newValue)
+                if(((String)newValue).equals(getResources().getString(R.string.item_type_single_start)))
                 {
-                    //Как то сделать
-                    case "Одиночный старт":
-                        _typeStart.setValueIndex(0);
-                        _setInterval.setEnabled(true);
-                        _setSecondInterval.setEnabled(true);
-                        break;
-                    case "Парный старт":
+                    _typeStart.setValueIndex(0);
+                    _setInterval.setEnabled(true);
+                    _setSecondInterval.setEnabled(true);
+                }
+                else
+                {
+                    if(((String)newValue).equals(getResources().getString(R.string.item_type_double_start)))
+                    {
                         _typeStart.setValueIndex(1);
                         _setInterval.setEnabled(true);
                         _setSecondInterval.setEnabled(true);
-                        break;
-                    case "Массовый старт":
+                    }
+                    else
+                    {
                         _typeStart.setValueIndex(2);
                         _setInterval.setEnabled(false);
                         _setSecondInterval.setEnabled(false);
-                        break;
+                    }
                 }
+//                switch ((String)newValue)
+//                {
+//                    //Как то сделать
+//                    case getResources().getString(R.string.item_type_single_start):
+//                        _typeStart.setValueIndex(0);
+//                        _setInterval.setEnabled(true);
+//                        _setSecondInterval.setEnabled(true);
+//                        break;
+//                    case "Парный старт":
+//                        _typeStart.setValueIndex(1);
+//                        _setInterval.setEnabled(true);
+//                        _setSecondInterval.setEnabled(true);
+//                        break;
+//                    case "Массовый старт":
+//                        _typeStart.setValueIndex(2);
+//                        _setInterval.setEnabled(false);
+//                        _setSecondInterval.setEnabled(false);
+//                        break;
+//                }
                 return false;
             }
         });
@@ -426,7 +448,7 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
     {
         android.content.res.Resources myRes = context.getResources();
         String groups = _group.getSummary().toString();
-       // if(_nameCompetition.getSummary().toString() == myRes.getString(R.string.)) return null;
+
 
         if(_setData.getSummary().toString().equals(myRes.getString(R.string.summary_data_competition))) return null;
         if(_countCheckPoint.getSummary().toString().equals(myRes.getString(R.string.summary_count_checkpoint))) return null;
@@ -434,13 +456,16 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
         if(_setSecondInterval.getSummary().toString().equals(myRes.getString(R.string.summary_interval)))return null;
         if(_setStartTimer.getSummary().toString().equals(myRes.getString(R.string.summary_time_to_start))) return null;
         if(_typeStart.getSummary().toString().equals(myRes.getString(R.string.summary_type_start))) return null;
+        if(_fine.getSummary().toString().equals(myRes.getString(R.string.summary_fine))) return null;
         if(!_group.getSummary().toString().equals(myRes.getString(R.string.summary_group)))
             groups = groups.split(":")[1];
         else
             groups = "";
+
+        String[] secondInterval = _setSecondInterval.getSummary().toString().split(myRes.getString(R.string.summary_second_interval_helper));
         Competition localCompetition = new Competition(_nameCompetition.getSummary().toString(),_setData.getSummary().toString(), context);
         localCompetition.SetCompetitionSettings(_typeStart.getSummary().toString(), _setInterval.getSummary().toString(),
-                _countCheckPoint.getSummary().toString(),_setStartTimer.getSummary().toString(),groups);
+                _countCheckPoint.getSummary().toString(),_setStartTimer.getSummary().toString(),groups, secondInterval[0], secondInterval[1],_fine.getSummary().toString());
         return localCompetition;
     }
 
@@ -492,12 +517,14 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
         return result;
     }
 
-    public static void SetAllSummaries(Context context,String name, String date, String interval, String startType, String groups, String checkPointsCount, String timeToStart)
+    public static void SetAllSummaries(Context context,String name, String date, String interval, String startType, String groups, String checkPointsCount, String timeToStart, String secondInterval, String numberSecondInterval, String fine)
     {
         _nameCompetition.setSummary(name);
         _setData.setSummary(date);
         _setInterval.setSummary(interval);
         _setStartTimer.setSummary(timeToStart);
+        _setSecondInterval.setSummary(secondInterval+context.getResources().getString(R.string.summary_second_interval_helper)+numberSecondInterval);
+        _fine.setSummary(fine);
         if(!groups.isEmpty())
         {
             _group.setSummary(context.getResources().getString(R.string.aftter_add_summary_group)+groups);
