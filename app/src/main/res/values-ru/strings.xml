@@ -39,7 +39,7 @@
     <string name="check_input_data">Проверьте введеные данные</string>
     <string name="setting_activity_title_fine">Штраф</string>
     <string name="summary_fine">Устанавливает время одного штрафа</string>
-    <string name="summary_second_interval_helper">" с позиции - "</string>
+    <string name="summary_second_interval_helper">" после позиции - "</string>
 
     //Список участников
     <string name="participant_list_actvity_head">Список участников соревнования</string>
