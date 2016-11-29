@@ -2,7 +2,7 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
 
     <dimen name="fab_margin">24dp</dimen>
-    <dimen name="normal_text_size">20sp</dimen>
+    <dimen name="normal_text_size">7.5sp</dimen>
 
     <!-- indent -->
     <dimen name="small_indent">24dp</dimen>
