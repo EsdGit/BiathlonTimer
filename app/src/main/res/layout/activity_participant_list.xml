@@ -116,7 +116,7 @@
             android:textColor="#000000"
             android:text="№"
             android:gravity="center"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="@dimen/title_text_size"
             android:background="#ffffff"
             android:typeface="serif"
             android:layout_weight="0.4"/>
@@ -132,7 +132,7 @@
             android:typeface="serif"
             android:text="@string/fio_col_title"
             android:gravity="center"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="@dimen/title_text_size"
             android:layout_weight="3"
             android:background="#ffffff"/>
 
@@ -147,7 +147,7 @@
             android:textColor="#000000"
             android:text="@string/year_col_title"
             android:gravity="center"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="@dimen/title_text_size"
             android:layout_weight="0.4"
             android:background="#ffffff"/>
 
@@ -162,7 +162,7 @@
             android:layout_marginBottom="1dp"
             android:text="@string/group_col_title"
             android:gravity="center"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="@dimen/title_text_size"
             android:layout_weight="0.6"
             android:background="#ffffff"/>
 
@@ -177,7 +177,7 @@
             android:textColor="#000000"
             android:text="@string/country_col_title"
             android:gravity="center"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="@dimen/title_text_size"
             android:layout_weight="0.6"
             android:background="#ffffff"/>
     </LinearLayout>

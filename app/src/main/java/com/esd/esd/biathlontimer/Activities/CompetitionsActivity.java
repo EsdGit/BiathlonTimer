@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.TableLayout;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.esd.esd.biathlontimer.Competition;
+import com.esd.esd.biathlontimer.MyButton;
 import com.esd.esd.biathlontimer.PagerAdapterHelper;
 import com.esd.esd.biathlontimer.Participant;
 import com.esd.esd.biathlontimer.R;
@@ -27,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.zip.Inflater;
 
 
 public class CompetitionsActivity extends AppCompatActivity
@@ -34,6 +37,7 @@ public class CompetitionsActivity extends AppCompatActivity
     private GridLayout _participantGridLayout;
     private TextView _competitionTimer;
     private ImageButton _startBtn;
+    private MyButton _button;
 
     private Competition _currentCompetition;
     private boolean _isCompetitionStarted = false;
@@ -82,6 +86,10 @@ public class CompetitionsActivity extends AppCompatActivity
         viewPager.setCurrentItem(0);
         setContentView(viewPager);
 
+        _button = new MyButton(this);
+        View view = CreateFrameLayout();
+        _button.SetParticipantNumber(view, "3");
+        _participantGridLayout.addView(view);
     }
 
 
@@ -98,6 +106,13 @@ public class CompetitionsActivity extends AppCompatActivity
             }
         });
         return newButton;
+    }
+
+    private View CreateFrameLayout()
+    {
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View view = inflater.inflate(R.layout.my_btn, null);
+        return view;
     }
 
 
