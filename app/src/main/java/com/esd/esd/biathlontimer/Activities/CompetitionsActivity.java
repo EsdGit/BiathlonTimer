@@ -36,7 +36,7 @@ public class CompetitionsActivity extends AppCompatActivity
 {
     private GridLayout _participantGridLayout;
     private TextView _competitionTimer;
-    private ImageButton _startBtn;
+    private Button _startBtn;
     private MyButton _button;
 
     private Competition _currentCompetition;
@@ -46,6 +46,7 @@ public class CompetitionsActivity extends AppCompatActivity
     private android.text.format.Time _currentInterval;
     private Participant[] _participants;
     private int _number = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -74,9 +75,10 @@ public class CompetitionsActivity extends AppCompatActivity
 
         _competitionTimer = (TextView) page1.findViewById(R.id.competitionTimer);
         _competitionTimer.setText(_currentCompetition.GetTimeToStart());
-        _startBtn = (ImageButton) page1.findViewById(R.id.competitionStart);
+        _startBtn = (Button) page1.findViewById(R.id.competitionStart);
 
         _currentTime.set(_currentInterval.second,_currentInterval.minute,0,0,0,0);
+
         View page2 = inflater.inflate(R.layout.activity_competition_tables, null);
         pages.add(page2);
 
@@ -126,6 +128,7 @@ public class CompetitionsActivity extends AppCompatActivity
     {
         if(!_isCompetitionStarted)
         {
+            _startBtn.setText(getResources().getString(R.string.stop_timer));
             final android.text.format.Time timeCountDown = new android.text.format.Time();
             timeCountDown.minute = Integer.valueOf(_currentCompetition.GetTimeToStart().split(":")[0]);
             timeCountDown.second = Integer.valueOf(_currentCompetition.GetTimeToStart().split(":")[1]);
@@ -219,7 +222,7 @@ public class CompetitionsActivity extends AppCompatActivity
         }
         else
         {
-
+            _startBtn.setText(getResources().getString(R.string.start_timer));
         }
 
     }

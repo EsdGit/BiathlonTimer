@@ -6,12 +6,11 @@
     android:gravity="center"
     android:background="#ffffff">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
         android:id="@+id/headCompetitionActivity"
         android:orientation="horizontal"
-        android:weightSum="1"
         android:background="@color/colorPrimary">
 
         <TextView
@@ -19,25 +18,26 @@
             android:layout_height="wrap_content"
             android:text="Тут таймер"
             android:id="@+id/competitionTimer"
-            android:layout_weight="0.9"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="#ffffff"
             android:layout_gravity="center"
             android:gravity="center"/>
 
-        <ImageButton
+        <Button
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="30dp"
+            android:background="@drawable/rounded_button"
             android:id="@+id/competitionStart"
-            android:src="@drawable/ic_start"
-            android:tint="#ffffff"
-            android:layout_weight="0.1"
-            android:layout_gravity="center"
-            android:foregroundGravity="center"
-            android:background="@null"
+            android:layout_marginRight="5dp"
+            android:layout_gravity="right|center_vertical"
+            android:text="Cтарт"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:typeface="serif"
+            android:textColor="@color/white"
+            android:textStyle="bold|italic"
             android:onClick="startBtnClick"/>
 
-    </LinearLayout>
+    </FrameLayout>
 
     <ScrollView
         android:layout_marginTop="5dp"

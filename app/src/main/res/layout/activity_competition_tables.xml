@@ -5,12 +5,11 @@
               android:layout_height="match_parent"
               android:background="#FFFFFF">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
         android:id="@+id/headCompetitionTableActivity"
         android:orientation="horizontal"
-        android:weightSum="1"
         android:background="@color/colorPrimary">
 
         <TextView
@@ -21,21 +20,21 @@
             android:id="@+id/competitionTimer"
             android:typeface="serif"
             android:layout_gravity="center"
-            android:layout_weight="0.9"
             android:gravity="center"/>
 
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_above="@id/competitionTimer"
             android:id="@+id/competitionStart"
+            android:paddingRight="5dp"
             android:src="@drawable/ic_start"
             android:tint="#ffffff"
-            android:layout_weight="0.1"
-            android:layout_gravity="center"
+            android:layout_gravity="right|center_vertical"
             android:foregroundGravity="center"
             android:background="@null"/>
 
-    </LinearLayout>
+    </FrameLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
