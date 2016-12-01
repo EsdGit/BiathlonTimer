@@ -138,7 +138,7 @@ public class CompetitionsActivity extends AppCompatActivity
         newTextView0.setTextColor(Color.BLACK);
         newTextView0.setBackground(new PaintDrawable(Color.WHITE));
         newTextView0.setTextSize(getResources().getDimension(R.dimen.normal_text_size));
-        newTextView0.setLayoutParams(new TableRow.LayoutParams(_numberParticipant.getMeasuredWidth(), ViewGroup.LayoutParams.MATCH_PARENT, 0.85f));
+        newTextView0.setLayoutParams(new TableRow.LayoutParams(_numberParticipant.getMeasuredWidth(), ViewGroup.LayoutParams.MATCH_PARENT,20f));
         ((TableRow.LayoutParams) newTextView0.getLayoutParams()).setMargins(2, 0, 2, 2);
 
         final TextView newTextView1 = new TextView(this);
@@ -148,7 +148,7 @@ public class CompetitionsActivity extends AppCompatActivity
         newTextView1.setTextColor(Color.BLACK);
         newTextView1.setBackground(new PaintDrawable(Color.WHITE));
         newTextView1.setTextSize(getResources().getDimension(R.dimen.normal_text_size));
-        newTextView1.setLayoutParams(new TableRow.LayoutParams(_positionParticipant.getMeasuredWidth(),ViewGroup.LayoutParams.MATCH_PARENT,1f));
+        newTextView1.setLayoutParams(new TableRow.LayoutParams(_positionParticipant.getMeasuredWidth(),ViewGroup.LayoutParams.MATCH_PARENT,20f));
         ((TableRow.LayoutParams) newTextView1.getLayoutParams()).setMargins(0, 0, 2, 2);
 
         final TextView newTextView2 = new TextView(this);
@@ -158,7 +158,7 @@ public class CompetitionsActivity extends AppCompatActivity
         newTextView2.setTextColor(Color.BLACK);
         newTextView2.setBackground(new PaintDrawable(Color.WHITE));
         newTextView2.setTextSize(getResources().getDimension(R.dimen.normal_text_size));
-        newTextView2.setLayoutParams(new TableRow.LayoutParams(_timeParticipant.getMeasuredWidth(), ViewGroup.LayoutParams.MATCH_PARENT,1f));
+        newTextView2.setLayoutParams(new TableRow.LayoutParams(_timeParticipant.getMeasuredWidth(), ViewGroup.LayoutParams.MATCH_PARENT,30f));
         ((TableRow.LayoutParams) newTextView2.getLayoutParams()).setMargins(0, 0, 2, 2);
 
         final TextView newTextView3 = new TextView(this);
@@ -168,7 +168,7 @@ public class CompetitionsActivity extends AppCompatActivity
         newTextView3.setTextColor(Color.BLACK);
         newTextView3.setBackground(new PaintDrawable(Color.WHITE));
         newTextView3.setTextSize(getResources().getDimension(R.dimen.normal_text_size));
-        newTextView3.setLayoutParams(new TableRow.LayoutParams(_lagParticipant.getMeasuredWidth(),ViewGroup.LayoutParams.MATCH_PARENT,1f));
+        newTextView3.setLayoutParams(new TableRow.LayoutParams(_lagParticipant.getMeasuredWidth(),ViewGroup.LayoutParams.MATCH_PARENT,30f));
         ((TableRow.LayoutParams) newTextView3.getLayoutParams()).setMargins(0, 0, 2, 2);
 
         newRow.addView(newTextView0);
