@@ -42,15 +42,17 @@
         android:id="@+id/headTablesCompetitions"
         android:orientation="horizontal"
         android:layout_below="@id/headCompetitionTableActivity"
+        android:weightSum="4"
         android:background="#000000">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/numberParticipantCompetitionTable"
             android:gravity="center"
             android:textColor="#000000"
             android:text="@string/number"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="@dimen/title_text_size"
             android:background="#ffffff"
             android:layout_margin="1dp"
             android:layout_weight="1"/>
@@ -58,9 +60,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/positionParticipantCompetitionTable"
             android:gravity="center"
             android:textColor="#000000"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="@dimen/title_text_size"
             android:text="@string/position"
             android:background="#ffffff"
             android:layout_weight="1"
@@ -71,9 +74,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/timeParticipantCompetitionTable"
             android:gravity="center"
             android:textColor="#000000"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="@dimen/title_text_size"
             android:text="@string/time"
             android:background="#ffffff"
             android:layout_weight="1"
@@ -84,9 +88,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/lagParticipantCompetitionTable"
             android:gravity="center"
             android:textColor="#000000"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="@dimen/title_text_size"
             android:text="@string/lag"
             android:background="#ffffff"
             android:layout_weight="1"
@@ -110,7 +115,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/tableCompetitionLayout"
             android:scrollbars="vertical"
-            android:elevation="4dp">
+            android:elevation="4dp"
+            android:background="#000000">
 
         </TableLayout>
     </ScrollView>

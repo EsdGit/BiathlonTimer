@@ -1,18 +1,23 @@
 package com.esd.esd.biathlontimer.Activities;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.PaintDrawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,7 +40,12 @@ import java.util.zip.Inflater;
 public class CompetitionsActivity extends AppCompatActivity
 {
     private GridLayout _participantGridLayout;
+    private TableLayout _tableCompetition;
     private TextView _competitionTimer;
+    private TextView _numberParticipant;
+    private TextView _positionParticipant;
+    private TextView _timeParticipant;
+    private TextView _lagParticipant;
     private Button _startBtn;
     private MyButton _button;
 
@@ -82,6 +92,12 @@ public class CompetitionsActivity extends AppCompatActivity
         View page2 = inflater.inflate(R.layout.activity_competition_tables, null);
         pages.add(page2);
 
+        _tableCompetition = (TableLayout) page2.findViewById(R.id.tableCompetitionLayout);
+        _numberParticipant = (TextView) page2.findViewById(R.id.numberParticipantCompetitionTable);
+        _positionParticipant = (TextView) page2.findViewById(R.id.positionParticipantCompetitionTable);
+        _timeParticipant = (TextView) page2.findViewById(R.id.timeParticipantCompetitionTable);
+        _lagParticipant = (TextView) page2.findViewById(R.id.lagParticipantCompetitionTable);
+
         PagerAdapterHelper pagerAdapter = new PagerAdapterHelper(pages);
         ViewPager viewPager = new ViewPager(this);
         viewPager.setAdapter(pagerAdapter);
@@ -92,6 +108,8 @@ public class CompetitionsActivity extends AppCompatActivity
         View view = CreateFrameLayout();
         _button.SetParticipantNumber(view, "3");
         _participantGridLayout.addView(view);
+
+        AddRowCompetitionTable();
     }
 
 
@@ -108,6 +126,57 @@ public class CompetitionsActivity extends AppCompatActivity
             }
         });
         return newButton;
+    }
+
+    private void AddRowCompetitionTable()
+    {
+        TableRow newRow = new TableRow(this);
+        final TextView newTextView0 = new TextView(this);
+        newTextView0.setSingleLine(false);
+        newTextView0.setText("Номер");
+        newTextView0.setGravity(Gravity.CENTER);
+        newTextView0.setTextColor(Color.BLACK);
+        newTextView0.setBackground(new PaintDrawable(Color.WHITE));
+        newTextView0.setTextSize(getResources().getDimension(R.dimen.normal_text_size));
+        newTextView0.setLayoutParams(new TableRow.LayoutParams(_numberParticipant.getMeasuredWidth(), ViewGroup.LayoutParams.MATCH_PARENT, 0.85f));
+        ((TableRow.LayoutParams) newTextView0.getLayoutParams()).setMargins(2, 0, 2, 2);
+
+        final TextView newTextView1 = new TextView(this);
+        newTextView1.setSingleLine(false);
+        newTextView1.setText("Позиция");
+        newTextView1.setGravity(Gravity.CENTER);
+        newTextView1.setTextColor(Color.BLACK);
+        newTextView1.setBackground(new PaintDrawable(Color.WHITE));
+        newTextView1.setTextSize(getResources().getDimension(R.dimen.normal_text_size));
+        newTextView1.setLayoutParams(new TableRow.LayoutParams(_positionParticipant.getMeasuredWidth(),ViewGroup.LayoutParams.MATCH_PARENT,1f));
+        ((TableRow.LayoutParams) newTextView1.getLayoutParams()).setMargins(0, 0, 2, 2);
+
+        final TextView newTextView2 = new TextView(this);
+        newTextView2.setSingleLine(false);
+        newTextView2.setText("Время");
+        newTextView2.setGravity(Gravity.CENTER);
+        newTextView2.setTextColor(Color.BLACK);
+        newTextView2.setBackground(new PaintDrawable(Color.WHITE));
+        newTextView2.setTextSize(getResources().getDimension(R.dimen.normal_text_size));
+        newTextView2.setLayoutParams(new TableRow.LayoutParams(_timeParticipant.getMeasuredWidth(), ViewGroup.LayoutParams.MATCH_PARENT,1f));
+        ((TableRow.LayoutParams) newTextView2.getLayoutParams()).setMargins(0, 0, 2, 2);
+
+        final TextView newTextView3 = new TextView(this);
+        newTextView3.setSingleLine(false);
+        newTextView3.setText("Отставание");
+        newTextView3.setGravity(Gravity.CENTER);
+        newTextView3.setTextColor(Color.BLACK);
+        newTextView3.setBackground(new PaintDrawable(Color.WHITE));
+        newTextView3.setTextSize(getResources().getDimension(R.dimen.normal_text_size));
+        newTextView3.setLayoutParams(new TableRow.LayoutParams(_lagParticipant.getMeasuredWidth(),ViewGroup.LayoutParams.MATCH_PARENT,1f));
+        ((TableRow.LayoutParams) newTextView3.getLayoutParams()).setMargins(0, 0, 2, 2);
+
+        newRow.addView(newTextView0);
+        newRow.addView(newTextView1);
+        newRow.addView(newTextView2);
+        newRow.addView(newTextView3);
+
+        _tableCompetition.addView(newRow);
     }
 
     private View CreateFrameLayout()
