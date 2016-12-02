@@ -1,10 +1,33 @@
 package com.esd.esd.biathlontimer;
 
 import android.graphics.Color;
+import android.text.format.Time;
 
 // Класс участника
 public class Participant
 {
+    private int _place;
+    public int GetPlace(){return _place;}
+    public void SetPlace(int place) {_place = place;}
+
+    private Time _resultTime;
+    public Time GetResultTime(){return _resultTime;}
+    public void SetResultTime(Time time)
+    {
+        _resultTime.second = time.second;
+        _resultTime.minute = time.minute;
+        _resultTime.hour = time.hour;
+    }
+
+    private Time _startTime;
+    public Time GetStartTime(){return _startTime;}
+    public void SetStartTime(Time time)
+    {
+        _startTime.second = time.second;
+        _startTime.minute = time.minute;
+        _startTime.hour = time.hour;
+    }
+
     private String _FIO;
     public String GetFIO()
     {
@@ -29,6 +52,8 @@ public class Participant
 
     public Participant(String number,String fio, String country,String birthYear, String group, int color)
     {
+        _startTime = new Time();
+        _resultTime = new Time();
         _FIO = fio;
         _country = country;
         _birthYear = birthYear;

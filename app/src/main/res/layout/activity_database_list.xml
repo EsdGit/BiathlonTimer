@@ -126,6 +126,7 @@
             android:text="@string/fio_col_title"
             android:gravity="center"
             android:textSize="@dimen/title_text_size"
+            android:textStyle="bold"
             android:layout_weight="3"
             android:background="#ffffff"/>
 
@@ -140,6 +141,7 @@
             android:id="@+id/birthdayDataBase"
             android:gravity="center"
             android:textSize="@dimen/title_text_size"
+            android:textStyle="bold"
             android:layout_weight="0.5"
             android:background="#ffffff"/>
 
@@ -152,6 +154,7 @@
             android:layout_marginBottom="1dp"
             android:id="@+id/countryDataBase"
             android:text="@string/country_col_title"
+            android:textStyle="bold"
             android:gravity="center"
             android:textSize="@dimen/title_text_size"
             android:layout_weight="0.5"

@@ -52,8 +52,9 @@ public class CompetitionsActivity extends AppCompatActivity
     private Competition _currentCompetition;
     private boolean _isCompetitionStarted = false;
     private Timer _timer;
-    private android.text.format.Time _currentTime;
+    private android.text.format.Time _timeNextParticipant;
     private android.text.format.Time _currentInterval;
+    private android.text.format.Time _currentTime;
     private Participant[] _participants;
     private int _number = 0;
 
@@ -65,7 +66,7 @@ public class CompetitionsActivity extends AppCompatActivity
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getSupportActionBar().hide();
 
-        _currentTime = new android.text.format.Time();
+        _timeNextParticipant = new android.text.format.Time();
         _currentInterval = new android.text.format.Time();
 
         _currentCompetition = new Competition(getIntent().getStringExtra("Name"), getIntent().getStringExtra("Date"), this);
@@ -87,7 +88,7 @@ public class CompetitionsActivity extends AppCompatActivity
         _competitionTimer.setText(_currentCompetition.GetTimeToStart());
         _startBtn = (Button) page1.findViewById(R.id.competitionStart);
 
-        _currentTime.set(_currentInterval.second,_currentInterval.minute,0,0,0,0);
+        _timeNextParticipant.set(_currentInterval.second,_currentInterval.minute,0,0,0,0);
 
         View page2 = inflater.inflate(R.layout.activity_competition_tables, null);
         pages.add(page2);
@@ -109,7 +110,6 @@ public class CompetitionsActivity extends AppCompatActivity
         _button.SetParticipantNumber(view, "3");
         _participantGridLayout.addView(view);
 
-        AddRowCompetitionTable();
     }
 
 
@@ -122,18 +122,26 @@ public class CompetitionsActivity extends AppCompatActivity
             @Override
             public void onClick(View v)
             {
+                int number = Integer.valueOf(newButton.getText().toString().split(",")[0]) - 1;
+                _participants[number].SetPlace(1);
+                android.text.format.Time newTime = new android.text.format.Time();
+                newTime.hour = _currentTime.hour - _participants[number].GetStartTime().hour;
+                newTime.minute = _currentTime.minute - _participants[number].GetStartTime().minute;
+                newTime.second = _currentTime.second - _participants[number].GetStartTime().second;
+                _participants[number].SetResultTime(newTime);
+                AddRowCompetitionTable(_participants[number]);
                 Toast.makeText(getApplicationContext(),newButton.getText(),Toast.LENGTH_LONG).show();
             }
         });
         return newButton;
     }
 
-    private void AddRowCompetitionTable()
+    private void AddRowCompetitionTable(Participant participant)
     {
         TableRow newRow = new TableRow(this);
         final TextView newTextView0 = new TextView(this);
         newTextView0.setSingleLine(false);
-        newTextView0.setText("Номер");
+        newTextView0.setText(participant.GetNumber());
         newTextView0.setGravity(Gravity.CENTER);
         newTextView0.setTextColor(Color.BLACK);
         newTextView0.setBackground(new PaintDrawable(Color.WHITE));
@@ -143,7 +151,7 @@ public class CompetitionsActivity extends AppCompatActivity
 
         final TextView newTextView1 = new TextView(this);
         newTextView1.setSingleLine(false);
-        newTextView1.setText("Позиция");
+        newTextView1.setText(String.valueOf(participant.GetPlace()));
         newTextView1.setGravity(Gravity.CENTER);
         newTextView1.setTextColor(Color.BLACK);
         newTextView1.setBackground(new PaintDrawable(Color.WHITE));
@@ -153,7 +161,7 @@ public class CompetitionsActivity extends AppCompatActivity
 
         final TextView newTextView2 = new TextView(this);
         newTextView2.setSingleLine(false);
-        newTextView2.setText("Время");
+        newTextView2.setText(participant.GetResultTime().format("%H:%M:%S"));
         newTextView2.setGravity(Gravity.CENTER);
         newTextView2.setTextColor(Color.BLACK);
         newTextView2.setBackground(new PaintDrawable(Color.WHITE));
@@ -203,11 +211,12 @@ public class CompetitionsActivity extends AppCompatActivity
             timeCountDown.second = Integer.valueOf(_currentCompetition.GetTimeToStart().split(":")[1]);
             final long ms = timeCountDown.minute*60000+timeCountDown.second*1000;
 
-            final android.text.format.Time time = new android.text.format.Time();
-            time.set(0,0,0,0,0,0);
+            _currentTime = new android.text.format.Time();
+            _currentTime.set(0,0,0,0,0,0);
             CountDownTimer countDownTimer = new CountDownTimer(ms+1000,1000)
             {
-                TimerTask task = new TimerTask() {
+                TimerTask task = new TimerTask()
+                {
                     int ms = 0;
                     String msStr;
 
@@ -217,52 +226,56 @@ public class CompetitionsActivity extends AppCompatActivity
                         ms++;
                         if(ms>9)
                         {
-                            time.second++;
+                            _currentTime.second++;
                             ms = 0;
 
 
-                            if(android.text.format.Time.compare(time,_currentTime) == 0 && _number < _participants.length)
+                            if(android.text.format.Time.compare(_currentTime,_timeNextParticipant) == 0 && _number < _participants.length)
                             {
+
+
                                 if(_number == Integer.valueOf(_currentCompetition.GetNumberSecondInterval()) - 1)
                                 {
                                     _currentInterval.second = Integer.valueOf(_currentCompetition.GetSecondInterval().split(":")[1]);
                                     _currentInterval.minute = Integer.valueOf(_currentCompetition.GetSecondInterval().split(":")[0]);
                                 }
+
                                 runOnUiThread(new Runnable()
                                 {
                                     @Override
                                     public void run()
                                     {
                                         _participantGridLayout.addView(CreateButton(_participants[_number],"1"));
+                                        _participants[_number].SetStartTime(_currentTime);
                                         _number++;
-
                                     }
                                 });
-                                _currentTime.second += _currentInterval.second;
-                                _currentTime.minute += _currentInterval.minute;
+                                _timeNextParticipant.second += _currentInterval.second;
+                                _timeNextParticipant.minute += _currentInterval.minute;
+
+
                             }
 
 
 
                         }
-                        if(time.second > 59)
+                        if(_currentTime.second > 59)
                         {
-                            time.minute++;
-                            time.second = 0;
+                            _currentTime.minute++;
+                            _currentTime.second = 0;
                         }
-                        if(time.minute > 59)
+                        if(_currentTime.minute > 59)
                         {
-                            time.hour++;
-                            time.minute = 0;
+                            _currentTime.hour++;
+                            _currentTime.minute = 0;
                         }
-                        //_currentTime.second++;
 
 
                         msStr = String.valueOf(ms);
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                _competitionTimer.setText(time.format("%H:%M:%S")+":"+msStr);
+                                _competitionTimer.setText(_currentTime.format("%H:%M:%S")+":"+msStr);
                             }
                         });
                     }
