@@ -46,6 +46,7 @@ public class CompetitionsActivity extends AppCompatActivity
     private TextView _positionParticipant;
     private TextView _timeParticipant;
     private TextView _lagParticipant;
+    private TextView _timerParticipantTable;
     private Button _startBtn;
     private MyButton _button;
 
@@ -85,7 +86,7 @@ public class CompetitionsActivity extends AppCompatActivity
         _participantGridLayout = (GridLayout) page1.findViewById(R.id.competitionGridLayout);
 
         _competitionTimer = (TextView) page1.findViewById(R.id.competitionTimer);
-        _competitionTimer.setText(_currentCompetition.GetTimeToStart());
+
         _startBtn = (Button) page1.findViewById(R.id.competitionStart);
 
         _timeNextParticipant.set(_currentInterval.second,_currentInterval.minute,0,0,0,0);
@@ -98,6 +99,7 @@ public class CompetitionsActivity extends AppCompatActivity
         _positionParticipant = (TextView) page2.findViewById(R.id.positionParticipantCompetitionTable);
         _timeParticipant = (TextView) page2.findViewById(R.id.timeParticipantCompetitionTable);
         _lagParticipant = (TextView) page2.findViewById(R.id.lagParticipantCompetitionTable);
+        _timerParticipantTable = (TextView) page2.findViewById(R.id.competitionTimer);
 
         PagerAdapterHelper pagerAdapter = new PagerAdapterHelper(pages);
         ViewPager viewPager = new ViewPager(this);
@@ -109,6 +111,9 @@ public class CompetitionsActivity extends AppCompatActivity
         View view = CreateFrameLayout();
         _button.SetParticipantNumber(view, "3");
         _participantGridLayout.addView(view);
+
+        _competitionTimer.setText(_currentCompetition.GetTimeToStart());
+        _timerParticipantTable.setText(_currentCompetition.GetTimeToStart());
 
     }
 
@@ -125,9 +130,11 @@ public class CompetitionsActivity extends AppCompatActivity
                 int number = Integer.valueOf(newButton.getText().toString().split(",")[0]) - 1;
                 _participants[number].SetPlace(1);
                 android.text.format.Time newTime = new android.text.format.Time();
+
                 newTime.hour = _currentTime.hour - _participants[number].GetStartTime().hour;
                 newTime.minute = _currentTime.minute - _participants[number].GetStartTime().minute;
                 newTime.second = _currentTime.second - _participants[number].GetStartTime().second;
+                newTime.normalize(false);
                 _participants[number].SetResultTime(newTime);
                 AddRowCompetitionTable(_participants[number]);
                 Toast.makeText(getApplicationContext(),newButton.getText(),Toast.LENGTH_LONG).show();
@@ -276,6 +283,7 @@ public class CompetitionsActivity extends AppCompatActivity
                             @Override
                             public void run() {
                                 _competitionTimer.setText(_currentTime.format("%H:%M:%S")+":"+msStr);
+                                _timerParticipantTable.setText(_currentTime.format("%H:%M:%S")+":"+msStr);
                             }
                         });
                     }
@@ -290,6 +298,7 @@ public class CompetitionsActivity extends AppCompatActivity
                         timeCountDown.second = 59;
                     }
                     _competitionTimer.setText(timeCountDown.format("%M:%S"));
+                    _timerParticipantTable.setText(timeCountDown.format("%M:%S"));
                 }
 
                 @Override
