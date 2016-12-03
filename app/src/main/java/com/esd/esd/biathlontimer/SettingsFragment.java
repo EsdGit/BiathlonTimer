@@ -343,25 +343,6 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
                         _setSecondInterval.setEnabled(false);
                     }
                 }
-//                switch ((String)newValue)
-//                {
-//                    //Как то сделать
-//                    case getResources().getString(R.string.item_type_single_start):
-//                        _typeStart.setValueIndex(0);
-//                        _setInterval.setEnabled(true);
-//                        _setSecondInterval.setEnabled(true);
-//                        break;
-//                    case "Парный старт":
-//                        _typeStart.setValueIndex(1);
-//                        _setInterval.setEnabled(true);
-//                        _setSecondInterval.setEnabled(true);
-//                        break;
-//                    case "Массовый старт":
-//                        _typeStart.setValueIndex(2);
-//                        _setInterval.setEnabled(false);
-//                        _setSecondInterval.setEnabled(false);
-//                        break;
-//                }
                 return false;
             }
         });
@@ -463,9 +444,10 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
             groups = "";
 
         String[] secondInterval = _setSecondInterval.getSummary().toString().split(myRes.getString(R.string.summary_second_interval_helper));
+        String countCheckPoints = _countCheckPoint.getSummary().toString().split(":")[1];
         Competition localCompetition = new Competition(_nameCompetition.getSummary().toString(),_setData.getSummary().toString(), context);
         localCompetition.SetCompetitionSettings(_typeStart.getSummary().toString(), _setInterval.getSummary().toString(),
-                _countCheckPoint.getSummary().toString(),_setStartTimer.getSummary().toString(),groups, secondInterval[0], secondInterval[1],_fine.getSummary().toString());
+                countCheckPoints,_setStartTimer.getSummary().toString(),groups, secondInterval[0], secondInterval[1],_fine.getSummary().toString());
         return localCompetition;
     }
 

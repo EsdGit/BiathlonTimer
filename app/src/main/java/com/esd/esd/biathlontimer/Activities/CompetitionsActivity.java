@@ -25,11 +25,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.esd.esd.biathlontimer.Competition;
+import com.esd.esd.biathlontimer.LapData;
 import com.esd.esd.biathlontimer.MyButton;
 import com.esd.esd.biathlontimer.PagerAdapterHelper;
 import com.esd.esd.biathlontimer.Participant;
 import com.esd.esd.biathlontimer.R;
 
+import org.apache.poi.hssf.usermodel.HeaderFooter;
 import org.w3c.dom.Text;
 
 import java.sql.Time;
@@ -65,9 +67,8 @@ public class CompetitionsActivity extends AppCompatActivity
     private int _currentTable = 0;
     private int _number = 0;
 
-    private int h = 1;
+    private LapData[] _laps;
 
-    private ArrayList<Participant> _lap1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -77,7 +78,6 @@ public class CompetitionsActivity extends AppCompatActivity
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getSupportActionBar().hide();
 
-        _lap1 = new ArrayList<Participant>();
 
         _timeNextParticipant = new android.text.format.Time();
         _currentInterval = new android.text.format.Time();
@@ -117,12 +117,19 @@ public class CompetitionsActivity extends AppCompatActivity
         viewPager.setCurrentItem(0);
         setContentView(viewPager);
 
-        _button = new MyButton(this);
-        View view = CreateFrameLayout();
-        _button.SetParticipantNumber(view, "3");
-        _participantGridLayout.addView(view);
+//        _button = new MyButton(this);
+//        View view = CreateFrameLayout();
+//        _button.SetParticipantNumber(view, "3");
+//        _participantGridLayout.addView(view);
 
-        CreateTables(3);//Создание таблиц
+        int tablesCount = Integer.valueOf(_currentCompetition.GetCheckPointsCount());
+        CreateTables(tablesCount);
+        _laps = new LapData[tablesCount];
+        for(int i = 0; i < tablesCount; i++)
+        {
+            _laps[i] = new LapData(i);
+        }
+
         _currentRound.setText(_currentRound.getText() + " - " + Integer.toString(_currentTable + 1));
 
         _competitionTimer.setText(_currentCompetition.GetTimeToStart());
@@ -143,7 +150,6 @@ public class CompetitionsActivity extends AppCompatActivity
             {
                 int number = Integer.valueOf(newButton.getText().toString().split(", ")[0]) - 1;
                 int lap = Integer.valueOf(newButton.getText().toString().split(", ")[1]) - 1;
-                // выяснить какое у него место
 
                 android.text.format.Time newTime = new android.text.format.Time();
 
@@ -155,10 +161,12 @@ public class CompetitionsActivity extends AppCompatActivity
                 _participants[number].SetResultTime(newTime, lap);
 
                 _participants[number].SetPlace(GetPlace(participant, lap), lap);
-                //_tableCompetition.removeAllViews();
-                for(int i = 0; i < _lap1.size(); i++)
+
+
+                _tablesCompetition.get(lap).removeAllViews();
+                for(int i = 0; i < _laps[lap].GetParticipants().length; i++)
                 {
-                    //AddRowCompetitionTable(_lap1.get(i), lap); добавить параметр таблицы куда добавить
+                    AddRowCompetitionTable(_laps[lap].GetParticipant(i),lap);
                 }
                 lap+=2;
                 newButton.setText(participant.GetNumber()+", "+lap);
@@ -174,11 +182,11 @@ public class CompetitionsActivity extends AppCompatActivity
         int place = 0;
         boolean _isLastPlace = true;
         // По lap выбираем arrayList
-        for(int i = 0; i < _lap1.size(); i++)
+        for(int i = 0; i < _laps[lap].GetParticipants().length;i++)
         {
-            if(android.text.format.Time.compare(_lap1.get(i).GetResultTime(lap), participant.GetResultTime(lap)) > 0)
+            if(android.text.format.Time.compare(_laps[lap].GetParticipant(i).GetResultTime(lap), participant.GetResultTime(lap)) > 0)
             {
-                _lap1.add(i, participant);
+                _laps[lap].AddParticipant(i, participant);
                 place = i+1;
                 _isLastPlace = false;
                 break;
@@ -187,29 +195,26 @@ public class CompetitionsActivity extends AppCompatActivity
 
         if(_isLastPlace)
         {
-            _lap1.add(participant);
-            place = _lap1.size();
+            _laps[lap].AddParticipant(participant);
+            place = _laps[lap].GetParticipants().length;
         }
         else
         {
-            for(int i = place; i<_lap1.size(); i++)
+            for(int i = place; i<_laps[lap].GetParticipants().length; i++)
             {
-                _lap1.get(i).SetPlace(i+1, lap);
+                _laps[lap].GetParticipant(i).SetPlace(i+1, lap);
             }
         }
 
         return place;
     }
 
-    private void AddRowCompetitionTable(Participant participant, int lap, TableLayout currentTable)
+    private void AddRowCompetitionTable(Participant participant, int lap)
     {
-        // По переменной lap мы знаем какую таблицу заполнять, нумерация с 0
         TableRow newRow = new TableRow(this);
         final TextView newTextView0 = new TextView(this);
         newTextView0.setSingleLine(false);
-        //newTextView0.setText(participant.GetNumber());
-        newTextView0.setText(Integer.toString(h));
-        h++;
+        newTextView0.setText(participant.GetNumber());
         newTextView0.setGravity(Gravity.CENTER);
         newTextView0.setTextColor(Color.BLACK);
         newTextView0.setBackground(new PaintDrawable(Color.WHITE));
@@ -219,9 +224,7 @@ public class CompetitionsActivity extends AppCompatActivity
 
         final TextView newTextView1 = new TextView(this);
         newTextView1.setSingleLine(false);
-        newTextView1.setText(Integer.toString(h));
-        h++;
-        //newTextView1.setText(String.valueOf(participant.GetPlace(lap)));
+        newTextView1.setText(String.valueOf(participant.GetPlace(lap)));
         newTextView1.setGravity(Gravity.CENTER);
         newTextView1.setTextColor(Color.BLACK);
         newTextView1.setBackground(new PaintDrawable(Color.WHITE));
@@ -231,9 +234,7 @@ public class CompetitionsActivity extends AppCompatActivity
 
         final TextView newTextView2 = new TextView(this);
         newTextView2.setSingleLine(false);
-        newTextView2.setText(Integer.toString(h));
-        h++;
-        //newTextView2.setText(participant.GetResultTime(lap).format("%H:%M:%S"));
+        newTextView2.setText(participant.GetResultTime(lap).format("%H:%M:%S"));
         newTextView2.setGravity(Gravity.CENTER);
         newTextView2.setTextColor(Color.BLACK);
         newTextView2.setBackground(new PaintDrawable(Color.WHITE));
@@ -256,7 +257,7 @@ public class CompetitionsActivity extends AppCompatActivity
         newRow.addView(newTextView2);
         newRow.addView(newTextView3);
 
-        currentTable.addView(newRow);
+        _tablesCompetition.get(lap).addView(newRow);
     }
 
 
@@ -272,7 +273,6 @@ public class CompetitionsActivity extends AppCompatActivity
             {
                 newTable.setVisibility(View.GONE);//Изначально показывать только первую таблицу
             }
-            //AddRowCompetitionTable(newTable);//Тут добавление строк в таблице нужно добавить парметр Participant
             _containerTables.addView(newTable);
         }
 
@@ -282,9 +282,9 @@ public class CompetitionsActivity extends AppCompatActivity
     {
         // По lap выбираем arrayList
         android.text.format.Time lag = new android.text.format.Time();
-        lag.second = participant.GetResultTime(lap).second - _lap1.get(0).GetResultTime(lap).second;
-        lag.minute = participant.GetResultTime(lap).minute - _lap1.get(0).GetResultTime(lap).minute;
-        lag.hour = participant.GetResultTime(lap).hour - _lap1.get(0).GetResultTime(lap).hour;
+        lag.second = participant.GetResultTime(lap).second - _laps[lap].GetParticipant(0).GetResultTime(lap).second;
+        lag.minute = participant.GetResultTime(lap).minute - _laps[lap].GetParticipant(0).GetResultTime(lap).minute;
+        lag.hour = participant.GetResultTime(lap).hour - _laps[lap].GetParticipant(0).GetResultTime(lap).hour;
         lag.normalize(false);
         return lag;
     }
