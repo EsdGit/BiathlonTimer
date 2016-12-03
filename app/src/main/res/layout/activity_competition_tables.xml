@@ -114,15 +114,14 @@
         android:layout_above="@+id/toolBarTablesCompetition"
         android:elevation="2dp">
 
-        <TableLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/tableCompetitionLayout"
-            android:scrollbars="vertical"
-            android:elevation="4dp"
-            android:background="#000000">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/containerTablesCompetition"
+                android:orientation="horizontal">
 
-        </TableLayout>
+
+            </LinearLayout>
     </ScrollView>
 
     <LinearLayout
@@ -147,12 +146,14 @@
                 android:background="@null"
                 android:tint="#000000"
                 android:layout_weight="0.5"
-                android:layout_gravity="right"/>
+                android:layout_gravity="right"
+                android:onClick="OnClickPreviousTable"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="Текущий круг"
+                android:id="@+id/currentRound"
+                android:text="@string/current_round"
                 android:textColor="#000000"
                 android:layout_weight="0.5"
                 android:layout_gravity="center"
@@ -166,7 +167,8 @@
                 android:layout_weight="0.5"
                 android:layout_gravity="left"
                 android:tint="#000000"
-                android:background="@null"/>
+                android:background="@null"
+                android:onClick="OnClickNextTable"/>
 
         </LinearLayout>
 

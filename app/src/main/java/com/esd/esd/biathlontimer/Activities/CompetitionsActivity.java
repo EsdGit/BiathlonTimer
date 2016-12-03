@@ -16,6 +16,8 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -40,7 +42,8 @@ import java.util.zip.Inflater;
 public class CompetitionsActivity extends AppCompatActivity
 {
     private GridLayout _participantGridLayout;
-    private TableLayout _tableCompetition;
+    private LinearLayout _containerTables;
+    private TextView _currentRound;
     private TextView _competitionTimer;
     private TextView _numberParticipant;
     private TextView _positionParticipant;
@@ -57,7 +60,11 @@ public class CompetitionsActivity extends AppCompatActivity
     private android.text.format.Time _currentInterval;
     private android.text.format.Time _currentTime;
     private Participant[] _participants;
+    private ArrayList<TableLayout> _tablesCompetition;
+    private int _currentTable = 0;
     private int _number = 0;
+
+    private int h = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -69,6 +76,7 @@ public class CompetitionsActivity extends AppCompatActivity
 
         _timeNextParticipant = new android.text.format.Time();
         _currentInterval = new android.text.format.Time();
+        _tablesCompetition = new ArrayList<>();
 
         _currentCompetition = new Competition(getIntent().getStringExtra("Name"), getIntent().getStringExtra("Date"), this);
         _currentCompetition.GetAllSettingsToComp();
@@ -84,17 +92,14 @@ public class CompetitionsActivity extends AppCompatActivity
         View page1 = inflater.inflate(R.layout.activity_competitions, null);
         pages.add(page1);
         _participantGridLayout = (GridLayout) page1.findViewById(R.id.competitionGridLayout);
-
         _competitionTimer = (TextView) page1.findViewById(R.id.competitionTimer);
-
         _startBtn = (Button) page1.findViewById(R.id.competitionStart);
-
         _timeNextParticipant.set(_currentInterval.second,_currentInterval.minute,0,0,0,0);
 
         View page2 = inflater.inflate(R.layout.activity_competition_tables, null);
         pages.add(page2);
-
-        _tableCompetition = (TableLayout) page2.findViewById(R.id.tableCompetitionLayout);
+        _containerTables = (LinearLayout) page2.findViewById(R.id.containerTablesCompetition);
+        _currentRound = (TextView) page2.findViewById(R.id.currentRound);
         _numberParticipant = (TextView) page2.findViewById(R.id.numberParticipantCompetitionTable);
         _positionParticipant = (TextView) page2.findViewById(R.id.positionParticipantCompetitionTable);
         _timeParticipant = (TextView) page2.findViewById(R.id.timeParticipantCompetitionTable);
@@ -112,6 +117,9 @@ public class CompetitionsActivity extends AppCompatActivity
         _button.SetParticipantNumber(view, "3");
         _participantGridLayout.addView(view);
 
+        CreateTables(3);//Создание таблиц
+        _currentRound.setText(_currentRound.getText() + " - " + Integer.toString(_currentTable + 1));
+
         _competitionTimer.setText(_currentCompetition.GetTimeToStart());
         _timerParticipantTable.setText(_currentCompetition.GetTimeToStart());
 
@@ -123,7 +131,8 @@ public class CompetitionsActivity extends AppCompatActivity
         final Button newButton = new Button(this);
         newButton.setText(participant.GetNumber() + ", " + numberCheckPoint);
         newButton.setBackgroundColor(participant.GetColor());
-        newButton.setOnClickListener(new View.OnClickListener() {
+        newButton.setOnClickListener(new View.OnClickListener()
+        {
             @Override
             public void onClick(View v)
             {
@@ -136,19 +145,21 @@ public class CompetitionsActivity extends AppCompatActivity
                 newTime.second = _currentTime.second - _participants[number].GetStartTime().second;
                 newTime.normalize(false);
                 _participants[number].SetResultTime(newTime);
-                AddRowCompetitionTable(_participants[number]);
+                //AddRowCompetitionTable(_participants[number]);
                 Toast.makeText(getApplicationContext(),newButton.getText(),Toast.LENGTH_LONG).show();
             }
         });
         return newButton;
     }
 
-    private void AddRowCompetitionTable(Participant participant)
+    private void AddRowCompetitionTable(/*Participant participant*/ TableLayout currentTable)
     {
         TableRow newRow = new TableRow(this);
         final TextView newTextView0 = new TextView(this);
         newTextView0.setSingleLine(false);
-        newTextView0.setText(participant.GetNumber());
+        //newTextView0.setText(participant.GetNumber());
+        newTextView0.setText(Integer.toString(h));
+        h++;
         newTextView0.setGravity(Gravity.CENTER);
         newTextView0.setTextColor(Color.BLACK);
         newTextView0.setBackground(new PaintDrawable(Color.WHITE));
@@ -158,7 +169,9 @@ public class CompetitionsActivity extends AppCompatActivity
 
         final TextView newTextView1 = new TextView(this);
         newTextView1.setSingleLine(false);
-        newTextView1.setText(String.valueOf(participant.GetPlace()));
+        //newTextView1.setText(String.valueOf(participant.GetPlace()));
+        newTextView1.setText(Integer.toString(h));
+        h++;
         newTextView1.setGravity(Gravity.CENTER);
         newTextView1.setTextColor(Color.BLACK);
         newTextView1.setBackground(new PaintDrawable(Color.WHITE));
@@ -168,7 +181,9 @@ public class CompetitionsActivity extends AppCompatActivity
 
         final TextView newTextView2 = new TextView(this);
         newTextView2.setSingleLine(false);
-        newTextView2.setText(participant.GetResultTime().format("%H:%M:%S"));
+        //newTextView2.setText(participant.GetResultTime().format("%H:%M:%S"));
+        newTextView2.setText(Integer.toString(h));
+        h++;
         newTextView2.setGravity(Gravity.CENTER);
         newTextView2.setTextColor(Color.BLACK);
         newTextView2.setBackground(new PaintDrawable(Color.WHITE));
@@ -191,9 +206,26 @@ public class CompetitionsActivity extends AppCompatActivity
         newRow.addView(newTextView2);
         newRow.addView(newTextView3);
 
-        _tableCompetition.addView(newRow);
+        currentTable.addView(newRow);
     }
 
+    private void CreateTables(int countCheckPoint)
+    {
+        for(int i = 0; i < countCheckPoint; i++)
+        {
+            TableLayout newTable = new TableLayout(this);
+            _tablesCompetition.add(newTable);
+            newTable.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            newTable.setBackgroundColor(Color.BLACK);
+            if(i!=0)
+            {
+                newTable.setVisibility(View.GONE);//Изначально показывать только первую таблицу
+            }
+            AddRowCompetitionTable(newTable);//Тут добавление строк в таблице нужно добавить парметр Participant
+            _containerTables.addView(newTable);
+        }
+
+    }
     private View CreateFrameLayout()
     {
         LayoutInflater inflater = LayoutInflater.from(this);
@@ -262,9 +294,6 @@ public class CompetitionsActivity extends AppCompatActivity
 
 
                             }
-
-
-
                         }
                         if(_currentTime.second > 59)
                         {
@@ -322,5 +351,25 @@ public class CompetitionsActivity extends AppCompatActivity
     protected void onDestroy() {
         super.onDestroy();
         if(_timer != null) _timer.cancel();
+    }
+
+    public void OnClickNextTable(View view)
+    {
+        if(_currentTable < _tablesCompetition.size() - 1)
+        {
+            _tablesCompetition.get(_currentTable).setVisibility(View.GONE);
+            _tablesCompetition.get(++_currentTable).setVisibility(View.VISIBLE);
+            _currentRound.setText(getResources().getString(R.string.current_round) + " - " + Integer.toString(_currentTable + 1));
+        }
+    }
+
+    public void OnClickPreviousTable(View view)
+    {
+        if(_currentTable > 0)
+        {
+            _tablesCompetition.get(_currentTable).setVisibility(View.GONE);
+            _tablesCompetition.get(--_currentTable).setVisibility(View.VISIBLE);
+            _currentRound.setText(getResources().getString(R.string.current_round) + " - " + Integer.toString(_currentTable + 1));
+        }
     }
 }
