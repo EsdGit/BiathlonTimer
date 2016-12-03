@@ -3,20 +3,34 @@ package com.esd.esd.biathlontimer;
 import android.graphics.Color;
 import android.text.format.Time;
 
+import java.util.ArrayList;
+
 // Класс участника
 public class Participant
 {
-    private int _place;
-    public int GetPlace(){return _place;}
-    public void SetPlace(int place) {_place = place;}
-
-    private Time _resultTime;
-    public Time GetResultTime(){return _resultTime;}
-    public void SetResultTime(Time time)
+    private ArrayList<Integer> _places;
+    public int GetPlace(int lapNumber)
     {
-        _resultTime.second = time.second;
-        _resultTime.minute = time.minute;
-        _resultTime.hour = time.hour;
+        return _places.get(lapNumber).intValue();
+    }
+    public void SetPlace(int place, int lapNumber)
+    {
+        _places.add(lapNumber, place);
+    }
+
+    private ArrayList<Time> _resultTimes;
+
+    public Time GetResultTime(int lapNumber)
+    {
+        return _resultTimes.get(lapNumber);
+    }
+    public void SetResultTime(Time time, int lapNumber)
+    {
+        _resultTimes.add(lapNumber, time);
+//        _resultTimes.get(lapNumber).second = time.second;
+//        _resultTimes.get(lapNumber).minute = time.minute;
+//        _resultTimes.get(lapNumber).hour = time.hour;
+//        _resultTimes.get(lapNumber).normalize(false);
     }
 
     private Time _startTime;
@@ -53,7 +67,8 @@ public class Participant
     public Participant(String number,String fio, String country,String birthYear, String group, int color)
     {
         _startTime = new Time();
-        _resultTime = new Time();
+        _resultTimes = new ArrayList<Time>();
+        _places = new ArrayList<Integer>();
         _FIO = fio;
         _country = country;
         _birthYear = birthYear;

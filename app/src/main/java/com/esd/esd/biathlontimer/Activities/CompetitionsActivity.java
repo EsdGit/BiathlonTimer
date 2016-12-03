@@ -3,6 +3,7 @@ package com.esd.esd.biathlontimer.Activities;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.PaintDrawable;
+import android.icu.text.MessagePattern;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v4.view.ViewPager;
@@ -59,6 +60,8 @@ public class CompetitionsActivity extends AppCompatActivity
     private Participant[] _participants;
     private int _number = 0;
 
+    private ArrayList<Participant> _lap1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -66,6 +69,8 @@ public class CompetitionsActivity extends AppCompatActivity
         setContentView(R.layout.activity_competitions);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getSupportActionBar().hide();
+
+        _lap1 = new ArrayList<Participant>();
 
         _timeNextParticipant = new android.text.format.Time();
         _currentInterval = new android.text.format.Time();
@@ -118,7 +123,7 @@ public class CompetitionsActivity extends AppCompatActivity
     }
 
 
-    private Button CreateButton(Participant participant, String numberCheckPoint)
+    private Button CreateButton(final Participant participant, String numberCheckPoint)
     {
         final Button newButton = new Button(this);
         newButton.setText(participant.GetNumber() + ", " + numberCheckPoint);
@@ -127,24 +132,67 @@ public class CompetitionsActivity extends AppCompatActivity
             @Override
             public void onClick(View v)
             {
-                int number = Integer.valueOf(newButton.getText().toString().split(",")[0]) - 1;
-                _participants[number].SetPlace(1);
+                int number = Integer.valueOf(newButton.getText().toString().split(", ")[0]) - 1;
+                int lap = Integer.valueOf(newButton.getText().toString().split(", ")[1]) - 1;
+                // выяснить какое у него место
+
                 android.text.format.Time newTime = new android.text.format.Time();
 
                 newTime.hour = _currentTime.hour - _participants[number].GetStartTime().hour;
                 newTime.minute = _currentTime.minute - _participants[number].GetStartTime().minute;
                 newTime.second = _currentTime.second - _participants[number].GetStartTime().second;
                 newTime.normalize(false);
-                _participants[number].SetResultTime(newTime);
-                AddRowCompetitionTable(_participants[number]);
+                _participants[number].SetResultTime(newTime, lap);
+
+                _participants[number].SetPlace(GetPlace(participant, lap), lap);
+                _tableCompetition.removeAllViews();
+                for(int i = 0; i < _lap1.size(); i++)
+                {
+                    AddRowCompetitionTable(_lap1.get(i), lap);
+                }
+                lap+=2;
+                newButton.setText(participant.GetNumber()+", "+lap);
                 Toast.makeText(getApplicationContext(),newButton.getText(),Toast.LENGTH_LONG).show();
             }
         });
         return newButton;
     }
 
-    private void AddRowCompetitionTable(Participant participant)
+    private int GetPlace(Participant participant, int lap)
     {
+        int place = 0;
+        boolean _isLastPlace = true;
+        // По lap выбираем arrayList
+        for(int i = 0; i < _lap1.size(); i++)
+        {
+            if(android.text.format.Time.compare(_lap1.get(i).GetResultTime(lap), participant.GetResultTime(lap)) > 0)
+            {
+                _lap1.add(i, participant);
+                place = i+1;
+                _isLastPlace = false;
+                break;
+            }
+        }
+
+        if(_isLastPlace)
+        {
+            _lap1.add(participant);
+            place = _lap1.size();
+        }
+        else
+        {
+            for(int i = place; i<_lap1.size(); i++)
+            {
+                _lap1.get(i).SetPlace(i+1, lap);
+            }
+        }
+
+        return place;
+    }
+
+    private void AddRowCompetitionTable(Participant participant, int lap)
+    {
+        // По переменной lap мы знаем какую таблицу заполнять, нумерация с 0
         TableRow newRow = new TableRow(this);
         final TextView newTextView0 = new TextView(this);
         newTextView0.setSingleLine(false);
@@ -158,7 +206,7 @@ public class CompetitionsActivity extends AppCompatActivity
 
         final TextView newTextView1 = new TextView(this);
         newTextView1.setSingleLine(false);
-        newTextView1.setText(String.valueOf(participant.GetPlace()));
+        newTextView1.setText(String.valueOf(participant.GetPlace(lap)));
         newTextView1.setGravity(Gravity.CENTER);
         newTextView1.setTextColor(Color.BLACK);
         newTextView1.setBackground(new PaintDrawable(Color.WHITE));
@@ -168,7 +216,7 @@ public class CompetitionsActivity extends AppCompatActivity
 
         final TextView newTextView2 = new TextView(this);
         newTextView2.setSingleLine(false);
-        newTextView2.setText(participant.GetResultTime().format("%H:%M:%S"));
+        newTextView2.setText(participant.GetResultTime(lap).format("%H:%M:%S"));
         newTextView2.setGravity(Gravity.CENTER);
         newTextView2.setTextColor(Color.BLACK);
         newTextView2.setBackground(new PaintDrawable(Color.WHITE));
@@ -178,7 +226,7 @@ public class CompetitionsActivity extends AppCompatActivity
 
         final TextView newTextView3 = new TextView(this);
         newTextView3.setSingleLine(false);
-        newTextView3.setText("Отставание");
+        newTextView3.setText(GetLag(participant, lap).format("%H:%M:%S"));
         newTextView3.setGravity(Gravity.CENTER);
         newTextView3.setTextColor(Color.BLACK);
         newTextView3.setBackground(new PaintDrawable(Color.WHITE));
@@ -192,6 +240,17 @@ public class CompetitionsActivity extends AppCompatActivity
         newRow.addView(newTextView3);
 
         _tableCompetition.addView(newRow);
+    }
+
+    private android.text.format.Time GetLag(Participant participant, int lap)
+    {
+        // По lap выбираем arrayList
+        android.text.format.Time lag = new android.text.format.Time();
+        lag.second = participant.GetResultTime(lap).second - _lap1.get(0).GetResultTime(lap).second;
+        lag.minute = participant.GetResultTime(lap).minute - _lap1.get(0).GetResultTime(lap).minute;
+        lag.hour = participant.GetResultTime(lap).hour - _lap1.get(0).GetResultTime(lap).hour;
+        lag.normalize(false);
+        return lag;
     }
 
     private View CreateFrameLayout()
