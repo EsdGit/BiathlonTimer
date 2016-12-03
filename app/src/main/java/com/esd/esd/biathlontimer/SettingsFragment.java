@@ -518,7 +518,7 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
             _dialogItems = _dialogItemsList.toArray(new String[_dialogItemsList.size()]);
         }
         _typeStart.setSummary(startType);
-        _countCheckPoint.setSummary(checkPointsCount);
+        _countCheckPoint.setSummary(context.getResources().getString(R.string.summary_count_checkpoint)+checkPointsCount);
     }
 
 }
