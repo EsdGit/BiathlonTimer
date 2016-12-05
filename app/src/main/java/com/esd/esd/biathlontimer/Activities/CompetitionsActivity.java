@@ -77,6 +77,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
     private int _currentTable = 0;
     private int _number = 0;
 
+    private Button _dialogOwnerButton;
     private LapData[] _laps;
 
     private CountDownTimer _countDownTimer;
@@ -132,36 +133,51 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         _dialogText = (TextView) _dialogFineForm.findViewById(R.id.count_fine);
         _dialogSeekBar.setOnSeekBarChangeListener(this);
         _dialogText.setText(getResources().getString(R.string.dialog_text_fine_competiton) + " 0");
-        _builderFineDialog = new AlertDialog.Builder(this);
+
+        _builderFineDialog = new AlertDialog.Builder(CompetitionsActivity.this);
         _builderFineDialog.setView(_dialogFineForm);
         _builderFineDialog.setPositiveButton(getResources().getString(R.string.accept), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which)
             {
-                //Что то будет если нажать принять
+//                int fineCount = _dialogSeekBar.getProgress();
+//                android.text.format.Time localTime = new android.text.format.Time();
+//                int participantNumber = Integer.valueOf(_dialogOwnerButton.getText().toString().split(", ")[0]);
+//                for(int i = 0; i < _participants.length; i++)
+//                {
+//                    if(participantNumber == Integer.valueOf(_participants[i].GetNumber()))
+//                    {
+//                        localTime = _participants[i].GetResultTime()
+//                        break;
+//                    }
+//                }
+                _dialogSeekBar.setProgress(0);
+                _dialogText.setText(getResources().getString(R.string.dialog_text_fine_competiton) + " 0");
             }
         });
         _builderFineDialog.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which)
             {
-                //Отмена
+                _dialogSeekBar.setProgress(0);
+                _dialogText.setText(getResources().getString(R.string.dialog_text_fine_competiton) + " 0");
             }
         });
+
         _fineDialog = _builderFineDialog.create();
 
         //_button = new MyButton(this);
-        View view = CreateFrameLayout();
-        view.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v)
-            {
-                _fineDialog.show();
-                return false;
-            }
-        });
+//        View view = CreateFrameLayout();
+//        view.setOnLongClickListener(new View.OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(View v)
+//            {
+//                _fineDialog.show();
+//                return false;
+//            }
+//        });
         //_button.SetParticipantNumber(view, "3");
-        _participantGridLayout.addView(view);
+        //_participantGridLayout.addView(view);
 
         int tablesCount = Integer.valueOf(_currentCompetition.GetCheckPointsCount());
         CreateTables(tablesCount);
@@ -180,8 +196,17 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
 
     private void TimerStartPosition()
     {
-        _currentInterval.second = Integer.valueOf(_currentCompetition.GetInterval().split(":")[1]);
-        _currentInterval.minute = Integer.valueOf(_currentCompetition.GetInterval().split(":")[0]);
+        if(_currentCompetition.GetStartType().equals(getResources().getString(R.string.item_type_mas_start)))
+        {
+            _currentInterval.second = 0;
+            _currentInterval.minute = 0;
+        }
+        else
+        {
+            _currentInterval.second = Integer.valueOf(_currentCompetition.GetInterval().split(":")[1]);
+            _currentInterval.minute = Integer.valueOf(_currentCompetition.GetInterval().split(":")[0]);
+        }
+
 
         _timeNextParticipant.set(_currentInterval.second,_currentInterval.minute,0,0,0,0);
 
@@ -194,6 +219,14 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         final Button newButton = new Button(this);
         newButton.setText(participant.GetNumber() + ", " + numberCheckPoint);
         newButton.setBackgroundColor(participant.GetColor());
+        newButton.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                _dialogOwnerButton = newButton;
+                _fineDialog.show();
+                return false;
+            }
+        });
         newButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -398,9 +431,6 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
                         ms++;
                         if(ms>9)
                         {
-                            _currentTime.second++;
-                            ms = 0;
-
 
                             if(android.text.format.Time.compare(_currentTime,_timeNextParticipant) == 0 && _number < _participants.length)
                             {
@@ -417,9 +447,40 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
                                     @Override
                                     public void run()
                                     {
-                                        _participantGridLayout.addView(CreateButton(_participants[_number],"1"));
-                                        _participants[_number].SetStartTime(_currentTime);
-                                        _number++;
+                                        if(_currentCompetition.GetStartType().equals(getResources().getString(R.string.item_type_single_start)))
+                                        {
+                                            _participantGridLayout.addView(CreateButton(_participants[_number], "1"));
+                                            _participants[_number].SetStartTime(_currentTime);
+                                            _number++;
+                                        }
+                                        else
+                                        {
+                                            if(_currentCompetition.GetStartType().equals(getResources().getString(R.string.item_type_double_start)))
+                                            {
+                                                _participantGridLayout.addView(CreateButton(_participants[_number], "1"));
+                                                _participants[_number].SetStartTime(_currentTime);
+                                                _number++;
+                                                if(_number < _participants.length)
+                                                {
+                                                    _participantGridLayout.addView(CreateButton(_participants[_number], "1"));
+                                                    _participants[_number].SetStartTime(_currentTime);
+                                                    _number++;
+                                                }
+                                            }
+                                            else
+                                            {
+                                                android.text.format.Time localTime = new android.text.format.Time();
+                                                localTime.second = _currentTime.second;
+                                                localTime.minute = _currentTime.minute;
+                                                localTime.hour = _currentTime.hour;
+                                                for(int i = 0; i < _participants.length; i++)
+                                                {
+                                                    _participantGridLayout.addView(CreateButton(_participants[i], "1"));
+                                                    _participants[i].SetStartTime(localTime);
+                                                }
+                                                _number = _participants.length;
+                                            }
+                                        }
                                     }
                                 });
                                 _timeNextParticipant.second += _currentInterval.second;
@@ -427,6 +488,8 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
 
 
                             }
+                            _currentTime.second++;
+                            ms = 0;
                         }
                         if(_currentTime.second > 59)
                         {

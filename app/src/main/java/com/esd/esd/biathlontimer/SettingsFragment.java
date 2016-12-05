@@ -433,10 +433,13 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
 
         if(_setData.getSummary().toString().equals(myRes.getString(R.string.summary_data_competition))) return null;
         if(_countCheckPoint.getSummary().toString().equals(myRes.getString(R.string.summary_count_checkpoint))) return null;
-        if(_setInterval.getSummary().toString().equals(myRes.getString(R.string.summary_interval))) return null;
-        if(_setSecondInterval.getSummary().toString().equals(myRes.getString(R.string.summary_interval)))return null;
         if(_setStartTimer.getSummary().toString().equals(myRes.getString(R.string.summary_time_to_start))) return null;
         if(_typeStart.getSummary().toString().equals(myRes.getString(R.string.summary_type_start))) return null;
+        if(!_typeStart.getSummary().toString().equals(myRes.getString(R.string.item_type_mas_start)))
+        {
+            if(_setInterval.getSummary().toString().equals(myRes.getString(R.string.summary_interval))) return null;
+            if(_setSecondInterval.getSummary().toString().equals(myRes.getString(R.string.summary_interval)))return null;
+        }
         if(_fine.getSummary().toString().equals(myRes.getString(R.string.summary_fine))) return null;
         if(!_group.getSummary().toString().equals(myRes.getString(R.string.summary_group)))
             groups = groups.split(":")[1];
