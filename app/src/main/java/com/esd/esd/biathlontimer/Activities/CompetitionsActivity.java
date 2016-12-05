@@ -1,5 +1,7 @@
 package com.esd.esd.biathlontimer.Activities;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.PaintDrawable;
@@ -19,6 +21,7 @@ import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.SeekBar;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -42,7 +45,7 @@ import java.util.TimerTask;
 import java.util.zip.Inflater;
 
 
-public class CompetitionsActivity extends AppCompatActivity
+public class CompetitionsActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener
 {
     private GridLayout _participantGridLayout;
     private LinearLayout _containerTables;
@@ -55,6 +58,12 @@ public class CompetitionsActivity extends AppCompatActivity
     private TextView _timerParticipantTable;
     private Button _startBtn;
     private MyButton _button;
+
+    private AlertDialog _fineDialog;
+    private AlertDialog.Builder _builderFineDialog;
+    private View _dialogFineForm;
+    private SeekBar _dialogSeekBar;
+    private TextView _dialogText;
 
     private Competition _currentCompetition;
     private boolean _isCompetitionStarted = false;
@@ -117,10 +126,41 @@ public class CompetitionsActivity extends AppCompatActivity
         viewPager.setCurrentItem(0);
         setContentView(viewPager);
 
-//        _button = new MyButton(this);
-//        View view = CreateFrameLayout();
-//        _button.SetParticipantNumber(view, "3");
-//        _participantGridLayout.addView(view);
+        _dialogFineForm = inflater.inflate(R.layout.dialog_fine_competition_activity, null);
+        _dialogSeekBar = (SeekBar) _dialogFineForm.findViewById(R.id.seek_bar_competition_activity);
+        _dialogText = (TextView) _dialogFineForm.findViewById(R.id.count_fine);
+        _dialogSeekBar.setOnSeekBarChangeListener(this);
+        _dialogText.setText(getResources().getString(R.string.dialog_text_fine_competiton) + " 0");
+        _builderFineDialog = new AlertDialog.Builder(this);
+        _builderFineDialog.setView(_dialogFineForm);
+        _builderFineDialog.setPositiveButton(getResources().getString(R.string.accept), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+                //Что то будет если нажать принять
+            }
+        });
+        _builderFineDialog.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+                //Отмена
+            }
+        });
+        _fineDialog = _builderFineDialog.create();
+
+        //_button = new MyButton(this);
+        View view = CreateFrameLayout();
+        view.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v)
+            {
+                _fineDialog.show();
+                return false;
+            }
+        });
+        //_button.SetParticipantNumber(view, "3");
+        _participantGridLayout.addView(view);
 
         int tablesCount = Integer.valueOf(_currentCompetition.GetCheckPointsCount());
         CreateTables(tablesCount);
@@ -434,5 +474,23 @@ public class CompetitionsActivity extends AppCompatActivity
             _tablesCompetition.get(--_currentTable).setVisibility(View.VISIBLE);
             _currentRound.setText(getResources().getString(R.string.current_round) + " - " + Integer.toString(_currentTable + 1));
         }
+    }
+
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser)
+    {
+        _dialogText.setText(getResources().getString(R.string.dialog_text_fine_competiton) + " " + Integer.toString(seekBar.getProgress()));
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar)
+    {
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar)
+    {
+        _dialogText.setText(getResources().getString(R.string.dialog_text_fine_competiton) + " " + Integer.toString(seekBar.getProgress()));
     }
 }
