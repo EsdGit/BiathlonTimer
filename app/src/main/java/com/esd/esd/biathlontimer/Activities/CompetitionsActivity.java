@@ -191,8 +191,17 @@ public class CompetitionsActivity extends AppCompatActivity
                 {
                     AddRowCompetitionTable(_laps[lap].GetParticipant(i),lap);
                 }
-                lap+=2;
-                newButton.setText(participant.GetNumber()+", "+lap);
+
+                if(lap == _laps.length - 1)
+                {
+                    _participantGridLayout.removeView(newButton);
+                }
+                else
+                {
+                    lap+=2;
+                    newButton.setText(participant.GetNumber()+", "+lap);
+                }
+
                 Toast.makeText(getApplicationContext(),newButton.getText(),Toast.LENGTH_LONG).show();
             }
         });

@@ -445,6 +445,7 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
 
         String[] secondInterval = _setSecondInterval.getSummary().toString().split(myRes.getString(R.string.summary_second_interval_helper));
         String countCheckPoints = _countCheckPoint.getSummary().toString().split(":")[1];
+        if(Integer.valueOf(countCheckPoints) <= 0) return null;
         Competition localCompetition = new Competition(_nameCompetition.getSummary().toString(),_setData.getSummary().toString(), context);
         localCompetition.SetCompetitionSettings(_typeStart.getSummary().toString(), _setInterval.getSummary().toString(),
                 countCheckPoints,_setStartTimer.getSummary().toString(),groups, secondInterval[0], secondInterval[1],_fine.getSummary().toString());
