@@ -35,7 +35,10 @@ import com.esd.esd.biathlontimer.DatabaseClasses.ParticipantSaver;
 import com.esd.esd.biathlontimer.DatabaseClasses.SettingsSaver;
 import com.esd.esd.biathlontimer.Participant;
 import com.esd.esd.biathlontimer.R;
+import com.esd.esd.biathlontimer.SettingsChangedEvent;
 import com.esd.esd.biathlontimer.SettingsFragment;
+
+import org.greenrobot.eventbus.EventBus;
 
 
 public class SettingsActivity extends PreferenceActivity
@@ -43,6 +46,8 @@ public class SettingsActivity extends PreferenceActivity
     private boolean isEditMode = false;
     private Intent _localIntent;
     private boolean isFirstLoad = true;
+
+    private EventBus _eventBus;
 
     private Competition _oldCompetititon;
     @Override
@@ -68,6 +73,7 @@ public class SettingsActivity extends PreferenceActivity
         }
         getFragmentManager().beginTransaction().replace(android.R.id.content, new SettingsFragment()).commit();
 
+        _eventBus = EventBus.getDefault();
     }
 
 
@@ -122,7 +128,7 @@ public class SettingsActivity extends PreferenceActivity
             Competition newComp = SettingsFragment.GetCurrentCompetition(this);
             if(newComp == null)
             {
-                Toast.makeText(this,"Заполните все настройки", Toast.LENGTH_LONG).show();
+                Toast.makeText(this,getResources().getString(R.string.wrong_settings_toast), Toast.LENGTH_LONG).show();
                 return true;
             }
             boolean _canAddCompetition = true;
@@ -156,6 +162,8 @@ public class SettingsActivity extends PreferenceActivity
                         newCompetition.AddParticipant(participants[i]);
                     }
                     saver.SaveCompetitionToDatabase(newCompetition);
+                    SettingsChangedEvent event = new SettingsChangedEvent();
+                    _eventBus.post(event);
                     this.finish();
                 }
             }

@@ -40,6 +40,7 @@
     <string name="setting_activity_title_fine">Штраф</string>
     <string name="summary_fine">Устанавливает время одного штрафа</string>
     <string name="summary_second_interval_helper">" после позиции - "</string>
+    <string name="wrong_settings_toast">Заполните все настройки или проверьте их правильность</string>
 
     //Список участников
     <string name="participant_list_actvity_head">Список участников соревнования</string>
@@ -65,6 +66,9 @@
     <string name="messege_del_dialog_from_database">Вы уверены, что хотите удалить участников из базы данных?</string>
     <string name="warning_dialog_title">Предупреждение</string>
     <string name="message_dialog_warning">Вы уверены, что хотите выйти?</string>
+    <string name="message_dialog_reset">Вы уверены, что хотите сбросить соревнование?</string>
+    <string name="reset_title">Сброс</string>
+    <string name="message_end_competition">Вы уверены, что хотите завершить соревнование?</string>
     <string name="add_group_dialog_title">Название групп</string>
     <string name="add_dialog_item_group">Добавить группу</string>
     <string name="interval_dialog_title">Установите интервал</string>
