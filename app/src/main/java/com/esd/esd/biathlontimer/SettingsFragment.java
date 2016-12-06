@@ -125,7 +125,7 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
                 {
                     if(_isFine)
                     {
-                        _fine.setSummary(getResources().getString(R.string.summary_fine_after_set) + " " + SetNormalFormatDataTime(_minute.getValue() + ":" + _seconds.getValue(), true));
+                        _fine.setSummary(getResources().getString(R.string.summary_fine_after_set) + SetNormalFormatDataTime(_minute.getValue() + ":" + _seconds.getValue(), true));
                         _dialogInterval.setTitle(getResources().getString(R.string.interval_dialog_title));
                         _isFine = false;
                     }
@@ -445,13 +445,13 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
             groups = groups.split(":")[1];
         else
             groups = "";
-
+        String fine = _fine.getSummary().toString().split("- ")[1];
         String[] secondInterval = _setSecondInterval.getSummary().toString().split(myRes.getString(R.string.summary_second_interval_helper));
         String countCheckPoints = _countCheckPoint.getSummary().toString().split(":")[1];
         if(Integer.valueOf(countCheckPoints) <= 0) return null;
         Competition localCompetition = new Competition(_nameCompetition.getSummary().toString(),_setData.getSummary().toString(), context);
         localCompetition.SetCompetitionSettings(_typeStart.getSummary().toString(), _setInterval.getSummary().toString(),
-                countCheckPoints,_setStartTimer.getSummary().toString(),groups, secondInterval[0], secondInterval[1],_fine.getSummary().toString());
+                countCheckPoints,_setStartTimer.getSummary().toString(),groups, secondInterval[0], secondInterval[1],fine);
         return localCompetition;
     }
 
@@ -510,7 +510,7 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
         _setInterval.setSummary(interval);
         _setStartTimer.setSummary(timeToStart);
         _setSecondInterval.setSummary(secondInterval+context.getResources().getString(R.string.summary_second_interval_helper)+numberSecondInterval);
-        _fine.setSummary(fine);
+        _fine.setSummary(context.getResources().getString(R.string.summary_fine_after_set)+fine);
         if(!groups.isEmpty())
         {
             _group.setSummary(context.getResources().getString(R.string.aftter_add_summary_group)+groups);

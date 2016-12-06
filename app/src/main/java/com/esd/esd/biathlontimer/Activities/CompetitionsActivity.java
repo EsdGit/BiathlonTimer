@@ -140,19 +140,41 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
             @Override
             public void onClick(DialogInterface dialog, int which)
             {
-//                int fineCount = _dialogSeekBar.getProgress();
-//                android.text.format.Time localTime = new android.text.format.Time();
-//                int participantNumber = Integer.valueOf(_dialogOwnerButton.getText().toString().split(", ")[0]);
-//                for(int i = 0; i < _participants.length; i++)
-//                {
-//                    if(participantNumber == Integer.valueOf(_participants[i].GetNumber()))
-//                    {
-//                        localTime = _participants[i].GetResultTime()
-//                        break;
-//                    }
-//                }
+                int fineCount = _dialogSeekBar.getProgress();
+                int fineSeconds = Integer.valueOf(_currentCompetition.GetFineTime().split(":")[1]);
+                int fineMinutes = Integer.valueOf(_currentCompetition.GetFineTime().split(":")[0]);
+                android.text.format.Time fineTime = new android.text.format.Time();
+                int participantNumber = Integer.valueOf(_dialogOwnerButton.getText().toString().split(", ")[0]);
+                int lapNumber = Integer.valueOf(_dialogOwnerButton.getText().toString().split(", ")[1]) - 2;
+
+                fineTime.second = fineCount*fineSeconds;
+                fineTime.minute = fineCount*fineMinutes;
+                fineTime.normalize(false);
+
+                for(int i = 0; i < _participants.length; i++)
+                {
+                    if(participantNumber == Integer.valueOf(_participants[i].GetNumber()))
+                    {
+                        participantNumber = i;
+                        break;
+                    }
+                }
+
+                _participants[participantNumber].SetFineTime(fineTime);
                 _dialogSeekBar.setProgress(0);
                 _dialogText.setText(getResources().getString(R.string.dialog_text_fine_competiton) + " 0");
+                if(lapNumber < 0) return;
+
+                _participants[participantNumber].SetPlace(GetPlace(_participants[participantNumber], lapNumber), lapNumber);
+
+                _tablesCompetition.get(lapNumber).removeAllViews();
+                for(int j = 0; j < _laps[lapNumber].GetParticipants().length; j++)
+                {
+                    AddRowCompetitionTable(_laps[lapNumber].GetParticipant(j),lapNumber);
+                }
+
+
+
             }
         });
         _builderFineDialog.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
@@ -284,6 +306,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
     {
         int place = 0;
         boolean _isLastPlace = true;
+        _laps[lap].RemoveParticipant(participant);
         for(int i = 0; i < _laps[lap].GetParticipants().length;i++)
         {
             if(android.text.format.Time.compare(_laps[lap].GetParticipant(i).GetResultTime(lap), participant.GetResultTime(lap)) > 0)
@@ -429,6 +452,28 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
                     public void run()
                     {
                         ms++;
+                        if(_currentCompetition.GetStartType().equals(getResources().getString(R.string.item_type_mas_start)) && _number < _participants.length)
+                        {
+
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run()
+                                {
+                                    android.text.format.Time localTime = new android.text.format.Time();
+                                    localTime.second = _currentTime.second;
+                                    localTime.minute = _currentTime.minute;
+                                    localTime.hour = _currentTime.hour;
+                                    for(int i = 0; i < _participants.length; i++)
+                                    {
+                                        _participantGridLayout.addView(CreateButton(_participants[i], "1"));
+                                        _participants[i].SetStartTime(localTime);
+                                    }
+                                    _number = _participants.length;
+                                }
+                            });
+
+
+                        }
                         if(ms>9)
                         {
 
@@ -466,19 +511,6 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
                                                     _participants[_number].SetStartTime(_currentTime);
                                                     _number++;
                                                 }
-                                            }
-                                            else
-                                            {
-                                                android.text.format.Time localTime = new android.text.format.Time();
-                                                localTime.second = _currentTime.second;
-                                                localTime.minute = _currentTime.minute;
-                                                localTime.hour = _currentTime.hour;
-                                                for(int i = 0; i < _participants.length; i++)
-                                                {
-                                                    _participantGridLayout.addView(CreateButton(_participants[i], "1"));
-                                                    _participants[i].SetStartTime(localTime);
-                                                }
-                                                _number = _participants.length;
                                             }
                                         }
                                     }
@@ -557,6 +589,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
                     _participantGridLayout.removeAllViews();
                     _isCompetitionStarted = false;
                     _startBtn.setText(getResources().getString(R.string.start_timer));
+                    _number = 0;
                 }
             });
 

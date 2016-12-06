@@ -19,20 +19,29 @@ public class Participant
     }
 
     private ArrayList<Time> _resultTimes;
-
     public Time GetResultTime(int lapNumber)
     {
-        return _resultTimes.get(lapNumber);
+        Time returnTime = new Time();
+        returnTime.second = _resultTimes.get(lapNumber).second + _fineTime.second;
+        returnTime.minute = _resultTimes.get(lapNumber).minute + _fineTime.minute;
+        returnTime.hour = _resultTimes.get(lapNumber).hour + _fineTime.hour;
+        returnTime.normalize(false);
+        return returnTime;
     }
     public void SetResultTime(Time time, int lapNumber)
     {
         _resultTimes.add(lapNumber, time);
-//        _resultTimes.get(lapNumber).second = time.second;
-//        _resultTimes.get(lapNumber).minute = time.minute;
-//        _resultTimes.get(lapNumber).hour = time.hour;
-//        _resultTimes.get(lapNumber).normalize(false);
     }
 
+    private Time _fineTime;
+    public Time GetFineTime(){return _fineTime;}
+    public void SetFineTime(Time fineTime)
+    {
+        _fineTime.second = fineTime.second;
+        _fineTime.minute = fineTime.minute;
+        _fineTime.hour = fineTime.hour;
+        _fineTime.normalize(false);
+    }
     private Time _startTime;
     public Time GetStartTime(){return _startTime;}
     public void SetStartTime(Time time)
@@ -66,6 +75,7 @@ public class Participant
 
     public Participant(String number,String fio, String country,String birthYear, String group, int color)
     {
+        _fineTime = new Time();
         _startTime = new Time();
         _resultTimes = new ArrayList<Time>();
         _places = new ArrayList<Integer>();
