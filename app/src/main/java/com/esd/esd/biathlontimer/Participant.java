@@ -22,26 +22,49 @@ public class Participant
     public Time GetResultTime(int lapNumber)
     {
         Time returnTime = new Time();
-        returnTime.second = _resultTimes.get(lapNumber).second + _fineTime.second;
-        returnTime.minute = _resultTimes.get(lapNumber).minute + _fineTime.minute;
-        returnTime.hour = _resultTimes.get(lapNumber).hour + _fineTime.hour;
+//        returnTime.second = _resultTimes.get(lapNumber).second + _fineTime.get(lapNumber).second;
+//        returnTime.minute = _resultTimes.get(lapNumber).minute + _fineTime.get(lapNumber).minute;
+//        returnTime.hour = _resultTimes.get(lapNumber).hour + _fineTime.get(lapNumber).hour;
+        returnTime.second = _resultTimes.get(lapNumber).second + _fullFineTime.second;
+        returnTime.minute = _resultTimes.get(lapNumber).minute + _fullFineTime.minute;
+        returnTime.hour = _resultTimes.get(lapNumber).hour + _fullFineTime.hour;
         returnTime.normalize(false);
         return returnTime;
     }
     public void SetResultTime(Time time, int lapNumber)
     {
         _resultTimes.add(lapNumber, time);
+        _fineTime.add(lapNumber, new Time());
     }
 
-    private Time _fineTime;
-    public Time GetFineTime(){return _fineTime;}
-    public void SetFineTime(Time fineTime)
+    private Time _fullFineTime;
+    private ArrayList<Time> _fineTime;
+    public Time GetFineTime(int lapNumber){return _fineTime.get(lapNumber);}
+    public void SetFineTime(Time fineTime, int lapNumber)
     {
-        _fineTime.second = fineTime.second;
-        _fineTime.minute = fineTime.minute;
-        _fineTime.hour = fineTime.hour;
-        _fineTime.normalize(false);
+        _fullFineTime.second += fineTime.second;
+        _fullFineTime.minute += fineTime.minute;
+        _fullFineTime.hour += fineTime.hour;
+        _fullFineTime.normalize(false);
+        if(lapNumber < _fineTime.size())
+        {
+            _fineTime.get(lapNumber).second += fineTime.second;
+            _fineTime.get(lapNumber).minute += fineTime.minute;
+            _fineTime.get(lapNumber).hour += fineTime.hour;
+            _fineTime.get(lapNumber).normalize(false);
+        }
+        else
+        {
+            _fineTime.add(lapNumber, fineTime);
+        }
     }
+
+    private ArrayList<Integer> _fineCount;
+    public void SetFineCount(int count, int lapNumber)
+    {
+        _fineCount.add(lapNumber, count);
+    }
+
     private Time _startTime;
     public Time GetStartTime(){return _startTime;}
     public void SetStartTime(Time time)
@@ -75,7 +98,9 @@ public class Participant
 
     public Participant(String number,String fio, String country,String birthYear, String group, int color)
     {
-        _fineTime = new Time();
+        _fullFineTime = new Time();
+        _fineTime = new ArrayList<Time>();
+        _fineCount = new ArrayList<Integer>();
         _startTime = new Time();
         _resultTimes = new ArrayList<Time>();
         _places = new ArrayList<Integer>();

@@ -161,13 +161,19 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
                     }
                 }
 
-                _participants[participantNumber].SetFineTime(fineTime);
                 _dialogSeekBar.setProgress(0);
                 _dialogText.setText(getResources().getString(R.string.dialog_text_fine_competiton) + " 0");
-                if(lapNumber < 0) return;
 
+                if(lapNumber < 0)
+                {
+                    lapNumber = 0;
+                    _participants[participantNumber].SetFineTime(fineTime,lapNumber);
+                    _participants[participantNumber].SetFineCount(fineCount,lapNumber);
+                    return;
+                }
+                _participants[participantNumber].SetFineTime(fineTime,lapNumber);
+                _participants[participantNumber].SetFineCount(fineCount,lapNumber);
                 _participants[participantNumber].SetPlace(GetPlace(_participants[participantNumber], lapNumber), lapNumber);
-
                 _tablesCompetition.get(lapNumber).removeAllViews();
                 for(int j = 0; j < _laps[lapNumber].GetParticipants().length; j++)
                 {
@@ -317,8 +323,9 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         {
             if(android.text.format.Time.compare(_laps[lap].GetParticipant(i).GetResultTime(lap), participant.GetResultTime(lap)) > 0)
             {
-                _laps[lap].AddParticipant(i, participant);
                 place = i+1;
+                participant.SetPlace(place, lap);
+                _laps[lap].AddParticipant(i, participant);
                 _isLastPlace = false;
                 break;
             }
@@ -326,8 +333,9 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
 
         if(_isLastPlace)
         {
+            place = _laps[lap].GetParticipants().length+1;
+            participant.SetPlace(place, lap);
             _laps[lap].AddParticipant(participant);
-            place = _laps[lap].GetParticipants().length;
         }
         else
         {
@@ -336,7 +344,6 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
                 _laps[lap].GetParticipant(i).SetPlace(i+1, lap);
             }
         }
-
         return place;
     }
 
@@ -461,7 +468,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
                         ms++;
                         if(_currentCompetition.GetStartType().equals(getResources().getString(R.string.item_type_mas_start)) && _number < _participants.length)
                         {
-
+                            _number = _participants.length;
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run()
@@ -470,12 +477,13 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
                                     localTime.second = _currentTime.second;
                                     localTime.minute = _currentTime.minute;
                                     localTime.hour = _currentTime.hour;
+
                                     for(int i = 0; i < _participants.length; i++)
                                     {
                                         _participantGridLayout.addView(CreateButton(_participants[i], "1"));
                                         _participants[i].SetStartTime(localTime);
                                     }
-                                    _number = _participants.length;
+
                                 }
                             });
                         }
