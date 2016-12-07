@@ -11,11 +11,13 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_margin="7.5dp"
+        android:id="@+id/backgroundMyButton"
         android:background="#ff0000">
 
         <ImageView
             android:layout_width="45dp"
             android:layout_height="45dp"
+            android:id="@+id/imageMyButton"
             android:src="@drawable/ic_launcher"
             android:tint="#ffffff"
             android:layout_gravity="center"/>
@@ -40,7 +42,7 @@
             android:textColor="#000000"
             android:textStyle="bold"
             android:typeface="serif"
-            android:id="@+id/numberParticipant"
+            android:id="@+id/numberParticipantMyButton"
             android:text="543"
             android:layout_gravity="center"
             android:gravity="center"/>
@@ -55,6 +57,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:id="@+id/lapParticipantMyButton"
             android:background="@drawable/round_text"
             android:text="5"
             android:textSize="10sp"

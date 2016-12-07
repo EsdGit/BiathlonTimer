@@ -94,6 +94,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         _timeNextParticipant = new android.text.format.Time();
         _currentInterval = new android.text.format.Time();
         _tablesCompetition = new ArrayList<>();
+        _button = new MyButton(this);
 
         _currentCompetition = new Competition(getIntent().getStringExtra("Name"), getIntent().getStringExtra("Date"), this);
         _currentCompetition.GetAllSettingsToComp();
@@ -188,7 +189,6 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
 
         _fineDialog = _builderFineDialog.create();
 
-        //_button = new MyButton(this);
 //        View view = CreateFrameLayout();
 //        view.setOnLongClickListener(new View.OnLongClickListener() {
 //            @Override
@@ -237,26 +237,30 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         _timerParticipantTable.setText(_currentCompetition.GetTimeToStart());
     }
 
-    private Button CreateButton(final Participant participant, String numberCheckPoint)
+    private View CreateButton(final Participant participant, String numberCheckPoint)
     {
-        final Button newButton = new Button(this);
-        newButton.setText(participant.GetNumber() + ", " + numberCheckPoint);
-        newButton.setBackgroundColor(participant.GetColor());
-        newButton.setOnLongClickListener(new View.OnLongClickListener() {
+        //final Button newButton = new Button(this);
+        //newButton.setText(participant.GetNumber() + ", " + numberCheckPoint);
+        //newButton.setBackgroundColor(participant.GetColor());
+        LayoutInflater inflater = LayoutInflater.from(this);
+        final View view = inflater.inflate(R.layout.my_btn, null);
+        _button.SetParticipantNumberAndBackground(view, participant.GetNumber(), participant.GetColor());
+        _button.SetParticipantLap(view, numberCheckPoint);
+        view.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                _dialogOwnerButton = newButton;
+                _dialogOwnerButton = (Button)view;
                 _fineDialog.show();
                 return false;
             }
         });
-        newButton.setOnClickListener(new View.OnClickListener()
+        view.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                int number = Integer.valueOf(newButton.getText().toString().split(", ")[0]);
-                int lap = Integer.valueOf(newButton.getText().toString().split(", ")[1]) - 1;
+                int number = Integer.valueOf(_button.GetParticipantNumber(v) /*newButton.getText().toString().split(", ")[0]*/);
+                int lap = Integer.valueOf(_button.GetLap(v) /*newButton.getText().toString().split(", ")[1]*/) - 1;
 
                 // Если номера одинаковые то капец
                 for(int i = 0; i < _participants.length; i++)
@@ -288,18 +292,19 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
 
                 if(lap == _laps.length - 1)
                 {
-                    _participantGridLayout.removeView(newButton);
+                    _participantGridLayout.removeView(view);
                 }
                 else
                 {
                     lap+=2;
-                    newButton.setText(participant.GetNumber()+", "+lap);
+                    _button.SetParticipantLap(view, Integer.toString(lap));
+                    //newButton.setText(participant.GetNumber()+", "+lap);
                 }
 
-                Toast.makeText(getApplicationContext(),newButton.getText(),Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(),newButton.getText(),Toast.LENGTH_LONG).show();
             }
         });
-        return newButton;
+        return view;
     }
 
 
@@ -416,12 +421,12 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         return lag;
     }
 
-    private View CreateFrameLayout()
-    {
-        LayoutInflater inflater = LayoutInflater.from(this);
-        View view = inflater.inflate(R.layout.my_btn, null);
-        return view;
-    }
+//    private View CreateFrameLayout()
+//    {
+//        LayoutInflater inflater = LayoutInflater.from(this);
+//        View view = inflater.inflate(R.layout.my_btn, null);
+//        return view;
+//    }
 
 
     public void imgBtnSettings_OnClick(View view)
