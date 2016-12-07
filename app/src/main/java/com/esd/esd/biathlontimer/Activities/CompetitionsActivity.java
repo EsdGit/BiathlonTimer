@@ -230,7 +230,8 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         }
 
 
-        _timeNextParticipant.set(_currentInterval.second,_currentInterval.minute,0,0,0,0);
+        _timeNextParticipant.second = _currentInterval.second;
+        _timeNextParticipant.minute = _currentInterval.minute;
 
         _competitionTimer.setText(_currentCompetition.GetTimeToStart());
         _timerParticipantTable.setText(_currentCompetition.GetTimeToStart());
@@ -437,11 +438,12 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
             final android.text.format.Time timeCountDown = new android.text.format.Time();
             timeCountDown.minute = Integer.valueOf(_currentCompetition.GetTimeToStart().split(":")[0]);
             timeCountDown.second = Integer.valueOf(_currentCompetition.GetTimeToStart().split(":")[1]);
-            final long ms = timeCountDown.minute*60000+timeCountDown.second*1000;
+            final long ms1 = timeCountDown.minute*60000+timeCountDown.second*1000;
 
-            _currentTime = new android.text.format.Time();
-            _currentTime.set(0,0,0,0,0,0);
-            _countDownTimer = new CountDownTimer(ms+1000,1000)
+            _currentTime = new android.text.format.Time(_timeNextParticipant);
+            _currentTime.second = 0;
+            _currentTime.minute = 0;
+            _countDownTimer = new CountDownTimer(ms1+1000,1000)
             {
                 TimerTask task = new TimerTask()
                 {
@@ -471,11 +473,12 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
                                     _number = _participants.length;
                                 }
                             });
-
-
                         }
                         if(ms>9)
                         {
+                            _currentTime.second++;
+                            ms = 0;
+                            _currentTime.normalize(false);
 
                             if(android.text.format.Time.compare(_currentTime,_timeNextParticipant) == 0 && _number < _participants.length)
                             {
@@ -515,24 +518,17 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
                                         }
                                     }
                                 });
-                                _timeNextParticipant.second += _currentInterval.second;
+                                _timeNextParticipant.hour += _currentInterval.hour;
                                 _timeNextParticipant.minute += _currentInterval.minute;
+                                _timeNextParticipant.second += _currentInterval.second;
+                                _timeNextParticipant.normalize(false);
 
 
                             }
-                            _currentTime.second++;
-                            ms = 0;
+
                         }
-                        if(_currentTime.second > 59)
-                        {
-                            _currentTime.minute++;
-                            _currentTime.second = 0;
-                        }
-                        if(_currentTime.minute > 59)
-                        {
-                            _currentTime.hour++;
-                            _currentTime.minute = 0;
-                        }
+
+
 
 
                         msStr = String.valueOf(ms);
