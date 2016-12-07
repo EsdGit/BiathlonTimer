@@ -77,7 +77,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
     private int _currentTable = 0;
     private int _number = 0;
 
-    private Button _dialogOwnerButton;
+    private FrameLayout _dialogOwnerView;
     private LapData[] _laps;
 
     private CountDownTimer _countDownTimer;
@@ -145,8 +145,8 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
                 int fineSeconds = Integer.valueOf(_currentCompetition.GetFineTime().split(":")[1]);
                 int fineMinutes = Integer.valueOf(_currentCompetition.GetFineTime().split(":")[0]);
                 android.text.format.Time fineTime = new android.text.format.Time();
-                int participantNumber = Integer.valueOf(_dialogOwnerButton.getText().toString().split(", ")[0]);
-                int lapNumber = Integer.valueOf(_dialogOwnerButton.getText().toString().split(", ")[1]) - 2;
+                int participantNumber = Integer.valueOf(_button.GetParticipantNumber(_dialogOwnerView));
+                int lapNumber = Integer.valueOf(_button.GetLap(_dialogOwnerView)) - 2;
 
                 fineTime.second = fineCount*fineSeconds;
                 fineTime.minute = fineCount*fineMinutes;
@@ -255,7 +255,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         view.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                _dialogOwnerButton = (Button)view;
+                _dialogOwnerView = (FrameLayout) view;
                 _fineDialog.show();
                 return false;
             }
