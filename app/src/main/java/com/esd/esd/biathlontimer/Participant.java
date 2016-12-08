@@ -8,61 +8,63 @@ import java.util.ArrayList;
 // Класс участника
 public class Participant
 {
-    private ArrayList<Integer> _places;
+    public static int LapsCount = 0;
+
+    private int[] _places;
     public int GetPlace(int lapNumber)
     {
-        return _places.get(lapNumber).intValue();
+        return _places[lapNumber];
     }
     public void SetPlace(int place, int lapNumber)
     {
-        _places.add(lapNumber, place);
+        _places[lapNumber] = place;
     }
 
-    private ArrayList<Time> _resultTimes;
+    private Time[] _resultTimes;
     public Time GetResultTime(int lapNumber)
     {
         Time returnTime = new Time();
-//        returnTime.second = _resultTimes.get(lapNumber).second + _fineTime.get(lapNumber).second;
-//        returnTime.minute = _resultTimes.get(lapNumber).minute + _fineTime.get(lapNumber).minute;
-//        returnTime.hour = _resultTimes.get(lapNumber).hour + _fineTime.get(lapNumber).hour;
-        returnTime.second = _resultTimes.get(lapNumber).second + _fullFineTime.second;
-        returnTime.minute = _resultTimes.get(lapNumber).minute + _fullFineTime.minute;
-        returnTime.hour = _resultTimes.get(lapNumber).hour + _fullFineTime.hour;
+        returnTime.second = _resultTimes[lapNumber].second + _fullFineTime.second;
+        returnTime.minute = _resultTimes[lapNumber].minute + _fullFineTime.minute;
+        returnTime.hour = _resultTimes[lapNumber].hour + _fullFineTime.hour;
         returnTime.normalize(false);
         return returnTime;
     }
+
     public void SetResultTime(Time time, int lapNumber)
     {
-        _resultTimes.add(lapNumber, time);
-        _fineTime.add(lapNumber, new Time());
+        _resultTimes[lapNumber] = new Time(time);
     }
 
     private Time _fullFineTime;
-    private ArrayList<Time> _fineTime;
-    public Time GetFineTime(int lapNumber){return _fineTime.get(lapNumber);}
+    private Time[] _fineTime;
+    public Time GetFineTime(int lapNumber){return _fineTime[lapNumber];}
     public void SetFineTime(Time fineTime, int lapNumber)
     {
         _fullFineTime.second += fineTime.second;
         _fullFineTime.minute += fineTime.minute;
         _fullFineTime.hour += fineTime.hour;
         _fullFineTime.normalize(false);
-        if(lapNumber < _fineTime.size())
+        if(lapNumber < _fineTime.length)
         {
-            _fineTime.get(lapNumber).second += fineTime.second;
-            _fineTime.get(lapNumber).minute += fineTime.minute;
-            _fineTime.get(lapNumber).hour += fineTime.hour;
-            _fineTime.get(lapNumber).normalize(false);
+            _fineTime[lapNumber].second += fineTime.second;
+            _fineTime[lapNumber].minute += fineTime.minute;
+            _fineTime[lapNumber].hour += fineTime.hour;
+            _fineTime[lapNumber].normalize(false);
         }
         else
         {
-            _fineTime.add(lapNumber, fineTime);
+            _fineTime[lapNumber].second = fineTime.second;
+            _fineTime[lapNumber].minute = fineTime.minute;
+            _fineTime[lapNumber].hour = fineTime.hour;
+            _fineTime[lapNumber].normalize(false);
         }
     }
 
-    private ArrayList<Integer> _fineCount;
+    private int[] _fineCount;
     public void SetFineCount(int count, int lapNumber)
     {
-        _fineCount.add(lapNumber, count);
+         _fineCount[lapNumber] += count;
     }
 
     private Time _startTime;
@@ -99,11 +101,14 @@ public class Participant
     public Participant(String number,String fio, String country,String birthYear, String group, int color)
     {
         _fullFineTime = new Time();
-        _fineTime = new ArrayList<Time>();
-        _fineCount = new ArrayList<Integer>();
+        _fineTime = new Time[LapsCount];
+        _fineCount = new int[LapsCount];
         _startTime = new Time();
-        _resultTimes = new ArrayList<Time>();
-        _places = new ArrayList<Integer>();
+        _resultTimes = new Time[LapsCount];
+        _places = new int[LapsCount];
+
+        StartPositionArrays();
+
         _FIO = fio;
         _country = country;
         _birthYear = birthYear;
@@ -120,6 +125,16 @@ public class Participant
         _color = color;
     }
 
+    private void StartPositionArrays()
+    {
+        for(int i = 0; i < LapsCount; i++)
+        {
+            _fineTime[i] = new Time();
+            _fineCount[i] = 0;
+            _resultTimes[i] = new Time();
+            _places[i] = 0;
+        }
+    }
     @Override
     public boolean equals(Object obj)
     {

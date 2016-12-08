@@ -98,9 +98,9 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
 
         _currentCompetition = new Competition(getIntent().getStringExtra("Name"), getIntent().getStringExtra("Date"), this);
         _currentCompetition.GetAllSettingsToComp();
-        _currentCompetition.GetAllParticipantsToComp();
 
-        _participants = _currentCompetition.GetAllParticipants();
+
+
 
 
         LayoutInflater inflater = LayoutInflater.from(this);
@@ -171,13 +171,14 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
                     _participants[participantNumber].SetFineCount(fineCount,lapNumber);
                     return;
                 }
+                lapNumber+=1;
                 _participants[participantNumber].SetFineTime(fineTime,lapNumber);
                 _participants[participantNumber].SetFineCount(fineCount,lapNumber);
                 _participants[participantNumber].SetPlace(GetPlace(_participants[participantNumber], lapNumber), lapNumber);
-                _tablesCompetition.get(lapNumber).removeAllViews();
+                _tablesCompetition.get(lapNumber - 1).removeAllViews();
                 for(int j = 0; j < _laps[lapNumber].GetParticipants().length; j++)
                 {
-                    AddRowCompetitionTable(_laps[lapNumber].GetParticipant(j),lapNumber);
+                    AddRowCompetitionTable(_laps[lapNumber].GetParticipant(j),lapNumber-1);
                 }
 
 
@@ -208,6 +209,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         //_participantGridLayout.addView(view);
 
         int tablesCount = Integer.valueOf(_currentCompetition.GetCheckPointsCount());
+        Participant.LapsCount = tablesCount;
         CreateTables(tablesCount);
         _laps = new LapData[tablesCount];
         for(int i = 0; i < tablesCount; i++)
@@ -216,7 +218,8 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         }
 
         _currentRound.setText(_currentRound.getText() + " - " + Integer.toString(_currentTable + 1));
-
+        _currentCompetition.GetAllParticipantsToComp();
+        _participants = _currentCompetition.GetAllParticipants();
         TimerStartPosition();
 
     }
@@ -265,8 +268,8 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
             @Override
             public void onClick(View v)
             {
-                int number = Integer.valueOf(_button.GetParticipantNumber(v) /*newButton.getText().toString().split(", ")[0]*/);
-                int lap = Integer.valueOf(_button.GetLap(v) /*newButton.getText().toString().split(", ")[1]*/) - 1;
+                int number = Integer.valueOf(_button.GetParticipantNumber(v));
+                int lap = Integer.valueOf(_button.GetLap(v)) - 1;
 
                 // Если номера одинаковые то капец
                 for(int i = 0; i < _participants.length; i++)
@@ -304,10 +307,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
                 {
                     lap+=2;
                     _button.SetParticipantLap(view, Integer.toString(lap));
-                    //newButton.setText(participant.GetNumber()+", "+lap);
                 }
-
-                //Toast.makeText(getApplicationContext(),newButton.getText(),Toast.LENGTH_LONG).show();
             }
         });
         return view;
