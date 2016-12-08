@@ -171,14 +171,15 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
                     _participants[participantNumber].SetFineCount(fineCount,lapNumber);
                     return;
                 }
+
                 lapNumber+=1;
                 _participants[participantNumber].SetFineTime(fineTime,lapNumber);
                 _participants[participantNumber].SetFineCount(fineCount,lapNumber);
-                _participants[participantNumber].SetPlace(GetPlace(_participants[participantNumber], lapNumber), lapNumber);
+                _participants[participantNumber].SetPlace(GetPlace(_participants[participantNumber], lapNumber - 1), lapNumber - 1);
                 _tablesCompetition.get(lapNumber - 1).removeAllViews();
-                for(int j = 0; j < _laps[lapNumber].GetParticipants().length; j++)
+                for(int j = 0; j < _laps[lapNumber - 1].GetParticipants().length; j++)
                 {
-                    AddRowCompetitionTable(_laps[lapNumber].GetParticipant(j),lapNumber-1);
+                    AddRowCompetitionTable(_laps[lapNumber - 1].GetParticipant(j),lapNumber-1);
                 }
 
 
