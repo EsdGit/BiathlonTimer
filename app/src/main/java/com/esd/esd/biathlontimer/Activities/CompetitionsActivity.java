@@ -29,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.esd.esd.biathlontimer.Competition;
+import com.esd.esd.biathlontimer.ErrorsBuffer;
 import com.esd.esd.biathlontimer.LapData;
 import com.esd.esd.biathlontimer.MyButton;
 import com.esd.esd.biathlontimer.PagerAdapterHelper;
@@ -48,6 +49,9 @@ import java.util.zip.Inflater;
 
 public class CompetitionsActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener
 {
+    private ErrorsBuffer<String> _buffer;
+    private final int ErrorCount = 5;
+
     private GridLayout _participantGridLayout;
     private LinearLayout _containerTables;
     private TextView _currentRound;
@@ -100,7 +104,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         _currentCompetition.GetAllSettingsToComp();
 
 
-
+        _buffer = new ErrorsBuffer<>(ErrorCount);
 
 
         LayoutInflater inflater = LayoutInflater.from(this);
@@ -197,18 +201,6 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
 
         _fineDialog = _builderFineDialog.create();
 
-//        View view = CreateFrameLayout();
-//        view.setOnLongClickListener(new View.OnLongClickListener() {
-//            @Override
-//            public boolean onLongClick(View v)
-//            {
-//                _fineDialog.show();
-//                return false;
-//            }
-//        });
-        //_button.SetParticipantNumber(view, "3");
-        //_participantGridLayout.addView(view);
-
         int tablesCount = Integer.valueOf(_currentCompetition.GetCheckPointsCount());
         Participant.LapsCount = tablesCount;
         CreateTables(tablesCount);
@@ -293,6 +285,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
 
                 _participants[number].SetPlace(GetPlace(participant, lap), lap);
 
+                _buffer.Write("T "+_button.GetParticipantNumber(v)+" "+String.valueOf(lap));
 
                 _tablesCompetition.get(lap).removeAllViews();
                 for(int i = 0; i < _laps[lap].GetParticipants().length; i++)
@@ -313,6 +306,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         });
         return view;
     }
+
 
 
     private int GetPlace(Participant participant, int lap)
@@ -428,13 +422,6 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         lag.normalize(false);
         return lag;
     }
-
-//    private View CreateFrameLayout()
-//    {
-//        LayoutInflater inflater = LayoutInflater.from(this);
-//        View view = inflater.inflate(R.layout.my_btn, null);
-//        return view;
-//    }
 
 
     public void imgBtnSettings_OnClick(View view)
@@ -620,6 +607,14 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
     protected void onDestroy() {
         super.onDestroy();
         if(_timer != null) _timer.cancel();
+    }
+
+    public void returnLastStepOnClick(View view)
+    {
+        if(!_buffer.IsEmpty()) {
+            String vall = _buffer.Read();
+            vall = "";
+        }
     }
 
     public void OnClickNextTable(View view)
