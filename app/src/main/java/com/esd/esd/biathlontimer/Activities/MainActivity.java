@@ -388,12 +388,12 @@ public class MainActivity extends AppCompatActivity {
 
     public void OnClick(View view)
     {
-        Intent settingPager = new Intent(this, SettingsActivity.class);
-        settingPager.putExtra("isEditMode", "false");
-        startActivity(settingPager);
-//
-//        Intent finalPage = new Intent(this, FinalActivity.class);
-//        startActivity(finalPage);
+//        Intent settingPager = new Intent(this, SettingsActivity.class);
+//        settingPager.putExtra("isEditMode", "false");
+//        startActivity(settingPager);
+
+        Intent finalPage = new Intent(this, FinalActivity.class);
+        startActivity(finalPage);
     }
 
     public void OnClickDeleteCompetition()
