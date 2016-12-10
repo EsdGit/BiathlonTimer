@@ -28,6 +28,10 @@
         <activity android:name=".Activities.CompetitionsActivity"
                   android:theme="@style/AppTheme"
                   android:screenOrientation="landscape"/>
+        <activity android:name=".Activities.FinalActivity"
+                  android:theme="@style/AppTheme"
+                  android:screenOrientation="landscape">
+        </activity>
     </application>
 
 </manifest>

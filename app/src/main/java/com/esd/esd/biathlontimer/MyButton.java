@@ -6,14 +6,18 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 
 public class MyButton
 {
     private Context _context;
+    private ArrayList<View> _buttonsArrayList;
 
     public MyButton(Context context)
     {
         _context = context;
+        _buttonsArrayList = new ArrayList<View>();
     }
 
     public void SetParticipantNumberAndBackground(View view, String numberParticipant, int backgroundColor)
@@ -22,6 +26,7 @@ public class MyButton
         number.setText(numberParticipant);
         FrameLayout background = (FrameLayout) view.findViewById(R.id.backgroundMyButton);
         background.setBackgroundColor(backgroundColor);
+        _buttonsArrayList.add(view);
     }
 
     public void SetParticipantLap(View view, String currentLap)
@@ -40,6 +45,17 @@ public class MyButton
     {
         TextView lap = (TextView) view.findViewById(R.id.lapParticipantMyButton);
         return lap.getText().toString();
+    }
+
+    public void ChangeLap(Participant participant, String lap)
+    {
+        for(int i = 0; i < _buttonsArrayList.size(); i++)
+        {
+            if(participant.GetNumber() == GetParticipantNumber(_buttonsArrayList.get(i)))
+            {
+                SetParticipantLap(_buttonsArrayList.get(i),lap);
+            }
+        }
     }
 
 }
