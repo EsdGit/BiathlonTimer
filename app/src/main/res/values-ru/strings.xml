@@ -107,6 +107,13 @@
     <string name="participant_added">Участник добавлен</string>
     <string name="participant_already_exists_in_database">Такой участник уже есть в базе данных</string>
 
+    //Последнияя активность
+    <string name="title_final_activity">Результаты соревнования</string>
+    <string name="time_column_final_activity">Время</string>
+    <string name="final_activity_place_sort">Сортировка по месту</string>
+    <string name="final_activity_name_sort">Сортировка по имени</string>
+    <string name="final_activity_send">Отправка</string>
+
 
     //Общие
     <string name="default_group">Без группы</string>
