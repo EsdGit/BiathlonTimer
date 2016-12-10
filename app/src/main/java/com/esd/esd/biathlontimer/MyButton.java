@@ -51,7 +51,7 @@ public class MyButton
     {
         for(int i = 0; i < _buttonsArrayList.size(); i++)
         {
-            if(number == GetParticipantNumber(_buttonsArrayList.get(i)))
+            if(number.equals(GetParticipantNumber(_buttonsArrayList.get(i))))
             {
                 SetParticipantLap(_buttonsArrayList.get(i),lap);
             }

@@ -41,6 +41,9 @@ import org.w3c.dom.Text;
 
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -620,20 +623,29 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
                 int lapNumber = Integer.valueOf(lastError[2]);
                 int participantNumber = Integer.valueOf(lastError[1]);
                 _tablesCompetition.get(lapNumber).removeAllViews();
+                android.text.format.Time localTime = null;
                 for(int i = 0; i < _laps[lapNumber].GetParticipants().length; i++)
                 {
                     if(Integer.valueOf(_laps[lapNumber].GetParticipant(i).GetNumber()) == participantNumber)
                     {
+                        localTime = new android.text.format.Time(_laps[lapNumber].GetParticipant(i).GetResultTime(lapNumber));
                         _laps[lapNumber].RemoveParticipant(_laps[lapNumber].GetParticipant(i));
                         break;
                     }
                 }
-                FrameLayout localBtn;
-                for(int i = 0; i < _participantGridLayout.getChildCount(); i++)
+
+                _button.ChangeLap(lastError[1], String.valueOf(lapNumber+1));
+
+                if(localTime != null)
                 {
-                    localBtn = (FrameLayout) _participantGridLayout.getChildAt(i);
+                    for (int i = 0; i < _laps[lapNumber].GetParticipants().length; i++)
+                    {
+                        if (android.text.format.Time.compare(_laps[lapNumber].GetParticipant(i).GetResultTime(lapNumber), localTime) > 0)
+                        {
+                            _laps[lapNumber].GetParticipant(i).SetPlace(_laps[lapNumber].GetParticipant(i).GetPlace(lapNumber) - 1, lapNumber);
+                        }
+                    }
                 }
-                // Пересчитать места и кнопку меняем
 
                 for(int i = 0; i < _laps[lapNumber].GetParticipants().length; i++)
                 {
@@ -645,6 +657,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
                 break;
         }
     }
+
 
     public void returnLastStepOnClick(View view)
     {

@@ -36,6 +36,7 @@ public class LapData
         return participants.get(index);
     }
 
+
     public void RemoveParticipant(Participant participant)
     {
         participants.remove(participant);

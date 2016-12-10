@@ -25,7 +25,7 @@ public class ErrorsBuffer<T>
         _buffer[_tail] = val;
         _tail++;
         _isEmpty = false;
-        if(_tail == _buffer.length)
+        if(_tail >= _buffer.length)
         {
             _tail = 0;
         }
@@ -33,10 +33,11 @@ public class ErrorsBuffer<T>
 
     public T Read()
     {
-        _tail--;
+        if(_tail > 0) _tail--;
         T val = _buffer[_tail];
         if(_tail <=0)
         {
+            _tail = 0;
             _isEmpty = true;
         }
         return val;
