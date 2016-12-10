@@ -41,4 +41,5 @@ public class MyButton
         TextView lap = (TextView) view.findViewById(R.id.lapParticipantMyButton);
         return lap.getText().toString();
     }
+
 }

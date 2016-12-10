@@ -171,12 +171,14 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
                 if(lapNumber < 0)
                 {
                     lapNumber = 0;
+                    _buffer.Write("F "+_button.GetParticipantNumber(_dialogOwnerView)+" "+String.valueOf(lapNumber)+" "+String.valueOf(fineCount));
                     _participants[participantNumber].SetFineTime(fineTime,lapNumber);
                     _participants[participantNumber].SetFineCount(fineCount,lapNumber);
                     return;
                 }
 
                 lapNumber+=1;
+                _buffer.Write("F "+_button.GetParticipantNumber(_dialogOwnerView)+" "+String.valueOf(lapNumber)+" "+String.valueOf(fineCount));
                 _participants[participantNumber].SetFineTime(fineTime,lapNumber);
                 _participants[participantNumber].SetFineCount(fineCount,lapNumber);
                 _participants[participantNumber].SetPlace(GetPlace(_participants[participantNumber], lapNumber - 1), lapNumber - 1);
@@ -609,11 +611,46 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         if(_timer != null) _timer.cancel();
     }
 
+    private void ParseErrorString(String error)
+    {
+        String[] lastError = error.split(" ");
+        switch(lastError[0])
+        {
+            case "T":
+                int lapNumber = Integer.valueOf(lastError[2]);
+                int participantNumber = Integer.valueOf(lastError[1]);
+                _tablesCompetition.get(lapNumber).removeAllViews();
+                for(int i = 0; i < _laps[lapNumber].GetParticipants().length; i++)
+                {
+                    if(Integer.valueOf(_laps[lapNumber].GetParticipant(i).GetNumber()) == participantNumber)
+                    {
+                        _laps[lapNumber].RemoveParticipant(_laps[lapNumber].GetParticipant(i));
+                        break;
+                    }
+                }
+                FrameLayout localBtn;
+                for(int i = 0; i < _participantGridLayout.getChildCount(); i++)
+                {
+                    localBtn = (FrameLayout) _participantGridLayout.getChildAt(i);
+                }
+                // Пересчитать места и кнопку меняем
+
+                for(int i = 0; i < _laps[lapNumber].GetParticipants().length; i++)
+                {
+                    AddRowCompetitionTable(_laps[lapNumber].GetParticipant(i),lapNumber);
+                }
+
+                break;
+            case "F":
+                break;
+        }
+    }
+
     public void returnLastStepOnClick(View view)
     {
         if(!_buffer.IsEmpty()) {
-            String vall = _buffer.Read();
-            vall = "";
+            String val = _buffer.Read();
+            ParseErrorString(val);
         }
     }
 
