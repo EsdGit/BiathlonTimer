@@ -47,11 +47,11 @@ public class MyButton
         return lap.getText().toString();
     }
 
-    public void ChangeLap(Participant participant, String lap)
+    public void ChangeLap(String number, String lap)
     {
         for(int i = 0; i < _buttonsArrayList.size(); i++)
         {
-            if(participant.GetNumber() == GetParticipantNumber(_buttonsArrayList.get(i)))
+            if(number == GetParticipantNumber(_buttonsArrayList.get(i)))
             {
                 SetParticipantLap(_buttonsArrayList.get(i),lap);
             }
