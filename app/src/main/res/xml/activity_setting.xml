@@ -35,6 +35,11 @@
         android:entryValues="@array/type_start"/>
 
     <Preference
+        android:key="firstNumberStart"
+        android:title="@string/setting_activity_title_number_start"
+        android:summary="@string/summary_number_start"/>
+
+    <Preference
         android:key="intervalSetting"
         android:summary="@string/summary_interval"
         android:title="@string/setting_activity_title_interval"

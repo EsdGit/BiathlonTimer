@@ -42,6 +42,7 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
     private static Preference _setSecondInterval;
     private static EditTextPreference _nameCompetition;
     private static ListPreference _typeStart;
+    private static Preference _numberStart;
     private static EditTextPreference _countCheckPoint;
     private static Preference _setStartTimer;
     private static Preference _group;
@@ -50,16 +51,19 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
     private View _dialogFormInterval;
     private View _dialogFormAddGroup;
     private View _dialogFormSecondInterval;
+    private View _dialogFormStartNumber;
     private AlertDialog.Builder _dialogBuilderInterval;
     private AlertDialog.Builder _dialogBuilderSecondInterval;
     private AlertDialog.Builder _dialogBuilderGroup;
     private AlertDialog.Builder _dialogBuilderAddGroup;
     private AlertDialog.Builder _dialogBuilderDelGroup;
+    private AlertDialog.Builder _dialogBuilderStartNumber;
     private AlertDialog _dialogInterval;
     private AlertDialog _dialogSecondInterval;
     private AlertDialog _dialogGroup;
     private AlertDialog _dialogAddGroup;
     private AlertDialog _dialogDelGroup;
+    private AlertDialog _dialogStartNumber;
 
     private NumberPicker _minute;
     private NumberPicker _seconds;
@@ -67,6 +71,8 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
     private NumberPicker _secondsSecondInterval;
     private EditText _setNumberStartWithSecondInterval;
     private EditText _nameAddGroup;
+    private EditText _startNumber;
+    private EditText _countParticipant;
 
     private boolean _isStartTimer = false;
     private boolean _isFine = false;
@@ -75,7 +81,7 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
     private int _indexDelGroup;
 
     private static final int MIN_VALUE_MINUTE_AND_SECONDS = 0;
-    private static final int MAX_VALUE_MINUTE_AND_SECONDS = 60;
+    private static final int MAX_VALUE_MINUTE_AND_SECONDS = 59;
 
     @Override
     public void onCreate(final Bundle savedInstanceState)
@@ -95,6 +101,7 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
         _countCheckPoint = (EditTextPreference) findPreference("countCheckPointSetting");
         _nameCompetition = (EditTextPreference) findPreference("nameCompetitionSetting");
         _typeStart = (ListPreference) findPreference("typeStartSetting");
+        _numberStart = (Preference) findPreference("firstNumberStart");
         _setStartTimer = (Preference) findPreference("startTimer");
         _group = (Preference) findPreference("group");
         _fine = (Preference) findPreference("fine");
@@ -206,6 +213,28 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
             }
         });
         _dialogAddGroup = _dialogBuilderAddGroup.create();
+
+        //Диалог добавления номера участника
+        _dialogFormStartNumber = inflater.inflate(R.layout.dialog_start_number, null);
+        _startNumber = (EditText) _dialogFormStartNumber.findViewById(R.id.startNumber);
+        _countParticipant = (EditText) _dialogFormStartNumber.findViewById(R.id.countParticipant);
+        _dialogBuilderStartNumber = new AlertDialog.Builder(getActivity());
+        _dialogBuilderStartNumber.setTitle(getResources().getString(R.string.dialog_title_start_number));
+        _dialogBuilderStartNumber.setView(_dialogFormStartNumber);
+        _dialogBuilderStartNumber.setPositiveButton(getResources().getString(R.string.accept), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+                _numberStart.setSummary(getResources().getString(R.string.summary_after_set_start_nmber) + " " + _startNumber.getText() + ". " + getResources().getString(R.string.summary_after_set_count_participant) + " " + _countParticipant.getText() + "." );
+            }
+        });
+        _dialogBuilderStartNumber.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        _dialogStartNumber = _dialogBuilderStartNumber.create();
 
         //Диалог удаления группы
         _dialogBuilderDelGroup = new AlertDialog.Builder(getActivity());
@@ -343,6 +372,17 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
                         _setSecondInterval.setEnabled(false);
                     }
                 }
+                return false;
+            }
+        });
+
+        _numberStart.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference)
+            {
+                _startNumber.setText("");
+                _countParticipant.setText("");
+                _dialogStartNumber.show();
                 return false;
             }
         });

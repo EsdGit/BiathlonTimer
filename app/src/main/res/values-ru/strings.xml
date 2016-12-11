@@ -41,6 +41,8 @@
     <string name="summary_fine">Устанавливает время одного штрафа</string>
     <string name="summary_second_interval_helper">" после позиции - "</string>
     <string name="wrong_settings_toast">Заполните все настройки или проверьте их правильность</string>
+    <string name="setting_activity_title_number_start">Стартовый номер</string>
+    <string name="summary_number_start">Устанавливает стартовый номер и количество участников</string>
 
     //Список участников
     <string name="participant_list_actvity_head">Список участников соревнования</string>
@@ -81,6 +83,11 @@
     <string name="add_group_dialog_hint">Введите название группы</string>
     <string name="dialog_fine_title">Установите время штрафа</string>
     <string name="summary_fine_after_set">"Штраф - "</string>
+    <string name="dialog_title_start_number">Установите номер старта и количесвто участников</string>
+    <string name="summary_after_set_start_nmber">Стартовый номер - </string>
+    <string name="summary_after_set_count_participant"> Количество участников - </string>
+    <string name="dialog_hint_start_number">Стартовый номер</string>
+    <string name="dialog_hint_count_participant">Кол-во участников</string>
 
     //Соревнование (Таблицы, участники)
     <string name="number">Номер</string>
