@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Тут таймер"
-            android:textColor="#ffffff"
+            android:textColor="@color/timerStart"
             android:id="@+id/competitionTimer"
             android:typeface="serif"
             android:layout_gravity="center"

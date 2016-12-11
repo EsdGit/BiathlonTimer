@@ -11,6 +11,7 @@ public class ErrorsBuffer<T>
 {
     private T[] _buffer;
     private int _tail = 0;
+    private int _head = 0;
     private int _capacity;
     private boolean _isEmpty;
 
@@ -24,6 +25,7 @@ public class ErrorsBuffer<T>
     {
         _buffer[_tail] = val;
         _tail++;
+        _head++;
         _isEmpty = false;
         if(_tail >= _buffer.length)
         {
@@ -31,13 +33,15 @@ public class ErrorsBuffer<T>
         }
     }
 
+    // Здесь всё неправильно
     public T Read()
     {
-        if(_tail > 0) _tail--;
-        T val = _buffer[_tail];
+        T val;
+        _tail--;
+        val = _buffer[_tail];
         if(_tail <=0)
         {
-            _tail = 0;
+            _tail = _capacity;
             _isEmpty = true;
         }
         return val;

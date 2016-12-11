@@ -20,7 +20,7 @@
             android:id="@+id/competitionTimer"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:typeface="serif"
-            android:textColor="#ffffff"
+            android:textColor="@color/timerStart"
             android:layout_gravity="center"
             android:gravity="center"/>
 

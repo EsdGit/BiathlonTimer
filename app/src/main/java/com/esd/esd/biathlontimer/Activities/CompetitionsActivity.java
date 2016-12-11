@@ -153,7 +153,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
                 int fineMinutes = Integer.valueOf(_currentCompetition.GetFineTime().split(":")[0]);
                 android.text.format.Time fineTime = new android.text.format.Time();
                 int participantNumber = Integer.valueOf(_button.GetParticipantNumber(_dialogOwnerView));
-                int lapNumber = Integer.valueOf(_button.GetLap(_dialogOwnerView)) - 2;
+                int lapNumber = Integer.valueOf(_button.GetLap(_dialogOwnerView));
 
                 fineTime.second = fineCount*fineSeconds;
                 fineTime.minute = fineCount*fineMinutes;
@@ -171,26 +171,11 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
                 _dialogSeekBar.setProgress(0);
                 _dialogText.setText(getResources().getString(R.string.dialog_text_fine_competiton) + " 0");
 
-                if(lapNumber < 0)
-                {
-                    lapNumber = 0;
-                    _buffer.Write("F "+_button.GetParticipantNumber(_dialogOwnerView)+" "+String.valueOf(lapNumber)+" "+String.valueOf(fineCount));
-                    _participants[participantNumber].SetFineTime(fineTime,lapNumber);
-                    _participants[participantNumber].SetFineCount(fineCount,lapNumber);
-                    return;
-                }
 
-                lapNumber+=1;
                 _buffer.Write("F "+_button.GetParticipantNumber(_dialogOwnerView)+" "+String.valueOf(lapNumber)+" "+String.valueOf(fineCount));
                 _participants[participantNumber].SetFineTime(fineTime,lapNumber);
                 _participants[participantNumber].SetFineCount(fineCount,lapNumber);
-                _participants[participantNumber].SetPlace(GetPlace(_participants[participantNumber], lapNumber - 1), lapNumber - 1);
-                _tablesCompetition.get(lapNumber - 1).removeAllViews();
-                for(int j = 0; j < _laps[lapNumber - 1].GetParticipants().length; j++)
-                {
-                    AddRowCompetitionTable(_laps[lapNumber - 1].GetParticipant(j),lapNumber-1);
-                }
-
+                _participants[participantNumber].SetPlace(GetPlace(_participants[participantNumber], lapNumber), lapNumber);
 
 
             }
@@ -240,6 +225,8 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         _timeNextParticipant.second = _currentInterval.second;
         _timeNextParticipant.minute = _currentInterval.minute;
 
+        _competitionTimer.setTextColor(getResources().getColor(R.color.timerStart));
+        _timerParticipantTable.setTextColor(getResources().getColor(R.color.timerStart));
         _competitionTimer.setText(_currentCompetition.GetTimeToStart());
         _timerParticipantTable.setText(_currentCompetition.GetTimeToStart());
     }
@@ -267,7 +254,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
             public void onClick(View v)
             {
                 int number = Integer.valueOf(_button.GetParticipantNumber(v));
-                int lap = Integer.valueOf(_button.GetLap(v)) - 1;
+                int lap = Integer.valueOf(_button.GetLap(v));
 
                 // Если номера одинаковые то капец
                 for(int i = 0; i < _participants.length; i++)
@@ -304,7 +291,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
                 }
                 else
                 {
-                    lap+=2;
+                    lap++;
                     _button.SetParticipantLap(view, Integer.toString(lap));
                 }
             }
@@ -350,13 +337,14 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
     private void AddRowCompetitionTable(Participant participant, int lap)
     {
         int rowColor = participant.GetColor();
+
         TableRow newRow = new TableRow(this);
         final TextView newTextView0 = new TextView(this);
         newTextView0.setSingleLine(false);
         newTextView0.setText(participant.GetNumber());
+        newTextView0.setTextColor(rowColor);
         newTextView0.setGravity(Gravity.CENTER);
-        newTextView0.setTextColor(Color.BLACK);
-        newTextView0.setBackground(new PaintDrawable(rowColor));
+        newTextView0.setBackground(new PaintDrawable(getResources().getColor(R.color.white)));
         newTextView0.setTextSize(getResources().getDimension(R.dimen.normal_text_size));
         newTextView0.setLayoutParams(new TableRow.LayoutParams(_numberParticipant.getMeasuredWidth(), ViewGroup.LayoutParams.MATCH_PARENT,20f));
         ((TableRow.LayoutParams) newTextView0.getLayoutParams()).setMargins(2, 0, 2, 2);
@@ -365,8 +353,8 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         newTextView1.setSingleLine(false);
         newTextView1.setText(String.valueOf(participant.GetPlace(lap)));
         newTextView1.setGravity(Gravity.CENTER);
-        newTextView1.setTextColor(Color.BLACK);
-        newTextView1.setBackground(new PaintDrawable(rowColor));
+        newTextView1.setTextColor(rowColor);
+        newTextView1.setBackground(new PaintDrawable(getResources().getColor(R.color.white)));
         newTextView1.setTextSize(getResources().getDimension(R.dimen.normal_text_size));
         newTextView1.setLayoutParams(new TableRow.LayoutParams(_positionParticipant.getMeasuredWidth(),ViewGroup.LayoutParams.MATCH_PARENT,20f));
         ((TableRow.LayoutParams) newTextView1.getLayoutParams()).setMargins(0, 0, 2, 2);
@@ -375,18 +363,18 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         newTextView2.setSingleLine(false);
         newTextView2.setText(participant.GetResultTime(lap).format("%H:%M:%S"));
         newTextView2.setGravity(Gravity.CENTER);
-        newTextView2.setTextColor(Color.BLACK);
-        newTextView2.setBackground(new PaintDrawable(rowColor));
+        newTextView2.setTextColor(rowColor);
+        newTextView2.setBackground(new PaintDrawable(getResources().getColor(R.color.white)));
         newTextView2.setTextSize(getResources().getDimension(R.dimen.normal_text_size));
         newTextView2.setLayoutParams(new TableRow.LayoutParams(_timeParticipant.getMeasuredWidth(), ViewGroup.LayoutParams.MATCH_PARENT,30f));
         ((TableRow.LayoutParams) newTextView2.getLayoutParams()).setMargins(0, 0, 2, 2);
 
         final TextView newTextView3 = new TextView(this);
         newTextView3.setSingleLine(false);
-        newTextView3.setText(GetLag(participant, lap).format("%H:%M:%S"));
+        newTextView3.setText("+"+GetLag(participant, lap).format("%M:%S"));
         newTextView3.setGravity(Gravity.CENTER);
-        newTextView3.setTextColor(Color.BLACK);
-        newTextView3.setBackground(new PaintDrawable(rowColor));
+        newTextView3.setTextColor(rowColor);
+        newTextView3.setBackground(new PaintDrawable(getResources().getColor(R.color.white)));
         newTextView3.setTextSize(getResources().getDimension(R.dimen.normal_text_size));
         newTextView3.setLayoutParams(new TableRow.LayoutParams(_lagParticipant.getMeasuredWidth(),ViewGroup.LayoutParams.MATCH_PARENT,30f));
         ((TableRow.LayoutParams) newTextView3.getLayoutParams()).setMargins(0, 0, 2, 2);
@@ -473,7 +461,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
 
                                     for(int i = 0; i < _participants.length; i++)
                                     {
-                                        _participantGridLayout.addView(CreateButton(_participants[i], "1"));
+                                        _participantGridLayout.addView(CreateButton(_participants[i], "0"));
                                         _participants[i].SetStartTime(localTime);
                                     }
 
@@ -503,7 +491,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
                                     {
                                         if(_currentCompetition.GetStartType().equals(getResources().getString(R.string.item_type_single_start)))
                                         {
-                                            _participantGridLayout.addView(CreateButton(_participants[_number], "1"));
+                                            _participantGridLayout.addView(CreateButton(_participants[_number], "0"));
                                             _participants[_number].SetStartTime(_currentTime);
                                             _number++;
                                         }
@@ -511,12 +499,12 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
                                         {
                                             if(_currentCompetition.GetStartType().equals(getResources().getString(R.string.item_type_double_start)))
                                             {
-                                                _participantGridLayout.addView(CreateButton(_participants[_number], "1"));
+                                                _participantGridLayout.addView(CreateButton(_participants[_number], "0"));
                                                 _participants[_number].SetStartTime(_currentTime);
                                                 _number++;
                                                 if(_number < _participants.length)
                                                 {
-                                                    _participantGridLayout.addView(CreateButton(_participants[_number], "1"));
+                                                    _participantGridLayout.addView(CreateButton(_participants[_number], "0"));
                                                     _participants[_number].SetStartTime(_currentTime);
                                                     _number++;
                                                 }
@@ -564,6 +552,8 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
                 public void onFinish() {
                     _timer = new Timer();
                     _timer.schedule(task, 0,100);
+                    _competitionTimer.setTextColor(getResources().getColor(R.color.white));
+                    _timerParticipantTable.setTextColor(getResources().getColor(R.color.white));
 
                 }
             };
