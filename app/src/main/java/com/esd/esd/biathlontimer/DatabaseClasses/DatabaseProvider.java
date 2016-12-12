@@ -6,6 +6,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 
+import static com.esd.esd.biathlontimer.DatabaseClasses.DatabaseProvider.DbSettings.COLUMN_PARTICIPANT_COUNT;
+
 // Класс для работы с локальной базой данных SQLLite
 public class DatabaseProvider extends SQLiteOpenHelper
 {
@@ -45,6 +47,7 @@ public class DatabaseProvider extends SQLiteOpenHelper
         public static final String COLUMN_SECOND_INTERVAL = "SecondInterval";
         public static final String COLUMN_NUMBER_SECOND_INTERVAL = "NumberSecondInterval";
         public static final String COLUMN_FINE = "Fine";
+        public static final String COLUMN_PARTICIPANT_COUNT = "CountAndStartNumber";
     }
 
     // Абстрактный класс базы данных участников
@@ -100,7 +103,7 @@ public class DatabaseProvider extends SQLiteOpenHelper
                 COMMA_SEP + DbSettings.COLUMN_CHECK_POINTS + TEXT_TYPE + COMMA_SEP + DbSettings.COLUMN_START_TYPE + TEXT_TYPE +
                 COMMA_SEP + DbSettings.COLUMN_TIME_TO_START + TEXT_TYPE + COMMA_SEP + DbSettings.COLUMN_GROUPS + TEXT_TYPE+
                 COMMA_SEP + DbSettings.COLUMN_SECOND_INTERVAL + TEXT_TYPE+COMMA_SEP + DbSettings.COLUMN_NUMBER_SECOND_INTERVAL +
-                TEXT_TYPE+ COMMA_SEP + DbSettings.COLUMN_FINE + TEXT_TYPE+")";
+                TEXT_TYPE+ COMMA_SEP + DbSettings.COLUMN_FINE + TEXT_TYPE+ COMMA_SEP+ DbSettings.COLUMN_PARTICIPANT_COUNT+ TEXT_TYPE+")";
         this.getWritableDatabase().execSQL(sql);
     }
 

@@ -62,6 +62,12 @@ public class Competition
     private String _fineTime;
     public String GetFineTime(){return _fineTime;}
 
+    private int _maxParticipantCount;
+    public int GetMaxParticipantCount(){return _maxParticipantCount;}
+
+    private int _startNumber;
+    public int GetStartNumber(){return _startNumber;}
+
     public Competition(String name, String date, Context context)
     {
         _competitionName = name;
@@ -90,7 +96,7 @@ public class Competition
     }
 
     public void SetCompetitionSettings(String startType, String interval, String checkPointsCount, String timeToStart,
-                                       String groups, String secondInterval, String numberSecondInterval, String fineTime)
+                                       String groups, String secondInterval, String numberSecondInterval, String fineTime, int startNumber, int maxPartCount)
     {
         _interval = interval;
         _checkPointsCount = checkPointsCount;
@@ -100,6 +106,8 @@ public class Competition
         _secondInterval = secondInterval;
         _numberSecondInterval = numberSecondInterval;
         _fineTime = fineTime;
+        _startNumber = startNumber;
+        _maxParticipantCount = maxPartCount;
         SettingsSaver saver = new SettingsSaver(_localContext);
         saver.SaveSettingsToDb(this);
     }
@@ -115,6 +123,9 @@ public class Competition
         _secondInterval = saver.GetSetting(this, DatabaseProvider.DbSettings.COLUMN_SECOND_INTERVAL);
         _numberSecondInterval = saver.GetSetting(this, DatabaseProvider.DbSettings.COLUMN_NUMBER_SECOND_INTERVAL);
         _fineTime = saver.GetSetting(this, DatabaseProvider.DbSettings.COLUMN_FINE);
+        String startNumberFromDb = saver.GetSetting(this, DatabaseProvider.DbSettings.COLUMN_PARTICIPANT_COUNT);
+        _startNumber = Integer.valueOf(startNumberFromDb.split(",")[0]);
+        _maxParticipantCount = Integer.valueOf(startNumberFromDb.split(",")[1]);
     }
 
     public void GetAllParticipantsToComp()

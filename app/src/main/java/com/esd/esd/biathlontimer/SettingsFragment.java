@@ -475,10 +475,11 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
         if(_countCheckPoint.getSummary().toString().equals(myRes.getString(R.string.summary_count_checkpoint))) return null;
         if(_setStartTimer.getSummary().toString().equals(myRes.getString(R.string.summary_time_to_start))) return null;
         if(_typeStart.getSummary().toString().equals(myRes.getString(R.string.summary_type_start))) return null;
+        if(_numberStart.getSummary().toString().equals(myRes.getString(R.string.summary_number_start))) return null;
         if(!_typeStart.getSummary().toString().equals(myRes.getString(R.string.item_type_mas_start)))
         {
             if(_setInterval.getSummary().toString().equals(myRes.getString(R.string.summary_interval))) return null;
-            if(_setSecondInterval.getSummary().toString().equals(myRes.getString(R.string.summary_interval)))return null;
+            //if(_setSecondInterval.getSummary().toString().equals(myRes.getString(R.string.summary_interval)))return null;
         }
         if(_fine.getSummary().toString().equals(myRes.getString(R.string.summary_fine))) return null;
         if(!_group.getSummary().toString().equals(myRes.getString(R.string.summary_group)))
@@ -486,12 +487,22 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
         else
             groups = "";
         String fine = _fine.getSummary().toString().split("- ")[1];
-        String[] secondInterval = _setSecondInterval.getSummary().toString().split(myRes.getString(R.string.summary_second_interval_helper));
+        String[] secondInterval;
+        if(!_setSecondInterval.getSummary().toString().equals(myRes.getString(R.string.summary_interval)))
+        {
+            secondInterval = _setSecondInterval.getSummary().toString().split(myRes.getString(R.string.summary_second_interval_helper));
+        }
+        else
+        {
+            secondInterval = new String[]{"", ""};
+        }
+        int startNumber = Integer.valueOf(_numberStart.getSummary().toString().split("- ")[1].split("\\.")[0]);
+        int maxPartCount = Integer.valueOf(_numberStart.getSummary().toString().split("- ")[2].split("\\.")[0]);
         String countCheckPoints = _countCheckPoint.getSummary().toString().split(":")[1];
         if(Integer.valueOf(countCheckPoints) <= 0) return null;
         Competition localCompetition = new Competition(_nameCompetition.getSummary().toString(),_setData.getSummary().toString(), context);
         localCompetition.SetCompetitionSettings(_typeStart.getSummary().toString(), _setInterval.getSummary().toString(),
-                countCheckPoints,_setStartTimer.getSummary().toString(),groups, secondInterval[0], secondInterval[1],fine);
+                countCheckPoints,_setStartTimer.getSummary().toString(),groups, secondInterval[0], secondInterval[1],fine, startNumber, maxPartCount);
         return localCompetition;
     }
 

@@ -32,6 +32,7 @@ public class SettingsSaver
         val.put(DatabaseProvider.DbSettings.COLUMN_SECOND_INTERVAL, competition.GetSecondInterval());
         val.put(DatabaseProvider.DbSettings.COLUMN_NUMBER_SECOND_INTERVAL, competition.GetNumberSecondInterval());
         val.put(DatabaseProvider.DbSettings.COLUMN_FINE, competition.GetFineTime());
+        val.put(DatabaseProvider.DbSettings.COLUMN_PARTICIPANT_COUNT, String.valueOf(competition.GetStartNumber()) + "," + String.valueOf(competition.GetMaxParticipantCount()));
         _db.insert(competition.GetSettingsPath(), null, val);
         _db.close();
     }
