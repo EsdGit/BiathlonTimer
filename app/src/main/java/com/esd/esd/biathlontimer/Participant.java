@@ -24,9 +24,9 @@ public class Participant
     public Time GetResultTime(int lapNumber)
     {
         Time returnTime = new Time();
-        returnTime.second = _resultTimes[lapNumber].second + _fullFineTime.second;
-        returnTime.minute = _resultTimes[lapNumber].minute + _fullFineTime.minute;
-        returnTime.hour = _resultTimes[lapNumber].hour + _fullFineTime.hour;
+        returnTime.second = _resultTimes[lapNumber].second + _fineTime[lapNumber].second;
+        returnTime.minute = _resultTimes[lapNumber].minute + _fineTime[lapNumber].minute;
+        returnTime.hour = _resultTimes[lapNumber].hour + _fineTime[lapNumber].hour;
         returnTime.normalize(false);
         return returnTime;
     }
@@ -45,20 +45,24 @@ public class Participant
         _fullFineTime.minute += fineTime.minute;
         _fullFineTime.hour += fineTime.hour;
         _fullFineTime.normalize(false);
-        if(lapNumber < _fineTime.length)
-        {
-            _fineTime[lapNumber].second += fineTime.second;
-            _fineTime[lapNumber].minute += fineTime.minute;
-            _fineTime[lapNumber].hour += fineTime.hour;
-            _fineTime[lapNumber].normalize(false);
-        }
-        else
-        {
-            _fineTime[lapNumber].second = fineTime.second;
-            _fineTime[lapNumber].minute = fineTime.minute;
-            _fineTime[lapNumber].hour = fineTime.hour;
-            _fineTime[lapNumber].normalize(false);
-        }
+//        if(lapNumber < _fineTime.length)
+//        {
+//            _fineTime[lapNumber].second += fineTime.second;
+//            _fineTime[lapNumber].minute += fineTime.minute;
+//            _fineTime[lapNumber].hour += fineTime.hour;
+//            _fineTime[lapNumber].normalize(false);
+//        }
+//        else
+//        {
+//            _fineTime[lapNumber].second = fineTime.second;
+//            _fineTime[lapNumber].minute = fineTime.minute;
+//            _fineTime[lapNumber].hour = fineTime.hour;
+//            _fineTime[lapNumber].normalize(false);
+//        }
+        _fineTime[lapNumber].second = _fullFineTime.second;
+        _fineTime[lapNumber].minute = _fullFineTime.minute;
+        _fineTime[lapNumber].hour = _fullFineTime.hour;
+        _fineTime[lapNumber].normalize(false);
     }
 
     private int[] _fineCount;

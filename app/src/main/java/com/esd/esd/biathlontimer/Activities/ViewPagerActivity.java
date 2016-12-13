@@ -193,8 +193,8 @@ public class ViewPagerActivity extends AppCompatActivity
                 _birthdayDialog.setText("");
                 _countryDialog.setText("");
                 _numberDialog.setText("");
-                _colorDialog.setBackgroundColor(Color.WHITE);
-                _addColorToParticipantDialog.setSelectedColor(Color.WHITE);
+                _colorDialog.setBackgroundColor(Color.BLACK);
+                _addColorToParticipantDialog.setSelectedColor(Color.BLACK);
                 _spinnerOfGroup.setSelection(0);
 
             }
@@ -349,6 +349,8 @@ public class ViewPagerActivity extends AppCompatActivity
         _spinnerOfGroupRename.setAdapter(adapterGroupAddParticipant);
         _spinnerOfGroupRename.setSelection(0);
         _spinnerOfGroupRename.setScrollContainer(true);
+
+
     }
 
     @Override
@@ -361,11 +363,18 @@ public class ViewPagerActivity extends AppCompatActivity
                 AddRowParticipantFromBase(localArr[i]);
             }
 
-            localArr = _dbSaver.GetAllParticipants(_currentCompetition.GetDbParticipantPath(), DatabaseProvider.DbParticipant.COLUMN_NUMBER);
-            for (int i = 0; i < localArr.length; i++) {
-                AddRowParticipantList(localArr[i]);
+            if(!_needDeleteTables)
+            {
+                localArr = _dbSaver.GetAllParticipants(_currentCompetition.GetDbParticipantPath(), DatabaseProvider.DbParticipant.COLUMN_NUMBER);
+                for (int i = 0; i < localArr.length; i++) {
+                    AddRowParticipantList(localArr[i]);
+                }
+                SortByYear(_tableLayoutParticipantList, true, false);
             }
-            SortByYear(_tableLayoutParticipantList,true,false);
+            else
+            {
+                GenerateStandartParticipants(_currentCompetition.GetStartNumber(), _currentCompetition.GetMaxParticipantCount());
+            }
             _isFirstLoad = false;
         }
         EmptyDataBaseCompetition();
@@ -374,6 +383,17 @@ public class ViewPagerActivity extends AppCompatActivity
 
     public void OnClick(View view) {
         _addDialog.show();
+    }
+
+    private void GenerateStandartParticipants(int firstNumber, int count)
+    {
+        Participant localPart;
+        for(int i = firstNumber; i < firstNumber+count; i++)
+        {
+            localPart = new Participant(String.valueOf(i),"Спортсмен "+String.valueOf(i-firstNumber+1), "Россия", "1990", "Без группы", Color.BLACK);
+            AddRowParticipantList(localPart);
+            _currentCompetition.AddParticipant(localPart);
+        }
     }
 
     // Добавление участника в ParticipantList
@@ -481,14 +501,6 @@ public class ViewPagerActivity extends AppCompatActivity
                                 rowView.get(i).setBackground(new PaintDrawable(Color.WHITE));
                             }
 
-//                            for(int j = 0; j<localArr.length;j++)
-//                            {
-//                                if(currParticipant.equals(localArr[j]))
-//                                {
-//                                    rowView.get(0).setBackgroundColor(localArr[j].GetColor());
-//                                    break;
-//                                }
-//                            }
 
                         }
                         else
@@ -965,7 +977,7 @@ public class ViewPagerActivity extends AppCompatActivity
                 }
                 else
                 {
-                    localArr.add(new Participant("",dataArr[0], dataArr[2], dataArr[1], "",-1));
+                    localArr.add(new Participant("",dataArr[0], dataArr[2], dataArr[1], "",Color.BLACK));
                 }
                 if(needDelete)
                 {
