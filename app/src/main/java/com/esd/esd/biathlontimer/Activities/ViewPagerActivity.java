@@ -238,6 +238,11 @@ public class ViewPagerActivity extends AppCompatActivity
                     ((TextView) _renameTableRow.getChildAt(2)).setText(_birthdayRenameDialog.getText());
                     ((TextView) _renameTableRow.getChildAt(3)).setText(group);
                     ((TextView) _renameTableRow.getChildAt(4)).setText(_countryRenameDialog.getText());
+
+                    for(int j = 0; j < 5; j++)
+                    {
+                        ((TextView) _renameTableRow.getChildAt(j)).setTextColor(_colorParticipant);
+                    }
                     cellsCount = 5;
                 }
                 else
@@ -262,21 +267,14 @@ public class ViewPagerActivity extends AppCompatActivity
                 if(currTable == _tableLayoutParticipantList)
                 {
                     _dbSaver.SaveParticipantToDatabase(localParticipant, _currentCompetition.GetDbParticipantPath());
-                    ((TextView) _renameTableRow.getChildAt(0)).setBackgroundColor(localParticipant.GetColor());
-                    for(int j = 1; j < cellsCount; j++)
-                    {
-                        ((TextView) _renameTableRow.getChildAt(j)).setBackground(new PaintDrawable(getResources().getColor(R.color.white)));
-                    }
-                }
-                else
-                {
-                    for(int j = 0; j < cellsCount; j++)
-                    {
-                        ((TextView) _renameTableRow.getChildAt(j)).setBackground(new PaintDrawable(getResources().getColor(R.color.white)));
-                    }
                 }
 
-                _colorDialog.setBackgroundColor(-1);
+                for(int j = 0; j < cellsCount; j++)
+                {
+                    ((TextView) _renameTableRow.getChildAt(j)).setBackground(new PaintDrawable(getResources().getColor(R.color.white)));
+                }
+
+                _colorDialog.setBackgroundColor(Color.BLACK);
                 SetStartPosition(currTable);
             }
         });
@@ -301,22 +299,14 @@ public class ViewPagerActivity extends AppCompatActivity
                     Participant currPart = new Participant("",name,country,year,DefaultGroup,-1);
                     Participant[] localArr = _dbSaver.GetAllParticipants(_currentCompetition.GetDbParticipantPath(), DatabaseProvider.DbParticipant.COLUMN_NAME);
                     ((TextView) _renameTableRow.getChildAt(0)).setBackgroundColor(-1);
-                    for(int j = 0; j<localArr.length;j++)
-                    {
-                        if(currPart.equals(localArr[j]))
-                        {
-                            ((TextView) _renameTableRow.getChildAt(0)).setBackgroundColor(localArr[j].GetColor());
-                            break;
-                        }
-                    }
 
                 }
-                for(int j = 1; j < cellsCount; j++)
+                for(int j = 0; j < cellsCount; j++)
                 {
                     ((TextView) _renameTableRow.getChildAt(j)).setBackground(new PaintDrawable(getResources().getColor(R.color.white)));
                 }
                 SetStartPosition((TableLayout) _renameTableRow.getParent());
-                _colorDialog.setBackgroundColor(-1);
+                _colorDialog.setBackgroundColor(Color.BLACK);
 
             }
         });
@@ -328,14 +318,14 @@ public class ViewPagerActivity extends AppCompatActivity
         _addColorToParticipantDialog.initialize(R.string.color_picker_default_title,
                 new int[] {
                         Color.RED,
-                        Color.WHITE,
+                        Color.BLACK,
                         Color.BLUE,
                         Color.CYAN,
                         Color.DKGRAY,
                         Color.GRAY,
                         Color.YELLOW,
-                        Color.GREEN
-                }, Color.WHITE, 4, 3);
+                        Color.parseColor("#0b8722")
+                }, Color.BLACK, 4, 30);
 
         _addColorToParticipantDialog.setOnColorSelectedListener(new ColorPickerSwatch.OnColorSelectedListener() {
             @Override
@@ -394,8 +384,8 @@ public class ViewPagerActivity extends AppCompatActivity
         newTextView0.setSingleLine(false);
         newTextView0.setText(participant.GetNumber());
         newTextView0.setGravity(Gravity.CENTER);
-        newTextView0.setTextColor(Color.BLACK);
-        newTextView0.setBackgroundColor(participant.GetColor());
+        newTextView0.setTextColor(participant.GetColor());
+        newTextView0.setBackgroundColor(Color.WHITE);
         newTextView0.setTextSize(getResources().getDimension(R.dimen.normal_text_size));
         newTextView0.setLayoutParams(new TableRow.LayoutParams(_numberParticipantList.getMeasuredWidth(), ViewGroup.LayoutParams.MATCH_PARENT/*_numberParticipantList.getMeasuredHeight()*/, 0.4f));
         ((TableRow.LayoutParams) newTextView0.getLayoutParams()).setMargins(2, 0, 2, 2);
@@ -404,7 +394,7 @@ public class ViewPagerActivity extends AppCompatActivity
         newTextView1.setSingleLine(false);
         newTextView1.setText(participant.GetFIO());
         newTextView1.setGravity(Gravity.CENTER);
-        newTextView1.setTextColor(Color.BLACK);
+        newTextView1.setTextColor(participant.GetColor());
         newTextView1.setBackground(new PaintDrawable(Color.WHITE));
         newTextView1.setTextSize(getResources().getDimension(R.dimen.normal_text_size));
         newTextView1.setLayoutParams(new TableRow.LayoutParams(_nameParticipantList.getMeasuredWidth(),ViewGroup.LayoutParams.MATCH_PARENT/* _nameParticipantList.getMeasuredHeight()*/, 3.0f));
@@ -414,7 +404,7 @@ public class ViewPagerActivity extends AppCompatActivity
         newTextView2.setSingleLine(false);
         newTextView2.setText(participant.GetBirthYear());
         newTextView2.setGravity(Gravity.CENTER);
-        newTextView2.setTextColor(Color.BLACK);
+        newTextView2.setTextColor(participant.GetColor());
         newTextView2.setBackground(new PaintDrawable(Color.WHITE));
         newTextView2.setTextSize(getResources().getDimension(R.dimen.normal_text_size));
         newTextView2.setLayoutParams(new TableRow.LayoutParams(_birthdayParticipantList.getMeasuredWidth(), ViewGroup.LayoutParams.MATCH_PARENT/* _birthdayParticipantList.getMeasuredHeight()*/, 0.4f));
@@ -424,7 +414,7 @@ public class ViewPagerActivity extends AppCompatActivity
         newTextView3.setSingleLine(false);
         newTextView3.setText(participant.GetGroup());
         newTextView3.setGravity(Gravity.CENTER);
-        newTextView3.setTextColor(Color.BLACK);
+        newTextView3.setTextColor(participant.GetColor());
         newTextView3.setBackground(new PaintDrawable(Color.WHITE));
         newTextView3.setTextSize(getResources().getDimension(R.dimen.normal_text_size));
         newTextView3.setLayoutParams(new TableRow.LayoutParams(_groupParticipantList.getMeasuredWidth(),ViewGroup.LayoutParams.MATCH_PARENT/* _groupParticipantList.getMeasuredHeight()*/, 0.6f));
@@ -434,7 +424,7 @@ public class ViewPagerActivity extends AppCompatActivity
         newTextView4.setSingleLine(false);
         newTextView4.setText(participant.GetCountry());
         newTextView4.setGravity(Gravity.CENTER);
-        newTextView4.setTextColor(Color.BLACK);
+        newTextView4.setTextColor(participant.GetColor());
         newTextView4.setBackground(new PaintDrawable(Color.WHITE));
         newTextView4.setTextSize(getResources().getDimension(R.dimen.normal_text_size));
         newTextView4.setLayoutParams(new TableRow.LayoutParams(_countryParticipantList.getMeasuredWidth(),ViewGroup.LayoutParams.MATCH_PARENT/* _countryParticipantList.getMeasuredHeight()*/, 0.6f));
@@ -491,14 +481,14 @@ public class ViewPagerActivity extends AppCompatActivity
                                 rowView.get(i).setBackground(new PaintDrawable(Color.WHITE));
                             }
 
-                            for(int j = 0; j<localArr.length;j++)
-                            {
-                                if(currParticipant.equals(localArr[j]))
-                                {
-                                    rowView.get(0).setBackgroundColor(localArr[j].GetColor());
-                                    break;
-                                }
-                            }
+//                            for(int j = 0; j<localArr.length;j++)
+//                            {
+//                                if(currParticipant.equals(localArr[j]))
+//                                {
+//                                    rowView.get(0).setBackgroundColor(localArr[j].GetColor());
+//                                    break;
+//                                }
+//                            }
 
                         }
                         else
@@ -1079,7 +1069,7 @@ public class ViewPagerActivity extends AppCompatActivity
         _nameRenameDialog.setText(currentParticipant[0].GetFIO());
         _birthdayRenameDialog.setText(currentParticipant[0].GetBirthYear());
         _countryRenameDialog.setText(currentParticipant[0].GetCountry());
-        _colorDialog.setBackgroundColor(-1);
+        _colorDialog.setBackgroundColor(Color.BLACK);
         _renameDialog.show();
         Toast.makeText(getApplicationContext(),"Редактировать участника в базе данных",Toast.LENGTH_SHORT).show();
     }

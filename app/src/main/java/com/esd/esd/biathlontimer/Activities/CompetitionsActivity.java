@@ -477,11 +477,12 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
                             if(android.text.format.Time.compare(_currentTime,_timeNextParticipant) == 0 && _number < _participants.length)
                             {
 
-
-                                if(_number == Integer.valueOf(_currentCompetition.GetNumberSecondInterval()) - 1)
+                                if(!_currentCompetition.GetSecondInterval().equals(""))
                                 {
-                                    _currentInterval.second = Integer.valueOf(_currentCompetition.GetSecondInterval().split(":")[1]);
-                                    _currentInterval.minute = Integer.valueOf(_currentCompetition.GetSecondInterval().split(":")[0]);
+                                    if (_number == Integer.valueOf(_currentCompetition.GetNumberSecondInterval()) - 1) {
+                                        _currentInterval.second = Integer.valueOf(_currentCompetition.GetSecondInterval().split(":")[1]);
+                                        _currentInterval.minute = Integer.valueOf(_currentCompetition.GetSecondInterval().split(":")[0]);
+                                    }
                                 }
 
                                 runOnUiThread(new Runnable()
