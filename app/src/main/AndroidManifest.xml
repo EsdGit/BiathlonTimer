@@ -32,6 +32,12 @@
                   android:theme="@style/AppTheme"
                   android:screenOrientation="landscape">
         </activity>
+        <activity android:name=".Activities.SplashScreen" android:theme="@style/SplashTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

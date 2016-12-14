@@ -8,67 +8,51 @@ import java.util.ArrayList;
 // Класс участника
 public class Participant
 {
-    public static int LapsCount = 0;
-
-    private int[] _places;
-    public int GetPlace(int lapNumber)
+    private int _place;
+    public int GetPlace()
     {
-        return _places[lapNumber];
+        return _place;
     }
-    public void SetPlace(int place, int lapNumber)
+    public void SetPlace(int place)
     {
-        _places[lapNumber] = place;
+        _place = place;
     }
 
-    private Time[] _resultTimes;
-    public Time GetResultTime(int lapNumber)
+    private Time _resultTime;
+    public Time GetResultTime()
     {
         Time returnTime = new Time();
-        returnTime.second = _resultTimes[lapNumber].second + _fineTime[lapNumber].second;
-        returnTime.minute = _resultTimes[lapNumber].minute + _fineTime[lapNumber].minute;
-        returnTime.hour = _resultTimes[lapNumber].hour + _fineTime[lapNumber].hour;
+        returnTime.second = _resultTime.second + _fineTime.second;
+        returnTime.minute = _resultTime.minute + _fineTime.minute;
+        returnTime.hour = _resultTime.hour + _fineTime.hour;
         returnTime.normalize(false);
         return returnTime;
     }
 
-    public void SetResultTime(Time time, int lapNumber)
+    public void SetResultTime(Time time)
     {
-        _resultTimes[lapNumber] = new Time(time);
+        _resultTime = new Time(time);
     }
 
     private Time _fullFineTime;
-    private Time[] _fineTime;
-    public Time GetFineTime(int lapNumber){return _fineTime[lapNumber];}
-    public void SetFineTime(Time fineTime, int lapNumber)
+    private Time _fineTime;
+    public Time GetFineTime(){return _fineTime;}
+    public void SetFineTime(Time fineTime)
     {
         _fullFineTime.second += fineTime.second;
         _fullFineTime.minute += fineTime.minute;
         _fullFineTime.hour += fineTime.hour;
         _fullFineTime.normalize(false);
-//        if(lapNumber < _fineTime.length)
-//        {
-//            _fineTime[lapNumber].second += fineTime.second;
-//            _fineTime[lapNumber].minute += fineTime.minute;
-//            _fineTime[lapNumber].hour += fineTime.hour;
-//            _fineTime[lapNumber].normalize(false);
-//        }
-//        else
-//        {
-//            _fineTime[lapNumber].second = fineTime.second;
-//            _fineTime[lapNumber].minute = fineTime.minute;
-//            _fineTime[lapNumber].hour = fineTime.hour;
-//            _fineTime[lapNumber].normalize(false);
-//        }
-        _fineTime[lapNumber].second = _fullFineTime.second;
-        _fineTime[lapNumber].minute = _fullFineTime.minute;
-        _fineTime[lapNumber].hour = _fullFineTime.hour;
-        _fineTime[lapNumber].normalize(false);
+        _fineTime.second = _fullFineTime.second;
+        _fineTime.minute = _fullFineTime.minute;
+        _fineTime.hour = _fullFineTime.hour;
+        _fineTime.normalize(false);
     }
 
-    private int[] _fineCount;
-    public void SetFineCount(int count, int lapNumber)
+    private int _fineCount;
+    public void SetFineCount(int count)
     {
-         _fineCount[lapNumber] += count;
+         _fineCount += count;
     }
 
     private Time _startTime;
@@ -105,13 +89,9 @@ public class Participant
     public Participant(String number,String fio, String country,String birthYear, String group, int color)
     {
         _fullFineTime = new Time();
-        _fineTime = new Time[LapsCount];
-        _fineCount = new int[LapsCount];
+        _fineTime = new Time();
         _startTime = new Time();
-        _resultTimes = new Time[LapsCount];
-        _places = new int[LapsCount];
-
-        StartPositionArrays();
+        _resultTime = new Time();
 
         _FIO = fio;
         _country = country;
@@ -129,16 +109,6 @@ public class Participant
         _color = color;
     }
 
-    private void StartPositionArrays()
-    {
-        for(int i = 0; i < LapsCount; i++)
-        {
-            _fineTime[i] = new Time();
-            _fineCount[i] = 0;
-            _resultTimes[i] = new Time();
-            _places[i] = 0;
-        }
-    }
     @Override
     public boolean equals(Object obj)
     {

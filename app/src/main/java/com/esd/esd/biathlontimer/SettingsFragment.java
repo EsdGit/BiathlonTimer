@@ -225,7 +225,7 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
             @Override
             public void onClick(DialogInterface dialog, int which)
             {
-                _numberStart.setSummary(getResources().getString(R.string.summary_after_set_start_nmber) + " " + _startNumber.getText() + ". " + getResources().getString(R.string.summary_after_set_count_participant) + " " + _countParticipant.getText() + "." );
+                _numberStart.setSummary(getResources().getString(R.string.summary_after_set_start_nmber) + _startNumber.getText() + getResources().getString(R.string.summary_after_set_count_participant) + _countParticipant.getText() + "." );
             }
         });
         _dialogBuilderStartNumber.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
@@ -554,13 +554,17 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
         return result;
     }
 
-    public static void SetAllSummaries(Context context,String name, String date, String interval, String startType, String groups, String checkPointsCount, String timeToStart, String secondInterval, String numberSecondInterval, String fine)
+    public static void SetAllSummaries(Context context,String name, String date, String interval, String startType, String groups, String checkPointsCount, String timeToStart, String secondInterval, String numberSecondInterval, String fine, int startNumber, int count)
     {
         _nameCompetition.setSummary(name);
         _setData.setSummary(date);
         _setInterval.setSummary(interval);
         _setStartTimer.setSummary(timeToStart);
-        _setSecondInterval.setSummary(secondInterval+context.getResources().getString(R.string.summary_second_interval_helper)+numberSecondInterval);
+        if(secondInterval.equals(""))
+        {
+            _setSecondInterval.setSummary(context.getResources().getString(R.string.summary_interval));
+        }
+        else _setSecondInterval.setSummary(secondInterval+context.getResources().getString(R.string.summary_second_interval_helper)+numberSecondInterval);
         _fine.setSummary(context.getResources().getString(R.string.summary_fine_after_set)+fine);
         if(!groups.isEmpty())
         {
@@ -574,6 +578,8 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
         }
         _typeStart.setSummary(startType);
         _countCheckPoint.setSummary(context.getResources().getString(R.string.summary_count_checkpoint)+checkPointsCount);
+        _numberStart.setSummary(context.getResources().getString(R.string.summary_after_set_start_nmber)+String.valueOf(startNumber)+
+                context.getResources().getString(R.string.summary_after_set_count_participant)+String.valueOf(count)+".");
     }
 
 }
