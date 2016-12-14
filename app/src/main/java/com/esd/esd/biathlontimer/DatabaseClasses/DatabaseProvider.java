@@ -15,6 +15,7 @@ public class DatabaseProvider extends SQLiteOpenHelper
     public static final String DatabaseName = "BiathlonDatabase.db";
 
 
+    private static final String INTEGER_TYPE = " INTEGER";
     private static final String TEXT_TYPE = " TEXT";
     private static final String COMMA_SEP = ",";
 
@@ -72,6 +73,18 @@ public class DatabaseProvider extends SQLiteOpenHelper
         public static final String COLUMN_DB_PATH = "DbParticipantPath";
     }
 
+    public static abstract class DbLapData implements BaseColumns
+    {
+        public static final String COLUMN_NUMBER = "Number";
+        public static final String COLUMN_PLACE = "Place";
+        public static final String COLUMN_FIO = "FIO";
+        public static final String COLUMN_YEAR = "Year";
+        public static final String COLUMN_COUNTRY = "Country";
+        public static final String COLUMN_RESULT = "Result";
+        public static final String COLUMN_START_TIME = "StartTime";
+        public static final String COLUMN_FINE_COUNT = "FineCount";
+    }
+
     @Override
     public void onCreate(SQLiteDatabase db)
     {
@@ -104,6 +117,15 @@ public class DatabaseProvider extends SQLiteOpenHelper
                 COMMA_SEP + DbSettings.COLUMN_TIME_TO_START + TEXT_TYPE + COMMA_SEP + DbSettings.COLUMN_GROUPS + TEXT_TYPE+
                 COMMA_SEP + DbSettings.COLUMN_SECOND_INTERVAL + TEXT_TYPE+COMMA_SEP + DbSettings.COLUMN_NUMBER_SECOND_INTERVAL +
                 TEXT_TYPE+ COMMA_SEP + DbSettings.COLUMN_FINE + TEXT_TYPE+ COMMA_SEP+ DbSettings.COLUMN_PARTICIPANT_COUNT+ TEXT_TYPE+")";
+        this.getWritableDatabase().execSQL(sql);
+    }
+
+    public void AddNewLapTable(String name)
+    {
+        String sql = "CREATE TABLE IF NOT EXISTS " + name + " (" + DbLapData._ID + " INTEGER PRIMARY KEY,"+DbLapData.COLUMN_NUMBER + INTEGER_TYPE + COMMA_SEP +
+                DbLapData.COLUMN_PLACE + INTEGER_TYPE + COMMA_SEP + DbLapData.COLUMN_FIO + TEXT_TYPE + COMMA_SEP + DbLapData.COLUMN_YEAR + TEXT_TYPE + COMMA_SEP +
+                DbLapData.COLUMN_COUNTRY  + TEXT_TYPE + COMMA_SEP + DbLapData.COLUMN_RESULT + TEXT_TYPE + COMMA_SEP + DbLapData.COLUMN_START_TIME + TEXT_TYPE + COMMA_SEP +
+                DbLapData.COLUMN_FINE_COUNT + INTEGER_TYPE+") ";
         this.getWritableDatabase().execSQL(sql);
     }
 

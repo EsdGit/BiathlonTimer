@@ -68,12 +68,16 @@ public class Competition
     private int _startNumber;
     public int GetStartNumber(){return _startNumber;}
 
+    private String _nameDateString;
+    public String GetNameDateString(){return _nameDateString;}
+
     public Competition(String name, String date, Context context)
     {
         _competitionName = name;
         _competitionDate = date;
         name = removePunct(name);
         date = removePunct(date);
+        _nameDateString = name+date;
         _settingsPath = "settings"+name+date;
         _dbParticipantPath = "participants"+name+date;
         _participants = new ArrayList<Participant>();

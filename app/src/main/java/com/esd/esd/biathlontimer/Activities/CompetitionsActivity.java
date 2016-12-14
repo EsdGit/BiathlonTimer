@@ -29,6 +29,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.esd.esd.biathlontimer.Competition;
+import com.esd.esd.biathlontimer.DatabaseClasses.DatabaseProvider;
+import com.esd.esd.biathlontimer.DatabaseClasses.LapDataSaver;
 import com.esd.esd.biathlontimer.ErrorsBuffer;
 import com.esd.esd.biathlontimer.LapData;
 import com.esd.esd.biathlontimer.MyButton;
@@ -85,9 +87,10 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
     private int _number = 0;
 
     private FrameLayout _dialogOwnerView;
-    private LapData[] _laps;
 
     private CountDownTimer _countDownTimer;
+
+    private LapDataSaver _lapSaver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -105,8 +108,8 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
 
         _currentCompetition = new Competition(getIntent().getStringExtra("Name"), getIntent().getStringExtra("Date"), this);
         _currentCompetition.GetAllSettingsToComp();
-
-
+        _currentCompetition.GetAllParticipantsToComp();
+        _participants = _currentCompetition.GetAllParticipants();
         _buffer = new ErrorsBuffer<>(ErrorCount);
 
 
@@ -173,9 +176,9 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
 
 
                 _buffer.Write("F "+_button.GetParticipantNumber(_dialogOwnerView)+" "+String.valueOf(lapNumber)+" "+String.valueOf(fineCount));
-                _participants[participantNumber].SetFineTime(fineTime,lapNumber);
-                _participants[participantNumber].SetFineCount(fineCount,lapNumber);
-                _participants[participantNumber].SetPlace(GetPlace(_participants[participantNumber], lapNumber), lapNumber);
+               // _participants[participantNumber].SetFineTime(fineTime,lapNumber);
+               // _participants[participantNumber].SetFineCount(fineCount,lapNumber);
+               // _participants[participantNumber].SetPlace(GetPlace(_participants[participantNumber], lapNumber), lapNumber);
 
 
             }
@@ -192,17 +195,20 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         _fineDialog = _builderFineDialog.create();
 
         int tablesCount = Integer.valueOf(_currentCompetition.GetCheckPointsCount());
-        Participant.LapsCount = tablesCount;
         CreateTables(tablesCount);
-        _laps = new LapData[tablesCount];
+
+        DatabaseProvider dbProv = new DatabaseProvider(this);
+        _lapSaver = new LapDataSaver(this);
         for(int i = 0; i < tablesCount; i++)
         {
-            _laps[i] = new LapData(i);
+            dbProv.AddNewLapTable(_currentCompetition.GetNameDateString()+"LAP"+String.valueOf(i));
+            for(int j = 0; j < _participants.length; j++)
+            {
+                _lapSaver.SaveParticiapntToLap(_currentCompetition.GetNameDateString()+"LAP"+String.valueOf(i), _participants[j]);
+            }
         }
-
         _currentRound.setText(_currentRound.getText() + " - " + Integer.toString(_currentTable + 1));
-        _currentCompetition.GetAllParticipantsToComp();
-        _participants = _currentCompetition.GetAllParticipants();
+
         TimerStartPosition();
 
     }
@@ -273,27 +279,29 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
                 newTime.second = _currentTime.second - _participants[number].GetStartTime().second;
                 newTime.normalize(false);
 
-                _participants[number].SetResultTime(newTime, lap);
+                _participants[number].SetResultTime(newTime.toString(), _currentCompetition.GetNameDateString()+"LAP"+_button.GetLap(v), _lapSaver);
 
-                _participants[number].SetPlace(GetPlace(participant, lap), lap);
+                String res = _participants[number].GetResultTime(_currentCompetition.GetNameDateString()+"LAP"+_button.GetLap(v), _lapSaver);
+                GetPlace(_participants[number], lap);
+                //_participants[number].SetPlace(GetPlace(participant, lap), lap);
 
-                _buffer.Write("T "+_button.GetParticipantNumber(v)+" "+String.valueOf(lap));
+               // _buffer.Write("T "+_button.GetParticipantNumber(v)+" "+String.valueOf(lap));
 
                 _tablesCompetition.get(lap).removeAllViews();
-                for(int i = 0; i < _laps[lap].GetParticipants().length; i++)
-                {
-                    AddRowCompetitionTable(_laps[lap].GetParticipant(i),lap);
-                }
-
-                if(lap == _laps.length - 1)
-                {
-                    _participantGridLayout.removeView(view);
-                }
-                else
-                {
-                    lap++;
-                    _button.SetParticipantLap(view, Integer.toString(lap));
-                }
+//                for(int i = 0; i < _laps[lap].GetParticipants().length; i++)
+//                {
+//                    AddRowCompetitionTable(_laps[lap].GetParticipant(i),lap);
+//                }
+//
+//                if(lap == _laps.length - 1)
+//                {
+//                    _participantGridLayout.removeView(view);
+//                }
+//                else
+//                {
+//                    lap++;
+//                    _button.SetParticipantLap(view, Integer.toString(lap));
+//                }
             }
         });
         return view;
@@ -305,32 +313,39 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
     {
         int place = 0;
         boolean _isLastPlace = true;
-        _laps[lap].RemoveParticipant(participant);
-        for(int i = 0; i < _laps[lap].GetParticipants().length;i++)
+        android.text.format.Time thisTime = new android.text.format.Time();
+        android.text.format.Time localTime = new android.text.format.Time();
+        String time;
+        time = _lapSaver.GetData(_currentCompetition.GetNameDateString()+"LAP"+lap, participant, DatabaseProvider.DbLapData.COLUMN_RESULT);
+        thisTime.parse3339(time);
+        for(int i = 0; i < _participants.length; i++)
         {
-            if(android.text.format.Time.compare(_laps[lap].GetParticipant(i).GetResultTime(lap), participant.GetResultTime(lap)) > 0)
+            time = _lapSaver.GetData(_currentCompetition.GetNameDateString()+"LAP"+lap, _participants[i], DatabaseProvider.DbLapData.COLUMN_RESULT);
+            if(!time.equals(null))
             {
-                place = i+1;
-                participant.SetPlace(place, lap);
-                _laps[lap].AddParticipant(i, participant);
-                _isLastPlace = false;
-                break;
+                localTime.parse3339(time);
+                if (android.text.format.Time.compare(localTime, thisTime) > 0) {
+                    place = i + 1;
+                    participant.SetPlace(_currentCompetition.GetNameDateString() + "LAP" + lap, _lapSaver, place);
+                    _isLastPlace = false;
+                    break;
+                }
             }
         }
 
-        if(_isLastPlace)
-        {
-            place = _laps[lap].GetParticipants().length+1;
-            participant.SetPlace(place, lap);
-            _laps[lap].AddParticipant(participant);
-        }
-        else
-        {
-            for(int i = place; i<_laps[lap].GetParticipants().length; i++)
-            {
-                _laps[lap].GetParticipant(i).SetPlace(i+1, lap);
-            }
-        }
+//        if(_isLastPlace)
+//        {
+//            place = _participants.length + 1;
+//            participant.SetPlace(place, lap);
+//            _laps[lap].AddParticipant(participant);
+//        }
+//        else
+//        {
+//            for(int i = place; i<_laps[lap].GetParticipants().length; i++)
+//            {
+//               _laps[lap].GetParticipant(i).SetPlace(i+1, lap);
+//            }
+//        }
         return place;
     }
 
@@ -351,7 +366,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
 
         final TextView newTextView1 = new TextView(this);
         newTextView1.setSingleLine(false);
-        newTextView1.setText(String.valueOf(participant.GetPlace(lap)));
+        //newTextView1.setText(String.valueOf(participant.GetPlace(lap)));
         newTextView1.setGravity(Gravity.CENTER);
         newTextView1.setTextColor(rowColor);
         newTextView1.setBackground(new PaintDrawable(getResources().getColor(R.color.white)));
@@ -361,7 +376,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
 
         final TextView newTextView2 = new TextView(this);
         newTextView2.setSingleLine(false);
-        newTextView2.setText(participant.GetResultTime(lap).format("%H:%M:%S"));
+        //newTextView2.setText(participant.GetResultTime(lap).format("%H:%M:%S"));
         newTextView2.setGravity(Gravity.CENTER);
         newTextView2.setTextColor(rowColor);
         newTextView2.setBackground(new PaintDrawable(getResources().getColor(R.color.white)));
@@ -409,9 +424,9 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
     {
         // По lap выбираем arrayList
         android.text.format.Time lag = new android.text.format.Time();
-        lag.second = participant.GetResultTime(lap).second - _laps[lap].GetParticipant(0).GetResultTime(lap).second;
-        lag.minute = participant.GetResultTime(lap).minute - _laps[lap].GetParticipant(0).GetResultTime(lap).minute;
-        lag.hour = participant.GetResultTime(lap).hour - _laps[lap].GetParticipant(0).GetResultTime(lap).hour;
+       // lag.second = participant.GetResultTime(lap).second - _laps[lap].GetParticipant(0).GetResultTime(lap).second;
+       // lag.minute = participant.GetResultTime(lap).minute - _laps[lap].GetParticipant(0).GetResultTime(lap).minute;
+        //lag.hour = participant.GetResultTime(lap).hour - _laps[lap].GetParticipant(0).GetResultTime(lap).hour;
         lag.normalize(false);
         return lag;
     }
@@ -615,33 +630,33 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
                 int participantNumber = Integer.valueOf(lastError[1]);
                 _tablesCompetition.get(lapNumber).removeAllViews();
                 android.text.format.Time localTime = null;
-                for(int i = 0; i < _laps[lapNumber].GetParticipants().length; i++)
-                {
-                    if(Integer.valueOf(_laps[lapNumber].GetParticipant(i).GetNumber()) == participantNumber)
-                    {
-                        localTime = new android.text.format.Time(_laps[lapNumber].GetParticipant(i).GetResultTime(lapNumber));
-                        _laps[lapNumber].RemoveParticipant(_laps[lapNumber].GetParticipant(i));
-                        break;
-                    }
-                }
-
-                _button.ChangeLap(lastError[1], String.valueOf(lapNumber+1));
-
-                if(localTime != null)
-                {
-                    for (int i = 0; i < _laps[lapNumber].GetParticipants().length; i++)
-                    {
-                        if (android.text.format.Time.compare(_laps[lapNumber].GetParticipant(i).GetResultTime(lapNumber), localTime) > 0)
-                        {
-                            _laps[lapNumber].GetParticipant(i).SetPlace(_laps[lapNumber].GetParticipant(i).GetPlace(lapNumber) - 1, lapNumber);
-                        }
-                    }
-                }
-
-                for(int i = 0; i < _laps[lapNumber].GetParticipants().length; i++)
-                {
-                    AddRowCompetitionTable(_laps[lapNumber].GetParticipant(i),lapNumber);
-                }
+//                for(int i = 0; i < _laps[lapNumber].GetParticipants().length; i++)
+//                {
+//                    if(Integer.valueOf(_laps[lapNumber].GetParticipant(i).GetNumber()) == participantNumber)
+//                    {
+//                       // localTime = new android.text.format.Time(_laps[lapNumber].GetParticipant(i).GetResultTime(lapNumber));
+//                        _laps[lapNumber].RemoveParticipant(_laps[lapNumber].GetParticipant(i));
+//                        break;
+//                    }
+//                }
+//
+//                _button.ChangeLap(lastError[1], String.valueOf(lapNumber+1));
+//
+//                if(localTime != null)
+//                {
+//                    for (int i = 0; i < _laps[lapNumber].GetParticipants().length; i++)
+//                    {
+////                        if (android.text.format.Time.compare(_laps[lapNumber].GetParticipant(i).GetResultTime(lapNumber), localTime) > 0)
+////                        {
+////                            _laps[lapNumber].GetParticipant(i).SetPlace(_laps[lapNumber].GetParticipant(i).GetPlace(lapNumber) - 1, lapNumber);
+////                        }
+//                    }
+//                }
+//
+//                for(int i = 0; i < _laps[lapNumber].GetParticipants().length; i++)
+//                {
+//                    AddRowCompetitionTable(_laps[lapNumber].GetParticipant(i),lapNumber);
+//                }
 
                 break;
             case "F":
