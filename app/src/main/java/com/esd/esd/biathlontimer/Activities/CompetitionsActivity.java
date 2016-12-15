@@ -285,7 +285,6 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
                 GetPlace(_participants[number], lap);
                 //_participants[number].SetPlace(GetPlace(participant, lap), lap);
 
-               // _buffer.Write("T "+_button.GetParticipantNumber(v)+" "+String.valueOf(lap));
 
                 _tablesCompetition.get(lap).removeAllViews();
 //                for(int i = 0; i < _laps[lap].GetParticipants().length; i++)
@@ -316,11 +315,11 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         android.text.format.Time thisTime = new android.text.format.Time();
         android.text.format.Time localTime = new android.text.format.Time();
         String time;
-        time = _lapSaver.GetData(_currentCompetition.GetNameDateString()+"LAP"+lap, participant, DatabaseProvider.DbLapData.COLUMN_RESULT);
+        time = _lapSaver.GetData(_currentCompetition.GetNameDateString()+"LAP"+lap, participant, DatabaseProvider.DbLapData.COLUMN_RESULT, DatabaseProvider.DbLapData.COLUMN_RESULT);
         thisTime.parse3339(time);
         for(int i = 0; i < _participants.length; i++)
         {
-            time = _lapSaver.GetData(_currentCompetition.GetNameDateString()+"LAP"+lap, _participants[i], DatabaseProvider.DbLapData.COLUMN_RESULT);
+            time = _lapSaver.GetData(_currentCompetition.GetNameDateString()+"LAP"+lap, _participants[i], DatabaseProvider.DbLapData.COLUMN_RESULT, DatabaseProvider.DbLapData.COLUMN_RESULT);
             if(!time.equals(null))
             {
                 localTime.parse3339(time);

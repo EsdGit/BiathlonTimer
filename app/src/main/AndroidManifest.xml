@@ -32,6 +32,9 @@
                   android:theme="@style/AppTheme"
                   android:screenOrientation="landscape">
         </activity>
+        <activity android:name=".Activities.TestBD"
+            android:theme="@style/AppTheme"
+            android:screenOrientation="landscape"/>
     </application>
 
 </manifest>

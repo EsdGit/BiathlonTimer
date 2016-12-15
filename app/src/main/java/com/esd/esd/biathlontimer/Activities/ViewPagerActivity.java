@@ -365,11 +365,12 @@ public class ViewPagerActivity extends AppCompatActivity
 
             if(!_needDeleteTables)
             {
-                localArr = _dbSaver.GetAllParticipants(_currentCompetition.GetDbParticipantPath(), DatabaseProvider.DbParticipant.COLUMN_NUMBER);
-                for (int i = 0; i < localArr.length; i++) {
-                    AddRowParticipantList(localArr[i]);
-                }
-                SortByYear(_tableLayoutParticipantList, true, false);
+//                localArr = _dbSaver.GetAllParticipants(_currentCompetition.GetDbParticipantPath(), DatabaseProvider.DbParticipant.COLUMN_NUMBER);
+//                for (int i = 0; i < localArr.length; i++) {
+//                    AddRowParticipantList(localArr[i]);
+//                }
+//                SortByYear(_tableLayoutParticipantList, true, false);
+
             }
             else
             {
@@ -999,12 +1000,15 @@ public class ViewPagerActivity extends AppCompatActivity
     {
         CompetitionSaver competitionSaver = new CompetitionSaver(this);
         competitionSaver.SaveCompetitionToDatabase(_currentCompetition);
-        _needDeleteTables = false;
-        Toast.makeText(getApplicationContext(),"Сохранить список и перейти к соревнованию",Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(this, CompetitionsActivity.class);
-        intent.putExtra("Name", _currentCompetition.GetName());
-        intent.putExtra("Date", _currentCompetition.GetDate());
-        startActivity(intent);
+//        _needDeleteTables = false;
+//        Toast.makeText(getApplicationContext(),"Сохранить список и перейти к соревнованию",Toast.LENGTH_SHORT).show();
+//        Intent intent = new Intent(this, CompetitionsActivity.class);
+//        intent.putExtra("Name", _currentCompetition.GetName());
+//        intent.putExtra("Date", _currentCompetition.GetDate());
+//        startActivity(intent);
+          Intent i = new Intent(this, TestBD.class);
+          i.putExtra("test", "participants"+_currentCompetition.GetNameDateString());
+          startActivity(i);
     }
 
     public void OnClickEditParticipant(View view)

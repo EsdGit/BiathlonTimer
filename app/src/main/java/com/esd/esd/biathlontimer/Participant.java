@@ -20,7 +20,7 @@ public class Participant
 
     public String GetResultTime(String tableName, LapDataSaver lapSaver)
     {
-        return lapSaver.GetData(tableName, this, DatabaseProvider.DbLapData.COLUMN_RESULT);
+        return lapSaver.GetData(tableName, this, DatabaseProvider.DbLapData.COLUMN_RESULT, DatabaseProvider.DbLapData.COLUMN_RESULT);
     }
 
     public void SetPlace(String tableName, LapDataSaver lapSaver, int place)

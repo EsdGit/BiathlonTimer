@@ -32,7 +32,7 @@ public class LapDataSaver
         return true;
     }
 
-    public String GetData(String tableName, Participant participant, String column)
+    public String GetData(String tableName, Participant participant, String column, String orderBy)
     {
         _db = _dbProvider.getReadableDatabase();
         String[] proj =
@@ -40,7 +40,7 @@ public class LapDataSaver
             column
         };
         Cursor cursor = _db.query(tableName, proj, DatabaseProvider.DbLapData.COLUMN_FIO + "=?" + " and " + DatabaseProvider.DbLapData.COLUMN_COUNTRY +
-                "=?"+" and " + DatabaseProvider.DbLapData.COLUMN_YEAR + "=?", new String[]{participant.GetFIO(), participant.GetCountry(), participant.GetBirthYear()},null, null, null);
+                "=?"+" and " + DatabaseProvider.DbLapData.COLUMN_YEAR + "=?", new String[]{participant.GetFIO(), participant.GetCountry(), participant.GetBirthYear()},null, null, orderBy + "ASC");
         cursor.moveToFirst();
         return cursor.getString(0);
     }

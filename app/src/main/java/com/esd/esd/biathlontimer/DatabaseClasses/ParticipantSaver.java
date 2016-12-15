@@ -68,6 +68,21 @@ public class ParticipantSaver
         return localArr;
     }
 
+    public Cursor getAllData(String tableName, String orderBy)
+    {
+        _db = _dbProvider.getReadableDatabase();
+        String[] proj=
+                {
+                        DatabaseProvider.DbParticipant._ID,
+                        DatabaseProvider.DbParticipant.COLUMN_NUMBER,
+                        DatabaseProvider.DbParticipant.COLUMN_NAME,
+                        DatabaseProvider.DbParticipant.COLUMN_COUNTRY,
+                        DatabaseProvider.DbParticipant.COLUMN_YEAR,
+                        DatabaseProvider.DbParticipant.COLUMN_GROUP
+                };
+        return _db.query(tableName, proj, null, null, null, null, orderBy);
+    }
+
     public void DeleteParticipant(Participant participant, String tableName)
     {
         _db = _dbProvider.getWritableDatabase();
