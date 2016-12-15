@@ -6,25 +6,30 @@
         android:id="@+id/number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="16sp"/>
+        android:textSize="16sp"
+        android:layout_marginRight="10dp"/>
     <TextView
         android:id="@+id/fio"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="16sp"/>
+        android:textSize="16sp"
+        android:layout_marginRight="10dp"/>
     <TextView
         android:id="@+id/year"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="16sp"/>
+        android:textSize="16sp"
+        android:layout_marginRight="10dp"/>
     <TextView
         android:id="@+id/group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="16sp"/>
+        android:textSize="16sp"
+        android:layout_marginRight="10dp"/>
     <TextView
         android:id="@+id/country"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="16sp"/>
+        android:textSize="16sp"
+        android:layout_marginRight="10dp"/>
 </TableRow>

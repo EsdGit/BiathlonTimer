@@ -46,6 +46,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -279,7 +280,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
                 newTime.second = _currentTime.second - _participants[number].GetStartTime().second;
                 newTime.normalize(false);
 
-                _participants[number].SetResultTime(newTime.toString(), _currentCompetition.GetNameDateString()+"LAP"+_button.GetLap(v), _lapSaver);
+                _participants[number].SetResultTime(newTime.format3339(true), _currentCompetition.GetNameDateString()+"LAP"+_button.GetLap(v), _lapSaver);
 
                 String res = _participants[number].GetResultTime(_currentCompetition.GetNameDateString()+"LAP"+_button.GetLap(v), _lapSaver);
                 GetPlace(_participants[number], lap);
@@ -311,6 +312,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
     private int GetPlace(Participant participant, int lap)
     {
         int place = 0;
+        int participantCount = 0;
         boolean _isLastPlace = true;
         android.text.format.Time thisTime = new android.text.format.Time();
         android.text.format.Time localTime = new android.text.format.Time();
@@ -320,8 +322,9 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         for(int i = 0; i < _participants.length; i++)
         {
             time = _lapSaver.GetData(_currentCompetition.GetNameDateString()+"LAP"+lap, _participants[i], DatabaseProvider.DbLapData.COLUMN_RESULT, DatabaseProvider.DbLapData.COLUMN_RESULT);
-            if(!time.equals(null))
+            if(time != null)
             {
+                participantCount++;
                 localTime.parse3339(time);
                 if (android.text.format.Time.compare(localTime, thisTime) > 0) {
                     place = i + 1;
@@ -332,12 +335,11 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
             }
         }
 
-//        if(_isLastPlace)
-//        {
-//            place = _participants.length + 1;
-//            participant.SetPlace(place, lap);
-//            _laps[lap].AddParticipant(participant);
-//        }
+        if(_isLastPlace)
+        {
+            place = participantCount+1;
+            participant.SetPlace(_currentCompetition.GetNameDateString() + "LAP" + lap, _lapSaver, place);
+        }
 //        else
 //        {
 //            for(int i = place; i<_laps[lap].GetParticipants().length; i++)

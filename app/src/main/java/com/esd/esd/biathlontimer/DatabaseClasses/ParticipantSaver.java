@@ -68,6 +68,17 @@ public class ParticipantSaver
         return localArr;
     }
 
+    public int GetColor(String tableName, int participantNumber)
+    {
+        _db = _dbProvider.getReadableDatabase();
+        String[] proj =
+                {
+                        DatabaseProvider.DbParticipant.COLUMN_COLOR
+                };
+        Cursor cursor = _db.query(tableName, proj, null, null, null, null, null,null);
+        return cursor.getInt(0);
+    }
+
     public Cursor getAllData(String tableName, String orderBy)
     {
         _db = _dbProvider.getReadableDatabase();

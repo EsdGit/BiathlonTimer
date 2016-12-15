@@ -408,7 +408,7 @@ public class ViewPagerActivity extends AppCompatActivity
         newTextView0.setTextColor(participant.GetColor());
         newTextView0.setBackgroundColor(Color.WHITE);
         newTextView0.setTextSize(getResources().getDimension(R.dimen.normal_text_size));
-        newTextView0.setLayoutParams(new TableRow.LayoutParams(_numberParticipantList.getMeasuredWidth(), ViewGroup.LayoutParams.MATCH_PARENT/*_numberParticipantList.getMeasuredHeight()*/, 0.4f));
+        newTextView0.setLayoutParams(new TableRow.LayoutParams(_numberParticipantList.getMeasuredWidth(), ViewGroup.LayoutParams.MATCH_PARENT, 0.4f));
         ((TableRow.LayoutParams) newTextView0.getLayoutParams()).setMargins(2, 0, 2, 2);
 
         final TextView newTextView1 = new TextView(this);

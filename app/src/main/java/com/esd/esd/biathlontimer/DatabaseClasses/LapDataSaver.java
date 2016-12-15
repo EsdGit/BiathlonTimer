@@ -20,7 +20,6 @@ public class LapDataSaver
 
     public boolean SaveParticiapntToLap(String tableName, Participant participant)
     {
-        // надо бы проверку
         _db = _dbProvider.getWritableDatabase();
         ContentValues val = new ContentValues();
         val.put(DatabaseProvider.DbLapData.COLUMN_NUMBER, participant.GetNumber());
@@ -40,10 +39,29 @@ public class LapDataSaver
             column
         };
         Cursor cursor = _db.query(tableName, proj, DatabaseProvider.DbLapData.COLUMN_FIO + "=?" + " and " + DatabaseProvider.DbLapData.COLUMN_COUNTRY +
-                "=?"+" and " + DatabaseProvider.DbLapData.COLUMN_YEAR + "=?", new String[]{participant.GetFIO(), participant.GetCountry(), participant.GetBirthYear()},null, null, orderBy + "ASC");
+                "=?"+" and " + DatabaseProvider.DbLapData.COLUMN_YEAR + "=?", new String[]{participant.GetFIO(), participant.GetCountry(), participant.GetBirthYear()},null, null, orderBy + " ASC");
         cursor.moveToFirst();
         return cursor.getString(0);
     }
+
+//    public String[] GetDataToTable(String tableName, String number)
+//    {
+//        String[] localArr = new String[4];
+//        _db = _dbProvider.getReadableDatabase();
+//        String[] proj =
+//                {
+//                        DatabaseProvider.DbLapData.COLUMN_NUMBER,
+//                        DatabaseProvider.DbLapData.COLUMN_PLACE,
+//                        DatabaseProvider.DbLapData.COLUMN_FIO,
+//                        DatabaseProvider.DbLapData.COLUMN_RESULT
+//                };
+//        Cursor cursor = _db.query(tableName, proj, DatabaseProvider.DbLapData.COLUMN_RESULT + "!=? and " + DatabaseProvider.DbLapData.COLUMN_NUMBER + "=?", new String[]{"null", number},null, null, null);
+//        for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext() )
+//        {
+//            localArr[cursor.getPosition()] = cursor.getString(0);
+//        }
+//        return cursor.getString(0);
+//    }
 
     public void AddDataToLap(String tableName, Participant participant, String column, String value)
     {
