@@ -38,4 +38,5 @@ public class MySimpleCursorAdapter extends SimpleCursorAdapter
         });
         return super.getView(position, convertView, parent);
     }
+
 }

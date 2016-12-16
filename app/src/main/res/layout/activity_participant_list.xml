@@ -187,25 +187,16 @@
             android:background="#ffffff"/>
     </LinearLayout>
 
-    <ScrollView
+    <GridView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerHorizontal="true"
-        android:id="@+id/scrollViewParticipantList"
+        android:id="@+id/gridViewParticipantList"
         android:scrollbars="vertical"
         android:layout_below="@+id/headTableParticipantListLayout"
         android:elevation="2dp">
 
-        <TableLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#000000"
-            android:id="@+id/tableParticipantListLayout"
-            android:scrollbars="vertical"
-            android:elevation="4dp">
-
-        </TableLayout>
-    </ScrollView>
+    </GridView>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/addFileBtn"

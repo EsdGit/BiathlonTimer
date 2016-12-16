@@ -42,6 +42,31 @@ public class ParticipantSaver
         return true;
     }
 
+    public boolean SaveParticipantToDatabase(String number, String name, String country, String year, String group, int color ,String tableName)
+    {
+//        Participant[] localArr = GetAllParticipants(tableName, DatabaseProvider.DbParticipant.COLUMN_NAME);
+//        for(int i = 0; i<localArr.length; i++)
+//        {
+//            if(localArr[i].equals(participant))
+//            {
+//                return false;
+//            }
+//        }
+        // Проверить бы на уже такое
+
+        _db = _dbProvider.getWritableDatabase();
+        ContentValues val = new ContentValues();
+        val.put(DatabaseProvider.DbParticipant.COLUMN_NUMBER, number);
+        val.put(DatabaseProvider.DbParticipant.COLUMN_NAME, name);
+        val.put(DatabaseProvider.DbParticipant.COLUMN_COUNTRY, country);
+        val.put(DatabaseProvider.DbParticipant.COLUMN_YEAR, year);
+        val.put(DatabaseProvider.DbParticipant.COLUMN_GROUP, group);
+        val.put(DatabaseProvider.DbParticipant.COLUMN_COLOR, String.valueOf(color));
+        _db.insert(tableName, null, val);
+        _db.close();
+        return true;
+    }
+
     public Participant[] GetAllParticipants(String tableName, String orderBy)
     {
         Participant[] localArr;
