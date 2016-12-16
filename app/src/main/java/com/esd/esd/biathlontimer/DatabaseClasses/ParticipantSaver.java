@@ -100,8 +100,11 @@ public class ParticipantSaver
                 {
                         DatabaseProvider.DbParticipant.COLUMN_COLOR
                 };
-        Cursor cursor = _db.query(tableName, proj, null, null, null, null, null,null);
-        return cursor.getInt(0);
+        Cursor cursor = _db.query(tableName, proj, DatabaseProvider.DbParticipant.COLUMN_NUMBER+"=?",new String[]{String.valueOf(participantNumber)}, null, null, null,null);
+        cursor.moveToFirst();
+        int i = cursor.getInt(0);
+        cursor.close();
+        return i;
     }
 
     public Cursor getAllData(String tableName, String orderBy)

@@ -159,7 +159,7 @@ public class ViewPagerActivity extends AppCompatActivity implements android.supp
         _arrayGroup[0]=getResources().getString(R.string.default_group);;
 
         _needDeleteTables = Boolean.valueOf(intent.getStringExtra("NeedDelete"));
-
+        MySimpleCursorAdapter.SetLocalBdName(_currentCompetition.GetDbParticipantPath());
         FindAllViews();
 
         // Создание диалогового окна
