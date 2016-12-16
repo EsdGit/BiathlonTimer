@@ -37,6 +37,8 @@ public class FinalActivity extends AppCompatActivity
     private MenuItem _placeSort;
     private MenuItem _nameSort;
     private MenuItem _send;
+    private MenuItem _sendByWhatsApp;
+    private MenuItem _sendByMail;
 
     private int _test = 0;
     @Override
@@ -69,6 +71,8 @@ public class FinalActivity extends AppCompatActivity
         _placeSort = (MenuItem) menu.findItem(R.id.action_bar_final_activity_place_sort);
         _nameSort = (MenuItem) menu.findItem(R.id.action_bar_final_activity_name_sort);
         _send = (MenuItem) menu.findItem(R.id.action_bar_final_activity_send);
+        _sendByWhatsApp = (MenuItem) menu.findItem(R.id.action_bar_final_activity_send_by_whatsapp);
+        _sendByMail = (MenuItem) menu.findItem(R.id.action_bar_final_activity_send_by_mail);
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -87,6 +91,13 @@ public class FinalActivity extends AppCompatActivity
             case R.id.action_bar_final_activity_send:
                 Toast.makeText(getApplicationContext(),"Отправка",Toast.LENGTH_SHORT).show();
                 break;
+            case R.id.action_bar_final_activity_send_by_whatsapp:
+                Toast.makeText(getApplicationContext(),"Отправка через WhatsApp",Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.action_bar_final_activity_send_by_mail:
+                Toast.makeText(getApplicationContext(),"Отправка через Mail",Toast.LENGTH_SHORT).show();
+                break;
+
         }
         return super.onOptionsItemSelected(item);
     }

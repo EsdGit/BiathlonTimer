@@ -133,6 +133,9 @@ public class ViewPagerActivity extends AppCompatActivity implements android.supp
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getSupportActionBar().hide();
         _dbSaver = new ParticipantSaver(this);
+        _dbSaver.SaveParticipantToDatabase("123","Ivan","Russia","1996","Group",Color.BLUE,DatabaseProvider.DbParticipant.TABLE_NAME);
+        _dbSaver.SaveParticipantToDatabase("456","Dasha","Russia","1996","Group",Color.RED,DatabaseProvider.DbParticipant.TABLE_NAME);
+        _dbSaver.SaveParticipantToDatabase("789","Oleg","Russia","1996","Group",Color.YELLOW,DatabaseProvider.DbParticipant.TABLE_NAME);
         _viewPagerContext = this;
         TitleDialog = getResources().getString(R.string.add_dialog_title);
         AddDialogBtn = getResources().getString(R.string.add);

@@ -21,6 +21,25 @@
         app:showAsAction="always"
         android:id="@+id/action_bar_final_activity_send"
         android:orderInCategory="100"
-        android:visible="true"/>
+        android:visible="true">
+
+        <menu>
+            <item
+                android:icon="@drawable/whatsapp"
+                android:title="@string/final_activity_send_by_whatsapp"
+                android:id="@+id/action_bar_final_activity_send_by_whatsapp"
+                android:showAsAction="never"
+                android:orderInCategory="100"
+                android:visible="true"/>
+
+            <item
+                android:icon="@drawable/mail"
+                android:title="@string/final_activity_send_by_mail"
+                android:id="@+id/action_bar_final_activity_send_by_mail"
+                android:showAsAction="never"
+                android:orderInCategory="100"
+                android:visible="true"/>
+        </menu>
+    </item>
 
 </menu>
