@@ -41,24 +41,27 @@ public class MySimpleCursorAdapter extends SimpleCursorAdapter
         _localBdName = name;
     }
 
+
     @Override
-    public void bindView(View view, final Context context, Cursor cursor) {
-        super.bindView(view, context, cursor);
-        if(view.getId() == R.id.tblRow)
+    public View newView(final Context context, Cursor cursor, ViewGroup parent) {
+        if(parent.getId() == R.id.gridViewParticipantList)
         {
-            TextView number = (TextView) view.findViewById(R.id.number);
-            TextView name = (TextView) view.findViewById(R.id.fio);
-            TextView year = (TextView) view.findViewById(R.id.year);
-            TextView group = (TextView) view.findViewById(R.id.group);
-            TextView country = (TextView) view.findViewById(R.id.country);
-            int num = Integer.valueOf(number.getText().toString());
-            int color = ps.GetColor(_localBdName, num);
+            LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            TableRow row = (TableRow) layoutInflater.inflate(R.layout.test_row, parent, false);
+            TextView number = (TextView) row.getChildAt(0);
+            TextView name = (TextView) row.getChildAt(1);
+            TextView year = (TextView) row.getChildAt(2);
+            TextView group = (TextView) row.getChildAt(3);
+            TextView country = (TextView) row.getChildAt(4);
+            //int num = Integer.valueOf(number.getText().toString());
+            //int color = ps.GetColor(_localBdName, num);
+            int color = Color.BLACK;
             number.setTextColor(color);
             name.setTextColor(color);
             year.setTextColor(color);
             group.setTextColor(color);
             country.setTextColor(color);
-            view.setOnLongClickListener(new View.OnLongClickListener() {
+            row.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v)
                 {
@@ -76,7 +79,7 @@ public class MySimpleCursorAdapter extends SimpleCursorAdapter
                 }
             });
 
-            view.setOnClickListener(new View.OnClickListener() {
+            row.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     ArrayList<View> rowView = new ArrayList<View>();
@@ -119,12 +122,11 @@ public class MySimpleCursorAdapter extends SimpleCursorAdapter
                 }
             });
         }
+        return super.newView(context, cursor, parent);
+
     }
 
-
-
-
-//    @Override
+    //    @Override
 //    public View getView(int position, View convertView, ViewGroup parent)
 //    {
 //        if(parent.getId() == R.id.gridViewParticipantList)
