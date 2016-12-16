@@ -125,7 +125,7 @@
     //Общие
     <string name="default_group">Без группы</string>
     <string name="fio_col_title">ФИО</string>
-    <string name="year_col_title">Год рождения</string>
+    <string name="year_col_title">Год</string>//Поговорить!
     <string name="country_col_title">Страна</string>
     <string name="region_col_titile">Регион</string>
     <string name="group_col_title">Группа</string>
