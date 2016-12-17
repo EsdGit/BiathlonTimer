@@ -23,6 +23,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -371,11 +372,11 @@ public class ViewPagerActivity extends AppCompatActivity implements android.supp
 
     private void AddDataFromBases()
     {
-        String[] from1 = new String[]{DatabaseProvider.DbParticipant.COLUMN_NAME, DatabaseProvider.DbParticipant.COLUMN_YEAR,
-                DatabaseProvider.DbParticipant.COLUMN_COUNTRY};
-        int[] to1 = new int[]{ R.id.fio, R.id.year, R.id.country};
-        scAdapterDatabase = new MySimpleCursorAdapter(this, R.layout.row_db_list, null, from1, to1, 0);
-        _gridViewDatabase.setAdapter(scAdapterDatabase);
+//        String[] from1 = new String[]{DatabaseProvider.DbParticipant.COLUMN_NAME, DatabaseProvider.DbParticipant.COLUMN_YEAR,
+//                DatabaseProvider.DbParticipant.COLUMN_COUNTRY};
+//        int[] to1 = new int[]{ R.id.fio, R.id.year, R.id.country};
+//        scAdapterDatabase = new MySimpleCursorAdapter(this, R.layout.row_db_list, null, from1, to1, 0);
+//        _gridViewDatabase.setAdapter(scAdapterDatabase);
 
 
         if(_needDeleteTables)
@@ -671,6 +672,15 @@ public class ViewPagerActivity extends AppCompatActivity implements android.supp
 
         _dialogForm = inflater.inflate(R.layout.dialog_activity_add_participant, null);
         _gridView = (GridView) page1.findViewById(R.id.gridViewParticipantList);
+        _gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id)
+            {
+                scAdapter.Participants.get(position).wasChecked = true;
+                scAdapter.notifyDataSetChanged();
+                return false;
+            }
+        });
         _headParticipant = (LinearLayout) page1.findViewById(R.id.headTableParticipantListLayout);
         _nameParticipantList = (TextView) page1.findViewById(R.id.nameParticipantList);
         _birthdayParticipantList = (TextView) page1.findViewById(R.id.birthdayParticipantList);
@@ -1295,13 +1305,13 @@ public class ViewPagerActivity extends AppCompatActivity implements android.supp
     @Override
     public void onLoadFinished(android.support.v4.content.Loader<Cursor> loader, Cursor data) {
         scAdapter.swapCursor(data);
-        scAdapterDatabase.swapCursor(MyCursorLoader.getDbCursor());
+        //scAdapterDatabase.swapCursor(MyCursorLoader.getDbCursor());
     }
 
     @Override
     public void onLoaderReset(android.support.v4.content.Loader<Cursor> loader) {
         scAdapter.swapCursor(null);
-        scAdapterDatabase.swapCursor(null);
+        //scAdapterDatabase.swapCursor(null);
     }
 
     public static class MyCursorLoader extends CursorLoader

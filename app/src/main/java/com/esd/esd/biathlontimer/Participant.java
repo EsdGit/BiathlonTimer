@@ -59,6 +59,8 @@ public class Participant
     private int _color;
     public int GetColor(){return _color;}
 
+    public boolean wasChecked;
+
     public Participant(String number, String fio, String country, String birthYear, String group, int color)
     {
         _startTime = new Time();
@@ -67,6 +69,7 @@ public class Participant
         _country = country;
         _birthYear = birthYear;
         _number = number;
+        wasChecked = false;
         if(group == "")
         {
             //Исправить из ресурсов
