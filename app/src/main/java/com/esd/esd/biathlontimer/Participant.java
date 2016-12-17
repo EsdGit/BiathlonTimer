@@ -9,6 +9,8 @@ import com.esd.esd.biathlontimer.DatabaseClasses.LapDataSaver;
 
 import java.util.ArrayList;
 
+import io.realm.RealmObject;
+
 // Класс участника
 public class Participant
 {
