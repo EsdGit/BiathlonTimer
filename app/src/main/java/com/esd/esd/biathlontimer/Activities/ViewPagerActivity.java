@@ -170,9 +170,9 @@ public class ViewPagerActivity extends AppCompatActivity
             {
                 _colorParticipant = ((ColorDrawable) _colorDialog.getBackground()).getColor();
                 Sportsman sportsman = new Sportsman(Integer.valueOf(_numberDialog.getText().toString()), _nameDialog.getText().toString(),
-                        Integer.valueOf(_birthdayDialog.getText().toString()), _countryDialog.getText().toString(), _spinnerOfGroup.toString());
+                        Integer.valueOf(_birthdayDialog.getText().toString()), _countryDialog.getText().toString(), _spinnerOfGroup.getSelectedItem().toString());
 
-                 _acceptParticipantImBtn.setVisibility(View.VISIBLE);
+                 //_acceptParticipantImBtn.setVisibility(View.VISIBLE);
 
                 _recyclerViewLocalDatabaseAdapter.AddSportsmen(sportsman);
                 _recyclerViewDatabaseAdapter.AddSportsmen(sportsman);
@@ -348,25 +348,33 @@ public class ViewPagerActivity extends AppCompatActivity
 
     private void AddDataFromBases()
     {
-        List<Sportsman> sportsmen = new ArrayList<Sportsman>();
-        List<Sportsman> testDb = new ArrayList<Sportsman>();
-        testDb.add(new Sportsman(1,"Олег",1996,"Россия","Без группы"));
-        testDb.add(new Sportsman(2,"Настя",1995,"Россия","Молодец"));
-        RealmSportsmenSaver saver = new RealmSportsmenSaver(this);
-        saver.SaveSportsmen(testDb);
+
+        RealmSportsmenSaver mainSaver = new RealmSportsmenSaver(this, "MAIN");
+        RealmSportsmenSaver saver = new RealmSportsmenSaver(this, _currentCompetition.GetDbParticipantPath());
+
         if(_needDeleteTables)
         {
+            List<Sportsman> sportsmen = new ArrayList<Sportsman>();
             GenerateStandartParticipants(_currentCompetition.GetStartNumber(), _currentCompetition.GetMaxParticipantCount(), sportsmen);
+            saver.SaveSportsmen(sportsmen);
+            _recyclerViewLocalDatabaseAdapter = new RecyclerViewLocalDatabaseAdapter(sportsmen);
         }
-        _recyclerViewLocalDatabaseAdapter = new RecyclerViewLocalDatabaseAdapter(sportsmen);
-        _recyclerViewDatabaseAdapter = new RecyclerViewDatabaseAdapter(saver.getSportsmen());
+        else
+        {
+            List<Sportsman> list = saver.getSportsmen();
+            _recyclerViewLocalDatabaseAdapter = new RecyclerViewLocalDatabaseAdapter(list);
+        }
+
+        _recyclerViewDatabaseAdapter = new RecyclerViewDatabaseAdapter(mainSaver.getSportsmen());
         LinearLayoutManager layoutManager1 = new LinearLayoutManager(this);
         RecyclerView.ItemAnimator itemAnimator1 = new DefaultItemAnimator();
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
+
         _recyclerView.setAdapter(_recyclerViewLocalDatabaseAdapter);
         _recyclerView.setLayoutManager(layoutManager);
         _recyclerView.setItemAnimator(itemAnimator);
+
         _recyclerViewDatabase.setAdapter(_recyclerViewDatabaseAdapter);
         _recyclerViewDatabase.setLayoutManager(layoutManager1);
         _recyclerViewDatabase.setItemAnimator(itemAnimator1);

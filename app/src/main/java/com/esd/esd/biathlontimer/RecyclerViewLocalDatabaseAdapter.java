@@ -63,7 +63,7 @@ public class RecyclerViewLocalDatabaseAdapter extends RecyclerView.Adapter<Recyc
 
     public void AddSportsmen(Sportsman sportsman)
     {
-        sportsmen.add(sportsman);
+        sportsmen.add(sportsmen.size(), sportsman);
         notifyItemInserted(sportsmen.size());
     }
 

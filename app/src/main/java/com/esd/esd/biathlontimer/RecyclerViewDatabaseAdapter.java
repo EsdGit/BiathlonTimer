@@ -61,7 +61,7 @@ public class RecyclerViewDatabaseAdapter extends RecyclerView.Adapter<RecyclerVi
 
     public void AddSportsmen(Sportsman sportsman)
     {
-        sportsmen.add(sportsman);
+        sportsmen.add(sportsmen.size(), sportsman);
         notifyItemInserted(sportsmen.size());
     }
 

@@ -19,10 +19,10 @@ public class RealmSportsmenSaver
 {
     private Realm realm;
     private AtomicLong keyId;
-    public RealmSportsmenSaver(Context context)
+    public RealmSportsmenSaver(Context context, String databaseName)
     {
         Realm.init(context);
-        RealmConfiguration config = new RealmConfiguration.Builder().schemaVersion(2).deleteRealmIfMigrationNeeded().build();
+        RealmConfiguration config = new RealmConfiguration.Builder().schemaVersion(2).deleteRealmIfMigrationNeeded().name(databaseName+".realm").build();
         realm = Realm.getInstance(config);
         if(realm.where(Sportsman.class).count() == 0)
         {
@@ -34,9 +34,10 @@ public class RealmSportsmenSaver
         }
     }
 
-    public RealmResults<Sportsman> getSportsmen()
+    public List<Sportsman> getSportsmen()
     {
-        return realm.where(Sportsman.class).findAll();
+        RealmResults<Sportsman> results = realm.where(Sportsman.class).findAll();
+        return realm.copyFromRealm(results);
     }
 
     public void SaveSportsmen(List<Sportsman> sportsmen)
