@@ -1,6 +1,7 @@
 package com.esd.esd.biathlontimer;
 
 import io.realm.RealmObject;
+import io.realm.annotations.Ignore;
 import io.realm.annotations.PrimaryKey;
 
 /**
@@ -18,6 +19,7 @@ public class Sportsman extends RealmObject
     private int year;
     private String country;
     private String group;
+    @Ignore
     private boolean isChecked;
 
     // Методы GET
@@ -27,6 +29,16 @@ public class Sportsman extends RealmObject
     public String getCountry(){return country;}
     public String getGroup(){return group;}
     public boolean isChecked(){return isChecked;}
+    public long getId(){return id;}
+
+    public Sportsman(int number, String name, int year, String country, String group)
+    {
+        this.number = number;
+        this.name = name;
+        this.year = year;
+        this.country = country;
+        this.group = group;
+    }
 
     public Sportsman()
     {
@@ -47,6 +59,10 @@ public class Sportsman extends RealmObject
         this.isChecked = isChecked;
     }
 
+    public void setId(long newId)
+    {
+        id = newId;
+    }
 
 
 }

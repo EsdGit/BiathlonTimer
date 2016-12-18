@@ -1,12 +1,10 @@
 package com.esd.esd.biathlontimer;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TableRow;
 import android.widget.TextView;
 
 import java.util.List;
@@ -15,10 +13,10 @@ import java.util.List;
  * Created by Oleg on 18.12.2016.
  */
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>
+public class RecyclerViewLocalDatabaseAdapter extends RecyclerView.Adapter<RecyclerViewLocalDatabaseAdapter.ViewHolder>
 {
     private List<Sportsman> sportsmen;
-    public RecyclerViewAdapter(List<Sportsman> sportsmen)
+    public RecyclerViewLocalDatabaseAdapter(List<Sportsman> sportsmen)
     {
         this.sportsmen = sportsmen;
     }
@@ -54,6 +52,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             holder.countryTextView.setBackgroundColor(Color.WHITE);
             holder.groupTextView.setBackgroundColor(Color.WHITE);
         }
+    }
+
+    public void AddSportsmen(Sportsman sportsman)
+    {
+        sportsmen.add(sportsman);
+        notifyItemInserted(sportsmen.size());
     }
 
     @Override
