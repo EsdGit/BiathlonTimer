@@ -65,6 +65,12 @@ public class RecyclerViewDatabaseAdapter extends RecyclerView.Adapter<RecyclerVi
         notifyItemInserted(sportsmen.size());
     }
 
+    public void RemoveSportsmen(Sportsman sportsman)
+    {
+        //sportsmen.remove(sportsman);
+        //notifyItemRemoved(sportsman.getId());
+    }
+
     class ViewHolder extends RecyclerView.ViewHolder
     {
         private TextView nameTextView;

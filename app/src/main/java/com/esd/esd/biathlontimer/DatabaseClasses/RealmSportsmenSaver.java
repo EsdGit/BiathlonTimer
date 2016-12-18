@@ -40,6 +40,31 @@ public class RealmSportsmenSaver
         return realm.copyFromRealm(results);
     }
 
+    public void SaveSportsman(Sportsman sportsman)
+    {
+        sportsman.setId(keyId.getAndIncrement());
+        realm.beginTransaction();
+        realm.insert(sportsman);
+        realm.commitTransaction();
+    }
+
+    public void DeleteSportsman(Sportsman sportsman)
+    {
+        realm.beginTransaction();
+        realm.where(Sportsman.class).equalTo("name", sportsman.getName()).findAll().deleteAllFromRealm();
+        realm.commitTransaction();
+    }
+
+    public void DeleteSportsmen(List<Sportsman> sportsmen)
+    {
+        for(int i = 0; i < sportsmen.size(); i++)
+        {
+            realm.beginTransaction();
+            realm.where(Sportsman.class).equalTo("name", sportsmen.get(i).getName()).findAll().deleteAllFromRealm();
+            realm.commitTransaction();
+        }
+    }
+
     public void SaveSportsmen(List<Sportsman> sportsmen)
     {
         for(int i = 0; i < sportsmen.size(); i++)

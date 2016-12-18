@@ -123,6 +123,8 @@ public class ViewPagerActivity extends AppCompatActivity
 
     private boolean _needDeleteTables = false;
 
+    private RealmSportsmenSaver saver;
+    private RealmSportsmenSaver mainSaver;
 
     private static Context _viewPagerContext;
     @Override
@@ -174,11 +176,11 @@ public class ViewPagerActivity extends AppCompatActivity
 
                  //_acceptParticipantImBtn.setVisibility(View.VISIBLE);
 
-                _recyclerViewLocalDatabaseAdapter.AddSportsmen(sportsman);
+                _recyclerViewLocalDatabaseAdapter.AddSportsman(sportsman);
                 _recyclerViewDatabaseAdapter.AddSportsmen(sportsman);
 
-
-
+                saver.SaveSportsman(sportsman);
+                mainSaver.SaveSportsman(sportsman);
 
                 //SetStartPosition(_gridView);
                 _nameDialog.setText("");
@@ -349,8 +351,8 @@ public class ViewPagerActivity extends AppCompatActivity
     private void AddDataFromBases()
     {
 
-        RealmSportsmenSaver mainSaver = new RealmSportsmenSaver(this, "MAIN");
-        RealmSportsmenSaver saver = new RealmSportsmenSaver(this, _currentCompetition.GetDbParticipantPath());
+        mainSaver = new RealmSportsmenSaver(this, "MAIN");
+        saver = new RealmSportsmenSaver(this, _currentCompetition.GetDbParticipantPath());
 
         if(_needDeleteTables)
         {
@@ -938,76 +940,6 @@ public class ViewPagerActivity extends AppCompatActivity
 //        return localArr;
 //    }
 
-//    private Participant[] GetCheckedParticipants(GridView table, boolean needDelete)
-//    {
-//        // Переделать!!!
-//        int participantCount = table.getChildCount();
-//        TableRow row;
-//        TextView textView;
-//        int cellsCount = 3;
-//        String[] dataArr = new String[cellsCount];
-//        ArrayList<Participant> localArr = new ArrayList<Participant>();
-//        boolean flag = false;
-//        int k = 0;
-//        int color = 1;
-//        if(table == _gridView)
-//        {
-//            cellsCount = 5;
-//            dataArr = new String[cellsCount];
-//        }
-//
-//
-//        for(int i = 0; i < participantCount - k; i++)
-//        {
-//            row = (TableRow) table.getChildAt(i);
-//            textView = (TextView) row.getChildAt(1);
-//            if(((PaintDrawable)(textView).getBackground()).getPaint().getColor() ==
-//                    getResources().getColor(R.color.colorPrimary))
-//            {
-//                for(int j = 0; j < cellsCount; j++)
-//                {
-//                    dataArr[j] = ((TextView)row.getChildAt(j)).getText().toString();
-//                }
-//                flag = true;
-//            }
-//
-//            if(flag)
-//            {
-//                flag = false;
-//                if(table == _gridView)
-//                {
-//                    Participant[] arrFromBase = _dbSaver.GetAllParticipants(_currentCompetition.GetDbParticipantPath(), DatabaseProvider.DbParticipant.COLUMN_NAME);
-//                    Participant localPart = new Participant("",dataArr[1], dataArr[4], dataArr[2],"",1);
-//                    for(int j = 0; j<arrFromBase.length;j++)
-//                    {
-//                        if(localPart.equals(arrFromBase[j]))
-//                        {
-//                            color = arrFromBase[j].GetColor();
-//                            localArr.add(arrFromBase[j]);
-//                            break;
-//                        }
-//                    }
-//
-//                }
-//                else
-//                {
-//                    localArr.add(new Participant("",dataArr[0], dataArr[2], dataArr[1], "",Color.BLACK));
-//                }
-//                if(needDelete)
-//                {
-//                    table.removeViewAt(i);
-//                    k++;
-//                    i--;
-//                }
-//                else
-//                {
-//                    _renameTableRow = row;
-//                }
-//
-//            }
-//        }
-//        return localArr.toArray(new Participant[localArr.size()]);
-//    }
 
     public void OnClickAcceptParticipant(View view)
     {
@@ -1044,21 +976,14 @@ public class ViewPagerActivity extends AppCompatActivity
 //        Toast.makeText(getApplicationContext(),"Редактировать участника",Toast.LENGTH_SHORT).show();
 //    }
 
-//    public void OnClickDeleteParticipant(View view)
-//    {
-//        if(_gridView.getChildCount() == 0)
-//        {
-//            _acceptParticipantImBtn.setVisibility(View.GONE);
-//        }
-//        Participant[] myArr = GetCheckedParticipants(_gridView, true);
-//        for(int i = 0; i<myArr.length; i++)
-//        {
-//            _currentCompetition.DeleteParticipantsFromCompetition(myArr[i]);
-//            _dbSaver.DeleteParticipant(myArr[i], _currentCompetition.GetDbParticipantPath());
-//        }
-//        SetStartPosition(_gridView);
-//        Toast.makeText(getApplicationContext(),"Удаление участника",Toast.LENGTH_SHORT).show();
-//    }
+    public void OnClickDeleteParticipant(View view)
+    {
+        List<Sportsman> listToDelete = _recyclerViewLocalDatabaseAdapter.getCheckedSportsmen();
+        _recyclerViewLocalDatabaseAdapter.RemoveSportsmen(listToDelete);
+        saver.DeleteSportsmen(listToDelete);
+        SetStartPosition(1,_recyclerViewLocalDatabaseAdapter.getItemCount(),0);
+        Toast.makeText(getApplicationContext(),"Удаление участника",Toast.LENGTH_SHORT).show();
+    }
 
 //    public void OnClickDeleteDataBAse(View view)
 //    {

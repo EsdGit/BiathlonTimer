@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.esd.esd.biathlontimer.Activities.ViewPagerActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -61,15 +62,51 @@ public class RecyclerViewLocalDatabaseAdapter extends RecyclerView.Adapter<Recyc
         }
     }
 
-    public void AddSportsmen(Sportsman sportsman)
+    public void AddSportsman(Sportsman sportsman)
     {
         sportsmen.add(sportsmen.size(), sportsman);
         notifyItemInserted(sportsmen.size());
     }
 
+    public void RemoveSportsman(Sportsman sportsman)
+    {
+        int pos = sportsmen.indexOf(sportsman);
+        sportsmen.remove(sportsman);
+        notifyItemRemoved(pos);
+    }
+
+    public void AddSportsmen(List<Sportsman> sportsmen)
+    {
+
+    }
+
+    public void RemoveSportsmen(List<Sportsman> sportsmen)
+    {
+        int pos;
+        for(int i = 0; i < sportsmen.size(); i++)
+        {
+            pos = this.sportsmen.indexOf(sportsmen.get(i));
+            this.sportsmen.remove(sportsmen.get(i));
+            notifyItemRemoved(pos);
+        }
+    }
+
     @Override
     public int getItemCount() {
         return sportsmen.size();
+    }
+
+    public List<Sportsman> getCheckedSportsmen()
+    {
+        List<Sportsman> checkedSportsmen = new ArrayList<Sportsman>();
+        for(int i = 0; i < sportsmen.size(); i++)
+        {
+            if(sportsmen.get(i).isChecked())
+            {
+                checkedSportsmen.add(sportsmen.get(i));
+            }
+        }
+        return checkedSportsmen;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder
