@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.esd.esd.biathlontimer.Activities.ViewPagerActivity;
+
 import java.util.List;
 
 /**
@@ -18,12 +20,17 @@ import java.util.List;
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>
 {
     private List<Sportsman> sportsmen;
+    private boolean _haveMarkedParticipant = false;
+    private int _countMarkedParticipant = 0;
+
     public RecyclerViewAdapter(List<Sportsman> sportsmen)
     {
         this.sportsmen = sportsmen;
     }
+
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
+    {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.test_row, parent, false);
         return new ViewHolder(v);
     }
@@ -70,6 +77,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         private TextView groupTextView;
         private LongClickListener longClickListener;
         private ClickListener clickListener;
+
         public ViewHolder(final View itemView)
         {
             super(itemView);
@@ -91,7 +99,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         @Override
         public boolean onLongClick(View v)
         {
+            if(_haveMarkedParticipant) return false;
+            _haveMarkedParticipant = true;
+            _countMarkedParticipant++;
             sportsman.setChecked(true);
+            ViewPagerActivity.SetEditPosition(1);
             notifyDataSetChanged();
             return false;
         }
@@ -108,7 +120,31 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         @Override
         public void onClick(View v)
         {
-            sportsman.setChecked(false);
+            if(!_haveMarkedParticipant) return;
+            if(sportsman.isChecked())//Если спортсмен отмечен
+            {
+                sportsman.setChecked(false);
+                _countMarkedParticipant--;
+            }
+            else//Если не отмечен
+            {
+                sportsman.setChecked(true);
+                _countMarkedParticipant++;
+            }
+            switch (_countMarkedParticipant)
+            {
+                case 0:
+                    _haveMarkedParticipant = false;
+                    _countMarkedParticipant = 0;
+                    ViewPagerActivity.SetStartPosition(1, sportsmen.size(), _countMarkedParticipant);
+                    break;
+                case 1:
+                    ViewPagerActivity.SetEditPosition(1);
+                    break;
+                default:
+                    ViewPagerActivity.SetDelPosition(1);
+                    break;
+            }
             notifyDataSetChanged();
         }
 

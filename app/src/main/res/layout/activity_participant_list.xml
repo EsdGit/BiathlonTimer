@@ -47,7 +47,7 @@
                 android:src="@drawable/ic_accept"
                 android:background="@null"
                 android:layout_gravity="center"
-                android:visibility="gone"
+                android:visibility="visible"
                 android:tint="#ffffff"
                 android:onClick="OnClickAcceptParticipant"
                 android:id="@+id/accept_participant"/>

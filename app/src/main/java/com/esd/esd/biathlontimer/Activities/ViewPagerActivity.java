@@ -52,35 +52,35 @@ public class ViewPagerActivity extends AppCompatActivity
 {
     //private ParticipantSaver _dbSaver;
     private boolean _isFirstLoad = true;
-    private boolean _haveMarkedParticipant = false;
-    private boolean _haveMarkedDataBase = false;
-    private int _counterMarkedParticipant;
-    private int _counterMarkedDataBase;
+    private static boolean _haveMarkedParticipant = false;
+    private static boolean _haveMarkedDataBase = false;
+    private static int _counterMarkedParticipant;
+    private static int _counterMarkedDataBase;
     private TableRow _renameTableRow;
-    private TextView _emptyDataBaseList;
-    private TextView _emptyParticipantList;
-    private LinearLayout _headDataBase;
-    private LinearLayout _headParticipant;
+    private static TextView _emptyDataBaseList;
+    private static TextView _emptyParticipantList;
+    private static LinearLayout _headDataBase;
+    private static LinearLayout _headParticipant;
     private AlertDialog.Builder _addDialogBuilder;
     private AlertDialog _addDialog;
     private PopupMenu _participantPopupMenu;
     private PopupMenu _dataBasePopupMenu;
-    private RecyclerView _recyclerView;
+    private static RecyclerView _recyclerView;
     private ColorPickerDialog _addColorToParticipantDialog;
     private int _colorParticipant;
     private String[] _arrayGroup;
 
     // Элементы ParticipantList
-    private TextView _nameParticipantList;
-    private TextView _birthdayParticipantList;
-    private TextView _countryParticipantList;
-    private TextView _numberParticipantList;
-    private TextView _nameOfParticipantList;
-    private TextView _groupParticipantList;
-    private ImageButton _acceptParticipantImBtn;
-    private ImageButton _deleteParticipantImBtn;
-    private ImageButton _menuParticipantImBtn;
-    private ImageButton _editParticipantImBtn;
+    private static TextView _nameParticipantList;
+    private static TextView _birthdayParticipantList;
+    private static TextView _countryParticipantList;
+    private static TextView _numberParticipantList;
+    private static TextView _nameOfParticipantList;
+    private static TextView _groupParticipantList;
+    private static ImageButton _acceptParticipantImBtn;
+    private static ImageButton _deleteParticipantImBtn;
+    private static ImageButton _menuParticipantImBtn;
+    private static ImageButton _editParticipantImBtn;
 
     // Элементы AlertDialog
     private EditText _nameDialog;
@@ -102,15 +102,15 @@ public class ViewPagerActivity extends AppCompatActivity
 
     // Элементы DataBaseList
     private GridView _gridViewDatabase;
-    private TextView _nameDataBaseList;
-    private TextView _birthdayDataBaseList;
-    private TextView _countryDataBaseList;
-    private TextView _nameOfDataBaseList;
-    private ImageButton _acceptDataBaseImBtn;
-    private ImageButton _deleteDataBaseImBtn;
-    private ImageButton _menuDataBaseImBtn;
-    private ImageButton _editDataBaseImBtn;
-    private ImageButton _secondAcceptDataBaseImBtn;
+    private static TextView _nameDataBaseList;
+    private static TextView _birthdayDataBaseList;
+    private static TextView _countryDataBaseList;
+    private static TextView _nameOfDataBaseList;
+    private static ImageButton _acceptDataBaseImBtn;
+    private static ImageButton _deleteDataBaseImBtn;
+    private static ImageButton _menuDataBaseImBtn;
+    private static ImageButton _editDataBaseImBtn;
+    private static ImageButton _secondAcceptDataBaseImBtn;
 
     //Диалог добавления
     private View _dialogForm;
@@ -123,7 +123,8 @@ public class ViewPagerActivity extends AppCompatActivity
 
     private boolean _needDeleteTables = false;
 
-    private Context _viewPagerContext;
+
+    private static Context _viewPagerContext;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -282,7 +283,7 @@ public class ViewPagerActivity extends AppCompatActivity
                 }
 
                 _colorDialog.setBackgroundColor(Color.BLACK);
-                SetStartPosition(currGridView);
+                //SetStartPosition(currGridView);
             }
         });
         _renameDialogBuilder.setNegativeButton(CancelDialogBtn, new DialogInterface.OnClickListener() {
@@ -312,7 +313,7 @@ public class ViewPagerActivity extends AppCompatActivity
                 {
                     ((TextView) _renameTableRow.getChildAt(j)).setBackground(new PaintDrawable(getResources().getColor(R.color.white)));
                 }
-                SetStartPosition((RecyclerView) _renameTableRow.getParent());
+                //SetStartPosition((RecyclerView) _renameTableRow.getParent());
                 _colorDialog.setBackgroundColor(Color.BLACK);
 
             }
@@ -376,6 +377,7 @@ public class ViewPagerActivity extends AppCompatActivity
         _recyclerView.setAdapter(recyclerViewAdapter);
         _recyclerView.setLayoutManager(layoutManager);
         _recyclerView.setItemAnimator(itemAnimator);
+        //SetStartPosition(_recyclerView);
     }
 
     @Override
@@ -1128,12 +1130,12 @@ public class ViewPagerActivity extends AppCompatActivity
 //        EmptyParticipantCompetition();
 //    }
 
-    private void SetStartPosition(RecyclerView gridView)
+    static public void SetStartPosition(int mode, int childCount, int markedCount)
     {
 
-        if(gridView == _recyclerView)
+        if(mode == 1)
         {
-            if(gridView.getChildCount()== 0)
+            if(childCount== 0)
             {
                 _acceptParticipantImBtn.setVisibility(View.GONE);
             }
@@ -1144,8 +1146,6 @@ public class ViewPagerActivity extends AppCompatActivity
             _editParticipantImBtn.setVisibility(View.GONE);
             _menuParticipantImBtn.setVisibility(View.VISIBLE);
             _deleteParticipantImBtn.setVisibility(View.GONE);
-            _haveMarkedParticipant = false;
-            _counterMarkedParticipant = 0;
         }
         else
         {
@@ -1155,13 +1155,12 @@ public class ViewPagerActivity extends AppCompatActivity
             _acceptDataBaseImBtn.setVisibility(View.GONE);
             _deleteDataBaseImBtn.setVisibility(View.GONE);
             _menuDataBaseImBtn.setVisibility(View.VISIBLE);
-            _counterMarkedDataBase = 0;
         }
     }
 
-    private void SetEditPosition(RecyclerView gridView)
+    static public void SetEditPosition(int mode)
     {
-        if(gridView == _recyclerView)
+        if(mode == 1)
         {
             _acceptParticipantImBtn.setVisibility(View.GONE);
             _editParticipantImBtn.setVisibility(View.VISIBLE);
@@ -1178,9 +1177,9 @@ public class ViewPagerActivity extends AppCompatActivity
         }
     }
 
-    private void SetDelPosition(RecyclerView gridView)
+    static public void SetDelPosition(int mode)
     {
-        if(gridView == _recyclerView)
+        if(mode == 1)
         {
             EmptyParticipantCompetition();
             _acceptParticipantImBtn.setVisibility(View.GONE);
@@ -1199,7 +1198,7 @@ public class ViewPagerActivity extends AppCompatActivity
         }
     }
 
-    private void EmptyParticipantCompetition()
+    static private void EmptyParticipantCompetition()
     {
         if(_recyclerView.getChildCount() == 0)
         {
@@ -1213,18 +1212,18 @@ public class ViewPagerActivity extends AppCompatActivity
         }
     }
 
-    private void EmptyDataBaseCompetition()
+    static private void EmptyDataBaseCompetition()
     {
-        if(_gridViewDatabase.getChildCount() == 0)
-        {
-            _emptyDataBaseList.setVisibility(View.VISIBLE);
-            _headDataBase.setVisibility(View.INVISIBLE);
-        }
-        else
-        {
-            _emptyDataBaseList.setVisibility(View.GONE);
-            _headDataBase.setVisibility(View.VISIBLE);
-        }
+//        if(_gridViewDatabase.getChildCount() == 0)
+//        {
+//            _emptyDataBaseList.setVisibility(View.VISIBLE);
+//            _headDataBase.setVisibility(View.INVISIBLE);
+//        }
+//        else
+//        {
+//            _emptyDataBaseList.setVisibility(View.GONE);
+//            _headDataBase.setVisibility(View.VISIBLE);
+//        }
     }
 
     @Override
