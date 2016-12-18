@@ -19,7 +19,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.esd.esd.biathlontimer.Competition;
-import com.esd.esd.biathlontimer.Participant;
 import com.esd.esd.biathlontimer.R;
 
 import java.util.ArrayList;

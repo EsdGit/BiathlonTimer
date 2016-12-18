@@ -2,43 +2,26 @@ package com.esd.esd.biathlontimer.Activities;
 
 import android.annotation.TargetApi;
 import android.app.ActionBar;
-import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
-import android.icu.text.MessagePattern;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.EditTextPreference;
-import android.preference.ListPreference;
-import android.preference.Preference;
 import android.preference.PreferenceActivity;
-import android.preference.PreferenceFragment;
-import android.preference.PreferenceScreen;
 import android.text.Html;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.WindowManager;
-import android.widget.DatePicker;
-import android.widget.TimePicker;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import com.esd.esd.biathlontimer.Competition;
 import com.esd.esd.biathlontimer.DatabaseClasses.CompetitionSaver;
 import com.esd.esd.biathlontimer.DatabaseClasses.DatabaseProvider;
-import com.esd.esd.biathlontimer.DatabaseClasses.ParticipantSaver;
-import com.esd.esd.biathlontimer.DatabaseClasses.SettingsSaver;
-import com.esd.esd.biathlontimer.Participant;
 import com.esd.esd.biathlontimer.R;
 import com.esd.esd.biathlontimer.SettingsChangedEvent;
 import com.esd.esd.biathlontimer.SettingsFragment;
 
-import org.greenrobot.eventbus.EventBus;
+
 
 
 public class SettingsActivity extends PreferenceActivity
@@ -47,7 +30,7 @@ public class SettingsActivity extends PreferenceActivity
     private Intent _localIntent;
     private boolean isFirstLoad = true;
 
-    private EventBus _eventBus;
+    //private EventBus _eventBus;
 
     private Competition _oldCompetititon;
     @Override
@@ -73,7 +56,7 @@ public class SettingsActivity extends PreferenceActivity
         }
         getFragmentManager().beginTransaction().replace(android.R.id.content, new SettingsFragment()).commit();
 
-        _eventBus = EventBus.getDefault();
+        //_eventBus = EventBus.getDefault();
     }
 
 
@@ -150,21 +133,21 @@ public class SettingsActivity extends PreferenceActivity
                 }
                 else
                 {
-                    ParticipantSaver partSaver = new ParticipantSaver(this);
-                    Participant[] participants = partSaver.GetAllParticipants(_oldCompetititon.GetDbParticipantPath(), DatabaseProvider.DbParticipant.COLUMN_NAME);
-                    DatabaseProvider dbProvider = new DatabaseProvider(this);
-                    dbProvider.DeleteTable(_oldCompetititon.GetDbParticipantPath());
-                    dbProvider.DeleteTable(_oldCompetititon.GetSettingsPath());
-                    saver.DeleteCompetitionFromDatabase(_oldCompetititon);
-                    Competition newCompetition = SettingsFragment.GetCurrentCompetition(this);
-                    for(int i = 0; i<participants.length;i++)
-                    {
-                        newCompetition.AddParticipant(participants[i]);
-                    }
-                    saver.SaveCompetitionToDatabase(newCompetition);
-                    SettingsChangedEvent event = new SettingsChangedEvent();
-                    _eventBus.post(event);
-                    this.finish();
+//                    ParticipantSaver partSaver = new ParticipantSaver(this);
+//                    Participant[] participants = partSaver.GetAllParticipants(_oldCompetititon.GetDbParticipantPath(), DatabaseProvider.DbParticipant.COLUMN_NAME);
+//                    DatabaseProvider dbProvider = new DatabaseProvider(this);
+//                    dbProvider.DeleteTable(_oldCompetititon.GetDbParticipantPath());
+//                    dbProvider.DeleteTable(_oldCompetititon.GetSettingsPath());
+//                    saver.DeleteCompetitionFromDatabase(_oldCompetititon);
+//                    Competition newCompetition = SettingsFragment.GetCurrentCompetition(this);
+//                    for(int i = 0; i<participants.length;i++)
+//                    {
+//                        newCompetition.AddParticipant(participants[i]);
+//                    }
+//                    saver.SaveCompetitionToDatabase(newCompetition);
+//                    SettingsChangedEvent event = new SettingsChangedEvent();
+//                    _eventBus.post(event);
+//                    this.finish();
                 }
             }
         }

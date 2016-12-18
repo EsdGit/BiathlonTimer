@@ -187,7 +187,7 @@
             android:background="#ffffff"/>
     </LinearLayout>
 
-    <GridView
+    <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerHorizontal="true"
@@ -196,7 +196,7 @@
         android:layout_below="@+id/headTableParticipantListLayout"
         android:elevation="2dp">
 
-    </GridView>
+    </android.support.v7.widget.RecyclerView>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/addFileBtn"

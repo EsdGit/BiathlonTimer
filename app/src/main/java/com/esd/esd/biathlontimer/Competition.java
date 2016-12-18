@@ -2,12 +2,8 @@ package com.esd.esd.biathlontimer;
 
 
 import android.content.Context;
-import android.icu.text.MessagePattern;
-import android.icu.text.TimeZoneFormat;
 
-import com.esd.esd.biathlontimer.Activities.MainActivity;
 import com.esd.esd.biathlontimer.DatabaseClasses.DatabaseProvider;
-import com.esd.esd.biathlontimer.DatabaseClasses.ParticipantSaver;
 import com.esd.esd.biathlontimer.DatabaseClasses.SettingsSaver;
 
 import java.util.ArrayList;
@@ -15,7 +11,7 @@ import java.util.ArrayList;
 // Класс реализующий таблицу участников
 public class Competition
 {
-    private ArrayList<Participant> _participants;
+    //private ArrayList<Participant> _participants;
 
     private String _competitionName;
     public String GetName()
@@ -80,7 +76,7 @@ public class Competition
         _nameDateString = name+date;
         _settingsPath = "settings"+name+date;
         _dbParticipantPath = "participants"+name+date;
-        _participants = new ArrayList<Participant>();
+       // _participants = new ArrayList<Participant>();
         _localContext = context;
         GenerateParticipantDb();
         GenerateSettingsDb();
@@ -132,57 +128,57 @@ public class Competition
         _maxParticipantCount = Integer.valueOf(startNumberFromDb.split(",")[1]);
     }
 
-    public void GetAllParticipantsToComp()
-    {
-        ParticipantSaver saver = new ParticipantSaver(_localContext);
-        Participant[] localArr = saver.GetAllParticipants(GetDbParticipantPath(), DatabaseProvider.DbParticipant.COLUMN_NAME);
-        localArr = SortByNumber(localArr);
-        for(int i = 0; i<localArr.length;i++)
-        {
-            _participants.add(localArr[i]);
-        }
-    }
+//    public void GetAllParticipantsToComp()
+//    {
+//        ParticipantSaver saver = new ParticipantSaver(_localContext);
+//        Participant[] localArr = saver.GetAllParticipants(GetDbParticipantPath(), DatabaseProvider.DbParticipant.COLUMN_NAME);
+//        localArr = SortByNumber(localArr);
+//        for(int i = 0; i<localArr.length;i++)
+//        {
+//            _participants.add(localArr[i]);
+//        }
+//    }
 
-    private Participant[] SortByNumber(Participant[] arr)
-    {
-        Participant[] localArr = arr;
-        int count = localArr.length;
-        if(count == 0) return null;
-        int first;
-        int second;
-        int k = 0;
-        Participant helper;
-        while(k != count)
-        {
-            for(int i = 0; i < count - k - 1; i++)
-            {
-                first = Integer.valueOf(localArr[i].GetNumber());
-                second = Integer.valueOf(localArr[i+1].GetNumber());
-                if(first > second)
-                {
-                    helper = localArr[i];
-                    localArr[i]  = localArr[i+1];
-                    localArr[i+1] = helper;
-                }
-            }
-            k++;
-        }
-        return localArr;
-    }
+//    private Participant[] SortByNumber(Participant[] arr)
+//    {
+//        Participant[] localArr = arr;
+//        int count = localArr.length;
+//        if(count == 0) return null;
+//        int first;
+//        int second;
+//        int k = 0;
+//        Participant helper;
+//        while(k != count)
+//        {
+//            for(int i = 0; i < count - k - 1; i++)
+//            {
+//                first = Integer.valueOf(localArr[i].GetNumber());
+//                second = Integer.valueOf(localArr[i+1].GetNumber());
+//                if(first > second)
+//                {
+//                    helper = localArr[i];
+//                    localArr[i]  = localArr[i+1];
+//                    localArr[i+1] = helper;
+//                }
+//            }
+//            k++;
+//        }
+//        return localArr;
+//    }
     // Метод добавления участников соревнований, если такого участника нет
-    public void AddParticipant(Participant participant)
-    {
-        Participant[] localArr = _participants.toArray(new Participant[_participants.size()]);
-        for(int i = 0; i < localArr.length; i++)
-        {
-            if(localArr[i].equals(participant)) return;
-        }
-
-        _participants.add(participant);
-
-        ParticipantSaver ps = new ParticipantSaver(_localContext);
-        ps.SaveParticipantToDatabase(participant, _dbParticipantPath);
-    }
+//    public void AddParticipant(Participant participant)
+//    {
+//        Participant[] localArr = _participants.toArray(new Participant[_participants.size()]);
+//        for(int i = 0; i < localArr.length; i++)
+//        {
+//            if(localArr[i].equals(participant)) return;
+//        }
+//
+//        _participants.add(participant);
+//
+//        ParticipantSaver ps = new ParticipantSaver(_localContext);
+//        ps.SaveParticipantToDatabase(participant, _dbParticipantPath);
+//    }
 
     public void GenerateSettingsDb()
     {
@@ -196,30 +192,30 @@ public class Competition
         dbProvider.AddNewParticipantTable(_dbParticipantPath);
     }
 
-    public void DeleteParticipantsFromCompetition(Participant participant)
-    {
-        ParticipantSaver ps = new ParticipantSaver(_localContext);
-        Participant[] localArr = _participants.toArray(new Participant[_participants.size()]);
-        for(int i = 0; i < localArr.length; i++)
-        {
-            if(localArr[i].equals(participant))
-            {
-                _participants.remove(participant);
-                ps.DeleteParticipant(participant, _dbParticipantPath);
-            }
-        }
-    }
+//    public void DeleteParticipantsFromCompetition(Participant participant)
+//    {
+//        ParticipantSaver ps = new ParticipantSaver(_localContext);
+//        Participant[] localArr = _participants.toArray(new Participant[_participants.size()]);
+//        for(int i = 0; i < localArr.length; i++)
+//        {
+//            if(localArr[i].equals(participant))
+//            {
+//                _participants.remove(participant);
+//                ps.DeleteParticipant(participant, _dbParticipantPath);
+//            }
+//        }
+//    }
+//
+//    public int GetParticipantCount()
+//    {
+//        return _participants.size();
+//    }
 
-    public int GetParticipantCount()
-    {
-        return _participants.size();
-    }
 
-
-    public Participant[] GetAllParticipants()
-    {
-        return _participants.toArray(new Participant[_participants.size()]);
-    }
+//    public Participant[] GetAllParticipants()
+//    {
+//        return _participants.toArray(new Participant[_participants.size()]);
+//    }
 
     public void FinishCompetition()
     {
