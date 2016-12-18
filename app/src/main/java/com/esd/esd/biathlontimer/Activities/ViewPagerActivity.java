@@ -4,27 +4,22 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.PaintDrawable;
 import android.os.Bundle;
-import android.support.v4.content.CursorLoader;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -40,9 +35,11 @@ import com.android.colorpicker.ColorPickerSwatch;
 import com.esd.esd.biathlontimer.Competition;
 import com.esd.esd.biathlontimer.DatabaseClasses.CompetitionSaver;
 import com.esd.esd.biathlontimer.DatabaseClasses.DatabaseProvider;
+import com.esd.esd.biathlontimer.DatabaseClasses.RealmSportsmenSaver;
 import com.esd.esd.biathlontimer.PagerAdapterHelper;
 import com.esd.esd.biathlontimer.R;
-import com.esd.esd.biathlontimer.RecyclerViewAdapter;
+import com.esd.esd.biathlontimer.RecyclerViewDatabaseAdapter;
+import com.esd.esd.biathlontimer.RecyclerViewLocalDatabaseAdapter;
 import com.esd.esd.biathlontimer.Sportsman;
 
 import java.util.ArrayList;
@@ -50,6 +47,8 @@ import java.util.List;
 
 public class ViewPagerActivity extends AppCompatActivity
 {
+    private RecyclerViewLocalDatabaseAdapter _recyclerViewLocalDatabaseAdapter;
+    private RecyclerViewDatabaseAdapter _recyclerViewDatabaseAdapter;
     //private ParticipantSaver _dbSaver;
     private boolean _isFirstLoad = true;
     private static boolean _haveMarkedParticipant = false;
@@ -111,6 +110,7 @@ public class ViewPagerActivity extends AppCompatActivity
     private static ImageButton _menuDataBaseImBtn;
     private static ImageButton _editDataBaseImBtn;
     private static ImageButton _secondAcceptDataBaseImBtn;
+    private static RecyclerView _recyclerViewDatabase;
 
     //Диалог добавления
     private View _dialogForm;
@@ -169,42 +169,25 @@ public class ViewPagerActivity extends AppCompatActivity
             public void onClick(DialogInterface dialog, int arg1)
             {
                 _colorParticipant = ((ColorDrawable) _colorDialog.getBackground()).getColor();
-//                Participant participant = new Participant(_numberDialog.getText().toString(),_nameDialog.getText().toString(),
-//                        _countryDialog.getText().toString(), _birthdayDialog.getText().toString(),_spinnerOfGroup.getSelectedItem().toString(),_colorParticipant);
-//
-//                 _acceptParticipantImBtn.setVisibility(View.VISIBLE);
-//                if(_dbSaver.SaveParticipantToDatabase(participant, DatabaseProvider.DbParticipant.TABLE_NAME))
-//                {
-//                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.participant_added),
-//                            Toast.LENGTH_LONG).show();
-//                }
-//                else
-//                {
-//                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.participant_already_exists_in_database),
-//                            Toast.LENGTH_LONG).show();
-//                }
-//                _dbSaver.SaveParticipantToDatabase(participant, _currentCompetition.GetDbParticipantPath());
-//                Participant[] localArr = GetParticipantsFromTable(_gridView);
-//                boolean needAdd = true;
-//                for(int i = 0; i < localArr.length; i++)
-//                {
-//                    if(participant.equals(localArr[i]))
-//                    {
-//                        needAdd = false;
-//                    }
-//                }
-//                if(needAdd) AddRowParticipantList(participant);
+                Sportsman sportsman = new Sportsman(Integer.valueOf(_numberDialog.getText().toString()), _nameDialog.getText().toString(),
+                        Integer.valueOf(_birthdayDialog.getText().toString()), _countryDialog.getText().toString(), _spinnerOfGroup.toString());
+
+                 _acceptParticipantImBtn.setVisibility(View.VISIBLE);
+
+                _recyclerViewLocalDatabaseAdapter.AddSportsmen(sportsman);
+                _recyclerViewDatabaseAdapter.AddSportsmen(sportsman);
 
 
-//                _currentCompetition.AddParticipant(participant);
-//                SetStartPosition(_gridView);
-//                _nameDialog.setText("");
-//                _birthdayDialog.setText("");
-//                _countryDialog.setText("");
-//                _numberDialog.setText("");
-//                _colorDialog.setBackgroundColor(Color.BLACK);
-//                _addColorToParticipantDialog.setSelectedColor(Color.BLACK);
-//                _spinnerOfGroup.setSelection(0);
+
+
+                //SetStartPosition(_gridView);
+                _nameDialog.setText("");
+                _birthdayDialog.setText("");
+                _countryDialog.setText("");
+                _numberDialog.setText("");
+                _colorDialog.setBackgroundColor(Color.BLACK);
+                _addColorToParticipantDialog.setSelectedColor(Color.BLACK);
+                _spinnerOfGroup.setSelection(0);
 
             }
 
@@ -294,7 +277,7 @@ public class ViewPagerActivity extends AppCompatActivity
                 String country;
 
                 int cellsCount = 5;
-                if((GridView)_renameTableRow.getParent() == _gridViewDatabase)
+                if((RecyclerView)_renameTableRow.getParent() == _recyclerViewDatabase)
                 {
                     cellsCount = 3;
                     ((TextView) _renameTableRow.getChildAt(0)).setBackground(new PaintDrawable(getResources().getColor(R.color.white)));
@@ -366,18 +349,27 @@ public class ViewPagerActivity extends AppCompatActivity
     private void AddDataFromBases()
     {
         List<Sportsman> sportsmen = new ArrayList<Sportsman>();
-
+        List<Sportsman> testDb = new ArrayList<Sportsman>();
+        testDb.add(new Sportsman(1,"Олег",1996,"Россия","Без группы"));
+        testDb.add(new Sportsman(2,"Настя",1995,"Россия","Молодец"));
+        RealmSportsmenSaver saver = new RealmSportsmenSaver(this);
+        saver.SaveSportsmen(testDb);
         if(_needDeleteTables)
         {
             GenerateStandartParticipants(_currentCompetition.GetStartNumber(), _currentCompetition.GetMaxParticipantCount(), sportsmen);
         }
-        RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter(sportsmen);
+        _recyclerViewLocalDatabaseAdapter = new RecyclerViewLocalDatabaseAdapter(sportsmen);
+        _recyclerViewDatabaseAdapter = new RecyclerViewDatabaseAdapter(saver.getSportsmen());
+        LinearLayoutManager layoutManager1 = new LinearLayoutManager(this);
+        RecyclerView.ItemAnimator itemAnimator1 = new DefaultItemAnimator();
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
-        _recyclerView.setAdapter(recyclerViewAdapter);
+        _recyclerView.setAdapter(_recyclerViewLocalDatabaseAdapter);
         _recyclerView.setLayoutManager(layoutManager);
         _recyclerView.setItemAnimator(itemAnimator);
-        //SetStartPosition(_recyclerView);
+        _recyclerViewDatabase.setAdapter(_recyclerViewDatabaseAdapter);
+        _recyclerViewDatabase.setLayoutManager(layoutManager1);
+        _recyclerViewDatabase.setItemAnimator(itemAnimator1);
     }
 
     @Override
@@ -387,14 +379,15 @@ public class ViewPagerActivity extends AppCompatActivity
         EmptyParticipantCompetition();
     }
 
-    public void OnClick(View view) {
+    public void OnClick(View view)
+    {
         _addDialog.show();
     }
 
     private void GenerateStandartParticipants(int firstNumber, int count, List<Sportsman> sportsmen)
     {
         int counter = 1;
-        for(int i = firstNumber; i < count; i++)
+        for(int i = firstNumber; i <= count + firstNumber; i++)
         {
             Sportsman sportsman = new Sportsman();
             sportsman.setInfo(i, "Спортсмен "+ String.valueOf(counter), 1996, "Россия", "Без группы");
@@ -690,7 +683,7 @@ public class ViewPagerActivity extends AppCompatActivity
         View page2 = inflater.inflate(R.layout.activity_database_list, null);
         pages.add(page2);
 
-        _gridViewDatabase = (GridView) page2.findViewById(R.id.gridViewDataBaseLayout);
+        _recyclerViewDatabase = (RecyclerView) page2.findViewById(R.id.gridViewDataBaseLayout);
         _headDataBase = (LinearLayout) page2.findViewById(R.id.headTableDataBaseLayout);
         _nameDataBaseList = (TextView) page2.findViewById(R.id.nameDataBase);
         _birthdayDataBaseList = (TextView) page2.findViewById(R.id.birthdayDataBase);
@@ -1214,16 +1207,16 @@ public class ViewPagerActivity extends AppCompatActivity
 
     static private void EmptyDataBaseCompetition()
     {
-//        if(_gridViewDatabase.getChildCount() == 0)
-//        {
-//            _emptyDataBaseList.setVisibility(View.VISIBLE);
-//            _headDataBase.setVisibility(View.INVISIBLE);
-//        }
-//        else
-//        {
-//            _emptyDataBaseList.setVisibility(View.GONE);
-//            _headDataBase.setVisibility(View.VISIBLE);
-//        }
+        if(_recyclerViewDatabase.getChildCount() == 0)
+        {
+            _emptyDataBaseList.setVisibility(View.VISIBLE);
+            _headDataBase.setVisibility(View.INVISIBLE);
+        }
+        else
+        {
+            _emptyDataBaseList.setVisibility(View.GONE);
+            _headDataBase.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
