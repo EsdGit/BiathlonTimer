@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.esd.esd.biathlontimer.Activities.ViewPagerActivity;
+
 import java.util.List;
 
 /**
@@ -16,10 +18,14 @@ import java.util.List;
 public class RecyclerViewDatabaseAdapter extends RecyclerView.Adapter<RecyclerViewDatabaseAdapter.ViewHolder>
 {
     private List<Sportsman> sportsmen;
+    private boolean _haveMarkedParticipantDataBase = false;
+    private int _countMarkedParticipantDataBase = 0;
+
     public RecyclerViewDatabaseAdapter(List<Sportsman> sportsmen)
     {
         this.sportsmen = sportsmen;
     }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_db_list, parent, false);
@@ -86,7 +92,11 @@ public class RecyclerViewDatabaseAdapter extends RecyclerView.Adapter<RecyclerVi
         @Override
         public boolean onLongClick(View v)
         {
+            if(_haveMarkedParticipantDataBase) return false;
+            _haveMarkedParticipantDataBase = true;
+            _countMarkedParticipantDataBase++;
             sportsman.setChecked(true);
+            ViewPagerActivity.SetEditPosition(2);
             notifyDataSetChanged();
             return false;
         }
@@ -103,7 +113,31 @@ public class RecyclerViewDatabaseAdapter extends RecyclerView.Adapter<RecyclerVi
         @Override
         public void onClick(View v)
         {
-            sportsman.setChecked(false);
+            if(!_haveMarkedParticipantDataBase) return;
+            if(sportsman.isChecked())//Если спортсмен отмечен
+            {
+                sportsman.setChecked(false);
+                _countMarkedParticipantDataBase--;
+            }
+            else//Если не отмечен
+            {
+                sportsman.setChecked(true);
+                _countMarkedParticipantDataBase++;
+            }
+            switch (_countMarkedParticipantDataBase)
+            {
+                case 0:
+                    _haveMarkedParticipantDataBase = false;
+                    _countMarkedParticipantDataBase = 0;
+                    ViewPagerActivity.SetStartPosition(2, sportsmen.size(), _countMarkedParticipantDataBase);
+                    break;
+                case 1:
+                    ViewPagerActivity.SetEditPosition(2);
+                    break;
+                default:
+                    ViewPagerActivity.SetDelPosition(2);
+                    break;
+            }
             notifyDataSetChanged();
         }
 
