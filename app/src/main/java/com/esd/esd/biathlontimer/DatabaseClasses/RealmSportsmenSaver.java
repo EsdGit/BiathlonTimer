@@ -10,6 +10,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
+import io.realm.Sort;
 
 /**
  * Created by Oleg on 18.12.2016.
@@ -34,9 +35,20 @@ public class RealmSportsmenSaver
         }
     }
 
-    public List<Sportsman> getSportsmen()
+    public List<Sportsman> GetSportsmen()
     {
         RealmResults<Sportsman> results = realm.where(Sportsman.class).findAll();
+        return realm.copyFromRealm(results);
+    }
+
+    public List<Sportsman> GetSortedSportsmen(String sortBy, boolean sortState)
+    {
+
+        Sort localSort;
+        if(sortState) localSort = Sort.ASCENDING;
+        else localSort = Sort.DESCENDING;
+
+        RealmResults<Sportsman> results = realm.where(Sportsman.class).findAllSorted(sortBy, localSort);
         return realm.copyFromRealm(results);
     }
 

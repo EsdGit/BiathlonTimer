@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.esd.esd.biathlontimer.Activities.ViewPagerActivity;
+import com.esd.esd.biathlontimer.DatabaseClasses.RealmSportsmenSaver;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,7 @@ import java.util.List;
  * Created by Oleg on 18.12.2016.
  */
 
-public class RecyclerViewLocalDatabaseAdapter extends RecyclerView.Adapter<RecyclerViewLocalDatabaseAdapter.ViewHolder>
+public class RecyclerViewLocalDatabaseAdapter extends RecyclerView.Adapter<RecyclerViewLocalDatabaseAdapter.ViewHolder> implements MyAdapterInteface
 {
     private List<Sportsman> sportsmen;
     private boolean _haveMarkedParticipant = false;
@@ -62,12 +63,22 @@ public class RecyclerViewLocalDatabaseAdapter extends RecyclerView.Adapter<Recyc
         }
     }
 
+    @Override
+    public void SortList(List<Sportsman> sortedList)
+    {
+        sportsmen.clear();
+        sportsmen = sortedList;
+        notifyDataSetChanged();
+    }
+
+    @Override
     public void AddSportsman(Sportsman sportsman)
     {
         sportsmen.add(sportsmen.size(), sportsman);
         notifyItemInserted(sportsmen.size());
     }
 
+    @Override
     public void RemoveSportsman(Sportsman sportsman)
     {
         int pos = sportsmen.indexOf(sportsman);
@@ -75,11 +86,12 @@ public class RecyclerViewLocalDatabaseAdapter extends RecyclerView.Adapter<Recyc
         notifyItemRemoved(pos);
     }
 
-    public void AddSportsmen(List<Sportsman> sportsmen)
-    {
+    @Override
+    public void AddSportsmen(List<Sportsman> sportsmen) {
 
     }
 
+    @Override
     public void RemoveSportsmen(List<Sportsman> sportsmen)
     {
         int pos;
@@ -96,8 +108,8 @@ public class RecyclerViewLocalDatabaseAdapter extends RecyclerView.Adapter<Recyc
         return sportsmen.size();
     }
 
-    public List<Sportsman> getCheckedSportsmen()
-    {
+    @Override
+    public List<Sportsman> GetCheckedSportsmen() {
         List<Sportsman> checkedSportsmen = new ArrayList<Sportsman>();
         for(int i = 0; i < sportsmen.size(); i++)
         {
@@ -107,6 +119,11 @@ public class RecyclerViewLocalDatabaseAdapter extends RecyclerView.Adapter<Recyc
             }
         }
         return checkedSportsmen;
+    }
+
+    @Override
+    public void ResetHaveMarkedFlag() {
+        _haveMarkedParticipant = false;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder

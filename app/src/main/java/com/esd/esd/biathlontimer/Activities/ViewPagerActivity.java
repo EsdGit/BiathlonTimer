@@ -177,12 +177,12 @@ public class ViewPagerActivity extends AppCompatActivity
                  //_acceptParticipantImBtn.setVisibility(View.VISIBLE);
 
                 _recyclerViewLocalDatabaseAdapter.AddSportsman(sportsman);
-                _recyclerViewDatabaseAdapter.AddSportsmen(sportsman);
+                _recyclerViewDatabaseAdapter.AddSportsman(sportsman);
 
                 saver.SaveSportsman(sportsman);
                 mainSaver.SaveSportsman(sportsman);
 
-                //SetStartPosition(_gridView);
+                SetStartPosition(1,_recyclerViewDatabaseAdapter.getItemCount(), 0);
                 _nameDialog.setText("");
                 _birthdayDialog.setText("");
                 _countryDialog.setText("");
@@ -363,11 +363,11 @@ public class ViewPagerActivity extends AppCompatActivity
         }
         else
         {
-            List<Sportsman> list = saver.getSportsmen();
+            List<Sportsman> list = saver.GetSportsmen();
             _recyclerViewLocalDatabaseAdapter = new RecyclerViewLocalDatabaseAdapter(list);
         }
 
-        _recyclerViewDatabaseAdapter = new RecyclerViewDatabaseAdapter(mainSaver.getSportsmen());
+        _recyclerViewDatabaseAdapter = new RecyclerViewDatabaseAdapter(mainSaver.GetSportsmen());
         LinearLayoutManager layoutManager1 = new LinearLayoutManager(this);
         RecyclerView.ItemAnimator itemAnimator1 = new DefaultItemAnimator();
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -406,242 +406,6 @@ public class ViewPagerActivity extends AppCompatActivity
         }
     }
 
-    // Добавление участника в ParticipantList
-//    private void AddRowParticipantList(Participant participant) {
-//        int maxHeight = 0;
-//        TableRow newRow = new TableRow(this);
-//        final TextView newTextView0 = new TextView(this);
-//        newTextView0.setSingleLine(false);
-//        newTextView0.setText(participant.GetNumber());
-//        newTextView0.setGravity(Gravity.CENTER);
-//        newTextView0.setTextColor(participant.GetColor());
-//        newTextView0.setBackgroundColor(Color.WHITE);
-//        newTextView0.setTextSize(getResources().getDimension(R.dimen.normal_text_size));
-//        newTextView0.setLayoutParams(new TableRow.LayoutParams(_numberParticipantList.getMeasuredWidth(), ViewGroup.LayoutParams.MATCH_PARENT, 0.4f));
-//        ((TableRow.LayoutParams) newTextView0.getLayoutParams()).setMargins(2, 0, 2, 2);
-//
-//        final TextView newTextView1 = new TextView(this);
-//        newTextView1.setSingleLine(false);
-//        newTextView1.setText(participant.GetFIO());
-//        newTextView1.setGravity(Gravity.CENTER);
-//        newTextView1.setTextColor(participant.GetColor());
-//        newTextView1.setBackground(new PaintDrawable(Color.WHITE));
-//        newTextView1.setTextSize(getResources().getDimension(R.dimen.normal_text_size));
-//        newTextView1.setLayoutParams(new TableRow.LayoutParams(_nameParticipantList.getMeasuredWidth(),ViewGroup.LayoutParams.MATCH_PARENT/* _nameParticipantList.getMeasuredHeight()*/, 3.0f));
-//        ((TableRow.LayoutParams) newTextView1.getLayoutParams()).setMargins(0, 0, 2, 2);
-//
-//        final TextView newTextView2 = new TextView(this);
-//        newTextView2.setSingleLine(false);
-//        newTextView2.setText(participant.GetBirthYear());
-//        newTextView2.setGravity(Gravity.CENTER);
-//        newTextView2.setTextColor(participant.GetColor());
-//        newTextView2.setBackground(new PaintDrawable(Color.WHITE));
-//        newTextView2.setTextSize(getResources().getDimension(R.dimen.normal_text_size));
-//        newTextView2.setLayoutParams(new TableRow.LayoutParams(_birthdayParticipantList.getMeasuredWidth(), ViewGroup.LayoutParams.MATCH_PARENT/* _birthdayParticipantList.getMeasuredHeight()*/, 0.4f));
-//        ((TableRow.LayoutParams) newTextView2.getLayoutParams()).setMargins(0, 0, 2, 2);
-//
-//        final TextView newTextView3 = new TextView(this);
-//        newTextView3.setSingleLine(false);
-//        newTextView3.setText(participant.GetGroup());
-//        newTextView3.setGravity(Gravity.CENTER);
-//        newTextView3.setTextColor(participant.GetColor());
-//        newTextView3.setBackground(new PaintDrawable(Color.WHITE));
-//        newTextView3.setTextSize(getResources().getDimension(R.dimen.normal_text_size));
-//        newTextView3.setLayoutParams(new TableRow.LayoutParams(_groupParticipantList.getMeasuredWidth(),ViewGroup.LayoutParams.MATCH_PARENT/* _groupParticipantList.getMeasuredHeight()*/, 0.6f));
-//        ((TableRow.LayoutParams) newTextView3.getLayoutParams()).setMargins(0, 0, 2, 2);
-//
-//        final TextView newTextView4 = new TextView(this);
-//        newTextView4.setSingleLine(false);
-//        newTextView4.setText(participant.GetCountry());
-//        newTextView4.setGravity(Gravity.CENTER);
-//        newTextView4.setTextColor(participant.GetColor());
-//        newTextView4.setBackground(new PaintDrawable(Color.WHITE));
-//        newTextView4.setTextSize(getResources().getDimension(R.dimen.normal_text_size));
-//        newTextView4.setLayoutParams(new TableRow.LayoutParams(_countryParticipantList.getMeasuredWidth(),ViewGroup.LayoutParams.MATCH_PARENT/* _countryParticipantList.getMeasuredHeight()*/, 0.6f));
-//        ((TableRow.LayoutParams) newTextView4.getLayoutParams()).setMargins(0, 0, 2, 2);
-//
-//        newRow.addView(newTextView0);
-//        newRow.addView(newTextView1);
-//        newRow.addView(newTextView2);
-//        newRow.addView(newTextView3);
-//        newRow.addView(newTextView4);
-//        newRow.setOnLongClickListener(new View.OnLongClickListener()
-//        {
-//            @Override
-//            public boolean onLongClick(View v)
-//            {
-//                ArrayList<View> rowView = new ArrayList<View>();
-//                v.addChildrenForAccessibility(rowView);
-//                if(!_haveMarkedParticipant)
-//                {
-//                    _haveMarkedParticipant = true;
-//                    for (int i = 0; i < rowView.size(); i++)
-//                    {
-//                        rowView.get(i).setBackground(new PaintDrawable(getResources().getColor(R.color.colorPrimary)));
-//                    }
-//                }
-//                return false;
-//            }
-//        });
-//        newRow.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v)
-//            {
-//                ArrayList<View> rowView = new ArrayList<View>();
-//                v.addChildrenForAccessibility(rowView);
-//                if(!_haveMarkedParticipant)return;
-//                if (_counterMarkedParticipant == 0) {
-//                    // Если отмечен первый
-//                    _counterMarkedParticipant++;
-//                    SetEditPosition(_gridView);
-//                }
-//                else
-//                {
-//                        PaintDrawable drawable = (PaintDrawable) rowView.get(1).getBackground();
-//                        if (drawable.getPaint().getColor() == getResources().getColor(R.color.colorPrimary))
-//                        {
-//                            _counterMarkedParticipant--;
-//                            String name = ((TextView) rowView.get(1)).getText().toString();
-//                            String year = ((TextView) rowView.get(2)).getText().toString();
-//                            String country = ((TextView) rowView.get(4)).getText().toString();
-//                            Participant currParticipant = new Participant("",name,country,year,DefaultGroup,1);
-//                            Participant[] localArr = _dbSaver.GetAllParticipants(_currentCompetition.GetDbParticipantPath(), DatabaseProvider.DbParticipant.COLUMN_NAME);
-//                            for(int i = 0; i < rowView.size(); i++)
-//                            {
-//                                rowView.get(i).setBackground(new PaintDrawable(Color.WHITE));
-//                            }
-//
-//
-//                        }
-//                        else
-//                        {
-//                            _counterMarkedParticipant++;
-//                            for(int i = 0; i<5;i++)
-//                            {
-//                                rowView.get(i).setBackground(new PaintDrawable(getResources().getColor(R.color.colorPrimary)));
-//                            }
-//                        }
-//                    }
-//                    switch (_counterMarkedParticipant)
-//                    {
-//                        case 0:
-//                            SetStartPosition(_gridView);
-//                            _haveMarkedParticipant = false;
-//                            break;
-//                        case 1:
-//                            SetEditPosition(_gridView);
-//                            break;
-//                        default:
-//                            SetDelPosition(_gridView);
-//                            break;
-//                    }
-//            }
-//        });
-//        _gridView.addView(newRow);
-//        SetStartPosition(_gridView);
-//    }
-//
-//    private void AddRowParticipantFromBase(Participant participant) {
-//        TableRow newRow = new TableRow(this);
-//        TextView newTextView1 = new TextView(this);
-//        newTextView1.setText(participant.GetFIO());
-//        newTextView1.setGravity(Gravity.CENTER);
-//        newTextView1.setTextColor(Color.BLACK);
-//        newTextView1.setBackground(new PaintDrawable(Color.WHITE));
-//        newTextView1.setTextSize(getResources().getDimension(R.dimen.normal_text_size));
-//        newTextView1.setLayoutParams(new TableRow.LayoutParams(_nameDataBaseList.getMeasuredWidth(), ViewGroup.LayoutParams.MATCH_PARENT, 3f));
-//        ((TableRow.LayoutParams) newTextView1.getLayoutParams()).setMargins(2, 0, 2, 2);
-//        TextView newTextView2 = new TextView(this);
-//        newTextView2.setText(participant.GetBirthYear());
-//        newTextView2.setGravity(Gravity.CENTER);
-//        newTextView2.setTextColor(Color.BLACK);
-//        newTextView2.setBackground(new PaintDrawable(Color.WHITE));
-//        newTextView2.setTextSize(getResources().getDimension(R.dimen.normal_text_size));
-//        newTextView2.setLayoutParams(new TableRow.LayoutParams(_birthdayDataBaseList.getMeasuredWidth(), ViewGroup.LayoutParams.MATCH_PARENT, 0.5f));
-//        ((TableRow.LayoutParams) newTextView2.getLayoutParams()).setMargins(0, 0, 2, 2);
-//        TextView newTextView3 = new TextView(this);
-//        newTextView3.setText(participant.GetCountry());
-//        newTextView3.setGravity(Gravity.CENTER);
-//        newTextView3.setTextColor(Color.BLACK);
-//        newTextView3.setBackground(new PaintDrawable(Color.WHITE));
-//        newTextView3.setTextSize(getResources().getDimension(R.dimen.normal_text_size));
-//        newTextView3.setLayoutParams(new TableRow.LayoutParams(_countryDataBaseList.getMeasuredWidth(), ViewGroup.LayoutParams.MATCH_PARENT, 0.5f));
-//        ((TableRow.LayoutParams) newTextView3.getLayoutParams()).setMargins(0, 0, 2, 2);
-//        newRow.addView(newTextView1);
-//        newRow.addView(newTextView2);
-//        newRow.addView(newTextView3);
-//        newRow.setOnLongClickListener(new View.OnLongClickListener()
-//        {
-//            @Override
-//            public boolean onLongClick(View v)
-//            {
-//                ArrayList<View> rowView = new ArrayList<View>();
-//                v.addChildrenForAccessibility(rowView);
-//                if(!_haveMarkedDataBase)
-//                {
-//                    _haveMarkedDataBase = true;
-//                    for (int i = 0; i < rowView.size(); i++)
-//                    {
-//                        rowView.get(i).setBackground(new PaintDrawable(getResources().getColor(R.color.colorPrimary)));
-//                    }
-//                }
-//                return false;
-//            }
-//        });
-//        newRow.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v)
-//            {
-//                ArrayList<View> rowView = new ArrayList<View>();
-//                v.addChildrenForAccessibility(rowView);
-//                if(!_haveMarkedDataBase) return;
-//                if (_counterMarkedDataBase == 0)
-//                {
-//                    // Если отмечен первый
-//                    _counterMarkedDataBase++;
-//                    SetEditPosition(_gridViewDatabase);
-//                }
-//                else
-//                {
-//                    // Есди уже были отмечены
-//                    for (int i = 0; i < rowView.size(); i++)
-//                    {
-//                        PaintDrawable drawable = (PaintDrawable) rowView.get(i).getBackground();
-//                        if (drawable.getPaint().getColor() == getResources().getColor(R.color.colorPrimary))
-//                        {
-//                            if(i == 0)
-//                            {
-//                                _counterMarkedDataBase--;
-//                            }
-//                            rowView.get(i).setBackground(new PaintDrawable(Color.WHITE));
-//                        }
-//                        else
-//                        {
-//                            if(i == 0)
-//                            {
-//                                _counterMarkedDataBase++;
-//                            }
-//                            rowView.get(i).setBackground(new PaintDrawable(getResources().getColor(R.color.colorPrimary)));
-//                        }
-//                    }
-//                    switch (_counterMarkedDataBase)
-//                    {
-//                        case 0:
-//                            SetStartPosition(_gridViewDatabase);
-//                            _haveMarkedDataBase = false;
-//                            break;
-//                        case 1:
-//                            SetEditPosition(_gridViewDatabase);
-//                            break;
-//                        default:
-//                            SetDelPosition(_gridViewDatabase);
-//                            break;
-//                    }
-//                }
-//            }
-//        });
-//        _gridViewDatabase.addView(newRow);
-//    }
 
     private void FindAllViews()
     {
@@ -716,113 +480,22 @@ public class ViewPagerActivity extends AppCompatActivity
         setContentView(viewPager);
     }
 
-//    private void SortTableBy(GridView table, String orderBy, boolean sortState)
-//    {
-//        String localOrderString;
-//        String localTableName = "";
-//        Participant[] localArr;
-//        if(sortState)
-//        {
-//            localOrderString = orderBy + " ASC";
-//        }
-//        else
-//        {
-//            localOrderString = orderBy + " DESC";
-//        }
-//        table.removeAllViews();
-//
-////        if(table == _tableLayoutDataBaseList)
-////        {
-////            localTableName = DatabaseProvider.DbParticipant.TABLE_NAME;
-////            localArr = _dbSaver.GetAllParticipants(localTableName, localOrderString);
-////            for(int i = 0; i < localArr.length; i++)
-////            {
-////                AddRowParticipantFromBase(localArr[i]);
-////            }
-////        }
-////        else
-////        {
-////            localTableName = _currentCompetition.GetDbParticipantPath();
-////            localArr = _dbSaver.GetAllParticipants(localTableName, localOrderString);
-////            for(int i = 0; i < localArr.length; i++)
-////            {
-////                AddRowParticipantList(localArr[i]);
-////            }
-////        }
-//        localTableName = _currentCompetition.GetDbParticipantPath();
-//        localArr = _dbSaver.GetAllParticipants(localTableName, localOrderString);
-//        for(int i = 0; i < localArr.length; i++)
-//        {
-//            AddRowParticipantList(localArr[i]);
-//        }
-//
-//    }
+    private void SortTableBy(RecyclerView recyclerView, String orderBy, boolean sortState)
+    {
+        List<Sportsman> sortedList;
+        if(recyclerView == _recyclerView)
+        {
+            sortedList = saver.GetSortedSportsmen(orderBy, sortState);
+            _recyclerViewLocalDatabaseAdapter.SortList(sortedList);
+        }
+        else
+        {
+            sortedList = mainSaver.GetSortedSportsmen(orderBy, sortState);
+            _recyclerViewDatabaseAdapter.SortList(sortedList);
+        }
 
-//    private void SortByYear(GridView table,boolean sortState, boolean sortByYear)
-//    {
-//        Participant[] localArr;
-//        if(table == _gridView)
-//            localArr = _dbSaver.GetAllParticipants(_currentCompetition.GetDbParticipantPath(), DatabaseProvider.DbParticipant.COLUMN_NAME);
-//        else
-//            localArr = _dbSaver.GetAllParticipants(DatabaseProvider.DbParticipant.TABLE_NAME, DatabaseProvider.DbParticipant.COLUMN_NAME);
-//        int participantCount = localArr.length;
-//        table.removeAllViews();
-//        int k = 0;
-//        Participant helpPart;
-//        int firstParticipantData;
-//        int secondParticipantData;
-//        while(k != participantCount)
-//        {
-//            for(int i = 0; i < participantCount - k - 1; i++)
-//            {
-//                if(sortByYear)
-//                {
-//                    firstParticipantData = Integer.valueOf(localArr[i].GetBirthYear());
-//                    secondParticipantData = Integer.valueOf(localArr[i + 1].GetBirthYear());
-//                }
-//                else
-//                {
-//                    try {
-//                        firstParticipantData = Integer.valueOf(localArr[i].GetNumber());
-//                    }catch (Exception e) {firstParticipantData = 0;}
-//                    try {
-//                        secondParticipantData = Integer.valueOf(localArr[i + 1].GetNumber());
-//                    }catch (Exception e1) {secondParticipantData = 0;}
-//                }
-//                if(sortState)
-//                {
-//                    if (firstParticipantData > secondParticipantData) {
-//                        helpPart = localArr[i];
-//                        localArr[i] = localArr[i + 1];
-//                        localArr[i + 1] = helpPart;
-//                    }
-//                }
-//                else
-//                {
-//                    if (firstParticipantData < secondParticipantData) {
-//                        helpPart = localArr[i];
-//                        localArr[i] = localArr[i + 1];
-//                        localArr[i + 1] = helpPart;
-//                    }
-//                }
-//            }
-//            k++;
-//        }
-//        if(table == _gridViewDatabase)
-//        {
-//            for (int j = 0; j < participantCount; j++)
-//            {
-//                AddRowParticipantFromBase(localArr[j]);
-//            }
-//        }
-//        else
-//        {
-//            for (int j = 0; j < participantCount; j++)
-//            {
-//                AddRowParticipantList(localArr[j]);
-//            }
-//        }
-//    }
+    }
+
     // Обработка нажатий меню сортировок
     public void OnClickMenu(View view)
     {
@@ -844,23 +517,23 @@ public class ViewPagerActivity extends AppCompatActivity
                             switch (item.getItemId())
                             {
                                 case R.id.groupSort:
-                                    //SortTableBy(_gridView, DatabaseProvider.DbParticipant.COLUMN_GROUP, item.isChecked());
+                                    SortTableBy(_recyclerView, "group", item.isChecked());
                                     Toast.makeText(getApplicationContext(),"Сортировка списка участников по группам",Toast.LENGTH_SHORT).show();
                                     return true;
                                 case R.id.nameSort:
-                                    //SortTableBy(_gridView, DatabaseProvider.DbParticipant.COLUMN_NAME, item.isChecked());
+                                    SortTableBy(_recyclerView, "name" , item.isChecked());
                                     Toast.makeText(getApplicationContext(),"Сортировка списка участников по имени",Toast.LENGTH_SHORT).show();
                                     return true;
                                 case R.id.dataSort:
-                                    //SortByYear(_gridView, item.isChecked(), true);
+                                    SortTableBy(_recyclerView, "year", item.isChecked());
                                     Toast.makeText(getApplicationContext(),"Сортировка списка участников по дате",Toast.LENGTH_SHORT).show();
                                     return true;
                                 case R.id.countrySort:
-                                    //SortTableBy(_gridView, DatabaseProvider.DbParticipant.COLUMN_COUNTRY, item.isChecked());
+                                    SortTableBy(_recyclerView, "country", item.isChecked());
                                     Toast.makeText(getApplicationContext(),"Сортировка списка участников по региону",Toast.LENGTH_SHORT).show();
                                     return true;
                                 case R.id.numberSort:
-                                   // SortByYear(_gridView, item.isChecked(), false);
+                                    SortTableBy(_recyclerView, "number", item.isChecked());
                                     Toast.makeText(getApplicationContext(),"Сортировка списка участников по номеру",Toast.LENGTH_SHORT).show();
                                     return true;
                                 default:
@@ -888,15 +561,15 @@ public class ViewPagerActivity extends AppCompatActivity
                             switch (item.getItemId())
                             {
                                 case R.id.nameSort:
-                                    //SortTableBy(_gridViewDatabase, DatabaseProvider.DbParticipant.COLUMN_NAME, item.isChecked());
+                                    SortTableBy(_recyclerViewDatabase, "name", item.isChecked());
                                     Toast.makeText(getApplicationContext(),"Сортировка базы данных по имени",Toast.LENGTH_SHORT).show();
                                     return true;
                                 case R.id.dataSort:
-                                   // SortByYear(_gridViewDatabase, item.isChecked(),true);
+                                    SortTableBy(_recyclerViewDatabase, "year", item.isChecked());
                                     Toast.makeText(getApplicationContext(),"Сортировка базы данных по дате",Toast.LENGTH_SHORT).show();
                                     return true;
                                 case R.id.countrySort:
-                                   // SortTableBy(_gridViewDatabase, DatabaseProvider.DbParticipant.COLUMN_COUNTRY, item.isChecked());
+                                    SortTableBy(_recyclerViewDatabase, "country", item.isChecked());
                                     Toast.makeText(getApplicationContext(),"Сортировка базы данных по региону",Toast.LENGTH_SHORT).show();
                                     return true;
                                 default:
@@ -978,43 +651,43 @@ public class ViewPagerActivity extends AppCompatActivity
 
     public void OnClickDeleteParticipant(View view)
     {
-        List<Sportsman> listToDelete = _recyclerViewLocalDatabaseAdapter.getCheckedSportsmen();
+        List<Sportsman> listToDelete = _recyclerViewLocalDatabaseAdapter.GetCheckedSportsmen();
         _recyclerViewLocalDatabaseAdapter.RemoveSportsmen(listToDelete);
         saver.DeleteSportsmen(listToDelete);
+        _recyclerViewLocalDatabaseAdapter.ResetHaveMarkedFlag();
         SetStartPosition(1,_recyclerViewLocalDatabaseAdapter.getItemCount(),0);
         Toast.makeText(getApplicationContext(),"Удаление участника",Toast.LENGTH_SHORT).show();
     }
 
-//    public void OnClickDeleteDataBAse(View view)
-//    {
-//        final AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-//        dialog.setTitle(getResources().getString(R.string.delete_dialog_title));
-//        dialog.setMessage(getResources().getString(R.string.messege_del_dialog_from_database));
-//        dialog.setCancelable(false);
-//        dialog.setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialogInterface, int i)
-//            {
-//                Participant[] myArr = GetCheckedParticipants(_gridViewDatabase, true);
-//                for(int j = 0; j<myArr.length;j++)
-//                {
-//                    _dbSaver.DeleteParticipant(myArr[j], DatabaseProvider.DbParticipant.TABLE_NAME);
-//                }
-//                SetStartPosition(_gridViewDatabase);
-//                Toast.makeText(getApplicationContext(),"Участники удалены",Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//
-//        dialog.setNegativeButton(getResources().getString(R.string.no), new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialogInterface, int i) {
-//
-//            }
-//        });
-//        dialog.show();
-//
-//
-//    }
+    public void OnClickDeleteDataBAse(View view)
+    {
+        final AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.setTitle(getResources().getString(R.string.delete_dialog_title));
+        dialog.setMessage(getResources().getString(R.string.messege_del_dialog_from_database));
+        dialog.setCancelable(false);
+        dialog.setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i)
+            {
+                List<Sportsman> listToDelete = _recyclerViewDatabaseAdapter.GetCheckedSportsmen();
+                mainSaver.DeleteSportsmen(listToDelete);
+                _recyclerViewDatabaseAdapter.RemoveSportsmen(listToDelete);
+                _recyclerViewDatabaseAdapter.ResetHaveMarkedFlag();
+                SetStartPosition(2, _recyclerViewDatabaseAdapter.getItemCount(), 0);
+                Toast.makeText(getApplicationContext(),"Участники удалены",Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        dialog.setNegativeButton(getResources().getString(R.string.no), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+        dialog.show();
+
+
+    }
 
 //    public void OnClickEditDataBase(View view)
 //    {

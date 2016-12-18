@@ -9,13 +9,14 @@ import android.widget.TextView;
 
 import com.esd.esd.biathlontimer.Activities.ViewPagerActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Oleg on 18.12.2016.
  */
 
-public class RecyclerViewDatabaseAdapter extends RecyclerView.Adapter<RecyclerViewDatabaseAdapter.ViewHolder>
+public class RecyclerViewDatabaseAdapter extends RecyclerView.Adapter<RecyclerViewDatabaseAdapter.ViewHolder> implements MyAdapterInteface
 {
     private List<Sportsman> sportsmen;
     private boolean _haveMarkedParticipantDataBase = false;
@@ -55,20 +56,67 @@ public class RecyclerViewDatabaseAdapter extends RecyclerView.Adapter<RecyclerVi
     }
 
     @Override
+    public void SortList(List<Sportsman> sortedList)
+    {
+        sportsmen.clear();
+        sportsmen = sortedList;
+        notifyDataSetChanged();
+    }
+
+    @Override
     public int getItemCount() {
         return sportsmen.size();
     }
 
-    public void AddSportsmen(Sportsman sportsman)
+    @Override
+    public List<Sportsman> GetCheckedSportsmen() {
+        List<Sportsman> checkedSportsmen = new ArrayList<Sportsman>();
+        for(int i = 0; i < sportsmen.size(); i++)
+        {
+            if(sportsmen.get(i).isChecked())
+            {
+                checkedSportsmen.add(sportsmen.get(i));
+            }
+        }
+        return checkedSportsmen;
+    }
+
+    @Override
+    public void ResetHaveMarkedFlag()
+    {
+        _haveMarkedParticipantDataBase = false;
+    }
+
+    @Override
+    public void AddSportsman(Sportsman sportsman)
     {
         sportsmen.add(sportsmen.size(), sportsman);
         notifyItemInserted(sportsmen.size());
     }
 
-    public void RemoveSportsmen(Sportsman sportsman)
+    @Override
+    public void AddSportsmen(List<Sportsman> sportsmen) {
+
+    }
+
+    @Override
+    public void RemoveSportsman(Sportsman sportsman)
     {
-        //sportsmen.remove(sportsman);
-        //notifyItemRemoved(sportsman.getId());
+        int pos = sportsmen.indexOf(sportsman);
+        sportsmen.remove(sportsman);
+        notifyItemRemoved(pos);
+    }
+
+    @Override
+    public void RemoveSportsmen(List<Sportsman> sportsmen)
+    {
+        int pos;
+        for(int i = 0; i < sportsmen.size(); i++)
+        {
+            pos = this.sportsmen.indexOf(sportsmen.get(i));
+            this.sportsmen.remove(sportsmen.get(i));
+            notifyItemRemoved(pos);
+        }
     }
 
     class ViewHolder extends RecyclerView.ViewHolder
