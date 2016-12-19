@@ -194,7 +194,7 @@ public class RecyclerViewLocalDatabaseAdapter extends RecyclerView.Adapter<Recyc
                 case 0:
                     _haveMarkedParticipant = false;
                     _countMarkedParticipant = 0;
-                    ViewPagerActivity.SetStartPosition(1, sportsmen.size(), _countMarkedParticipant);
+                    ViewPagerActivity.SetStartPosition(1, sportsmen.size());
                     break;
                 case 1:
                     ViewPagerActivity.SetEditPosition(1);

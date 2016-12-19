@@ -183,7 +183,7 @@ public class RecyclerViewDatabaseAdapter extends RecyclerView.Adapter<RecyclerVi
                 case 0:
                     _haveMarkedParticipantDataBase = false;
                     _countMarkedParticipantDataBase = 0;
-                    ViewPagerActivity.SetStartPosition(2, sportsmen.size(), _countMarkedParticipantDataBase);
+                    ViewPagerActivity.SetStartPosition(2, sportsmen.size());
                     break;
                 case 1:
                     ViewPagerActivity.SetEditPosition(2);

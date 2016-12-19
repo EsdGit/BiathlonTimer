@@ -729,7 +729,7 @@ public class ViewPagerActivity extends AppCompatActivity
 //        EmptyParticipantCompetition();
 //    }
 
-    static public void SetStartPosition(int mode, int childCount, int markedCount)
+    static public void SetStartPosition(int mode, int childCount)
     {
 
         if(mode == 1)
