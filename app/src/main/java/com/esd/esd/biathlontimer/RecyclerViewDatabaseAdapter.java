@@ -75,6 +75,7 @@ public class RecyclerViewDatabaseAdapter extends RecyclerView.Adapter<RecyclerVi
         {
             if(sportsmen.get(i).isChecked())
             {
+                sportsmen.get(i).setChecked(false);
                 checkedSportsmen.add(sportsmen.get(i));
             }
         }
@@ -90,13 +91,18 @@ public class RecyclerViewDatabaseAdapter extends RecyclerView.Adapter<RecyclerVi
     @Override
     public void AddSportsman(Sportsman sportsman)
     {
-        sportsmen.add(sportsmen.size(), sportsman);
-        notifyItemInserted(sportsmen.size());
+        if(sportsmen.contains(sportsman)) return;
+        sportsmen.add(0, sportsman);
+        notifyItemInserted(0);
     }
 
     @Override
-    public void AddSportsmen(List<Sportsman> sportsmen) {
-
+    public void AddSportsmen(List<Sportsman> sportsmen)
+    {
+        for(int i = 0; i<sportsmen.size(); i++)
+        {
+            AddSportsman(sportsmen.get(i));
+        }
     }
 
     @Override

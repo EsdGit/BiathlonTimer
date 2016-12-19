@@ -174,7 +174,7 @@ public class ViewPagerActivity extends AppCompatActivity
                 Sportsman sportsman = new Sportsman(Integer.valueOf(_numberDialog.getText().toString()), _nameDialog.getText().toString(),
                         Integer.valueOf(_birthdayDialog.getText().toString()), _countryDialog.getText().toString(), _spinnerOfGroup.getSelectedItem().toString());
 
-                 //_acceptParticipantImBtn.setVisibility(View.VISIBLE);
+                 sportsman.setColor(_colorParticipant);
 
                 _recyclerViewLocalDatabaseAdapter.AddSportsman(sportsman);
                 _recyclerViewDatabaseAdapter.AddSportsman(sportsman);
@@ -226,17 +226,7 @@ public class ViewPagerActivity extends AppCompatActivity
                     year = ((TextView)_renameTableRow.getChildAt(2)).getText().toString();
                     group = _spinnerOfGroupRename.getSelectedItem().toString();
                     country = ((TextView)_renameTableRow.getChildAt(4)).getText().toString();
-                    ((TextView) _renameTableRow.getChildAt(0)).setText(_numberRenameDialog.getText());
-                    ((TextView) _renameTableRow.getChildAt(1)).setText(_nameRenameDialog.getText());
-                    ((TextView) _renameTableRow.getChildAt(2)).setText(_birthdayRenameDialog.getText());
-                    ((TextView) _renameTableRow.getChildAt(3)).setText(group);
-                    ((TextView) _renameTableRow.getChildAt(4)).setText(_countryRenameDialog.getText());
 
-                    for(int j = 0; j < 5; j++)
-                    {
-                        ((TextView) _renameTableRow.getChildAt(j)).setTextColor(_colorParticipant);
-                    }
-                    cellsCount = 5;
                 }
                 else
                 {
@@ -244,10 +234,7 @@ public class ViewPagerActivity extends AppCompatActivity
                     name = ((TextView)_renameTableRow.getChildAt(0)).getText().toString();
                     year = ((TextView)_renameTableRow.getChildAt(1)).getText().toString();
                     country = ((TextView)_renameTableRow.getChildAt(2)).getText().toString();
-                    ((TextView) _renameTableRow.getChildAt(0)).setText(_nameRenameDialog.getText());
-                    ((TextView) _renameTableRow.getChildAt(1)).setText(_birthdayRenameDialog.getText());
-                    ((TextView) _renameTableRow.getChildAt(2)).setText(_countryRenameDialog.getText());
-                    cellsCount = 3;
+
                 }
 
 //                localParticipant = new Participant(number, name, country, year, "",_colorParticipant);
@@ -262,10 +249,10 @@ public class ViewPagerActivity extends AppCompatActivity
 //                    _dbSaver.SaveParticipantToDatabase(localParticipant, _currentCompetition.GetDbParticipantPath());
 //                }
 
-                for(int j = 0; j < cellsCount; j++)
-                {
-                    ((TextView) _renameTableRow.getChildAt(j)).setBackground(new PaintDrawable(getResources().getColor(R.color.white)));
-                }
+//                for(int j = 0; j < cellsCount; j++)
+//                {
+//                    ((TextView) _renameTableRow.getChildAt(j)).setBackground(new PaintDrawable(getResources().getColor(R.color.white)));
+//                }
 
                 _colorDialog.setBackgroundColor(Color.BLACK);
                 //SetStartPosition(currGridView);
@@ -274,31 +261,8 @@ public class ViewPagerActivity extends AppCompatActivity
         _renameDialogBuilder.setNegativeButton(CancelDialogBtn, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                String name;
-                String year;
-                String country;
 
-                int cellsCount = 5;
-                if((RecyclerView)_renameTableRow.getParent() == _recyclerViewDatabase)
-                {
-                    cellsCount = 3;
-                    ((TextView) _renameTableRow.getChildAt(0)).setBackground(new PaintDrawable(getResources().getColor(R.color.white)));
-                }
-                else
-                {
-                    name = ((TextView)_renameTableRow.getChildAt(1)).getText().toString();
-                    year = ((TextView)_renameTableRow.getChildAt(2)).getText().toString();
-                    country = ((TextView)_renameTableRow.getChildAt(4)).getText().toString();
-                   // Participant currPart = new Participant("",name,country,year,DefaultGroup,-1);
-                  //  Participant[] localArr = _dbSaver.GetAllParticipants(_currentCompetition.GetDbParticipantPath(), DatabaseProvider.DbParticipant.COLUMN_NAME);
-                    ((TextView) _renameTableRow.getChildAt(0)).setBackgroundColor(-1);
-
-                }
-                for(int j = 0; j < cellsCount; j++)
-                {
-                    ((TextView) _renameTableRow.getChildAt(j)).setBackground(new PaintDrawable(getResources().getColor(R.color.white)));
-                }
-                //SetStartPosition((RecyclerView) _renameTableRow.getParent());
+                //SetStartPosition(1);
                 _colorDialog.setBackgroundColor(Color.BLACK);
 
             }
@@ -401,6 +365,7 @@ public class ViewPagerActivity extends AppCompatActivity
         {
             Sportsman sportsman = new Sportsman();
             sportsman.setInfo(i, "Спортсмен "+ String.valueOf(counter), 1996, "Россия", "Без группы");
+            sportsman.setColor(Color.BLACK);
             sportsmen.add(sportsman);
             counter++;
         }
@@ -584,35 +549,6 @@ public class ViewPagerActivity extends AppCompatActivity
         }
     }
 
-//    private Participant[] GetParticipantsFromTable(GridView table)
-//    {
-//        int participantCount = table.getChildCount();
-//        Participant[] localArr = new Participant[participantCount];
-//        String[] dataArr;
-//        int cellsCount;
-//        if(table == _gridViewDatabase)
-//        {
-//            cellsCount = 3;
-//            dataArr = new String[cellsCount];
-//        }
-//        else
-//        {
-//            cellsCount = 5;
-//            dataArr = new String[cellsCount];
-//        }
-//        for(int i = 0; i<participantCount; i++)
-//        {
-//            for(int j = 0; j < cellsCount; j++)
-//            {
-//                dataArr[j] = ((TextView)((TableRow) table.getChildAt(i)).getChildAt(j)).getText().toString();
-//            }
-//            if(table == _gridView) localArr[i] = new Participant(dataArr[0],dataArr[1], dataArr[4], dataArr[2],dataArr[3],1);
-//            else localArr[i] = new Participant("",dataArr[0], dataArr[2], dataArr[1], DefaultGroup,1);
-//        }
-//
-//        return localArr;
-//    }
-
 
     public void OnClickAcceptParticipant(View view)
     {
@@ -624,30 +560,27 @@ public class ViewPagerActivity extends AppCompatActivity
         intent.putExtra("Name", _currentCompetition.GetName());
         intent.putExtra("Date", _currentCompetition.GetDate());
         startActivity(intent);
-//          Intent i = new Intent(this, TestBD.class);
-//          i.putExtra("test", "participants"+_currentCompetition.GetNameDateString());
-//          startActivity(i);
     }
 
-//    public void OnClickEditParticipant(View view)
-//    {
-//        Participant[] currentParticipant = GetCheckedParticipants(_gridView, false);
-//        _numberRenameDialog.setText(currentParticipant[0].GetNumber());
-//        _nameRenameDialog.setText(currentParticipant[0].GetFIO());
-//        _birthdayRenameDialog.setText(currentParticipant[0].GetBirthYear());
-//        _countryRenameDialog.setText(currentParticipant[0].GetCountry());
-//        _colorRenameDialog.setBackgroundColor(currentParticipant[0].GetColor());
-//        for(int i = 0; i < _arrayGroup.length; i++)
-//        {
-//            if(_arrayGroup[i].equals(currentParticipant[0].GetGroup()))
-//            {
-//                _spinnerOfGroupRename.setSelection(i);
-//                break;
-//            }
-//        }
-//        _renameDialog.show();
-//        Toast.makeText(getApplicationContext(),"Редактировать участника",Toast.LENGTH_SHORT).show();
-//    }
+    public void OnClickEditParticipant(View view)
+    {
+        Sportsman sportsmanToEdit = _recyclerViewLocalDatabaseAdapter.GetCheckedSportsmen().get(0);
+        _numberRenameDialog.setText(sportsmanToEdit.getNumber());
+        _nameRenameDialog.setText(sportsmanToEdit.getName());
+        _birthdayRenameDialog.setText(sportsmanToEdit.getYear());
+        _countryRenameDialog.setText(sportsmanToEdit.getCountry());
+        _colorRenameDialog.setBackgroundColor(sportsmanToEdit.getColor());
+        for(int i = 0; i < _arrayGroup.length; i++)
+        {
+            if(_arrayGroup[i].equals(sportsmanToEdit.getGroup()))
+            {
+                _spinnerOfGroupRename.setSelection(i);
+                break;
+            }
+        }
+        _renameDialog.show();
+        Toast.makeText(getApplicationContext(),"Редактировать участника",Toast.LENGTH_SHORT).show();
+    }
 
     public void OnClickDeleteParticipant(View view)
     {
@@ -701,33 +634,17 @@ public class ViewPagerActivity extends AppCompatActivity
 //        Toast.makeText(getApplicationContext(),"Редактировать участника в базе данных",Toast.LENGTH_SHORT).show();
 //    }
 
-//    public void OnClickAcceptDataBase(View view)
-//    {
-//        Participant[] localArr = GetCheckedParticipants(_gridViewDatabase, true);
-//        Participant[] localCompParticipants = GetParticipantsFromTable(_gridView);
-//        boolean localFlag;
-//        for(int i = 0; i<localArr.length; i++)
-//        {
-//            localFlag = true;
-//            for(int j = 0; j<localCompParticipants.length; j++)
-//            {
-//                if(localArr[i].equals(localCompParticipants[j]))
-//                {
-//                    localFlag = false;
-//                    break;
-//                }
-//            }
-//            if(localFlag)
-//            {
-//                AddRowParticipantList(localArr[i]);
-//                _currentCompetition.AddParticipant(localArr[i]);
-//            }
-//        }
-//        SetStartPosition(_gridViewDatabase);
-//        Toast.makeText(getApplicationContext(),"Участники были добавлены в соревнование",Toast.LENGTH_SHORT).show();
-//        EmptyDataBaseCompetition();
-//        EmptyParticipantCompetition();
-//    }
+    public void OnClickAcceptDataBase(View view)
+    {
+        List<Sportsman> checkedList = _recyclerViewDatabaseAdapter.GetCheckedSportsmen();
+        _recyclerViewDatabaseAdapter.RemoveSportsmen(checkedList);
+        saver.SaveSportsmen(checkedList);
+        _recyclerViewLocalDatabaseAdapter.AddSportsmen(checkedList);
+        SetStartPosition(2, _recyclerViewDatabaseAdapter.getItemCount(), 0);
+        Toast.makeText(getApplicationContext(),"Участники были добавлены в соревнование",Toast.LENGTH_SHORT).show();
+        EmptyDataBaseCompetition();
+        EmptyParticipantCompetition();
+    }
 
     static public void SetStartPosition(int mode, int childCount)
     {

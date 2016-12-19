@@ -43,6 +43,13 @@ public class RecyclerViewLocalDatabaseAdapter extends RecyclerView.Adapter<Recyc
         holder.yearTextView.setText(String.valueOf(sportsman.getYear()));
         holder.countryTextView.setText(sportsman.getCountry());
         holder.groupTextView.setText(sportsman.getGroup());
+
+        holder.nameTextView.setTextColor(sportsman.getColor());
+        holder.yearTextView.setTextColor(sportsman.getColor());
+        holder.numberTextView.setTextColor(sportsman.getColor());
+        holder.countryTextView.setTextColor(sportsman.getColor());
+        holder.groupTextView.setTextColor(sportsman.getColor());
+
         holder.longClickListener.setSportsman(sportsman);
         holder.clickListener.setSportsman(sportsman);
         if(sportsman.isChecked())
@@ -74,8 +81,11 @@ public class RecyclerViewLocalDatabaseAdapter extends RecyclerView.Adapter<Recyc
     @Override
     public void AddSportsman(Sportsman sportsman)
     {
-        sportsmen.add(sportsmen.size(), sportsman);
-        notifyItemInserted(sportsmen.size());
+//        sportsmen.add(sportsmen.size(), sportsman);
+//        notifyItemInserted(sportsmen.size());
+        if(sportsmen.contains(sportsman)) return;
+        sportsmen.add(0, sportsman);
+        notifyItemInserted(0);
     }
 
     @Override
@@ -87,8 +97,12 @@ public class RecyclerViewLocalDatabaseAdapter extends RecyclerView.Adapter<Recyc
     }
 
     @Override
-    public void AddSportsmen(List<Sportsman> sportsmen) {
-
+    public void AddSportsmen(List<Sportsman> sportsmen)
+    {
+        for(int i = 0; i<sportsmen.size(); i++)
+        {
+            AddSportsman(sportsmen.get(i));
+        }
     }
 
     @Override
@@ -115,6 +129,7 @@ public class RecyclerViewLocalDatabaseAdapter extends RecyclerView.Adapter<Recyc
         {
             if(sportsmen.get(i).isChecked())
             {
+                sportsmen.get(i).setChecked(false);
                 checkedSportsmen.add(sportsmen.get(i));
             }
         }

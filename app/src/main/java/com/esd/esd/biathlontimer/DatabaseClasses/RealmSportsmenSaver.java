@@ -1,6 +1,7 @@
 package com.esd.esd.biathlontimer.DatabaseClasses;
 
 import android.content.Context;
+import android.graphics.Color;
 
 import com.esd.esd.biathlontimer.Sportsman;
 
@@ -20,10 +21,12 @@ public class RealmSportsmenSaver
 {
     private Realm realm;
     private AtomicLong keyId;
+    private boolean isMainDb = false;
     public RealmSportsmenSaver(Context context, String databaseName)
     {
         Realm.init(context);
         RealmConfiguration config = new RealmConfiguration.Builder().schemaVersion(2).deleteRealmIfMigrationNeeded().name(databaseName+".realm").build();
+        if(databaseName.equals("MAIN")) isMainDb = true;
         realm = Realm.getInstance(config);
         if(realm.where(Sportsman.class).count() == 0)
         {
@@ -54,7 +57,11 @@ public class RealmSportsmenSaver
 
     public void SaveSportsman(Sportsman sportsman)
     {
+        if(realm.where(Sportsman.class).equalTo("name",sportsman.getName()).equalTo("year", sportsman.getYear()).
+            equalTo("country", sportsman.getCountry()).count() > 0) return;
         sportsman.setId(keyId.getAndIncrement());
+        // C цветом что-то не то
+        if(isMainDb) sportsman.setColor(Color.BLACK);
         realm.beginTransaction();
         realm.insert(sportsman);
         realm.commitTransaction();
@@ -63,7 +70,8 @@ public class RealmSportsmenSaver
     public void DeleteSportsman(Sportsman sportsman)
     {
         realm.beginTransaction();
-        realm.where(Sportsman.class).equalTo("name", sportsman.getName()).findAll().deleteAllFromRealm();
+        realm.where(Sportsman.class).equalTo("name", sportsman.getName()).equalTo("year", sportsman.getYear()).
+                equalTo("country",sportsman.getCountry()).findAll().deleteAllFromRealm();
         realm.commitTransaction();
     }
 
@@ -72,20 +80,19 @@ public class RealmSportsmenSaver
         for(int i = 0; i < sportsmen.size(); i++)
         {
             realm.beginTransaction();
-            realm.where(Sportsman.class).equalTo("name", sportsmen.get(i).getName()).findAll().deleteAllFromRealm();
+            realm.where(Sportsman.class).equalTo("name", sportsmen.get(i).getName()).equalTo("year", sportsmen.get(i).getYear()).
+                    equalTo("country",sportsmen.get(i).getCountry()).findAll().deleteAllFromRealm();
             realm.commitTransaction();
         }
     }
 
     public void SaveSportsmen(List<Sportsman> sportsmen)
     {
+
         for(int i = 0; i < sportsmen.size(); i++)
         {
-            sportsmen.get(i).setId(keyId.getAndIncrement());
+            SaveSportsman(sportsmen.get(i));
         }
 
-        realm.beginTransaction();
-        realm.insert(sportsmen);
-        realm.commitTransaction();
     }
 }

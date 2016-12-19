@@ -19,8 +19,10 @@ public class Sportsman extends RealmObject
     private int year;
     private String country;
     private String group;
+    private int color;
     @Ignore
     private boolean isChecked;
+
 
     // Методы GET
     public int getNumber() {return number;}
@@ -30,6 +32,7 @@ public class Sportsman extends RealmObject
     public String getGroup(){return group;}
     public boolean isChecked(){return isChecked;}
     public long getId(){return id;}
+    public int getColor(){return color;}
 
     public Sportsman(int number, String name, int year, String country, String group)
     {
@@ -64,5 +67,15 @@ public class Sportsman extends RealmObject
         id = newId;
     }
 
+    public void setColor(int color){this.color = color;}
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == null || !(obj instanceof Sportsman)) return false;
 
+        if(this.name.equals(((Sportsman) obj).name) && this.year == ((Sportsman) obj).year && this.country.equals(((Sportsman) obj).country))
+        {
+            return true;
+        }
+        return false;
+    }
 }
