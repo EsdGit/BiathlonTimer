@@ -182,7 +182,7 @@ public class ViewPagerActivity extends AppCompatActivity
                 saver.SaveSportsman(sportsman);
                 mainSaver.SaveSportsman(sportsman);
 
-                SetStartPosition(1,_recyclerViewDatabaseAdapter.getItemCount(), 0);
+                SetStartPosition(1,_recyclerViewDatabaseAdapter.getItemCount());
                 _nameDialog.setText("");
                 _birthdayDialog.setText("");
                 _countryDialog.setText("");
@@ -320,17 +320,9 @@ public class ViewPagerActivity extends AppCompatActivity
 
         if(_needDeleteTables)
         {
-            List<Sportsman> sportsmen = new ArrayList<Sportsman>();
-            GenerateStandartParticipants(_currentCompetition.GetStartNumber(), _currentCompetition.GetMaxParticipantCount(), sportsmen);
-            saver.SaveSportsmen(sportsmen);
-            _recyclerViewLocalDatabaseAdapter = new RecyclerViewLocalDatabaseAdapter(sportsmen);
+            GenerateStandartParticipants(_currentCompetition.GetStartNumber(), _currentCompetition.GetMaxParticipantCount());
         }
-        else
-        {
-            List<Sportsman> list = saver.GetSportsmen();
-            _recyclerViewLocalDatabaseAdapter = new RecyclerViewLocalDatabaseAdapter(list);
-        }
-
+        _recyclerViewLocalDatabaseAdapter = new RecyclerViewLocalDatabaseAdapter(saver.GetSportsmen());
         _recyclerViewDatabaseAdapter = new RecyclerViewDatabaseAdapter(mainSaver.GetSportsmen());
         LinearLayoutManager layoutManager1 = new LinearLayoutManager(this);
         RecyclerView.ItemAnimator itemAnimator1 = new DefaultItemAnimator();
@@ -358,15 +350,14 @@ public class ViewPagerActivity extends AppCompatActivity
         _addDialog.show();
     }
 
-    private void GenerateStandartParticipants(int firstNumber, int count, List<Sportsman> sportsmen)
+    private void GenerateStandartParticipants(int firstNumber, int count)
     {
         int counter = 1;
         for(int i = firstNumber; i <= count + firstNumber; i++)
         {
-            Sportsman sportsman = new Sportsman();
-            sportsman.setInfo(i, "Спортсмен "+ String.valueOf(counter), 1996, "Россия", "Без группы");
+            Sportsman sportsman = new Sportsman(i, "Спортсмен "+ String.valueOf(counter), 1996, "Россия", "Без группы");
             sportsman.setColor(Color.BLACK);
-            sportsmen.add(sportsman);
+            saver.SaveSportsman(sportsman);
             counter++;
         }
     }
@@ -588,7 +579,7 @@ public class ViewPagerActivity extends AppCompatActivity
         _recyclerViewLocalDatabaseAdapter.RemoveSportsmen(listToDelete);
         saver.DeleteSportsmen(listToDelete);
         _recyclerViewLocalDatabaseAdapter.ResetHaveMarkedFlag();
-        SetStartPosition(1,_recyclerViewLocalDatabaseAdapter.getItemCount(),0);
+        SetStartPosition(1,_recyclerViewLocalDatabaseAdapter.getItemCount());
         Toast.makeText(getApplicationContext(),"Удаление участника",Toast.LENGTH_SHORT).show();
     }
 
@@ -606,7 +597,7 @@ public class ViewPagerActivity extends AppCompatActivity
                 mainSaver.DeleteSportsmen(listToDelete);
                 _recyclerViewDatabaseAdapter.RemoveSportsmen(listToDelete);
                 _recyclerViewDatabaseAdapter.ResetHaveMarkedFlag();
-                SetStartPosition(2, _recyclerViewDatabaseAdapter.getItemCount(), 0);
+                SetStartPosition(2, _recyclerViewDatabaseAdapter.getItemCount());
                 Toast.makeText(getApplicationContext(),"Участники удалены",Toast.LENGTH_SHORT).show();
             }
         });
@@ -640,7 +631,7 @@ public class ViewPagerActivity extends AppCompatActivity
         _recyclerViewDatabaseAdapter.RemoveSportsmen(checkedList);
         saver.SaveSportsmen(checkedList);
         _recyclerViewLocalDatabaseAdapter.AddSportsmen(checkedList);
-        SetStartPosition(2, _recyclerViewDatabaseAdapter.getItemCount(), 0);
+        SetStartPosition(2, _recyclerViewDatabaseAdapter.getItemCount());
         Toast.makeText(getApplicationContext(),"Участники были добавлены в соревнование",Toast.LENGTH_SHORT).show();
         EmptyDataBaseCompetition();
         EmptyParticipantCompetition();

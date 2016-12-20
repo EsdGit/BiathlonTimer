@@ -68,7 +68,10 @@ public class RecyclerViewLocalDatabaseAdapter extends RecyclerView.Adapter<Recyc
             holder.countryTextView.setBackgroundColor(Color.WHITE);
             holder.groupTextView.setBackgroundColor(Color.WHITE);
         }
+
+
     }
+
 
     @Override
     public void SortList(List<Sportsman> sortedList)
@@ -135,6 +138,7 @@ public class RecyclerViewLocalDatabaseAdapter extends RecyclerView.Adapter<Recyc
         }
         return checkedSportsmen;
     }
+
 
     @Override
     public void ResetHaveMarkedFlag() {
@@ -208,7 +212,6 @@ public class RecyclerViewLocalDatabaseAdapter extends RecyclerView.Adapter<Recyc
             {
                 case 0:
                     _haveMarkedParticipant = false;
-                    _countMarkedParticipant = 0;
                     ViewPagerActivity.SetStartPosition(1, sportsmen.size());
                     break;
                 case 1:
@@ -218,6 +221,7 @@ public class RecyclerViewLocalDatabaseAdapter extends RecyclerView.Adapter<Recyc
                     ViewPagerActivity.SetDelPosition(1);
                     break;
             }
+
             notifyDataSetChanged();
         }
 
