@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.esd.esd.biathlontimer.Competition;
+import com.esd.esd.biathlontimer.ExcelHelper;
 import com.esd.esd.biathlontimer.R;
 
 import java.util.ArrayList;
@@ -59,6 +60,9 @@ public class FinalActivity extends AppCompatActivity
         {
             AddResultRow();
         }
+
+        ExcelHelper excelHelper = new ExcelHelper();
+        excelHelper.CreateFileWithResult(5);
 
     }
 

@@ -3,20 +3,27 @@ package com.esd.esd.biathlontimer;
 import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
+import android.widget.Toast;
 
+import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 
 // Класс для работы с excel файлом
 public class ExcelHelper
 {
+    private static final String _fileName ="/ResultCompetition2.xls";
 
     public ExcelHelper()
     {
@@ -25,24 +32,64 @@ public class ExcelHelper
 
 
     // Метод создаёт excel файл и сохраняет его в папку приложения
-    public static void CreateFileWithResult(Context context)
+    public static void CreateFileWithResult(int countLap)
     {
         HSSFWorkbook resultWorkbook = new HSSFWorkbook();
-        HSSFSheet sheet = resultWorkbook.createSheet("Лист1");
-        Row row = sheet.createRow(0);
-        row.createCell(0).setCellValue("Привет");
+        HSSFSheet sheet;
+        HSSFRow row;
+        for (int i = 0 ; i < countLap; i++)
+        {
+            sheet = resultWorkbook.createSheet("Круг " + Integer.toString(i + 1));
+            row = sheet.createRow(0);
+            for(int j = 0; j < 9; j++)
+            {
+                switch (j)
+                {
+                    case 0:
+                        row.createCell(0).setCellValue("Позиция");
+                        break;
+                    case 1:
+                        row.createCell(1).setCellValue("Номер");
+                        break;
+                    case 2:
+                        row.createCell(2).setCellValue("ФИО");
+                        break;
+                    case 3:
+                        row.createCell(3).setCellValue("Год");
+                        break;
+                    case 4:
+                        row.createCell(4).setCellValue("Страна");
+                        break;
+                    case 5:
+                        row.createCell(5).setCellValue("Время круга без штрафа");
+                        break;
+                    case 6:
+                        row.createCell(6).setCellValue("Количество штрафов");
+                        break;
+                    case 7:
+                        row.createCell(7).setCellValue("Время");
+                        break;
+                    case 8:
+                        row.createCell(8).setCellValue("Отставание");
+                        break;
+                }
+            }
+        }
 
         try {
-            try {
-                resultWorkbook.write(new FileOutputStream(context.getExternalFilesDir(Environment.DIRECTORY_ALARMS) + "test.xls"));
+            try
+            {
+                resultWorkbook.write(new FileOutputStream(Environment.getExternalStorageDirectory().getPath() + _fileName));
+                resultWorkbook.close();
             }catch (FileNotFoundException e)
             {
-                Log.i("New", "Error");
+                Log.i("What", "Error");
             }
             resultWorkbook.close();
-        }catch (IOException e)
+        }
+        catch (IOException e)
         {
-            Log.i("gh", "wfe");
+            Log.i("What", "wfe");
         }
     }
 }
