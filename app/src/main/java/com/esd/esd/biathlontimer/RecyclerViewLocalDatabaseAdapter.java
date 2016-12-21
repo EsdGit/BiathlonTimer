@@ -142,7 +142,9 @@ public class RecyclerViewLocalDatabaseAdapter extends RecyclerView.Adapter<Recyc
 
     @Override
     public void ResetHaveMarkedFlag() {
+
         _haveMarkedParticipant = false;
+        _countMarkedParticipant = 0;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder
@@ -212,6 +214,7 @@ public class RecyclerViewLocalDatabaseAdapter extends RecyclerView.Adapter<Recyc
             {
                 case 0:
                     _haveMarkedParticipant = false;
+                    _countMarkedParticipant = 0;
                     ViewPagerActivity.SetStartPosition(1, sportsmen.size());
                     break;
                 case 1:

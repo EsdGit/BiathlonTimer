@@ -47,8 +47,8 @@ import java.util.List;
 
 public class ViewPagerActivity extends AppCompatActivity
 {
-    private RecyclerViewLocalDatabaseAdapter _recyclerViewLocalDatabaseAdapter;
-    private RecyclerViewDatabaseAdapter _recyclerViewDatabaseAdapter;
+    private static  RecyclerViewLocalDatabaseAdapter _recyclerViewLocalDatabaseAdapter;
+    private static RecyclerViewDatabaseAdapter _recyclerViewDatabaseAdapter;
     //private ParticipantSaver _dbSaver;
     private boolean _isFirstLoad = true;
     private static boolean _haveMarkedParticipant = false;
@@ -630,6 +630,7 @@ public class ViewPagerActivity extends AppCompatActivity
         List<Sportsman> checkedList = _recyclerViewDatabaseAdapter.GetCheckedSportsmen();
         _recyclerViewDatabaseAdapter.RemoveSportsmen(checkedList);
         saver.SaveSportsmen(checkedList);
+        _recyclerViewLocalDatabaseAdapter.SortList(saver.GetSortedSportsmen("number", true));
         _recyclerViewLocalDatabaseAdapter.AddSportsmen(checkedList);
         SetStartPosition(2, _recyclerViewDatabaseAdapter.getItemCount());
         Toast.makeText(getApplicationContext(),"Участники были добавлены в соревнование",Toast.LENGTH_SHORT).show();
@@ -653,6 +654,7 @@ public class ViewPagerActivity extends AppCompatActivity
             _editParticipantImBtn.setVisibility(View.GONE);
             _menuParticipantImBtn.setVisibility(View.VISIBLE);
             _deleteParticipantImBtn.setVisibility(View.GONE);
+            _recyclerViewLocalDatabaseAdapter.ResetHaveMarkedFlag();
         }
         else
         {
@@ -662,6 +664,7 @@ public class ViewPagerActivity extends AppCompatActivity
             _acceptDataBaseImBtn.setVisibility(View.GONE);
             _deleteDataBaseImBtn.setVisibility(View.GONE);
             _menuDataBaseImBtn.setVisibility(View.VISIBLE);
+            _recyclerViewDatabaseAdapter.ResetHaveMarkedFlag();
         }
     }
 

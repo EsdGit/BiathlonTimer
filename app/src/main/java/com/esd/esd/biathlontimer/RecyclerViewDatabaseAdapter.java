@@ -85,6 +85,7 @@ public class RecyclerViewDatabaseAdapter extends RecyclerView.Adapter<RecyclerVi
     @Override
     public void ResetHaveMarkedFlag()
     {
+        _countMarkedParticipantDataBase = 0;
         _haveMarkedParticipantDataBase = false;
     }
 
