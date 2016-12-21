@@ -1,5 +1,6 @@
 package com.esd.esd.biathlontimer;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,6 +15,8 @@ public interface MyAdapterInteface
 
     void RemoveSportsman(Sportsman sportsman);
     void RemoveSportsmen(List<Sportsman> sportsmen);
+
+    void ChangeSportsman(Sportsman newSportsman, Sportsman oldSportsman);
 
     List<Sportsman> GetCheckedSportsmen();
 

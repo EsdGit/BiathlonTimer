@@ -49,13 +49,11 @@ public class ViewPagerActivity extends AppCompatActivity
 {
     private static  RecyclerViewLocalDatabaseAdapter _recyclerViewLocalDatabaseAdapter;
     private static RecyclerViewDatabaseAdapter _recyclerViewDatabaseAdapter;
-    //private ParticipantSaver _dbSaver;
+
+    private Sportsman _renameSportsman;
+    private RecyclerView _renameRecyclerView;
+
     private boolean _isFirstLoad = true;
-    private static boolean _haveMarkedParticipant = false;
-    private static boolean _haveMarkedDataBase = false;
-    private static int _counterMarkedParticipant;
-    private static int _counterMarkedDataBase;
-    private TableRow _renameTableRow;
     private static TextView _emptyDataBaseList;
     private static TextView _emptyParticipantList;
     private static LinearLayout _headDataBase;
@@ -171,16 +169,17 @@ public class ViewPagerActivity extends AppCompatActivity
             public void onClick(DialogInterface dialog, int arg1)
             {
                 _colorParticipant = ((ColorDrawable) _colorDialog.getBackground()).getColor();
-                Sportsman sportsman = new Sportsman(Integer.valueOf(_numberDialog.getText().toString()), _nameDialog.getText().toString(),
+                final Sportsman sportsman = new Sportsman(Integer.valueOf(_numberDialog.getText().toString()), _nameDialog.getText().toString(),
                         Integer.valueOf(_birthdayDialog.getText().toString()), _countryDialog.getText().toString(), _spinnerOfGroup.getSelectedItem().toString());
 
                  sportsman.setColor(_colorParticipant);
 
-                _recyclerViewLocalDatabaseAdapter.AddSportsman(sportsman);
-                _recyclerViewDatabaseAdapter.AddSportsman(sportsman);
-
                 saver.SaveSportsman(sportsman);
+
+                sportsman.setColor(Color.BLACK);
                 mainSaver.SaveSportsman(sportsman);
+                _recyclerViewLocalDatabaseAdapter.SortList(saver.GetSortedSportsmen("number",true));
+                _recyclerViewDatabaseAdapter.AddSportsman(sportsman);
 
                 SetStartPosition(1,_recyclerViewDatabaseAdapter.getItemCount());
                 _nameDialog.setText("");
@@ -210,59 +209,31 @@ public class ViewPagerActivity extends AppCompatActivity
         _renameDialogBuilder.setPositiveButton(AddDialogBtn, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                RecyclerView currGridView = (RecyclerView) _renameTableRow.getParent();
-                //Participant localParticipant;
-                String number;
-                String name;
-                String year;
-                String country;
-                String group;
-                int cellsCount;
-                _colorParticipant = ((ColorDrawable) _colorRenameDialog.getBackground()).getColor();
-                if(currGridView == _recyclerView)
-                {
-                    number = ((TextView) _renameTableRow.getChildAt(0)).getText().toString();
-                    name = ((TextView)_renameTableRow.getChildAt(1)).getText().toString();
-                    year = ((TextView)_renameTableRow.getChildAt(2)).getText().toString();
-                    group = _spinnerOfGroupRename.getSelectedItem().toString();
-                    country = ((TextView)_renameTableRow.getChildAt(4)).getText().toString();
 
+                if(_renameRecyclerView == _recyclerView)
+                {
+                    int color = ((ColorDrawable) _colorRenameDialog.getBackground()).getColor();
+                    Sportsman sportsman = new Sportsman(Integer.valueOf(_numberRenameDialog.getText().toString()),_nameRenameDialog.getText().toString(),
+                            Integer.valueOf(_birthdayRenameDialog.getText().toString()),_countryRenameDialog.getText().toString(), _spinnerOfGroupRename.getSelectedItem().toString());
+                    sportsman.setColor(color);
+                    _recyclerViewLocalDatabaseAdapter.ChangeSportsman(sportsman, _renameSportsman);
+                    saver.DeleteSportsman(_renameSportsman);
+                    saver.SaveSportsman(sportsman);
                 }
                 else
                 {
-                    number = "";
-                    name = ((TextView)_renameTableRow.getChildAt(0)).getText().toString();
-                    year = ((TextView)_renameTableRow.getChildAt(1)).getText().toString();
-                    country = ((TextView)_renameTableRow.getChildAt(2)).getText().toString();
 
                 }
 
-//                localParticipant = new Participant(number, name, country, year, "",_colorParticipant);
-//
-//                _dbSaver.DeleteParticipant(localParticipant, DatabaseProvider.DbParticipant.TABLE_NAME);
-//                _dbSaver.DeleteParticipant(localParticipant, _currentCompetition.GetDbParticipantPath());
-//                localParticipant = new Participant(_numberRenameDialog.getText().toString(), _nameRenameDialog.getText().toString(),
-//                        _countryRenameDialog.getText().toString(), _birthdayRenameDialog.getText().toString(), _spinnerOfGroupRename.getSelectedItem().toString(),_colorParticipant);
-//                _dbSaver.SaveParticipantToDatabase(localParticipant, DatabaseProvider.DbParticipant.TABLE_NAME);
-//                if(currGridView == _gridView)
-//                {
-//                    _dbSaver.SaveParticipantToDatabase(localParticipant, _currentCompetition.GetDbParticipantPath());
-//                }
-
-//                for(int j = 0; j < cellsCount; j++)
-//                {
-//                    ((TextView) _renameTableRow.getChildAt(j)).setBackground(new PaintDrawable(getResources().getColor(R.color.white)));
-//                }
-
                 _colorDialog.setBackgroundColor(Color.BLACK);
-                //SetStartPosition(currGridView);
+                SetStartPosition(1,_recyclerViewLocalDatabaseAdapter.getItemCount());
             }
         });
         _renameDialogBuilder.setNegativeButton(CancelDialogBtn, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
 
-                //SetStartPosition(1);
+                SetStartPosition(1,_recyclerViewLocalDatabaseAdapter.getItemCount());
                 _colorDialog.setBackgroundColor(Color.BLACK);
 
             }
@@ -322,8 +293,9 @@ public class ViewPagerActivity extends AppCompatActivity
         {
             GenerateStandartParticipants(_currentCompetition.GetStartNumber(), _currentCompetition.GetMaxParticipantCount());
         }
-        _recyclerViewLocalDatabaseAdapter = new RecyclerViewLocalDatabaseAdapter(saver.GetSportsmen());
-        _recyclerViewDatabaseAdapter = new RecyclerViewDatabaseAdapter(mainSaver.GetSportsmen());
+        _recyclerViewLocalDatabaseAdapter = new RecyclerViewLocalDatabaseAdapter(this,saver.GetSportsmen());
+        _recyclerViewDatabaseAdapter = new RecyclerViewDatabaseAdapter(this,mainSaver.GetSportsmen());
+
         LinearLayoutManager layoutManager1 = new LinearLayoutManager(this);
         RecyclerView.ItemAnimator itemAnimator1 = new DefaultItemAnimator();
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -556,11 +528,13 @@ public class ViewPagerActivity extends AppCompatActivity
     public void OnClickEditParticipant(View view)
     {
         Sportsman sportsmanToEdit = _recyclerViewLocalDatabaseAdapter.GetCheckedSportsmen().get(0);
-        _numberRenameDialog.setText(sportsmanToEdit.getNumber());
+        _numberRenameDialog.setText(String.valueOf(sportsmanToEdit.getNumber()));
         _nameRenameDialog.setText(sportsmanToEdit.getName());
-        _birthdayRenameDialog.setText(sportsmanToEdit.getYear());
+        _birthdayRenameDialog.setText(String.valueOf(sportsmanToEdit.getYear()));
         _countryRenameDialog.setText(sportsmanToEdit.getCountry());
         _colorRenameDialog.setBackgroundColor(sportsmanToEdit.getColor());
+        _renameRecyclerView = _recyclerView;
+        _renameSportsman = sportsmanToEdit;
         for(int i = 0; i < _arrayGroup.length; i++)
         {
             if(_arrayGroup[i].equals(sportsmanToEdit.getGroup()))
@@ -658,7 +632,6 @@ public class ViewPagerActivity extends AppCompatActivity
         }
         else
         {
-            _haveMarkedDataBase = false;
             _secondAcceptDataBaseImBtn.setVisibility(View.INVISIBLE);
             _editDataBaseImBtn.setVisibility(View.GONE);
             _acceptDataBaseImBtn.setVisibility(View.GONE);

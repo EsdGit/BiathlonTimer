@@ -1,5 +1,6 @@
 package com.esd.esd.biathlontimer;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -22,9 +23,11 @@ public class RecyclerViewLocalDatabaseAdapter extends RecyclerView.Adapter<Recyc
     private List<Sportsman> sportsmen;
     private boolean _haveMarkedParticipant = false;
     private int _countMarkedParticipant = 0;
+    private Context _localContext;
 
-    public RecyclerViewLocalDatabaseAdapter(List<Sportsman> sportsmen)
+    public RecyclerViewLocalDatabaseAdapter(Context context, List<Sportsman> sportsmen)
     {
+        _localContext = context;
         this.sportsmen = sportsmen;
     }
 
@@ -39,7 +42,8 @@ public class RecyclerViewLocalDatabaseAdapter extends RecyclerView.Adapter<Recyc
     public void onBindViewHolder(ViewHolder holder, int position) {
         Sportsman sportsman = sportsmen.get(position);
         holder.nameTextView.setText(sportsman.getName());
-        holder.numberTextView.setText(String.valueOf(sportsman.getNumber()));
+        if(sportsman.getNumber() != 0) holder.numberTextView.setText(String.valueOf(sportsman.getNumber()));
+        else holder.numberTextView.setText("");
         holder.yearTextView.setText(String.valueOf(sportsman.getYear()));
         holder.countryTextView.setText(sportsman.getCountry());
         holder.groupTextView.setText(sportsman.getGroup());
@@ -54,11 +58,12 @@ public class RecyclerViewLocalDatabaseAdapter extends RecyclerView.Adapter<Recyc
         holder.clickListener.setSportsman(sportsman);
         if(sportsman.isChecked())
         {
-            holder.nameTextView.setBackgroundColor(Color.RED);
-            holder.numberTextView.setBackgroundColor(Color.RED);
-            holder.yearTextView.setBackgroundColor(Color.RED);
-            holder.countryTextView.setBackgroundColor(Color.RED);
-            holder.groupTextView.setBackgroundColor(Color.RED);
+            int color = _localContext.getResources().getColor(R.color.colorPrimary);
+            holder.nameTextView.setBackgroundColor(color);
+            holder.numberTextView.setBackgroundColor(color);
+            holder.yearTextView.setBackgroundColor(color);
+            holder.countryTextView.setBackgroundColor(color);
+            holder.groupTextView.setBackgroundColor(color);
         }
         else
         {
@@ -89,6 +94,14 @@ public class RecyclerViewLocalDatabaseAdapter extends RecyclerView.Adapter<Recyc
         if(sportsmen.contains(sportsman)) return;
         sportsmen.add(0, sportsman);
         notifyItemInserted(0);
+    }
+
+    @Override
+    public void ChangeSportsman(Sportsman newSportsman, Sportsman oldSportsman)
+    {
+        int pos = sportsmen.indexOf(oldSportsman);
+        sportsmen.set(pos, newSportsman);
+        notifyItemChanged(pos);
     }
 
     @Override

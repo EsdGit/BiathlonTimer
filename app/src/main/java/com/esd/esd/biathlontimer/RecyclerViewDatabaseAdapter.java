@@ -1,5 +1,6 @@
 package com.esd.esd.biathlontimer;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -21,9 +22,11 @@ public class RecyclerViewDatabaseAdapter extends RecyclerView.Adapter<RecyclerVi
     private List<Sportsman> sportsmen;
     private boolean _haveMarkedParticipantDataBase = false;
     private int _countMarkedParticipantDataBase = 0;
+    private Context _localContext;
 
-    public RecyclerViewDatabaseAdapter(List<Sportsman> sportsmen)
+    public RecyclerViewDatabaseAdapter(Context context, List<Sportsman> sportsmen)
     {
+        _localContext = context;
         this.sportsmen = sportsmen;
     }
 
@@ -43,9 +46,10 @@ public class RecyclerViewDatabaseAdapter extends RecyclerView.Adapter<RecyclerVi
         holder.clickListener.setSportsman(sportsman);
         if(sportsman.isChecked())
         {
-            holder.nameTextView.setBackgroundColor(Color.RED);
-            holder.yearTextView.setBackgroundColor(Color.RED);
-            holder.countryTextView.setBackgroundColor(Color.RED);
+            int color = _localContext.getResources().getColor(R.color.colorPrimary);
+            holder.nameTextView.setBackgroundColor(color);
+            holder.yearTextView.setBackgroundColor(color);
+            holder.countryTextView.setBackgroundColor(color);
         }
         else
         {
@@ -95,6 +99,11 @@ public class RecyclerViewDatabaseAdapter extends RecyclerView.Adapter<RecyclerVi
         if(sportsmen.contains(sportsman)) return;
         sportsmen.add(0, sportsman);
         notifyItemInserted(0);
+    }
+
+    @Override
+    public void ChangeSportsman(Sportsman newSportsman, Sportsman oldSportsman) {
+
     }
 
     @Override
