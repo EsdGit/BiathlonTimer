@@ -1,18 +1,23 @@
 package com.esd.esd.biathlontimer.Activities;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Debug;
+import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -283,7 +288,7 @@ public class ViewPagerActivity extends AppCompatActivity
         _spinnerOfGroupRename.setScrollContainer(true);
 
 
-        AddDataFromBases();
+       // AddDataFromBases();
 
     }
 
@@ -317,8 +322,12 @@ public class ViewPagerActivity extends AppCompatActivity
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        _myProgressBar.setVisibility(View.GONE);
-        EmptyDataBaseCompetition();
+       // _myProgressBar.setVisibility(View.GONE);
+        if(_isFirstLoad) {
+            AddDataFromBases();
+            EmptyDataBaseCompetition();
+            _isFirstLoad = false;
+        }
         //EmptyParticipantCompetition();
     }
 
@@ -330,16 +339,52 @@ public class ViewPagerActivity extends AppCompatActivity
     int kostil = 0;
     private void GenerateStandartParticipants(final int firstNumber, final int count)
     {
-        _myProgressBar.setVisibility(View.VISIBLE);
-        int counter = 1;
+        //_myProgressBar.setVisibility(View.VISIBLE);
 
-        for(int i = firstNumber; i < count + firstNumber; i++) {
-            Sportsman sportsman = new Sportsman(i, "Спортсмен " + String.valueOf(counter), 1996, "Россия", "Без группы");
-            sportsman.setColor(Color.BLACK);
-            saver.SaveSportsman(sportsman);
-            counter++;
-            SetProgress(kostil++);
-        }
+        int counter = 1;
+        //        for(int i = firstNumber; i < count + firstNumber; i++) {
+//            Sportsman sportsman = new Sportsman(i, "Спортсмен " + String.valueOf(counter), 1996, "Россия", "Без группы");
+//            sportsman.setColor(Color.BLACK);
+//            saver.SaveSportsman(sportsman);
+//            counter++;
+//
+//            dialog.setProgress(counter);
+//            //SetProgress(kostil++);
+//        }
+        AsyncTaskLoader<Sportsman> taskLoader = new AsyncTaskLoader<Sportsman>(this)
+        {
+            ProgressDialog dialog;
+            @Override
+            protected void onStartLoading() {
+                dialog = new ProgressDialog(getApplicationContext());
+                dialog.setMessage("Работает!!!");
+                dialog.setCancelable(false);
+                dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                dialog.show();
+                super.onStartLoading();
+
+            }
+
+            @Override
+            public Sportsman loadInBackground()
+            {
+                for(int i = 0; i < 100; i++)
+                {
+                    dialog.setProgress(i);
+                    try {
+                        Thread.sleep(5);
+                    }catch (InterruptedException ex)
+                    {
+
+                    }
+                }
+                return null;
+            }
+
+
+        };
+        taskLoader.startLoading();
+        //dialog.dismiss();
     }
 
     void SetProgress(int progress)
