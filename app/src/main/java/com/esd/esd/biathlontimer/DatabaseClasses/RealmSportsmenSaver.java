@@ -37,23 +37,11 @@ public class RealmSportsmenSaver
         }
     }
 
-    public List<Sportsman> GetSportsmen()
+    public List<Sportsman> GetSportsmen(String sortBy, boolean sortState)
     {
-        RealmResults<Sportsman> results = realm.where(Sportsman.class).findAll();
-        return realm.copyFromRealm(results);
+        if(sortState) return realm.copyFromRealm(realm.where(Sportsman.class).findAllSorted(sortBy, Sort.ASCENDING));
+        else return realm.copyFromRealm(realm.where(Sportsman.class).findAllSorted(sortBy, Sort.DESCENDING));
     }
-
-    public List<Sportsman> GetSortedSportsmen(String sortBy, boolean sortState)
-    {
-
-        Sort localSort;
-        if(sortState) localSort = Sort.ASCENDING;
-        else localSort = Sort.DESCENDING;
-        RealmResults<Sportsman> results = realm.where(Sportsman.class).findAllSorted(sortBy, localSort);
-        return realm.copyFromRealm(results);
-    }
-
-
 
     public void SaveSportsman(Sportsman sportsman)
     {
@@ -69,7 +57,8 @@ public class RealmSportsmenSaver
     public void DeleteSportsman(Sportsman sportsman)
     {
         realm.beginTransaction();
-        realm.where(Sportsman.class).equalTo("id", sportsman.getId()).findAll().deleteAllFromRealm();
+        realm.where(Sportsman.class).equalTo("name",sportsman.getName()).equalTo("year", sportsman.getYear()).
+                equalTo("country", sportsman.getCountry()).findAll().deleteAllFromRealm();
         realm.commitTransaction();
     }
 
@@ -80,7 +69,8 @@ public class RealmSportsmenSaver
             realm.beginTransaction();
 //            realm.where(Sportsman.class).equalTo("name", sportsmen.get(i).getName()).equalTo("year", sportsmen.get(i).getYear()).
 //                    equalTo("country",sportsmen.get(i).getCountry()).findAll().deleteAllFromRealm();
-            realm.where(Sportsman.class).equalTo("id", sportsmen.get(i).getId()).findAll().deleteAllFromRealm();
+            realm.where(Sportsman.class).equalTo("name",sportsmen.get(i).getName()).equalTo("year", sportsmen.get(i).getYear()).
+                    equalTo("country", sportsmen.get(i).getCountry()).findAll().deleteAllFromRealm();
             realm.commitTransaction();
         }
     }
@@ -93,5 +83,17 @@ public class RealmSportsmenSaver
             SaveSportsman(sportsmen.get(i));
         }
 
+    }
+
+    public void Dispose()
+    {
+        realm.close();
+    }
+
+    public void DeleteTable()
+    {
+        realm.close();
+        RealmConfiguration configuration = realm.getConfiguration();
+        Realm.deleteRealm(configuration);
     }
 }

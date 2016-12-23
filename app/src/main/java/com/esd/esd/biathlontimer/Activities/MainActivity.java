@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.esd.esd.biathlontimer.Competition;
 import com.esd.esd.biathlontimer.DatabaseClasses.CompetitionSaver;
 import com.esd.esd.biathlontimer.DatabaseClasses.DatabaseProvider;
+import com.esd.esd.biathlontimer.DatabaseClasses.RealmSportsmenSaver;
 import com.esd.esd.biathlontimer.R;
 import com.esd.esd.biathlontimer.SettingsChangedEvent;
 
@@ -28,6 +29,9 @@ import com.esd.esd.biathlontimer.SettingsChangedEvent;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
+
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -397,9 +401,12 @@ public class MainActivity extends AppCompatActivity {
     public void OnClickDeleteCompetition()
     {
         Competition[] localArr = GetCheckedCompetitions(true);
+        RealmSportsmenSaver realmSaver;
         for(int i = 0; i<localArr.length; i++)
         {
             _saver.DeleteCompetitionFromDatabase(localArr[i]);
+            realmSaver = new RealmSportsmenSaver(this, localArr[i].GetDbParticipantPath());
+            realmSaver.DeleteTable();
         }
     }
 

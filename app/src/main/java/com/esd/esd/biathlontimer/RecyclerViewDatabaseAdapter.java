@@ -102,8 +102,11 @@ public class RecyclerViewDatabaseAdapter extends RecyclerView.Adapter<RecyclerVi
     }
 
     @Override
-    public void ChangeSportsman(Sportsman newSportsman, Sportsman oldSportsman) {
-
+    public void ChangeSportsman(Sportsman newSportsman, Sportsman oldSportsman)
+    {
+        int pos = sportsmen.indexOf(oldSportsman);
+        sportsmen.set(pos, newSportsman);
+        notifyItemChanged(pos);
     }
 
     @Override

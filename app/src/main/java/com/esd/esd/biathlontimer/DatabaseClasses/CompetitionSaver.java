@@ -74,7 +74,6 @@ public class CompetitionSaver
                         DatabaseProvider.DbCompetitions.COLUMN_DB_PATH+"=?", new String[]{competition.GetName(), competition.GetDate(), competition.GetSettingsPath(),
                         competition.GetDbParticipantPath()});
         _db.close();
-        _dbProvider.DeleteTable(competition.GetDbParticipantPath());
         _dbProvider.DeleteTable(competition.GetSettingsPath());
 
     }
