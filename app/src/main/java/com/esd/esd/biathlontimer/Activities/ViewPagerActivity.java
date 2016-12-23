@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.PaintDrawable;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -26,6 +25,8 @@ import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -68,6 +69,9 @@ public class ViewPagerActivity extends AppCompatActivity
     private String[] _arrayGroup;
 
     // Элементы ParticipantList
+    private RelativeLayout _myProgressBar;
+    private ProgressBar _progressBar;
+    private TextView _textProgress;
     private static TextView _nameParticipantList;
     private static TextView _birthdayParticipantList;
     private static TextView _countryParticipantList;
@@ -313,8 +317,9 @@ public class ViewPagerActivity extends AppCompatActivity
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
+        _myProgressBar.setVisibility(View.GONE);
         EmptyDataBaseCompetition();
-        EmptyParticipantCompetition();
+        //EmptyParticipantCompetition();
     }
 
     public void OnClick(View view)
@@ -322,16 +327,32 @@ public class ViewPagerActivity extends AppCompatActivity
         _addDialog.show();
     }
 
-    private void GenerateStandartParticipants(int firstNumber, int count)
+    int kostil = 0;
+    private void GenerateStandartParticipants(final int firstNumber, final int count)
     {
+        _myProgressBar.setVisibility(View.VISIBLE);
         int counter = 1;
-        for(int i = firstNumber; i <= count + firstNumber; i++)
-        {
-            Sportsman sportsman = new Sportsman(i, "Спортсмен "+ String.valueOf(counter), 1996, "Россия", "Без группы");
+
+        for(int i = firstNumber; i < count + firstNumber; i++) {
+            Sportsman sportsman = new Sportsman(i, "Спортсмен " + String.valueOf(counter), 1996, "Россия", "Без группы");
             sportsman.setColor(Color.BLACK);
             saver.SaveSportsman(sportsman);
             counter++;
+            SetProgress(kostil++);
         }
+    }
+
+    void SetProgress(int progress)
+    {
+        String strProgress = String.valueOf(progress) + " %";
+        _progressBar.setProgress(progress);
+
+        if (progress == 0) {
+            _progressBar.setSecondaryProgress(0);
+        } else {
+            _progressBar.setSecondaryProgress(progress + 5);
+        }
+        _textProgress.setText(strProgress);
     }
 
 
@@ -359,6 +380,9 @@ public class ViewPagerActivity extends AppCompatActivity
         _recyclerView = (RecyclerView) page1.findViewById(R.id.gridViewParticipantList);
 
         _headParticipant = (LinearLayout) page1.findViewById(R.id.headTableParticipantListLayout);
+        _myProgressBar = (RelativeLayout) page1.findViewById(R.id.my_progress_bar);
+        _progressBar = (ProgressBar) page1.findViewById(R.id.progress_bar);
+        _textProgress = (TextView) page1.findViewById(R.id.text_progress);
         _nameParticipantList = (TextView) page1.findViewById(R.id.nameParticipantList);
         _birthdayParticipantList = (TextView) page1.findViewById(R.id.birthdayParticipantList);
         _countryParticipantList = (TextView) page1.findViewById(R.id.countryParticipantList);
