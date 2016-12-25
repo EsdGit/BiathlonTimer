@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -80,7 +81,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
     private android.text.format.Time _currentInterval;
     private android.text.format.Time _currentTime;
     //private Participant[] _participants;
-    private ArrayList<TableLayout> _tablesCompetition;
+    private ArrayList<RecyclerView> _tablesCompetition;
     private int _currentTable = 0;
     private int _number = 0;
 
@@ -192,7 +193,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         _fineDialog = _builderFineDialog.create();
 
         int tablesCount = Integer.valueOf(_currentCompetition.GetCheckPointsCount());
-        CreateTables(tablesCount);
+        CreateTables(5);
 
         DatabaseProvider dbProv = new DatabaseProvider(this);
         for(int i = 0; i < tablesCount; i++)
@@ -403,7 +404,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
     {
         for(int i = 0; i < countCheckPoint; i++)
         {
-            TableLayout newTable = new TableLayout(this);
+            RecyclerView newTable = new RecyclerView(this);
             _tablesCompetition.add(newTable);
             newTable.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             newTable.setBackgroundColor(Color.BLACK);
