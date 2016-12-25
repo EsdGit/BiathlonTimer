@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.esd.esd.biathlontimer.Activities.ViewPagerActivity;
-import com.esd.esd.biathlontimer.DatabaseClasses.RealmSportsmenSaver;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +17,7 @@ import java.util.List;
  * Created by Oleg on 18.12.2016.
  */
 
-public class RecyclerViewLocalDatabaseAdapter extends RecyclerView.Adapter<RecyclerViewLocalDatabaseAdapter.ViewHolder> implements MyAdapterInteface
+public class RecyclerViewLocalDatabaseAdapter extends RecyclerView.Adapter<RecyclerViewLocalDatabaseAdapter.ViewHolder> implements IMyAdapter<Sportsman>
 {
     private List<Sportsman> sportsmen;
     private boolean _haveMarkedParticipant = false;
@@ -158,6 +157,7 @@ public class RecyclerViewLocalDatabaseAdapter extends RecyclerView.Adapter<Recyc
 
         _haveMarkedParticipant = false;
         _countMarkedParticipant = 0;
+        notifyDataSetChanged();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder

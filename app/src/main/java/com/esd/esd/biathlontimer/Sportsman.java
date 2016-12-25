@@ -1,5 +1,7 @@
 package com.esd.esd.biathlontimer;
 
+import com.esd.esd.biathlontimer.DatabaseClasses.ISportsman;
+
 import io.realm.RealmObject;
 import io.realm.annotations.Ignore;
 import io.realm.annotations.PrimaryKey;
@@ -8,7 +10,7 @@ import io.realm.annotations.PrimaryKey;
  * Created by Oleg on 18.12.2016.
  */
 
-public class Sportsman extends RealmObject
+public class Sportsman extends RealmObject implements ISportsman
 {
     @PrimaryKey
     private long id;
@@ -68,6 +70,31 @@ public class Sportsman extends RealmObject
     }
 
     public void setColor(int color){this.color = color;}
+
+    public void setNumber(int number) {
+        this.number = number;
+    }
+
+    @Override
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    @Override
+    public void setGroup(String group) {
+        this.group = group;
+    }
+
+    @Override
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public void setYear(int year) {
+        this.year = year;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if(obj == null || !(obj instanceof Sportsman)) return false;
