@@ -1,18 +1,23 @@
 package com.esd.esd.biathlontimer.Activities;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Debug;
+import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -28,6 +33,7 @@ import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.android.colorpicker.ColorPickerDialog;
@@ -47,7 +53,7 @@ import java.util.List;
 
 public class ViewPagerActivity extends AppCompatActivity
 {
-    private static RecyclerViewLocalDatabaseAdapter _recyclerViewLocalDatabaseAdapter;
+    private static  RecyclerViewLocalDatabaseAdapter _recyclerViewLocalDatabaseAdapter;
     private static RecyclerViewDatabaseAdapter _recyclerViewDatabaseAdapter;
 
     private Sportsman _renameSportsman;
@@ -178,8 +184,8 @@ public class ViewPagerActivity extends AppCompatActivity
                  sportsman.setColor(_colorParticipant);
 
                 saver.SaveSportsman(sportsman);
+
                 sportsman.setColor(Color.BLACK);
-                sportsman.setNumber(0);
                 mainSaver.SaveSportsman(sportsman);
                 _recyclerViewLocalDatabaseAdapter.SortList(saver.GetSportsmen("number",true));
                 _recyclerViewDatabaseAdapter.AddSportsman(sportsman);
@@ -231,8 +237,6 @@ public class ViewPagerActivity extends AppCompatActivity
                 }
                 else
                 {
-                    sportsman.setColor(Color.BLACK);
-                    sportsman.setNumber(0);
                     _recyclerViewDatabaseAdapter.ChangeSportsman(sportsman, _renameSportsman);
                     mainSaver.DeleteSportsman(_renameSportsman);
                     mainSaver.SaveSportsman(sportsman);
@@ -299,17 +303,9 @@ public class ViewPagerActivity extends AppCompatActivity
 
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if(_isFirstLoad) {
-            AddDataFromBases();
-            _isFirstLoad = false;
-        }
-    }
-
     private void AddDataFromBases()
     {
+
         mainSaver = new RealmSportsmenSaver(this, "MAIN");
         saver = new RealmSportsmenSaver(this, _currentCompetition.GetDbParticipantPath());
 
@@ -338,7 +334,10 @@ public class ViewPagerActivity extends AppCompatActivity
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
        // _myProgressBar.setVisibility(View.GONE);
-
+        if(_isFirstLoad) {
+            AddDataFromBases();
+            _isFirstLoad = false;
+        }
         EmptyParticipantCompetition();
         EmptyDataBaseCompetition();
     }

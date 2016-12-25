@@ -17,7 +17,7 @@ import java.util.List;
  * Created by Oleg on 18.12.2016.
  */
 
-public class RecyclerViewDatabaseAdapter extends RecyclerView.Adapter<RecyclerViewDatabaseAdapter.ViewHolder> implements IMyAdapter
+public class RecyclerViewDatabaseAdapter extends RecyclerView.Adapter<RecyclerViewDatabaseAdapter.ViewHolder> implements MyAdapterInteface
 {
     private List<Sportsman> sportsmen;
     private boolean _haveMarkedParticipantDataBase = false;
@@ -91,7 +91,6 @@ public class RecyclerViewDatabaseAdapter extends RecyclerView.Adapter<RecyclerVi
     {
         _countMarkedParticipantDataBase = 0;
         _haveMarkedParticipantDataBase = false;
-        notifyDataSetChanged();
     }
 
     @Override
