@@ -15,7 +15,7 @@
     //Настройки
     <string name="summary_international_competition">Международные соревнования</string>
     <string name="summary_regional_competition">Региональные соревнования</string>
-    <string name="summary_count_checkpoint">Количество контрольных точек: </string>
+    <string name="summary_count_checkpoint">"Количество контрольных точек: "</string>
     <string name="item_type_single_start">Одиночный старт</string>
     <string name="item_type_double_start">Парный старт</string>
     <string name="item_type_mas_start">Массовый старт</string>
