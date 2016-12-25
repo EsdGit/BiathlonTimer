@@ -348,7 +348,6 @@ public class ViewPagerActivity extends AppCompatActivity
         _addDialog.show();
     }
 
-    int kostil = 0;
     private void GenerateStandartParticipants(final int firstNumber, final int count)
     {
         int counter = 1;

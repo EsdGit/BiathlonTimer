@@ -38,6 +38,11 @@ public class MegaSportsman extends RealmObject implements ISportsman
         this.id = sportsman.getId();
     }
 
+    public MegaSportsman()
+    {
+
+    }
+
     public MegaSportsman(int number, String name, int year, String country, String group, int color)
     {
         this.number = number;

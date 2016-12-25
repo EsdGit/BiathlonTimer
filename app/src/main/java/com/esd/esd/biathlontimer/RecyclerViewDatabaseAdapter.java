@@ -17,7 +17,7 @@ import java.util.List;
  * Created by Oleg on 18.12.2016.
  */
 
-public class RecyclerViewDatabaseAdapter extends RecyclerView.Adapter<RecyclerViewDatabaseAdapter.ViewHolder> implements IMyAdapter
+public class RecyclerViewDatabaseAdapter extends RecyclerView.Adapter<RecyclerViewDatabaseAdapter.ViewHolder> implements IMyAdapter<Sportsman>
 {
     private List<Sportsman> sportsmen;
     private boolean _haveMarkedParticipantDataBase = false;
@@ -72,6 +72,7 @@ public class RecyclerViewDatabaseAdapter extends RecyclerView.Adapter<RecyclerVi
         return sportsmen.size();
     }
 
+
     @Override
     public List<Sportsman> GetCheckedSportsmen() {
         List<Sportsman> checkedSportsmen = new ArrayList<Sportsman>();
@@ -93,6 +94,7 @@ public class RecyclerViewDatabaseAdapter extends RecyclerView.Adapter<RecyclerVi
         _haveMarkedParticipantDataBase = false;
         notifyDataSetChanged();
     }
+
 
     @Override
     public void AddSportsman(Sportsman sportsman)
