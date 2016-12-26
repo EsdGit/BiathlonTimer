@@ -2,7 +2,10 @@ package com.esd.esd.biathlontimer;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -10,14 +13,16 @@ import java.util.List;
  * Created by Oleg on 25.12.2016.
  */
 
-public class SportsmanButtonAdapter extends RecyclerView.Adapter<RecyclerViewLocalDatabaseAdapter.ViewHolder> implements IMyAdapter<MegaSportsman>
+public class SportsmanButtonAdapter extends RecyclerView.Adapter<SportsmanButtonAdapter.ViewHolder> implements IMyAdapter<MegaSportsman>
 {
     private List<MegaSportsman> sportsmen;
+    int layoutId;
     private Context _localContext;
-    public SportsmanButtonAdapter(Context context, List<MegaSportsman> sportsmen)
+    public SportsmanButtonAdapter(Context context, List<MegaSportsman> sportsmen, int layoutId)
     {
         _localContext = context;
         this.sportsmen = sportsmen;
+        this.layoutId = layoutId;
     }
     @Override
     public void AddSportsmen(List<MegaSportsman> sportsmen) {
@@ -62,17 +67,43 @@ public class SportsmanButtonAdapter extends RecyclerView.Adapter<RecyclerViewLoc
 
 
     @Override
-    public RecyclerViewLocalDatabaseAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return null;
+    public SportsmanButtonAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_competition_table, parent, false);
+        return new ViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(RecyclerViewLocalDatabaseAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(SportsmanButtonAdapter.ViewHolder holder, int position)
+    {
+        MegaSportsman megaSportsman = sportsmen.get(position);
+        holder.numberTextView.setText(megaSportsman.getNumber());
 
+
+        holder.numberTextView.setTextColor(megaSportsman.getColor());
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return sportsmen.size();
     }
+
+    class ViewHolder extends RecyclerView.ViewHolder
+    {
+        private TextView nameTextView;
+        private TextView numberTextView;
+        private TextView positionTextView;
+        private TextView timeTextView;
+        private TextView lagTextView;
+
+        public ViewHolder(final View itemView)
+        {
+            super(itemView);
+            //nameTextView = (TextView) itemView.findViewById(R.id.fio);
+            numberTextView = (TextView) itemView.findViewById(R.id.numberCompetitionTable);
+            positionTextView = (TextView) itemView.findViewById(R.id.positionCompetitionTable);
+            timeTextView = (TextView) itemView.findViewById(R.id.timeCompetitionTable);
+            lagTextView = (TextView) itemView.findViewById(R.id.lagCompetitionTable);
+        }
+    }
+
 }

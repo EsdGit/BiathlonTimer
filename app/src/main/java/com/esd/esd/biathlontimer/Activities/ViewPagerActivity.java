@@ -1,6 +1,7 @@
 package com.esd.esd.biathlontimer.Activities;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -74,12 +75,7 @@ public class ViewPagerActivity extends AppCompatActivity
     private RelativeLayout _myProgressBar;
     private ProgressBar _progressBar;
     private TextView _textProgress;
-    private static TextView _nameParticipantList;
-    private static TextView _birthdayParticipantList;
-    private static TextView _countryParticipantList;
-    private static TextView _numberParticipantList;
     private static TextView _nameOfParticipantList;
-    private static TextView _groupParticipantList;
     private static ImageButton _acceptParticipantImBtn;
     private static ImageButton _deleteParticipantImBtn;
     private static ImageButton _menuParticipantImBtn;
@@ -104,10 +100,6 @@ public class ViewPagerActivity extends AppCompatActivity
     private AlertDialog _renameDialog;
 
     // Элементы DataBaseList
-    private GridView _gridViewDatabase;
-    private static TextView _nameDataBaseList;
-    private static TextView _birthdayDataBaseList;
-    private static TextView _countryDataBaseList;
     private static TextView _nameOfDataBaseList;
     private static ImageButton _acceptDataBaseImBtn;
     private static ImageButton _deleteDataBaseImBtn;
@@ -238,10 +230,9 @@ public class ViewPagerActivity extends AppCompatActivity
                     sportsman.setNumber(0);
                     _recyclerViewDatabaseAdapter.ChangeSportsman(sportsman, _renameSportsman);
                     mainSaver.DeleteSportsman(_renameSportsman);
-                    mainSaver.SaveSportsman(sportsman);
                     SetStartPosition(2,_recyclerViewDatabaseAdapter.getItemCount());
                 }
-
+                mainSaver.SaveSportsman(sportsman);
                 _colorDialog.setBackgroundColor(Color.BLACK);
 
             }
@@ -350,17 +341,38 @@ public class ViewPagerActivity extends AppCompatActivity
     {
         _addDialog.show();
     }
+    ProgressDialog dialog;
 
     private void GenerateStandartParticipants(final int firstNumber, final int count)
     {
-        int counter = 1;
-        for(int i = firstNumber; i < count + firstNumber; i++)
-        {
-            Sportsman sportsman = new Sportsman(i, "Спортсмен " + String.valueOf(counter), 1996, "Россия", "Без группы");
-            sportsman.setColor(Color.BLACK);
-            saver.SaveSportsman(sportsman);
-            counter++;
-        }
+        dialog = new ProgressDialog(this);
+        dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        dialog.setProgress(1);
+        dialog.setMessage("Ghbdtn");
+        dialog.setMax(100);
+        dialog.setIndeterminate(false);
+        dialog.show();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                int counter = 1;
+                for(int i = firstNumber; i < count + firstNumber; i++)
+                {
+                    final Sportsman sportsman = new Sportsman(i, "Спортсмен " + String.valueOf(counter), 1996, "Россия", "Без группы");
+                    sportsman.setColor(Color.BLACK);
+                    counter++;
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            saver.SaveSportsman(sportsman);
+                            dialog.setMessage("Я поменялся");
+                        }
+                    });
+                }
+                dialog.dismiss();
+            }
+        }).start();
+
     }
 
     void SetProgress(int progress)
@@ -404,12 +416,7 @@ public class ViewPagerActivity extends AppCompatActivity
         _myProgressBar = (RelativeLayout) page1.findViewById(R.id.my_progress_bar);
         _progressBar = (ProgressBar) page1.findViewById(R.id.progress_bar);
         _textProgress = (TextView) page1.findViewById(R.id.text_progress);
-        _nameParticipantList = (TextView) page1.findViewById(R.id.nameParticipantList);
-        _birthdayParticipantList = (TextView) page1.findViewById(R.id.birthdayParticipantList);
-        _countryParticipantList = (TextView) page1.findViewById(R.id.countryParticipantList);
-        _numberParticipantList = (TextView) page1.findViewById(R.id.numberParticipantList);
         _nameOfParticipantList = (TextView) page1.findViewById(R.id.participant_list_head);
-        _groupParticipantList = (TextView) page1.findViewById(R.id.groupParticipantList);
         _emptyParticipantList = (TextView) page1.findViewById(R.id.emptyParticipantListTextView);
         _acceptParticipantImBtn = (ImageButton) page1.findViewById(R.id.accept_participant);
         _menuParticipantImBtn = (ImageButton) page1.findViewById(R.id.menu_participant);
@@ -432,9 +439,6 @@ public class ViewPagerActivity extends AppCompatActivity
 
         _recyclerViewDatabase = (RecyclerView) page2.findViewById(R.id.gridViewDataBaseLayout);
         _headDataBase = (LinearLayout) page2.findViewById(R.id.headTableDataBaseLayout);
-        _nameDataBaseList = (TextView) page2.findViewById(R.id.nameDataBase);
-        _birthdayDataBaseList = (TextView) page2.findViewById(R.id.birthdayDataBase);
-        _countryDataBaseList = (TextView) page2.findViewById(R.id.countryDataBase);
         _nameOfDataBaseList = (TextView) page2.findViewById(R.id.database_list_head);
         _emptyDataBaseList = (TextView) page2.findViewById(R.id.emptyDataBaseTextView);
         _acceptDataBaseImBtn = (ImageButton) page2.findViewById(R.id.accept_database);

@@ -53,6 +53,35 @@ public class RealmMegaSportsmanSaver
         realm.commitTransaction();
     }
 
+    public void SaveSportsmen(List<MegaSportsman> sportsmen)
+    {
+
+        for(int i = 0; i < sportsmen.size(); i++)
+        {
+            SaveSportsman(sportsmen.get(i));
+        }
+
+    }
+
+    public void DeleteSportsmen(List<MegaSportsman> sportsmen)
+    {
+        for(int i = 0; i < sportsmen.size(); i++)
+        {
+            realm.beginTransaction();
+            realm.where(Sportsman.class).equalTo("name",sportsmen.get(i).getName()).equalTo("year", sportsmen.get(i).getYear()).
+                    equalTo("country", sportsmen.get(i).getCountry()).findAll().deleteAllFromRealm();
+            realm.commitTransaction();
+        }
+    }
+
+    public void DeleteSportsman(MegaSportsman sportsman)
+    {
+        realm.beginTransaction();
+        realm.where(Sportsman.class).equalTo("name",sportsman.getName()).equalTo("year", sportsman.getYear()).
+                equalTo("country", sportsman.getCountry()).findAll().deleteAllFromRealm();
+        realm.commitTransaction();
+    }
+
     public void DeleteTable()
     {
         realm.close();

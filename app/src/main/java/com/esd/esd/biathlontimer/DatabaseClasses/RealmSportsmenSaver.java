@@ -67,8 +67,6 @@ public class RealmSportsmenSaver
         for(int i = 0; i < sportsmen.size(); i++)
         {
             realm.beginTransaction();
-//            realm.where(Sportsman.class).equalTo("name", sportsmen.get(i).getName()).equalTo("year", sportsmen.get(i).getYear()).
-//                    equalTo("country",sportsmen.get(i).getCountry()).findAll().deleteAllFromRealm();
             realm.where(Sportsman.class).equalTo("name",sportsmen.get(i).getName()).equalTo("year", sportsmen.get(i).getYear()).
                     equalTo("country", sportsmen.get(i).getCountry()).findAll().deleteAllFromRealm();
             realm.commitTransaction();
