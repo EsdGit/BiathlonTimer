@@ -1,4 +1,4 @@
-package com.esd.esd.biathlontimer.DatabaseClasses;
+package com.esd.esd.biathlontimer;
 
 /**
  * Created by Oleg on 25.12.2016.

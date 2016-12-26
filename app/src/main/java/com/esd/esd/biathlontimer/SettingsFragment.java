@@ -569,7 +569,7 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
         }
         int startNumber = Integer.valueOf(_numberStart.getSummary().toString().split("- ")[1].split("\\.")[0]);
         int maxPartCount = Integer.valueOf(_numberStart.getSummary().toString().split("- ")[2].split("\\.")[0]);
-        String countCheckPoints = _countCheckPoint.getSummary().toString().split(":")[1];
+        String countCheckPoints = _countCheckPoint.getSummary().toString().split(": ")[1];
         if(Integer.valueOf(countCheckPoints) <= 0) return null;
         Competition localCompetition = new Competition(_nameCompetition.getSummary().toString(),_setData.getSummary().toString(), context);
         localCompetition.SetCompetitionSettings(_typeStart.getSummary().toString(), _setInterval.getSummary().toString(),

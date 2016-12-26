@@ -1,12 +1,10 @@
 package com.esd.esd.biathlontimer;
 
-import com.esd.esd.biathlontimer.DatabaseClasses.ISportsman;
+import android.text.format.Time;
 
-import io.realm.RealmModel;
 import io.realm.RealmObject;
 import io.realm.annotations.Ignore;
 import io.realm.annotations.PrimaryKey;
-import io.realm.internal.async.RealmAsyncTaskImpl;
 
 /**
  * Created by Oleg on 25.12.2016.
@@ -24,8 +22,12 @@ public class MegaSportsman extends RealmObject implements ISportsman
     private String country;
     private String group;
     private int color;
+    private String resultTimeString;
     @Ignore
     private boolean isChecked;
+    @Ignore
+    private Time resultTime;
+
 
     public MegaSportsman(Sportsman sportsman)
     {
@@ -37,6 +39,7 @@ public class MegaSportsman extends RealmObject implements ISportsman
         this.color = sportsman.getColor();
         this.id = sportsman.getId();
     }
+
 
     public MegaSportsman()
     {
@@ -51,6 +54,17 @@ public class MegaSportsman extends RealmObject implements ISportsman
         this.country = country;
         this.group = group;
         this.color = color;
+    }
+
+    public void setResultTime(Time result)
+    {
+        resultTime = new Time(result);
+        resultTimeString = resultTime.format("%H:%M:%S");
+    }
+
+    public String getResultTime()
+    {
+        return resultTimeString;
     }
 
     @Override

@@ -55,8 +55,9 @@ public class SportsmanButtonAdapter extends RecyclerView.Adapter<RecyclerViewLoc
     }
 
     @Override
-    public void AddSportsman(MegaSportsman sportsman) {
-
+    public void AddSportsman(MegaSportsman sportsman)
+    {
+        sportsmen.add(sportsman);
     }
 
 
