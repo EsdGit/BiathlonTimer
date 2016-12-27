@@ -89,7 +89,9 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
     private ArrayList<RealmMegaSportsmanSaver> _megaSavers;
     private ArrayList<CompetitionTableAdapter> _adapter;
     private int _currentTable = 0;
-    private int _number = 0;
+
+    private int _tablesCount;
+    private int _number;
 
     private FrameLayout _dialogOwnerView;
 
@@ -193,7 +195,8 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
 
         _fineDialog = _builderFineDialog.create();
         _megaSavers = new ArrayList<>();
-        final int tablesCount = Integer.valueOf(_currentCompetition.GetCheckPointsCount());
+        _tablesCount = Integer.valueOf(_currentCompetition.GetCheckPointsCount());
+        _number = 0;
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -207,7 +210,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
                 }
 
                 _adapter = new ArrayList<>();
-                for(int i = 0; i < tablesCount; i++)
+                for(int i = 0; i < _tablesCount; i++)
                 {
                     megaSportsmanSaver = new RealmMegaSportsmanSaver(getApplicationContext(), _currentCompetition.GetNameDateString()+"LAP"+String.valueOf(i));
                     megaSportsmanSaver.SaveSportsmen(list);
@@ -216,7 +219,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
                     _adapter.add(new CompetitionTableAdapter(getApplicationContext(),R.layout.row_competition_table));
                 }
 
-                CreateTables(tablesCount);
+                CreateTables(_tablesCount);
 
             }
         }).start();
@@ -250,39 +253,40 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         _competitionTimer.setText(_currentCompetition.GetTimeToStart());
         _timerParticipantTable.setText(_currentCompetition.GetTimeToStart());
     }
-//
-//    private View CreateButton(final Sportsman sportsman, String numberCheckPoint)
-//    {
-//        LayoutInflater inflater = LayoutInflater.from(this);
-//        final View view = inflater.inflate(R.layout.my_btn, null);
-//        _button.SetParticipantNumberAndBackground(view, String.valueOf(sportsman.getNumber()), sportsman.getColor());
-//        _button.SetParticipantLap(view, numberCheckPoint);
-//        view.setOnLongClickListener(new View.OnLongClickListener() {
-//            @Override
-//            public boolean onLongClick(View v) {
-//                _dialogOwnerView = (FrameLayout) view;
-//                _fineDialog.show();
-//                return false;
-//            }
-//        });
-//        view.setOnClickListener(new View.OnClickListener()
-//        {
-//            @Override
-//            public void onClick(View v)
-//            {
-//                int number = Integer.valueOf(_button.GetParticipantNumber(v));
-//                int lap = Integer.valueOf(_button.GetLap(v));
-//
-//
-//                android.text.format.Time newTime = new android.text.format.Time();
-//
-//                newTime.hour = _currentTime.hour - _participants[number].GetStartTime().hour;
-//                newTime.minute = _currentTime.minute - _participants[number].GetStartTime().minute;
-//                newTime.second = _currentTime.second - _participants[number].GetStartTime().second;
-//                newTime.normalize(false);
-//
-//                _participants[number].SetResultTime(newTime.format3339(true), _currentCompetition.GetNameDateString()+"LAP"+_button.GetLap(v), _lapSaver);
-//
+
+    private View CreateButton(final MegaSportsman sportsman, String numberCheckPoint)
+    {
+        LayoutInflater inflater = LayoutInflater.from(this);
+        final View view = inflater.inflate(R.layout.my_btn, null);
+        _button.SetParticipantNumberAndBackground(view, String.valueOf(sportsman.getNumber()), sportsman.getColor());
+        _button.SetParticipantLap(view, numberCheckPoint);
+        view.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                _dialogOwnerView = (FrameLayout) view;
+                _fineDialog.show();
+                return false;
+            }
+        });
+        view.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                int number = Integer.valueOf(_button.GetParticipantNumber(v));
+                int lap = Integer.valueOf(_button.GetLap(v));
+
+
+                android.text.format.Time newTime = new android.text.format.Time();
+
+                newTime.hour = _currentTime.hour - _megaSavers.get(lap).getMegaSportsman(number).getStartTime().hour;
+                newTime.minute = _currentTime.minute - _megaSavers.get(lap).getMegaSportsman(number).getStartTime().minute;
+                newTime.second = _currentTime.second - _megaSavers.get(lap).getMegaSportsman(number).getStartTime().second;
+                newTime.normalize(false);
+
+                //куча говна
+
+
 //                String res = _participants[number].GetResultTime(_currentCompetition.GetNameDateString()+"LAP"+_button.GetLap(v), _lapSaver);
 //                GetPlace(_participants[number], lap);
 //                //_participants[number].SetPlace(GetPlace(participant, lap), lap);
@@ -303,10 +307,10 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
 //                    lap++;
 //                    _button.SetParticipantLap(view, Integer.toString(lap));
 //                }
-//            }
-//        });
-//        return view;
-//    }
+            }
+        });
+        return view;
+    }
 
 
 
@@ -447,83 +451,87 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         startActivity(intent);
     }
 
-//    public void startBtnClick(View view)
-//    {
-//        if(!_isCompetitionStarted)
-//        {
-//            _startBtn.setText(getResources().getString(R.string.stop_timer));
-//            final android.text.format.Time timeCountDown = new android.text.format.Time();
-//            timeCountDown.minute = Integer.valueOf(_currentCompetition.GetTimeToStart().split(":")[0]);
-//            timeCountDown.second = Integer.valueOf(_currentCompetition.GetTimeToStart().split(":")[1]);
-//            final long ms1 = timeCountDown.minute*60000+timeCountDown.second*1000;
-//
-//            _currentTime = new android.text.format.Time(_timeNextParticipant);
-//            _currentTime.second = 0;
-//            _currentTime.minute = 0;
-//            _countDownTimer = new CountDownTimer(ms1+1000,1000)
-//            {
-//                TimerTask task = new TimerTask()
-//                {
-//                    int ms = 0;
-//                    String msStr;
-//
-//                    @Override
-//                    public void run()
-//                    {
-//                        ms++;
-//                        if(_currentCompetition.GetStartType().equals(getResources().getString(R.string.item_type_mas_start)))
-//                        {
-////                            _number = _participants.length;
-////                            runOnUiThread(new Runnable() {
-////                                @Override
-////                                public void run()
-////                                {
-////                                    android.text.format.Time localTime = new android.text.format.Time();
-////                                    localTime.second = _currentTime.second;
-////                                    localTime.minute = _currentTime.minute;
-////                                    localTime.hour = _currentTime.hour;
-////
-////                                    for(int i = 0; i < _participants.length; i++)
-////                                    {
-////                                        _participantGridLayout.addView(CreateButton(_participants[i], "0"));
-////                                        _participants[i].SetStartTime(localTime);
-////                                    }
-////
-////                                }
-////                            });
-//
-//                            // ЗДЕСЬ У НАС МАССОВЫЙ СТАРТ
-//                        }
-//                        if(ms>9)
-//                        {
-//                            _currentTime.second++;
-//                            ms = 0;
-//                            _currentTime.normalize(false);
-//
-//                            if(android.text.format.Time.compare(_currentTime,_timeNextParticipant) == 0 && _number < _participants.length)
-//                            {
-//
-//                                if(!_currentCompetition.GetSecondInterval().equals(""))
+    public void startBtnClick(View view)
+    {
+        if(!_isCompetitionStarted)
+        {
+            _startBtn.setText(getResources().getString(R.string.stop_timer));
+            final android.text.format.Time timeCountDown = new android.text.format.Time();
+            timeCountDown.minute = Integer.valueOf(_currentCompetition.GetTimeToStart().split(":")[0]);
+            timeCountDown.second = Integer.valueOf(_currentCompetition.GetTimeToStart().split(":")[1]);
+            final long ms1 = timeCountDown.minute*60000+timeCountDown.second*1000;
+
+            _currentTime = new android.text.format.Time(_timeNextParticipant);
+            _currentTime.second = 0;
+            _currentTime.minute = 0;
+            _countDownTimer = new CountDownTimer(ms1+1000,1000)
+            {
+                TimerTask task = new TimerTask()
+                {
+                    int ms = 0;
+                    String msStr;
+
+                    @Override
+                    public void run()
+                    {
+                        ms++;
+                        if(_currentCompetition.GetStartType().equals(getResources().getString(R.string.item_type_mas_start)))
+                        {
+//                            _number = _participants.length;
+//                            runOnUiThread(new Runnable() {
+//                                @Override
+//                                public void run()
 //                                {
-//                                    if (_number == Integer.valueOf(_currentCompetition.GetNumberSecondInterval()) - 1) {
-//                                        _currentInterval.second = Integer.valueOf(_currentCompetition.GetSecondInterval().split(":")[1]);
-//                                        _currentInterval.minute = Integer.valueOf(_currentCompetition.GetSecondInterval().split(":")[0]);
-//                                    }
-//                                }
+//                                    android.text.format.Time localTime = new android.text.format.Time();
+//                                    localTime.second = _currentTime.second;
+//                                    localTime.minute = _currentTime.minute;
+//                                    localTime.hour = _currentTime.hour;
 //
-//                                runOnUiThread(new Runnable()
-//                                {
-//                                    @Override
-//                                    public void run()
+//                                    for(int i = 0; i < _participants.length; i++)
 //                                    {
-//                                        if(_currentCompetition.GetStartType().equals(getResources().getString(R.string.item_type_single_start)))
-//                                        {
-//                                            _participantGridLayout.addView(CreateButton(_participants[_number], "0"));
-//                                            _participants[_number].SetStartTime(_currentTime);
-//                                            _number++;
-//                                        }
-//                                        else
-//                                        {
+//                                        _participantGridLayout.addView(CreateButton(_participants[i], "0"));
+//                                        _participants[i].SetStartTime(localTime);
+//                                    }
+//
+//                                }
+//                            });
+
+                            // ЗДЕСЬ У НАС МАССОВЫЙ СТАРТ
+                        }
+                        if(ms>9)
+                        {
+                            _currentTime.second++;
+                            ms = 0;
+                            _currentTime.normalize(false);
+
+                            if(android.text.format.Time.compare(_currentTime,_timeNextParticipant) == 0) // проверку бы что не кончились участники просто переменную, которую -- при добавлении кнопки
+                            {
+
+                                if(!_currentCompetition.GetSecondInterval().equals(""))
+                                {
+                                    if (_number == Integer.valueOf(_currentCompetition.GetNumberSecondInterval()) - 1) {
+                                        _currentInterval.second = Integer.valueOf(_currentCompetition.GetSecondInterval().split(":")[1]);
+                                        _currentInterval.minute = Integer.valueOf(_currentCompetition.GetSecondInterval().split(":")[0]);
+                                    }
+                                }
+
+                                        if(_currentCompetition.GetStartType().equals(getResources().getString(R.string.item_type_single_start)) && _number < _tablesCount)
+                                        {
+
+                                                    MegaSportsman localSportsman = null;
+                                                    for(int i = 0; i < _tablesCount; i++)
+                                                    {
+                                                        localSportsman = _megaSavers.get(i).getMegaSportsman(_number);
+                                                        _megaSavers.get(i).DeleteSportsman(localSportsman);
+                                                        localSportsman.setStartTime(_currentTime);
+                                                        _megaSavers.get(i).SaveSportsman(localSportsman);
+                                                    }
+                                                    _participantGridLayout.addView(CreateButton(localSportsman, "0"));
+
+                                            _number++;
+                                        }
+                                        else
+                                        {
 //                                            if(_currentCompetition.GetStartType().equals(getResources().getString(R.string.item_type_double_start)))
 //                                            {
 //                                                _participantGridLayout.addView(CreateButton(_participants[_number], "0"));
@@ -536,94 +544,92 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
 //                                                    _number++;
 //                                                }
 //                                            }
-//                                        }
-//                                    }
-//                                });
-//                                _timeNextParticipant.hour += _currentInterval.hour;
-//                                _timeNextParticipant.minute += _currentInterval.minute;
-//                                _timeNextParticipant.second += _currentInterval.second;
-//                                _timeNextParticipant.normalize(false);
-//
-//
-//                            }
-//
-//                        }
-//
-//
-//
-//
-//                        msStr = String.valueOf(ms);
-//                        runOnUiThread(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                _competitionTimer.setText(_currentTime.format("%H:%M:%S")+":"+msStr);
-//                                _timerParticipantTable.setText(_currentTime.format("%H:%M:%S")+":"+msStr);
-//                            }
-//                        });
-//                    }
-//                };
-//                @Override
-//                public void onTick(long millisUntilFinished)
-//                {
-//                    timeCountDown.second--;
-//                    if(timeCountDown.second < 0)
-//                    {
-//                        timeCountDown.minute--;
-//                        timeCountDown.second = 59;
-//                    }
-//                    _competitionTimer.setText(timeCountDown.format("%M:%S"));
-//                    _timerParticipantTable.setText(timeCountDown.format("%M:%S"));
-//                }
-//
-//                @Override
-//                public void onFinish() {
-//                    _timer = new Timer();
-//                    _timer.schedule(task, 0,100);
-//                    _competitionTimer.setTextColor(getResources().getColor(R.color.white));
-//                    _timerParticipantTable.setTextColor(getResources().getColor(R.color.white));
-//
-//                }
-//            };
-//            _countDownTimer.start();
-//            _isCompetitionStarted = true;
-//        }
-//        else
-//        {
-//            // Здесь сброс
-//            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//            builder.setTitle(getResources().getString(R.string.reset_title));
-//            builder.setMessage(getResources().getString(R.string.message_dialog_reset));
-//            builder.setPositiveButton(getResources().getString(R.string.accept), new DialogInterface.OnClickListener()
-//            {
-//                @Override
-//                public void onClick(DialogInterface dialogInterface, int i)
-//                {
-//                    if(_countDownTimer != null) _countDownTimer.cancel();
-//                    if(_timer != null) _timer.cancel();
-//                    TimerStartPosition();
-//                    for(int j = 0; j < _tablesCompetition.size(); j++)
-//                    {
-//                        _tablesCompetition.get(j).removeAllViews();
-//                    }
-//                    _participantGridLayout.removeAllViews();
-//                    _isCompetitionStarted = false;
-//                    _startBtn.setText(getResources().getString(R.string.start_timer));
-//                    _number = 0;
-//                }
-//            });
-//
-//            builder.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
-//                @Override
-//                public void onClick(DialogInterface dialogInterface, int i) {
-//
-//                }
-//            });
-//
-//            builder.show();
-//
-//        }
-//
-//    }
+                                        }
+                                _timeNextParticipant.hour += _currentInterval.hour;
+                                _timeNextParticipant.minute += _currentInterval.minute;
+                                _timeNextParticipant.second += _currentInterval.second;
+                                _timeNextParticipant.normalize(false);
+
+
+                            }
+
+                        }
+
+
+
+
+                        msStr = String.valueOf(ms);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                _competitionTimer.setText(_currentTime.format("%H:%M:%S")+":"+msStr);
+                                _timerParticipantTable.setText(_currentTime.format("%H:%M:%S")+":"+msStr);
+                            }
+                        });
+                    }
+                };
+                @Override
+                public void onTick(long millisUntilFinished)
+                {
+                    timeCountDown.second--;
+                    if(timeCountDown.second < 0)
+                    {
+                        timeCountDown.minute--;
+                        timeCountDown.second = 59;
+                    }
+                    _competitionTimer.setText(timeCountDown.format("%M:%S"));
+                    _timerParticipantTable.setText(timeCountDown.format("%M:%S"));
+                }
+
+                @Override
+                public void onFinish() {
+                    _timer = new Timer();
+                    _timer.schedule(task, 0,100);
+                    _competitionTimer.setTextColor(getResources().getColor(R.color.white));
+                    _timerParticipantTable.setTextColor(getResources().getColor(R.color.white));
+
+                }
+            };
+            _countDownTimer.start();
+            _isCompetitionStarted = true;
+        }
+        else
+        {
+            // Здесь сброс
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(getResources().getString(R.string.reset_title));
+            builder.setMessage(getResources().getString(R.string.message_dialog_reset));
+            builder.setPositiveButton(getResources().getString(R.string.accept), new DialogInterface.OnClickListener()
+            {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i)
+                {
+                    if(_countDownTimer != null) _countDownTimer.cancel();
+                    if(_timer != null) _timer.cancel();
+                    TimerStartPosition();
+                    for(int j = 0; j < _tablesCompetition.size(); j++)
+                    {
+                        _tablesCompetition.get(j).removeAllViews();
+                    }
+                    _participantGridLayout.removeAllViews();
+                    _isCompetitionStarted = false;
+                    _startBtn.setText(getResources().getString(R.string.start_timer));
+                    _number = 0;
+                }
+            });
+
+            builder.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+
+                }
+            });
+
+            builder.show();
+
+        }
+
+    }
 
     @Override
     protected void onDestroy() {

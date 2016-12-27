@@ -2,6 +2,8 @@ package com.esd.esd.biathlontimer;
 
 import android.text.format.Time;
 
+import java.util.Date;
+
 import io.realm.RealmObject;
 import io.realm.annotations.Ignore;
 import io.realm.annotations.PrimaryKey;
@@ -26,7 +28,9 @@ public class MegaSportsman extends RealmObject implements ISportsman
     @Ignore
     private boolean isChecked;
     @Ignore
-    private Time resultTime;
+    private Time _resultTime;
+    @Ignore
+    private Time _startTime;
 
 
     public MegaSportsman(Sportsman sportsman)
@@ -58,13 +62,23 @@ public class MegaSportsman extends RealmObject implements ISportsman
 
     public void setResultTime(Time result)
     {
-        resultTime = new Time(result);
-        resultTimeString = resultTime.format("%H:%M:%S");
+        _resultTime = new Time(result);
+        resultTimeString = result.format("%H:%M:%S");
     }
 
     public String getResultTime()
     {
         return resultTimeString;
+    }
+
+    public void setStartTime(Time startTime)
+    {
+        _startTime = new Time(startTime);
+    }
+
+    public Time getStartTime()
+    {
+        return _startTime;
     }
 
     @Override
