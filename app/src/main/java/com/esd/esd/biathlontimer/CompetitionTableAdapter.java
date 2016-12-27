@@ -1,6 +1,7 @@
 package com.esd.esd.biathlontimer;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,10 +38,10 @@ public class CompetitionTableAdapter extends RecyclerView.Adapter<CompetitionTab
     public void onBindViewHolder(ViewHolder holder, int position)
     {
         MegaSportsman megaSportsman = sportsmen.get(position);
-        holder.numberTextView.setText(megaSportsman.getNumber());
+        holder.numberTextView.setText(String.valueOf(megaSportsman.getNumber()));
 
 
-        holder.numberTextView.setTextColor(megaSportsman.getColor());
+        holder.numberTextView.setTextColor(Color.BLACK);
     }
 
     @Override
@@ -103,9 +104,9 @@ public class CompetitionTableAdapter extends RecyclerView.Adapter<CompetitionTab
         {
             super(itemView);
             numberTextView = (TextView) itemView.findViewById(R.id.numberCompetitionTable);
-            positionTextView = (TextView) itemView.findViewById(R.id.positionCompetitionTable);
-            timeTextView = (TextView) itemView.findViewById(R.id.timeCompetitionTable);
-            lagTextView = (TextView) itemView.findViewById(R.id.lagCompetitionTable);
+//            positionTextView = (TextView) itemView.findViewById(R.id.positionCompetitionTable);
+//            timeTextView = (TextView) itemView.findViewById(R.id.timeCompetitionTable);
+//            lagTextView = (TextView) itemView.findViewById(R.id.lagCompetitionTable);
         }
     }
 }

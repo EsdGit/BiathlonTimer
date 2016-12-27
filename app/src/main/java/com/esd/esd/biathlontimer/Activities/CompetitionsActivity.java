@@ -412,22 +412,20 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
             newTable.setAdapter(_adapter.get(i));
             newTable.setItemAnimator(new DefaultItemAnimator());
             newTable.setLayoutManager(new LinearLayoutManager(this));
-            _tablesCompetition.add(newTable);
             newTable.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             newTable.setBackgroundColor(Color.BLACK);
             if(i!=0)
             {
                 newTable.setVisibility(View.GONE);
             }
+            _tablesCompetition.add(newTable);
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     _containerTables.addView(newTable);
                 }
             });
-
         }
-
     }
 
 //    private android.text.format.Time GetLag(Participant participant, int lap)
@@ -446,13 +444,6 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
     {
         Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
-    }
-
-    public void startBtnClick(View view)
-    {
-        _adapter.get(0).AddSportsman(new MegaSportsman(0,"Красава",1990,"","",1));
-        _adapter.get(1).AddSportsman(new MegaSportsman(15,"Красава",1990,"","",1));
-        _adapter.get(2).AddSportsman(new MegaSportsman(98,"Красава",1990,"","",1));
     }
 
 //    public void startBtnClick(View view)

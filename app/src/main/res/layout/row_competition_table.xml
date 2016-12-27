@@ -10,7 +10,7 @@
 
     <TextView
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:id="@+id/numberCompetitionTable"
         android:gravity="center"
         android:textColor="#000000"
@@ -23,7 +23,7 @@
 
     <TextView
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:id="@+id/positionCompetitionTable"
         android:gravity="center"
         android:textColor="#000000"
@@ -35,7 +35,7 @@
 
     <TextView
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:id="@+id/nameCompetitionTable"
         android:gravity="center"
         android:textColor="#000000"
@@ -48,7 +48,7 @@
 
     <TextView
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:id="@+id/timeCompetitionTable"
         android:gravity="center"
         android:textColor="#000000"
@@ -60,7 +60,7 @@
 
     <TextView
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:id="@+id/lagCompetitionTable"
         android:gravity="center"
         android:textColor="#000000"

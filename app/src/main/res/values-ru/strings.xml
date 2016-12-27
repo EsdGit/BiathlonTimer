@@ -91,7 +91,7 @@
 
     //Соревнование (Таблицы, участники)
     <string name="number">Номер</string>
-    <string name="position">Позиция</string>
+    <string name="position">Поз.</string>
     <string name="time">Время</string>
     <string name="lag">Отставание</string>
     <string name="start_timer">Старт</string>
