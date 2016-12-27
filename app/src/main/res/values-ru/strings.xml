@@ -113,6 +113,7 @@
     <string name="competition_already_exists">Соревнование уже существует!</string>
     <string name="participant_added">Участник добавлен</string>
     <string name="participant_already_exists_in_database">Такой участник уже есть в базе данных</string>
+    <string name="participant_already_exists">Проверьте номер участника</string>
 
     //Последнияя активность
     <string name="title_final_activity">Результаты соревнования</string>

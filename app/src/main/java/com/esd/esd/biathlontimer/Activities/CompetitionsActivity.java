@@ -83,6 +83,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
     private android.text.format.Time _timeNextParticipant;
     private android.text.format.Time _currentInterval;
     private android.text.format.Time _currentTime;
+
     //private Participant[] _participants;
     private ArrayList<RecyclerView> _tablesCompetition;
     private ArrayList<RealmMegaSportsmanSaver> _megaSavers;
