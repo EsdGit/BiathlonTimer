@@ -183,7 +183,7 @@ public class ViewPagerActivity extends AppCompatActivity
                 }
                 else
                 {
-                    Toast.makeText(getApplicationContext(),getResources().getString(R.string.participant_already_exists),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),getResources().getString(R.string.participant_already_exists_in_database),Toast.LENGTH_SHORT).show();
                 }
                 SetStartPosition(1, _recyclerViewDatabaseAdapter.getItemCount());
                 _nameDialog.setText("");
@@ -233,7 +233,7 @@ public class ViewPagerActivity extends AppCompatActivity
                         }
                         else
                         {
-                            Toast.makeText(getApplicationContext(),getResources().getString(R.string.participant_already_exists),Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(),getResources().getString(R.string.participant_already_exists_in_database),Toast.LENGTH_SHORT).show();
                         }
                         SetStartPosition(1, _recyclerViewLocalDatabaseAdapter.getItemCount());
                     }

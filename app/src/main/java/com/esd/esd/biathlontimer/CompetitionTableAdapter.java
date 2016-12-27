@@ -39,9 +39,17 @@ public class CompetitionTableAdapter extends RecyclerView.Adapter<CompetitionTab
     {
         MegaSportsman megaSportsman = sportsmen.get(position);
         holder.numberTextView.setText(String.valueOf(megaSportsman.getNumber()));
+        holder.nameTextView.setText(megaSportsman.getName());
+        holder.positionTextView.setText("1");
+        holder.timeTextView.setText(megaSportsman.getResultTime());
+        holder.lagTextView.setText("00:00:00");
 
 
-        holder.numberTextView.setTextColor(Color.BLACK);
+        holder.numberTextView.setTextColor(megaSportsman.getColor());
+        holder.nameTextView.setTextColor(megaSportsman.getColor());
+        holder.positionTextView.setTextColor(megaSportsman.getColor());
+        holder.timeTextView.setTextColor(megaSportsman.getColor());
+        holder.lagTextView.setTextColor(megaSportsman.getColor());
     }
 
     @Override
@@ -50,7 +58,8 @@ public class CompetitionTableAdapter extends RecyclerView.Adapter<CompetitionTab
     }
 
     @Override
-    public void AddSportsman(MegaSportsman sportsman) {
+    public void AddSportsman(MegaSportsman sportsman)
+    {
         if(sportsmen.contains(sportsman)) return;
         sportsmen.add(sportsman);
         notifyDataSetChanged();
@@ -87,7 +96,8 @@ public class CompetitionTableAdapter extends RecyclerView.Adapter<CompetitionTab
     }
 
     @Override
-    public void SortList(List<MegaSportsman> sortedList) {
+    public void SortList(List<MegaSportsman> sortedList)
+    {
 
     }
 
@@ -104,9 +114,10 @@ public class CompetitionTableAdapter extends RecyclerView.Adapter<CompetitionTab
         {
             super(itemView);
             numberTextView = (TextView) itemView.findViewById(R.id.numberCompetitionTable);
-//            positionTextView = (TextView) itemView.findViewById(R.id.positionCompetitionTable);
-//            timeTextView = (TextView) itemView.findViewById(R.id.timeCompetitionTable);
-//            lagTextView = (TextView) itemView.findViewById(R.id.lagCompetitionTable);
+            nameTextView = (TextView) itemView.findViewById(R.id.nameCompetitionTable);
+            positionTextView = (TextView) itemView.findViewById(R.id.positionCompetitionTable);
+            timeTextView = (TextView) itemView.findViewById(R.id.timeCompetitionTable);
+            lagTextView = (TextView) itemView.findViewById(R.id.lagCompetitionTable);
         }
     }
 }
