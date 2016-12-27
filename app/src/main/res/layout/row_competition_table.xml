@@ -19,12 +19,37 @@
         android:layout_marginLeft="1dp"
         android:layout_marginRight="1dp"
         android:layout_marginBottom="1dp"
-        android:layout_weight="20"/>
+        android:layout_weight="10"/>
 
     <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:id="@+id/positionCompetitionTable"
+        android:gravity="center"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        android:background="#ffffff"
+        android:layout_weight="10"
+        android:layout_marginRight="1dp"
+        android:layout_marginBottom="1dp"/>
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/nameCompetitionTable"
+        android:gravity="center"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        android:background="#ffffff"
+        android:layout_marginRight="1dp"
+        android:layout_marginBottom="1dp"
+        android:layout_weight="40"/>
+
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/timeCompetitionTable"
         android:gravity="center"
         android:textColor="#000000"
         android:textSize="20sp"
@@ -36,24 +61,12 @@
     <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:id="@+id/timeCompetitionTable"
-        android:gravity="center"
-        android:textColor="#000000"
-        android:textSize="20sp"
-        android:background="#ffffff"
-        android:layout_weight="30"
-        android:layout_marginRight="1dp"
-        android:layout_marginBottom="1dp"/>
-
-    <TextView
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
         android:id="@+id/lagCompetitionTable"
         android:gravity="center"
         android:textColor="#000000"
         android:textSize="20sp"
         android:background="#ffffff"
-        android:layout_weight="30"
+        android:layout_weight="20"
         android:layout_marginRight="1dp"
         android:layout_marginBottom="1dp"/>
 
