@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -48,6 +49,7 @@ import com.esd.esd.biathlontimer.Sportsman;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class ViewPagerActivity extends AppCompatActivity
 {
@@ -89,7 +91,7 @@ public class ViewPagerActivity extends AppCompatActivity
     private TextView _colorDialog;
     private Spinner _spinnerOfGroup;
 
-    private View _renameForm;
+    private  View _renameForm;
     private EditText _numberRenameDialog;
     private EditText _nameRenameDialog;
     private EditText _birthdayRenameDialog;
@@ -119,10 +121,12 @@ public class ViewPagerActivity extends AppCompatActivity
 
     private boolean _needDeleteTables = false;
 
-    private RealmSportsmenSaver saver;
+    private static RealmSportsmenSaver saver;
     private RealmSportsmenSaver mainSaver;
 
-    private static Context _viewPagerContext;
+    private Context _viewPagerContext;
+    private ProgressDialog _progressDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -302,7 +306,11 @@ public class ViewPagerActivity extends AppCompatActivity
 
 
        // AddDataFromBases();
-
+        _progressDialog = new ProgressDialog(this);
+        _progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        _progressDialog.setMessage("Подождите. Идет загрузка...");
+        _progressDialog.setCancelable(false);
+        _progressDialog.setMax(_currentCompetition.GetMaxParticipantCount());
     }
 
     @Override
@@ -353,38 +361,17 @@ public class ViewPagerActivity extends AppCompatActivity
     {
         _addDialog.show();
     }
-    ProgressDialog dialog;
 
-    private void GenerateStandartParticipants(final int firstNumber, final int count)
-    {
-        dialog = new ProgressDialog(this);
-        dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        dialog.setProgress(1);
-        dialog.setMessage("Ghbdtn");
-        dialog.setMax(100);
-        dialog.setIndeterminate(false);
-        dialog.show();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                int counter = 1;
-                for(int i = firstNumber; i < count + firstNumber; i++)
-                {
-                    final Sportsman sportsman = new Sportsman(i, "Спортсмен " + String.valueOf(counter), 1996, "Россия", "Без группы");
-                    sportsman.setColor(Color.BLACK);
-                    counter++;
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            saver.SaveSportsman(sportsman);
-                            dialog.setMessage("Я поменялся");
-                        }
-                    });
-                }
-                dialog.dismiss();
-            }
-        }).start();
 
+
+    private void GenerateStandartParticipants(final int firstNumber, final int count) {
+        _progressDialog.show();
+        CreateTableOfSportsman createTableOfSportsman = new CreateTableOfSportsman();
+        createTableOfSportsman.execute();
+//        for(int i = firstNumber; i < count + firstNumber; i++)
+//        {
+//
+//        }
     }
 
     void SetProgress(int progress)
@@ -849,6 +836,59 @@ public class ViewPagerActivity extends AppCompatActivity
             return false;
         else
             return true;
+    }
+
+    private class CreateTableOfSportsman extends AsyncTask<Void, Integer, Void>
+    {
+        private int _firstNumber = _currentCompetition.GetStartNumber();
+        private int _count = _currentCompetition.GetStartNumber() +  _currentCompetition.GetMaxParticipantCount();
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+                int counter = 0;
+                for (int i = _firstNumber; i < _count; i++)
+                {
+                    final Sportsman sportsman = new Sportsman(i, "Спортсмен " + String.valueOf(counter + 1), 1996, "Россия", "Без группы");
+                    sportsman.setColor(Color.BLACK);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run()
+                        {
+                            saver.SaveSportsman(sportsman);
+                        }
+                    });
+                    getFloor(0);
+                    publishProgress(++counter);
+                }
+                TimeUnit.MILLISECONDS.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute()
+        {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            _progressDialog.dismiss();
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+            _progressDialog.setProgress(values[0]);
+        }
+
+        private void getFloor(int floor) throws InterruptedException {
+            TimeUnit.NANOSECONDS.sleep(10);
+        }
     }
 
 }
