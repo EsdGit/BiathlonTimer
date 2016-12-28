@@ -166,7 +166,7 @@ public class ViewPagerActivity extends AppCompatActivity
         _addDialogBuilder.setPositiveButton(AddDialogBtn, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int arg1)
             {
-                if(ParseSportsman(Integer.valueOf(_numberDialog.getText().toString())))
+                if(ParseSportsman(Integer.valueOf(_numberDialog.getText().toString()), _nameDialog.getText().toString(), false))
                 {
                     _colorParticipant = ((ColorDrawable) _colorDialog.getBackground()).getColor();
                     final Sportsman sportsman = new Sportsman(Integer.valueOf(_numberDialog.getText().toString()), _nameDialog.getText().toString(),
@@ -223,7 +223,7 @@ public class ViewPagerActivity extends AppCompatActivity
 
                     if (_renameRecyclerView == _recyclerView)
                     {
-                        if(ParseSportsman(numberInt))
+                        if(ParseSportsman(numberInt, _nameRenameDialog.getText().toString(), true))
                         {
                             int color = ((ColorDrawable) _colorRenameDialog.getBackground()).getColor();
                             sportsman.setColor(color);
@@ -822,16 +822,29 @@ public class ViewPagerActivity extends AppCompatActivity
     }
 
 
-    private boolean ParseSportsman(int number)
+    private boolean ParseSportsman(int number, String fio, boolean isRename)
     {
         List<Sportsman> localList = saver.GetSportsmen("number", true);
-        for(int i = 0; i < localList.size(); i++)
-        {
-            if(localList.get(i).getNumber() == number)
+
+            for (int i = 0; i < localList.size(); i++)
             {
-                return false;
+                if(isRename)
+                {
+                    if(localList.get(i).getNumber() == number && localList.get(i).getName().equals(fio))
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    if(localList.get(i).getNumber() == number)
+                    {
+                        return false;
+                    }
+
+                }
             }
-        }
+
         if((_currentCompetition.GetStartNumber() + _currentCompetition.GetMaxParticipantCount()) - 1 < number || _currentCompetition.GetStartNumber() > number)
             return false;
         else
