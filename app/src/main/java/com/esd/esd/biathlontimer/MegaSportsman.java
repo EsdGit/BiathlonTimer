@@ -24,13 +24,14 @@ public class MegaSportsman extends RealmObject implements ISportsman
     private String country;
     private String group;
     private int color;
-    private String resultTimeString;
     @Ignore
     private boolean isChecked;
     @Ignore
-    private Time _resultTime;
+    private Time[] _resultTime;
     @Ignore
     private Time _startTime;
+    @Ignore
+    private int[] _places;
 
 
     public MegaSportsman(Sportsman sportsman)
@@ -60,15 +61,31 @@ public class MegaSportsman extends RealmObject implements ISportsman
         this.color = color;
     }
 
-    public void setResultTime(Time result)
+    public void setLapsCount(int lapsCount)
     {
-        _resultTime = new Time(result);
-        resultTimeString = result.format("%H:%M:%S");
+        _resultTime = new Time[lapsCount];
+        _places = new int[lapsCount];
     }
 
-    public String getResultTime()
+    public void setResultTime(Time result, int lapNumber)
     {
-        return resultTimeString;
+        _resultTime[lapNumber] = new Time(result);
+    }
+
+    public String getResultTime(int lapNumber)
+    {
+        if(_resultTime[lapNumber].equals(null)) return null;
+        return _resultTime[lapNumber].format("%H:%M:%S");
+    }
+
+    public void setPlace(int place, int lapNumber)
+    {
+        _places[lapNumber] = place;
+    }
+
+    public int getPlace(int lapNumber)
+    {
+        return _places[lapNumber];
     }
 
     public void setStartTime(Time startTime)

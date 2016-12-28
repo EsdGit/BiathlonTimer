@@ -42,25 +42,50 @@ public class RealmMegaSportsmanSaver
         else return realm.copyFromRealm(realm.where(MegaSportsman.class).findAllSorted(sortBy, Sort.DESCENDING));
     }
 
-    public void SaveSportsman(MegaSportsman sportsman)
+    public void SaveSportsman(final MegaSportsman sportsman)
     {
         if(realm.where(MegaSportsman.class).equalTo("name",sportsman.getName()).equalTo("year", sportsman.getYear()).
                 equalTo("country", sportsman.getCountry()).count() > 0) return;
         sportsman.setId(keyId.getAndIncrement());
         // C цветом что-то не то
+//        realm.executeTransactionAsync(new Realm.Transaction() {
+//            @Override
+//            public void execute(Realm realm) {
+//                realm.insert(sportsman);
+//            }
+//        });
         realm.beginTransaction();
         realm.insert(sportsman);
         realm.commitTransaction();
     }
 
-    public void SaveSportsmen(List<MegaSportsman> sportsmen)
+    public void SaveSportsmen(final List<MegaSportsman> sportsmen)
     {
 
+        realm.executeTransactionAsync(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm)
+            {
+                for(int i = 0; i < sportsmen.size(); i++)
+                {
+                    sportsmen.get(i).setId(keyId.getAndIncrement());
+                }
+                realm.insert(sportsmen);
+            }
+        });
+
+    }
+    public int GetPositionInList(int number)
+    {
+        List<MegaSportsman> sportsmen = realm.where(MegaSportsman.class).findAllSorted("number",Sort.ASCENDING);
         for(int i = 0; i < sportsmen.size(); i++)
         {
-            SaveSportsman(sportsmen.get(i));
+            if(sportsmen.get(i).getNumber() == number)
+            {
+                return i;
+            }
         }
-
+        return 0;
     }
 
     public void DeleteSportsmen(List<MegaSportsman> sportsmen)
