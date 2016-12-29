@@ -64,6 +64,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
     private TextView _competitionTimer;
     private TextView _numberParticipant;
     private TextView _positionParticipant;
+    private TextView _nameParticipant;
     private TextView _timeParticipant;
     private TextView _lagParticipant;
     private TextView _timerParticipantTable;
@@ -127,6 +128,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         _currentRound = (TextView) page2.findViewById(R.id.currentRound);
         _numberParticipant = (TextView) page2.findViewById(R.id.numberParticipantCompetitionTable);
         _positionParticipant = (TextView) page2.findViewById(R.id.positionParticipantCompetitionTable);
+        _nameParticipant = (TextView) page2.findViewById(R.id.nameParticipantCompetitionTable);
         _timeParticipant = (TextView) page2.findViewById(R.id.timeParticipantCompetitionTable);
         _lagParticipant = (TextView) page2.findViewById(R.id.lagParticipantCompetitionTable);
         _timerParticipantTable = (TextView) page2.findViewById(R.id.competitionTimer);
@@ -353,7 +355,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         newTextView0.setGravity(Gravity.CENTER);
         newTextView0.setBackground(new PaintDrawable(getResources().getColor(R.color.white)));
         newTextView0.setTextSize(getResources().getDimension(R.dimen.normal_text_size));
-        newTextView0.setLayoutParams(new TableRow.LayoutParams(_numberParticipant.getMeasuredWidth(), ViewGroup.LayoutParams.MATCH_PARENT,20f));
+        newTextView0.setLayoutParams(new TableRow.LayoutParams(_numberParticipant.getMeasuredWidth(), ViewGroup.LayoutParams.MATCH_PARENT,10f));
         ((TableRow.LayoutParams) newTextView0.getLayoutParams()).setMargins(2, 0, 2, 2);
 
         final TextView newTextView1 = new TextView(this);
@@ -363,34 +365,45 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         newTextView1.setTextColor(rowColor);
         newTextView1.setBackground(new PaintDrawable(getResources().getColor(R.color.white)));
         newTextView1.setTextSize(getResources().getDimension(R.dimen.normal_text_size));
-        newTextView1.setLayoutParams(new TableRow.LayoutParams(_positionParticipant.getMeasuredWidth(),ViewGroup.LayoutParams.MATCH_PARENT,20f));
+        newTextView1.setLayoutParams(new TableRow.LayoutParams(_positionParticipant.getMeasuredWidth(),ViewGroup.LayoutParams.MATCH_PARENT,10f));
         ((TableRow.LayoutParams) newTextView1.getLayoutParams()).setMargins(0, 0, 2, 2);
 
         final TextView newTextView2 = new TextView(this);
         newTextView2.setSingleLine(false);
-        newTextView2.setText(megaSportsman.getResultTime(lap));
+        newTextView2.setText(String.valueOf(megaSportsman.getName()));
         newTextView2.setGravity(Gravity.CENTER);
         newTextView2.setTextColor(rowColor);
         newTextView2.setBackground(new PaintDrawable(getResources().getColor(R.color.white)));
         newTextView2.setTextSize(getResources().getDimension(R.dimen.normal_text_size));
-        newTextView2.setLayoutParams(new TableRow.LayoutParams(_timeParticipant.getMeasuredWidth(), ViewGroup.LayoutParams.MATCH_PARENT,30f));
+        newTextView2.setLayoutParams(new TableRow.LayoutParams(_nameParticipant.getMeasuredWidth(),ViewGroup.LayoutParams.MATCH_PARENT,40f));
         ((TableRow.LayoutParams) newTextView2.getLayoutParams()).setMargins(0, 0, 2, 2);
 
         final TextView newTextView3 = new TextView(this);
         newTextView3.setSingleLine(false);
-        //newTextView3.setText("+"+GetLag(megaSportsman, lap).format("%M:%S"));
-        newTextView3.setText("test");
+        newTextView3.setText(megaSportsman.getResultTime(lap));
         newTextView3.setGravity(Gravity.CENTER);
         newTextView3.setTextColor(rowColor);
         newTextView3.setBackground(new PaintDrawable(getResources().getColor(R.color.white)));
         newTextView3.setTextSize(getResources().getDimension(R.dimen.normal_text_size));
-        newTextView3.setLayoutParams(new TableRow.LayoutParams(_lagParticipant.getMeasuredWidth(),ViewGroup.LayoutParams.MATCH_PARENT,30f));
+        newTextView3.setLayoutParams(new TableRow.LayoutParams(_timeParticipant.getMeasuredWidth(), ViewGroup.LayoutParams.MATCH_PARENT,20f));
         ((TableRow.LayoutParams) newTextView3.getLayoutParams()).setMargins(0, 0, 2, 2);
+
+        final TextView newTextView4 = new TextView(this);
+        newTextView4.setSingleLine(false);
+        //newTextView3.setText("+"+GetLag(megaSportsman, lap).format("%M:%S"));
+        newTextView4.setText("test");
+        newTextView4.setGravity(Gravity.CENTER);
+        newTextView4.setTextColor(rowColor);
+        newTextView4.setBackground(new PaintDrawable(getResources().getColor(R.color.white)));
+        newTextView4.setTextSize(getResources().getDimension(R.dimen.normal_text_size));
+        newTextView4.setLayoutParams(new TableRow.LayoutParams(_lagParticipant.getMeasuredWidth(),ViewGroup.LayoutParams.MATCH_PARENT,20f));
+        ((TableRow.LayoutParams) newTextView4.getLayoutParams()).setMargins(0, 0, 2, 2);
 
         newRow.addView(newTextView0);
         newRow.addView(newTextView1);
         newRow.addView(newTextView2);
         newRow.addView(newTextView3);
+        newRow.addView(newTextView4);
 
         _tablesCompetition.get(lap).addView(newRow);
     }

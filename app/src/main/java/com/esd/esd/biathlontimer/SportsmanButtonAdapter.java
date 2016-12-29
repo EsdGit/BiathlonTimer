@@ -98,7 +98,7 @@ public class SportsmanButtonAdapter extends RecyclerView.Adapter<SportsmanButton
         public ViewHolder(final View itemView)
         {
             super(itemView);
-            //nameTextView = (TextView) itemView.findViewById(R.id.fio);
+            nameTextView = (TextView) itemView.findViewById(R.id.nameCompetitionTable);
             numberTextView = (TextView) itemView.findViewById(R.id.numberCompetitionTable);
             positionTextView = (TextView) itemView.findViewById(R.id.positionCompetitionTable);
             timeTextView = (TextView) itemView.findViewById(R.id.timeCompetitionTable);
