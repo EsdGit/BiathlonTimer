@@ -107,6 +107,7 @@ public class DatabaseProvider extends SQLiteOpenHelper
                 DbParticipant.COLUMN_NAME + TEXT_TYPE + COMMA_SEP + DbParticipant.COLUMN_COUNTRY + TEXT_TYPE + COMMA_SEP
                 + DbParticipant.COLUMN_YEAR + INTEGER_TYPE + COMMA_SEP+DbParticipant.COLUMN_GROUP+TEXT_TYPE+COMMA_SEP + DbParticipant.COLUMN_COLOR + TEXT_TYPE+")";
         this.getWritableDatabase().execSQL(sql);
+        this.close();
     }
 
     public void AddNewSettingsTable(String name)
@@ -118,6 +119,7 @@ public class DatabaseProvider extends SQLiteOpenHelper
                 COMMA_SEP + DbSettings.COLUMN_SECOND_INTERVAL + TEXT_TYPE+COMMA_SEP + DbSettings.COLUMN_NUMBER_SECOND_INTERVAL +
                 TEXT_TYPE+ COMMA_SEP + DbSettings.COLUMN_FINE + TEXT_TYPE+ COMMA_SEP+ DbSettings.COLUMN_PARTICIPANT_COUNT+ TEXT_TYPE+")";
         this.getWritableDatabase().execSQL(sql);
+        this.close();
     }
 
     public void AddNewLapTable(String name)

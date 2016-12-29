@@ -173,7 +173,7 @@ public class ViewPagerActivity extends AppCompatActivity
                 if(ParseSportsman(Integer.valueOf(_numberDialog.getText().toString()), _nameDialog.getText().toString(), false))
                 {
                     _colorParticipant = ((ColorDrawable) _colorDialog.getBackground()).getColor();
-                    final Sportsman sportsman = new Sportsman(Integer.valueOf(_numberDialog.getText().toString()), _nameDialog.getText().toString(),
+                    Sportsman sportsman = new Sportsman(Integer.valueOf(_numberDialog.getText().toString()), _nameDialog.getText().toString(),
                             Integer.valueOf(_birthdayDialog.getText().toString()), _countryDialog.getText().toString(), _spinnerOfGroup.getSelectedItem().toString());
 
                     sportsman.setColor(_colorParticipant);
@@ -249,7 +249,10 @@ public class ViewPagerActivity extends AppCompatActivity
                         mainSaver.DeleteSportsman(_renameSportsman);
                         SetStartPosition(2, _recyclerViewDatabaseAdapter.getItemCount());
                     }
+                    sportsman.setColor(Color.BLACK);
+                    sportsman.setNumber(0);
                     mainSaver.SaveSportsman(sportsman);
+                    _recyclerViewDatabaseAdapter.AddSportsman(sportsman);
                     _colorDialog.setBackgroundColor(Color.BLACK);
             }
         });
@@ -306,11 +309,7 @@ public class ViewPagerActivity extends AppCompatActivity
 
 
        // AddDataFromBases();
-        _progressDialog = new ProgressDialog(this);
-        _progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        _progressDialog.setMessage("Подождите. Идет загрузка...");
-        _progressDialog.setCancelable(false);
-        _progressDialog.setMax(_currentCompetition.GetMaxParticipantCount());
+
     }
 
     @Override
@@ -331,18 +330,20 @@ public class ViewPagerActivity extends AppCompatActivity
         {
             GenerateStandartParticipants(_currentCompetition.GetStartNumber(), _currentCompetition.GetMaxParticipantCount());
         }
-        _recyclerViewLocalDatabaseAdapter = new RecyclerViewLocalDatabaseAdapter(this,saver.GetSportsmen("number", true));
-        _recyclerViewDatabaseAdapter = new RecyclerViewDatabaseAdapter(this,mainSaver.GetSportsmen("name", true));
+        else
+        {
+            _recyclerViewLocalDatabaseAdapter = new RecyclerViewLocalDatabaseAdapter(this, saver.GetSportsmen("number", true));
+            LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+            RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
+
+            _recyclerView.setAdapter(_recyclerViewLocalDatabaseAdapter);
+            _recyclerView.setLayoutManager(layoutManager);
+            _recyclerView.setItemAnimator(itemAnimator);
+        }
 
         LinearLayoutManager layoutManager1 = new LinearLayoutManager(this);
         RecyclerView.ItemAnimator itemAnimator1 = new DefaultItemAnimator();
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
-
-        _recyclerView.setAdapter(_recyclerViewLocalDatabaseAdapter);
-        _recyclerView.setLayoutManager(layoutManager);
-        _recyclerView.setItemAnimator(itemAnimator);
-
+        _recyclerViewDatabaseAdapter = new RecyclerViewDatabaseAdapter(this, mainSaver.GetSportsmen("name", true));
         _recyclerViewDatabase.setAdapter(_recyclerViewDatabaseAdapter);
         _recyclerViewDatabase.setLayoutManager(layoutManager1);
         _recyclerViewDatabase.setItemAnimator(itemAnimator1);
@@ -351,9 +352,7 @@ public class ViewPagerActivity extends AppCompatActivity
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-       // _myProgressBar.setVisibility(View.GONE);
-
-        EmptyParticipantCompetition();
+        //EmptyParticipantCompetition();
         EmptyDataBaseCompetition();
     }
 
@@ -364,28 +363,19 @@ public class ViewPagerActivity extends AppCompatActivity
 
 
 
-    private void GenerateStandartParticipants(final int firstNumber, final int count) {
+    private void GenerateStandartParticipants(final int firstNumber, final int count)
+    {
+        _progressDialog = new ProgressDialog(this);
+        _progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        _progressDialog.setMessage("Подождите. Идет загрузка...");
+        _progressDialog.setIndeterminate(false);
+        _progressDialog.setCancelable(false);
+        _progressDialog.setMax(_currentCompetition.GetMaxParticipantCount());
         _progressDialog.show();
         CreateTableOfSportsman createTableOfSportsman = new CreateTableOfSportsman();
         createTableOfSportsman.execute();
-//        for(int i = firstNumber; i < count + firstNumber; i++)
-//        {
-//
-//        }
     }
 
-    void SetProgress(int progress)
-    {
-        String strProgress = String.valueOf(progress) + " %";
-        _progressBar.setProgress(progress);
-
-        if (progress == 0) {
-            _progressBar.setSecondaryProgress(0);
-        } else {
-            _progressBar.setSecondaryProgress(progress + 5);
-        }
-        _textProgress.setText(strProgress);
-    }
 
 
     private void FindAllViews()
@@ -842,7 +832,6 @@ public class ViewPagerActivity extends AppCompatActivity
     {
         private int _firstNumber = _currentCompetition.GetStartNumber();
         private int _count = _currentCompetition.GetStartNumber() +  _currentCompetition.GetMaxParticipantCount();
-
         @Override
         protected Void doInBackground(Void... params) {
             try {
@@ -877,17 +866,29 @@ public class ViewPagerActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            _recyclerViewLocalDatabaseAdapter = new RecyclerViewLocalDatabaseAdapter(getApplicationContext(), saver.GetSportsmen("number", true));
+            LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+            RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
+            _recyclerView.setAdapter(_recyclerViewLocalDatabaseAdapter);
+            _recyclerView.setLayoutManager(layoutManager);
+            _recyclerView.setItemAnimator(itemAnimator);
             _progressDialog.dismiss();
         }
 
         @Override
         protected void onProgressUpdate(Integer... values) {
-            super.onProgressUpdate(values);
             _progressDialog.setProgress(values[0]);
+            //super.onProgressUpdate(values);
+
+
+            //_progressDialog.setSecondaryProgress(values[0]);
+//            _progressDialog.incrementProgressBy(1);
+//            _progressDialog.incrementSecondaryProgressBy(1);
         }
 
         private void getFloor(int floor) throws InterruptedException {
-            TimeUnit.NANOSECONDS.sleep(10);
+            //TimeUnit.NANOSECONDS.sleep(1000);
+            TimeUnit.MICROSECONDS.sleep(1);
         }
     }
 

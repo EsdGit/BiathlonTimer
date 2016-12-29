@@ -91,7 +91,7 @@ public class RecyclerViewLocalDatabaseAdapter extends RecyclerView.Adapter<Recyc
 //        sportsmen.add(sportsmen.size(), sportsman);
 //        notifyItemInserted(sportsmen.size());
         if(sportsmen.contains(sportsman)) return;
-        sportsmen.add(0, sportsman);
+        sportsmen.add(0, new Sportsman(sportsman));
         notifyItemInserted(0);
     }
 
@@ -99,7 +99,7 @@ public class RecyclerViewLocalDatabaseAdapter extends RecyclerView.Adapter<Recyc
     public void ChangeSportsman(Sportsman newSportsman, Sportsman oldSportsman)
     {
         int pos = sportsmen.indexOf(oldSportsman);
-        sportsmen.set(pos, newSportsman);
+        sportsmen.set(pos, new Sportsman(newSportsman));
         notifyItemChanged(pos);
     }
 

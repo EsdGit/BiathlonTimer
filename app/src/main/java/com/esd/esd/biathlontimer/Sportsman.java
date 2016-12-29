@@ -48,6 +48,17 @@ public class Sportsman extends RealmObject implements ISportsman
 
     }
 
+    public Sportsman(Sportsman sportsman)
+    {
+        this.number = sportsman.getNumber();
+        this.name = sportsman.getName();
+        this.year = sportsman.getYear();
+        this.country = sportsman.getCountry();
+        this.color = sportsman.getColor();
+        this.group = sportsman.getGroup();
+    }
+
+
     public void setInfo(int number, String name, int year, String country, String group)
     {
         this.number = number;
