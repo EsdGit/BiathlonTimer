@@ -72,10 +72,9 @@ public class MegaSportsman extends RealmObject implements ISportsman
         _resultTime[lapNumber] = new Time(result);
     }
 
-    public String getResultTime(int lapNumber)
+    public Time getResultTime(int lapNumber)
     {
-        if(_resultTime[lapNumber].equals(null)) return null;
-        return _resultTime[lapNumber].format("%H:%M:%S");
+        return _resultTime[lapNumber];
     }
 
     public void setPlace(int place, int lapNumber)
