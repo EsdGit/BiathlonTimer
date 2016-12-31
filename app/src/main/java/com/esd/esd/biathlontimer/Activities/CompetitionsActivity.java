@@ -66,7 +66,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
     private TextView _timeParticipant;
     private TextView _lagParticipant;
     private TextView _timerParticipantTable;
-    private Button _startBtn;
+    private ImageButton _startBtn;
     private MyButton _button;
 
     private AlertDialog _fineDialog;
@@ -117,7 +117,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         pages.add(page1);
         _participantGridLayout = (GridLayout) page1.findViewById(R.id.competitionGridLayout);
         _competitionTimer = (TextView) page1.findViewById(R.id.competitionTimer);
-        _startBtn = (Button) page1.findViewById(R.id.competitionStart);
+        _startBtn = (ImageButton) page1.findViewById(R.id.competitionStart);
 
 
         View page2 = inflater.inflate(R.layout.activity_competition_tables, null);
@@ -457,7 +457,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
     {
         if(!_isCompetitionStarted)
         {
-            _startBtn.setText(getResources().getString(R.string.stop_timer));
+            //_startBtn.setText(getResources().getString(R.string.stop_timer));
             final android.text.format.Time timeCountDown = new android.text.format.Time();
             timeCountDown.minute = Integer.valueOf(_currentCompetition.GetTimeToStart().split(":")[0]);
             timeCountDown.second = Integer.valueOf(_currentCompetition.GetTimeToStart().split(":")[1]);
@@ -609,7 +609,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
                     }
                     _participantGridLayout.removeAllViews();
                     _isCompetitionStarted = false;
-                    _startBtn.setText(getResources().getString(R.string.start_timer));
+                    //_startBtn.setText(getResources().getString(R.string.start_timer));
                     _number = 0;
                 }
             });
@@ -748,5 +748,15 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
             }
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    public void pauseBtnClick(View view)
+    {
+        Toast.makeText(getApplicationContext(),"Пауза",Toast.LENGTH_SHORT).show();
+    }
+
+    public void stopBtnClick(View view)
+    {
+        Toast.makeText(getApplicationContext(),"Стоп",Toast.LENGTH_SHORT).show();
     }
 }

@@ -832,6 +832,7 @@ public class ViewPagerActivity extends AppCompatActivity
     {
         private int _firstNumber = _currentCompetition.GetStartNumber();
         private int _count = _currentCompetition.GetStartNumber() +  _currentCompetition.GetMaxParticipantCount();
+
         @Override
         protected Void doInBackground(Void... params) {
             try {
@@ -850,7 +851,7 @@ public class ViewPagerActivity extends AppCompatActivity
                     getFloor(0);
                     publishProgress(++counter);
                 }
-                TimeUnit.MILLISECONDS.sleep(100);
+                TimeUnit.NANOSECONDS.sleep(10);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -877,9 +878,8 @@ public class ViewPagerActivity extends AppCompatActivity
 
         @Override
         protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
             _progressDialog.setProgress(values[0]);
-            //super.onProgressUpdate(values);
-
 
             //_progressDialog.setSecondaryProgress(values[0]);
 //            _progressDialog.incrementProgressBy(1);
@@ -888,7 +888,7 @@ public class ViewPagerActivity extends AppCompatActivity
 
         private void getFloor(int floor) throws InterruptedException {
             //TimeUnit.NANOSECONDS.sleep(1000);
-            TimeUnit.MICROSECONDS.sleep(1);
+            TimeUnit.NANOSECONDS.sleep(1);
         }
     }
 
