@@ -24,6 +24,7 @@ public class MegaSportsman extends RealmObject implements ISportsman
     private String country;
     private String group;
     private int color;
+    //private String results;
     @Ignore
     private boolean isChecked;
     @Ignore
@@ -32,6 +33,10 @@ public class MegaSportsman extends RealmObject implements ISportsman
     private Time _startTime;
     @Ignore
     private int[] _places;
+    @Ignore
+    private int[] _fineCount;
+    @Ignore
+    private Time[] _fineTime;
 
 
     public MegaSportsman(Sportsman sportsman)
@@ -65,6 +70,28 @@ public class MegaSportsman extends RealmObject implements ISportsman
     {
         _resultTime = new Time[lapsCount];
         _places = new int[lapsCount];
+        _fineCount = new int[lapsCount];
+        _fineTime = new Time[lapsCount];
+    }
+
+    public void setFineCount(int fineCount, int lapNumber)
+    {
+        _fineCount[lapNumber] = fineCount;
+    }
+
+    public int getFineCount(int lapNumber)
+    {
+        return _fineCount[lapNumber];
+    }
+
+    public void setFineTime(Time fine, int lapNumber)
+    {
+        _fineTime[lapNumber] = new Time(fine);
+    }
+
+    public Time getFineTime(int lapNumber)
+    {
+        return _fineTime[lapNumber];
     }
 
     public void setResultTime(Time result, int lapNumber)
@@ -74,6 +101,15 @@ public class MegaSportsman extends RealmObject implements ISportsman
 
     public Time getResultTime(int lapNumber)
     {
+        if(_fineTime[lapNumber] != null)
+        {
+            Time localTime = new Time(_resultTime[lapNumber]);
+            localTime.hour += _fineTime[lapNumber].hour;
+            localTime.minute += _fineTime[lapNumber].minute;
+            localTime.second += _fineTime[lapNumber].second;
+            localTime.normalize(false);
+            return localTime;
+        }
         return _resultTime[lapNumber];
     }
 

@@ -20,7 +20,6 @@ public class RealmMegaSportsmanSaver
 {
     private Realm realm;
     private AtomicLong keyId;
-    private Context _localContext;
     public RealmMegaSportsmanSaver(Context context, String databaseName)
     {
         Realm.init(context);
@@ -47,13 +46,6 @@ public class RealmMegaSportsmanSaver
         if(realm.where(MegaSportsman.class).equalTo("name",sportsman.getName()).equalTo("year", sportsman.getYear()).
                 equalTo("country", sportsman.getCountry()).count() > 0) return;
         sportsman.setId(keyId.getAndIncrement());
-        // C цветом что-то не то
-//        realm.executeTransactionAsync(new Realm.Transaction() {
-//            @Override
-//            public void execute(Realm realm) {
-//                realm.insert(sportsman);
-//            }
-//        });
         realm.beginTransaction();
         realm.insert(sportsman);
         realm.commitTransaction();

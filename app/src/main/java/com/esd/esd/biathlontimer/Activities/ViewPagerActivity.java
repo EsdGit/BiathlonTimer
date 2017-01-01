@@ -321,6 +321,11 @@ public class ViewPagerActivity extends AppCompatActivity
         }
     }
 
+    /*
+        void AddDataFromBases() - метод для загрузки данных из общей базы участников и из базы текущего соревнования.
+        Возвращаемый тип: -
+        Аргументы: -
+    */
     private void AddDataFromBases()
     {
         mainSaver = new RealmSportsmenSaver(this, "MAIN");
@@ -349,6 +354,12 @@ public class ViewPagerActivity extends AppCompatActivity
         _recyclerViewDatabase.setItemAnimator(itemAnimator1);
     }
 
+    /*
+        void onWindowFocusChanged() - метод, вызывающийся по изменению фокуса на активности.
+        Возвращаемый тип: -
+        Аргументы:
+            boolean hasFocus - показывает есть фокус на данной активности в данный момент времени или нет.
+    */
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
@@ -356,13 +367,24 @@ public class ViewPagerActivity extends AppCompatActivity
         EmptyDataBaseCompetition();
     }
 
+    /*
+        void OnClick() - метод, вызывающийся по клику на кнопку добавления участника.
+        Возвращаемый тип: -
+        Аргументы:
+            View view - элемент, вызвавший этот метод.
+    */
     public void OnClick(View view)
     {
         _addDialog.show();
     }
 
-
-
+    /*
+        void GenerateStandartParticipnats() - метод, создающий спортсменов по умолчанию при первом создании соревнования.
+        Возвращаемый тип: -
+        Аргументы:
+            final int firstNumber - номер, с которого начинается нумерация всех участников.
+            final int count - количество участников в соревновании.
+    */
     private void GenerateStandartParticipants(final int firstNumber, final int count)
     {
         _progressDialog = new ProgressDialog(this);
@@ -376,18 +398,18 @@ public class ViewPagerActivity extends AppCompatActivity
         createTableOfSportsman.execute();
     }
 
-
-
+    /*
+        void FindAllViews() - метод,в котором находим все view элементы данной активности.
+        Возвращаемый тип: -
+        Аргументы: -
+    */
     private void FindAllViews()
     {
         LayoutInflater inflater = LayoutInflater.from(this);
         List<View> pages = new ArrayList<>();
 
-        //Работа с ParticipantList
         View page1 = inflater.inflate(R.layout.activity_participant_list, null);
         pages.add(page1);
-
-
 
         _renameForm = inflater.inflate(R.layout.dialog_activity_add_participant, null);
         _numberRenameDialog = (EditText) _renameForm.findViewById(R.id.dialogNumber);
@@ -396,7 +418,6 @@ public class ViewPagerActivity extends AppCompatActivity
         _countryRenameDialog = (EditText) _renameForm.findViewById(R.id.dialogCountry);
         _colorRenameDialog = (TextView) _renameForm.findViewById(R.id.dialogColor);
         _spinnerOfGroupRename = (Spinner) _renameForm.findViewById(R.id.spinnerOfGroup);
-
 
         _dialogForm = inflater.inflate(R.layout.dialog_activity_add_participant, null);
         _recyclerView = (RecyclerView) page1.findViewById(R.id.gridViewParticipantList);
@@ -413,7 +434,6 @@ public class ViewPagerActivity extends AppCompatActivity
         _editParticipantImBtn = (ImageButton) page1.findViewById(R.id.edit_participant);
 
         _nameOfParticipantList.setText(Html.fromHtml("<font>"  + "<big>" + getResources().getString(R.string.participant_list_actvity_head) + "</big>" + "</font>"));
-
 
         _nameDialog = (EditText) _dialogForm.findViewById(R.id.dialogName);
         _birthdayDialog = (EditText) _dialogForm.findViewById(R.id.dialogBirthday);
@@ -446,6 +466,15 @@ public class ViewPagerActivity extends AppCompatActivity
         setContentView(viewPager);
     }
 
+    /*
+        void SortTableBy() - метод, сортирующий таблицу по заданным параметрам.
+        Возвращаемый тип: -
+        Аргументы:
+            RecyclerView recyclerView - элемент RecyclerView в котором будем сортировать данные, необходим для
+                                       того, чтобы определять сортируем локальную базу или общую.
+            String orderBy - параметр по которому сортируем, пример: "name", "number";
+            boolean sortState - сортировка в прямом порядке или в инверсном.
+    */
     private void SortTableBy(RecyclerView recyclerView, String orderBy, boolean sortState)
     {
         List<Sportsman> sortedList;
@@ -462,7 +491,12 @@ public class ViewPagerActivity extends AppCompatActivity
 
     }
 
-    // Обработка нажатий меню сортировок
+    /*
+        void OnClickMenu() - метод, вызывающийся при клике на меню сортировок.
+        Возвращаемый тип: -
+        Аргументы:
+            View view - элемент, который вызвал данный метод.
+    */
     public void OnClickMenu(View view)
     {
         switch (view.getId())
@@ -549,7 +583,6 @@ public class ViewPagerActivity extends AppCompatActivity
 
         }
     }
-
 
     public void OnClickAcceptParticipant(View view)
     {
@@ -793,8 +826,6 @@ public class ViewPagerActivity extends AppCompatActivity
     public void OnClickColorParticipant(View view)
     {
         android.app.FragmentManager fm = this.getFragmentManager();
-        //Подумать как сделать
-        //_addColorToParticipantDialog.setSelectedColor(_colorParticipant);
         _addColorToParticipantDialog.show(fm, "colorpicker");
     }
 
