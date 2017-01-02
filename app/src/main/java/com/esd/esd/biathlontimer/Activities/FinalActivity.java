@@ -19,10 +19,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.esd.esd.biathlontimer.Competition;
+import com.esd.esd.biathlontimer.DatabaseClasses.RealmMegaSportsmanSaver;
 import com.esd.esd.biathlontimer.ExcelHelper;
+import com.esd.esd.biathlontimer.MegaSportsman;
 import com.esd.esd.biathlontimer.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class FinalActivity extends AppCompatActivity
@@ -64,6 +67,9 @@ public class FinalActivity extends AppCompatActivity
         ExcelHelper excelHelper = new ExcelHelper();
         excelHelper.CreateFileWithResult(5);
 
+        RealmMegaSportsmanSaver saver = new RealmMegaSportsmanSaver(this, "RESULTS");
+        List<MegaSportsman> list = saver.GetSportsmen("number",true);
+        list.get(0);
     }
 
     @Override

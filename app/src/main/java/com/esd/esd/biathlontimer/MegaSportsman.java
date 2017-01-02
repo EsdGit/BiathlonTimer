@@ -24,6 +24,10 @@ public class MegaSportsman extends RealmObject implements ISportsman
     private String country;
     private String group;
     private int color;
+    private String _placesDb;
+    private String _resultsDb;
+    private String _finesTimeDb;
+    private String _finesCountDb;
     //private String results;
     @Ignore
     private boolean isChecked;
@@ -74,9 +78,26 @@ public class MegaSportsman extends RealmObject implements ISportsman
         _fineTime = new Time[lapsCount];
     }
 
+    public void makeForSaving()
+    {
+        _placesDb = "";
+        _resultsDb = "";
+        _finesCountDb = "";
+        _finesTimeDb = "";
+        for(int i = 0;i < _places.length; i++)
+        {
+            _placesDb += String.valueOf(_places[i])+",";
+            if(_resultTime[i] == null) _resultsDb += "null,";
+            else _resultsDb += _resultTime[i].format("%H:%M:%S")+",";
+            _finesCountDb += String.valueOf(_fineCount[i])+",";
+            if(_fineTime[i] == null) _finesTimeDb += "null,";
+            else _finesTimeDb += _fineTime[i].format("%H:%M:%S")+",";
+        }
+    }
+
     public void setFineCount(int fineCount, int lapNumber)
     {
-        _fineCount[lapNumber] = fineCount;
+        _fineCount[lapNumber] += fineCount;
     }
 
     public int getFineCount(int lapNumber)
@@ -86,7 +107,15 @@ public class MegaSportsman extends RealmObject implements ISportsman
 
     public void setFineTime(Time fine, int lapNumber)
     {
-        _fineTime[lapNumber] = new Time(fine);
+        if(_fineTime[lapNumber] == null)
+            _fineTime[lapNumber] = new Time(fine);
+        else
+        {
+            _fineTime[lapNumber].second += fine.second;
+            _fineTime[lapNumber].minute += fine.minute;
+            _fineTime[lapNumber].hour += fine.hour;
+            _fineTime[lapNumber].normalize(false);
+        }
     }
 
     public Time getFineTime(int lapNumber)

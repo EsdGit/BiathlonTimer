@@ -30,6 +30,7 @@ import android.widget.Toast;
 
 import com.esd.esd.biathlontimer.Competition;
 import com.esd.esd.biathlontimer.DatabaseClasses.DatabaseProvider;
+import com.esd.esd.biathlontimer.DatabaseClasses.RealmMegaSportsmanSaver;
 import com.esd.esd.biathlontimer.DatabaseClasses.RealmSportsmenSaver;
 import com.esd.esd.biathlontimer.ErrorsBuffer;
 import com.esd.esd.biathlontimer.MegaSportsman;
@@ -659,7 +660,13 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
 
     private void SaveResultsToDatabase()
     {
+        RealmMegaSportsmanSaver megaSportsmanSaver = new RealmMegaSportsmanSaver(this, "RESULTS");
 
+        for(int i = 0; i<_megaSportsmen.length; i++)
+        {
+            _megaSportsmen[i].makeForSaving();
+            megaSportsmanSaver.SaveSportsman(_megaSportsmen[i]);
+        }
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event)
@@ -676,6 +683,8 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
                     public void onClick(DialogInterface dialogInterface, int i) {
                         // заканчиваем нахер
                         SaveResultsToDatabase();
+                        Intent intent = new Intent(CompetitionsActivity.this, FinalActivity.class);
+                        startActivity(intent);
                         CompetitionsActivity.this.finish();
                     }
                 });
