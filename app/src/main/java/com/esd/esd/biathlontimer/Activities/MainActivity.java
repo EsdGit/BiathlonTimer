@@ -189,6 +189,8 @@ public class MainActivity extends AppCompatActivity {
                     myIntent.putExtra("NeedDelete", "false");
                     myIntent.putExtra("ArrayGroup", new String[]{});
                     startActivity(myIntent);
+//                    Intent myInt = new Intent(MainActivity.this, FinalActivity.class);
+//                    startActivity(myInt);
                 }
                 else
                 {

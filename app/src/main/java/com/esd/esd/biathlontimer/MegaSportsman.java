@@ -95,6 +95,16 @@ public class MegaSportsman extends RealmObject implements ISportsman
         }
     }
 
+    public String[] getPlaceArr()
+    {
+        return _placesDb.split(",");
+    }
+
+    public String[] getResultArr()
+    {
+        return _resultsDb.split(",");
+    }
+
     public void setFineCount(int fineCount, int lapNumber)
     {
         _fineCount[lapNumber] += fineCount;
@@ -130,7 +140,7 @@ public class MegaSportsman extends RealmObject implements ISportsman
 
     public Time getResultTime(int lapNumber)
     {
-        if(_fineTime[lapNumber] != null)
+        if(_fineTime[lapNumber] != null && _resultTime[lapNumber] != null)
         {
             Time localTime = new Time(_resultTime[lapNumber]);
             localTime.hour += _fineTime[lapNumber].hour;

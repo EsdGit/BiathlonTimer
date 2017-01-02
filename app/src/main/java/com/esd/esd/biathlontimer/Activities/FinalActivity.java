@@ -44,6 +44,7 @@ public class FinalActivity extends AppCompatActivity
     private MenuItem _sendByMail;
 
     private int _test = 0;
+    List<MegaSportsman> list;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -59,17 +60,20 @@ public class FinalActivity extends AppCompatActivity
         _name = (TextView) findViewById(R.id.name_final_activity);
         _time = (TextView) findViewById(R.id.time_final_activity);
 
-        for(int i = 0; i < 5; i++)
-        {
-            AddResultRow();
-        }
-
         ExcelHelper excelHelper = new ExcelHelper();
         excelHelper.CreateFileWithResult(5);
 
         RealmMegaSportsmanSaver saver = new RealmMegaSportsmanSaver(this, "RESULTS");
-        List<MegaSportsman> list = saver.GetSportsmen("number",true);
-        list.get(0);
+        list = saver.GetSportsmen("number",true);
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        for(int i = 0; i<list.size(); i++)
+        {
+            AddResultRow(list.get(i), 0);
+        }
     }
 
     @Override
@@ -111,11 +115,11 @@ public class FinalActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    private void AddResultRow(/*Participant participant*/)
+    private void AddResultRow(MegaSportsman sportsman, int lap)
     {
         final TableRow newRow = new TableRow(this);
         final TextView newTextView = new TextView(this);
-        newTextView.setText("1");
+        newTextView.setText(sportsman.getPlaceArr()[lap]);
         newTextView.setGravity(Gravity.CENTER);
         newTextView.setTextColor(Color.BLACK);
         newTextView.setBackground(new PaintDrawable(Color.WHITE));
@@ -124,7 +128,7 @@ public class FinalActivity extends AppCompatActivity
         ((TableRow.LayoutParams)newTextView.getLayoutParams()).setMargins(2,0,2,2);
 
         final TextView newTextView2 = new TextView(this);
-        newTextView2.setText(Integer.toString(_test++) /*participant.GetNumber()*/);
+        newTextView2.setText(String.valueOf(sportsman.getNumber()));
         newTextView2.setGravity(Gravity.CENTER);
         newTextView2.setTextColor(Color.BLACK);
         newTextView2.setBackground(new PaintDrawable(Color.WHITE));
@@ -133,7 +137,7 @@ public class FinalActivity extends AppCompatActivity
         ((TableRow.LayoutParams)newTextView2.getLayoutParams()).setMargins(0,0,2,2);
 
         final TextView newTextView3 = new TextView(this);
-        newTextView3.setText(Integer.toString(_test++) /*participant.GetFIO()*/);
+        newTextView3.setText(sportsman.getName());
         newTextView3.setGravity(Gravity.CENTER);
         newTextView3.setTextColor(Color.BLACK);
         newTextView3.setBackground(new PaintDrawable(Color.WHITE));
@@ -142,7 +146,7 @@ public class FinalActivity extends AppCompatActivity
         ((TableRow.LayoutParams)newTextView3.getLayoutParams()).setMargins(0,0,2,2);
 
         final TextView newTextView4 = new TextView(this);
-        newTextView4.setText("Время");
+        newTextView4.setText(sportsman.getResultArr()[lap]);
         newTextView4.setGravity(Gravity.CENTER);
         newTextView4.setTextColor(Color.BLACK);
         newTextView4.setBackground(new PaintDrawable(Color.WHITE));
