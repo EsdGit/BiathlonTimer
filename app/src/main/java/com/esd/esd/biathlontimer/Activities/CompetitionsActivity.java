@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.PaintDrawable;
 import android.icu.text.MessagePattern;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -254,51 +255,39 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         view.setOnClickListener(new View.OnClickListener()
         {
             @Override
-            public void onClick(final View v)
-            {
+            public void onClick(final View v) {
 
-                        int number = Integer.valueOf(_button.GetParticipantNumber(v));
-                        final int lap = Integer.valueOf(_button.GetLap(v));
+                int number = Integer.valueOf(_button.GetParticipantNumber(v));
+                final int lap = Integer.valueOf(_button.GetLap(v));
 
-                        // Если номера одинаковые то капец
-                        for(int i = 0; i < _megaSportsmen.length; i++)
-                        {
-                            if(number == _megaSportsmen[i].getNumber())
-                            {
-                                number = i;
-                                break;
-                            }
-                        }
+                for (int i = 0; i < _megaSportsmen.length; i++) {
+                    if (number == _megaSportsmen[i].getNumber()) {
+                        number = i;
+                        break;
+                    }
+                }
 
-                        android.text.format.Time newTime = new android.text.format.Time();
+                android.text.format.Time newTime = new android.text.format.Time();
 
-                        newTime.hour = _currentTime.hour - _megaSportsmen[number].getStartTime().hour;
-                        newTime.minute = _currentTime.minute - _megaSportsmen[number].getStartTime().minute;
-                        newTime.second = _currentTime.second - _megaSportsmen[number].getStartTime().second;
-                        newTime.normalize(false);
+                newTime.hour = _currentTime.hour - _megaSportsmen[number].getStartTime().hour;
+                newTime.minute = _currentTime.minute - _megaSportsmen[number].getStartTime().minute;
+                newTime.second = _currentTime.second - _megaSportsmen[number].getStartTime().second;
+                newTime.normalize(false);
 
-                        _megaSportsmen[number].setResultTime(newTime, lap);
+                _megaSportsmen[number].setResultTime(newTime, lap);
 
-                        GetPlace(number, lap);
-
-                                _tablesCompetition.get(lap).removeAllViews();
-                                SortByPlace(lap);
-                                for(int i = 0; i < _megaSportsmen.length; i++)
-                                {
-                                    if(_megaSportsmen[i].getPlace(lap) == 0) continue;
-                                    AddRowCompetitionTable(_megaSportsmen[i], lap);
-                                }
-                                if(lap == lapsCount - 1)
-                                {
-                                    _participantGridLayout.removeView(view);
-                                }
-                                else
-                                {
-                                    _button.SetParticipantLap(view, Integer.toString(lap+1));
-                                }
-
-
-
+                GetPlace(number, lap);
+                _tablesCompetition.get(lap).removeAllViews();
+                SortByPlace(lap);
+                for (int i = 0; i < _megaSportsmen.length; i++) {
+                    if (_megaSportsmen[i].getPlace(lap) == 0) continue;
+                    AddRowCompetitionTable(_megaSportsmen[i], lap);
+                }
+                if (lap == lapsCount - 1) {
+                    _participantGridLayout.removeView(view);
+                } else {
+                    _button.SetParticipantLap(view, Integer.toString(lap + 1));
+                }
             }
         });
         return view;
@@ -307,14 +296,19 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
     private void SortByPlace(int lap)
     {
         MegaSportsman helper;
-        for(int i = 0; i < _megaSportsmen.length - 1; i++)
+        int k = 0;
+        while (k < _megaSportsmen.length - 1)
         {
-            if(_megaSportsmen[i].getPlace(lap) > _megaSportsmen[i+1].getPlace(lap))
+            for (int i = 0; i < _megaSportsmen.length - k - 1; i++)
             {
-                helper = _megaSportsmen[i];
-                _megaSportsmen[i] = _megaSportsmen[i+1];
-                _megaSportsmen[i+1] = helper;
+                if (_megaSportsmen[i].getPlace(lap) > _megaSportsmen[i + 1].getPlace(lap))
+                {
+                    helper = _megaSportsmen[i];
+                    _megaSportsmen[i] = _megaSportsmen[i + 1];
+                    _megaSportsmen[i + 1] = helper;
+                }
             }
+            k++;
         }
     }
 
@@ -461,6 +455,56 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         startActivity(intent);
     }
     Handler handler;
+    Thread thread = new Thread(new Runnable() {
+        @Override
+        public void run()
+        {
+            while(true) {
+                if (android.text.format.Time.compare(_currentTime, _timeNextParticipant) == 0 && _number < _megaSportsmen.length) {
+
+                    if (!_currentCompetition.GetSecondInterval().equals("")) {
+                        if (_number == Integer.valueOf(_currentCompetition.GetNumberSecondInterval()) - 1) {
+                            _currentInterval.second = Integer.valueOf(_currentCompetition.GetSecondInterval().split(":")[1]);
+                            _currentInterval.minute = Integer.valueOf(_currentCompetition.GetSecondInterval().split(":")[0]);
+                        }
+                    }
+
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (_currentCompetition.GetStartType().equals(getResources().getString(R.string.item_type_single_start))) {
+                                _participantGridLayout.addView(CreateButton(_megaSportsmen[_number], "0"));
+                                _megaSportsmen[_number].setStartTime(_currentTime);
+                                _number++;
+                            } else {
+                                if (_currentCompetition.GetStartType().equals(getResources().getString(R.string.item_type_double_start))) {
+                                    _participantGridLayout.addView(CreateButton(_megaSportsmen[_number], "0"));
+                                    _megaSportsmen[_number].setStartTime(_currentTime);
+                                    _number++;
+                                    if (_number < _megaSportsmen.length) {
+                                        _participantGridLayout.addView(CreateButton(_megaSportsmen[_number], "0"));
+                                        _megaSportsmen[_number].setStartTime(_currentTime);
+                                        _number++;
+                                    }
+                                }
+                            }
+                        }
+                    });
+                    _timeNextParticipant.hour += _currentInterval.hour;
+                    _timeNextParticipant.minute += _currentInterval.minute;
+                    _timeNextParticipant.second += _currentInterval.second;
+                    _timeNextParticipant.normalize(false);
+                }
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException ex) {
+
+                }
+            }
+        }
+    });
+
+    int ms;
     public void startBtnClick(View view)
     {
         handler = new Handler();
@@ -485,98 +529,14 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
             {
                 TimerTask task = new TimerTask()
                 {
-                    int ms = 0;
-                    String msStr;
+                    //int ms = 0;
+                    //String msStr;
 
                     @Override
                     public void run()
                     {
-                        if(!_isPaused) ms++;
-//                        if(_currentCompetition.GetStartType().equals(getResources().getString(R.string.item_type_mas_start)) && _number < _participants.length)
-//                        {
-//                            _number = _participants.length;
-//                            runOnUiThread(new Runnable() {
-//                                @Override
-//                                public void run()
-//                                {
-//                                    android.text.format.Time localTime = new android.text.format.Time();
-//                                    localTime.second = _currentTime.second;
-//                                    localTime.minute = _currentTime.minute;
-//                                    localTime.hour = _currentTime.hour;
-//
-//                                    for(int i = 0; i < _participants.length; i++)
-//                                    {
-//                                        _participantGridLayout.addView(CreateButton(_participants[i], "0"));
-//                                        _participants[i].SetStartTime(localTime);
-//                                    }
-//
-//                                }
-//                            });
-//                        }
-                        if(ms>9)
-                        {
-                            _currentTime.second++;
-                            ms = 0;
-                            _currentTime.normalize(false);
-
-                            if(android.text.format.Time.compare(_currentTime,_timeNextParticipant) == 0 && _number < _megaSportsmen.length)
-                            {
-
-                                if(!_currentCompetition.GetSecondInterval().equals(""))
-                                {
-                                    if (_number == Integer.valueOf(_currentCompetition.GetNumberSecondInterval()) - 1) {
-                                        _currentInterval.second = Integer.valueOf(_currentCompetition.GetSecondInterval().split(":")[1]);
-                                        _currentInterval.minute = Integer.valueOf(_currentCompetition.GetSecondInterval().split(":")[0]);
-                                    }
-                                }
-
-                                handler.post(new Runnable()
-                                {
-                                    @Override
-                                    public void run()
-                                    {
-                                        if(_currentCompetition.GetStartType().equals(getResources().getString(R.string.item_type_single_start)))
-                                        {
-                                            _participantGridLayout.addView(CreateButton(_megaSportsmen[_number], "0"));
-                                            _megaSportsmen[_number].setStartTime(_currentTime);
-                                            _number++;
-                                        }
-                                        else
-                                        {
-                                            if(_currentCompetition.GetStartType().equals(getResources().getString(R.string.item_type_double_start)))
-                                            {
-                                                _participantGridLayout.addView(CreateButton(_megaSportsmen[_number], "0"));
-                                                _megaSportsmen[_number].setStartTime(_currentTime);
-                                                _number++;
-                                                if(_number < _megaSportsmen.length)
-                                                {
-                                                    _participantGridLayout.addView(CreateButton(_megaSportsmen[_number], "0"));
-                                                    _megaSportsmen[_number].setStartTime(_currentTime);
-                                                    _number++;
-                                                }
-                                            }
-                                        }
-                                    }
-                                });
-                                _timeNextParticipant.hour += _currentInterval.hour;
-                                _timeNextParticipant.minute += _currentInterval.minute;
-                                _timeNextParticipant.second += _currentInterval.second;
-                                _timeNextParticipant.normalize(false);
-                            }
-
-                        }
-
-
-
-
-                        msStr = String.valueOf(ms);
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                _competitionTimer.setText(_currentTime.format("%H:%M:%S")+":"+msStr);
-                                _timerParticipantTable.setText(_currentTime.format("%H:%M:%S")+":"+msStr);
-                            }
-                        });
+                        MyTimerTask task = new MyTimerTask();
+                        task.execute(ms);
                     }
                 };
                 @Override
@@ -596,6 +556,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
                 public void onFinish() {
                     _timer = new Timer();
                     _timer.schedule(task, 0,100);
+                    thread.start();
                     _competitionTimer.setTextColor(getResources().getColor(R.color.white));
                     _timerParticipantTable.setTextColor(getResources().getColor(R.color.white));
                     _competitionState = CompetitionState.Running;
@@ -665,7 +626,8 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
     private void SaveResultsToDatabase()
     {
         RealmMegaSportsmanSaver megaSportsmanSaver = new RealmMegaSportsmanSaver(this, "RESULTS");
-
+        megaSportsmanSaver.DeleteTable();
+        megaSportsmanSaver = new RealmMegaSportsmanSaver(this, "RESULTS");
         for(int i = 0; i<_megaSportsmen.length; i++)
         {
             _megaSportsmen[i].makeForSaving();
@@ -748,5 +710,57 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
 
         builder.show();
         Toast.makeText(getApplicationContext(),"Стоп",Toast.LENGTH_SHORT).show();
+    }
+
+    class MyTimerTask extends AsyncTask<Integer, Integer, Integer>
+    {
+
+        @Override
+        protected Integer doInBackground(Integer... params) {
+            if(!_isPaused) ms++;
+//                        if(_currentCompetition.GetStartType().equals(getResources().getString(R.string.item_type_mas_start)) && _number < _participants.length)
+//                        {
+//                            _number = _participants.length;
+//                            runOnUiThread(new Runnable() {
+//                                @Override
+//                                public void run()
+//                                {
+//                                    android.text.format.Time localTime = new android.text.format.Time();
+//                                    localTime.second = _currentTime.second;
+//                                    localTime.minute = _currentTime.minute;
+//                                    localTime.hour = _currentTime.hour;
+//
+//                                    for(int i = 0; i < _participants.length; i++)
+//                                    {
+//                                        _participantGridLayout.addView(CreateButton(_participants[i], "0"));
+//                                        _participants[i].SetStartTime(localTime);
+//                                    }
+//
+//                                }
+//                            });
+//                        }
+            if(ms>9)
+            {
+                _currentTime.second++;
+                ms = 0;
+                _currentTime.normalize(false);
+
+
+
+            }
+
+
+
+
+            final String msStr = String.valueOf(ms);
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    _competitionTimer.setText(_currentTime.format("%H:%M:%S")+":"+msStr);
+                    _timerParticipantTable.setText(_currentTime.format("%H:%M:%S")+":"+msStr);
+                }
+            });
+            return params[0];
+        }
     }
 }
