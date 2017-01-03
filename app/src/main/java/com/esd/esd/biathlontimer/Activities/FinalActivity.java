@@ -6,6 +6,7 @@ import android.graphics.drawable.PaintDrawable;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.Gravity;
 import android.view.Menu;
@@ -30,7 +31,7 @@ import java.util.List;
 
 public class FinalActivity extends AppCompatActivity
 {
-    private TableLayout _resultTable;
+    private RecyclerView _resultTable;
 
     private TextView _place;
     private TextView _number;
@@ -54,7 +55,7 @@ public class FinalActivity extends AppCompatActivity
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getSupportActionBar().setTitle((Html.fromHtml("<font color=\"#FFFFFF\">"  + "<big>" + getResources().getString(R.string.title_final_activity) + "</big>" + "</font>")));
 
-        _resultTable = (TableLayout) findViewById(R.id.tableFinalActivity);
+        _resultTable = (RecyclerView) findViewById(R.id.tableFinalActivity);
         _place = (TextView) findViewById(R.id.place_final_activity);
         _number = (TextView) findViewById(R.id.number_final_activity);
         _name = (TextView) findViewById(R.id.name_final_activity);

@@ -80,10 +80,10 @@
         android:id="@+id/competitionScrollView">
 
         <GridLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:columnCount="7"
+            android:columnCount="6"
             android:orientation="horizontal"
             android:id="@+id/competitionGridLayout"
             android:useDefaultMargins="true">
