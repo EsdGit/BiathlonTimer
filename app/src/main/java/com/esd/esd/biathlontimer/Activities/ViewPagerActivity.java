@@ -859,11 +859,10 @@ public class ViewPagerActivity extends AppCompatActivity
             return true;
     }
 
-    private class CreateTableOfSportsman extends AsyncTask<Void, Integer, Void>
+    private class CreateTableOfSportsman extends AsyncTask<Void, Sportsman, Void>
     {
         private int _firstNumber = _currentCompetition.GetStartNumber();
         private int _count = _currentCompetition.GetStartNumber() +  _currentCompetition.GetMaxParticipantCount();
-
         @Override
         protected Void doInBackground(Void... params) {
             try {
@@ -872,15 +871,9 @@ public class ViewPagerActivity extends AppCompatActivity
                 {
                     final Sportsman sportsman = new Sportsman(i, "Спортсмен " + String.valueOf(counter + 1), 1996, "Россия", "Без группы");
                     sportsman.setColor(Color.BLACK);
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run()
-                        {
-                            saver.SaveSportsman(sportsman);
-                        }
-                    });
+                    publishProgress(sportsman);
                     getFloor(0);
-                    publishProgress(++counter);
+                    counter++;
                 }
                 TimeUnit.NANOSECONDS.sleep(10);
             } catch (InterruptedException e) {
@@ -908,10 +901,11 @@ public class ViewPagerActivity extends AppCompatActivity
         }
 
         @Override
-        protected void onProgressUpdate(Integer... values) {
+        protected void onProgressUpdate(Sportsman... values) {
             super.onProgressUpdate(values);
-            _progressDialog.setProgress(values[0]);
-
+            //_progressDialog.setProgress(values[0]);
+            _progressDialog.incrementProgressBy(1);
+            saver.SaveSportsman(values[0]);
             //_progressDialog.setSecondaryProgress(values[0]);
 //            _progressDialog.incrementProgressBy(1);
 //            _progressDialog.incrementSecondaryProgressBy(1);
@@ -919,7 +913,7 @@ public class ViewPagerActivity extends AppCompatActivity
 
         private void getFloor(int floor) throws InterruptedException {
             //TimeUnit.NANOSECONDS.sleep(1000);
-            TimeUnit.NANOSECONDS.sleep(1);
+            TimeUnit.MILLISECONDS.sleep(5);
         }
     }
 

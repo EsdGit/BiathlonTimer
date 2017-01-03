@@ -1,6 +1,7 @@
 package com.esd.esd.biathlontimer.Activities;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -53,6 +54,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 import java.util.zip.Inflater;
 
 
@@ -200,20 +202,18 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
 
         lapsCount = Integer.valueOf(_currentCompetition.GetCheckPointsCount());
         CreateTables(lapsCount);
-        RealmSportsmenSaver saver = new RealmSportsmenSaver(this, _currentCompetition.GetDbParticipantPath());
-        List<Sportsman> list = saver.GetSportsmen("number", true);
-        _megaSportsmen = new MegaSportsman[list.size()];
-        for(int i = 0; i<list.size(); i++)
-        {
-            _megaSportsmen[i] = new MegaSportsman(list.get(i));
-            _megaSportsmen[i].setLapsCount(lapsCount);
-        }
         _currentRound.setText(_currentRound.getText() + " - " + Integer.toString(_currentTable + 1));
 
         TimerStartPosition();
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        LoadingTask loadingTask = new LoadingTask();
+        loadingTask.execute();
+    }
 
     private void TimerStartPosition()
     {
@@ -648,6 +648,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         // заканчиваем нахер
+                        _timer.cancel();
                         SaveResultsToDatabase();
                         Intent intent = new Intent(CompetitionsActivity.this, FinalActivity.class);
                         startActivity(intent);
@@ -744,23 +745,65 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
                 _currentTime.second++;
                 ms = 0;
                 _currentTime.normalize(false);
+            }
+            return params[0];
+        }
 
+        @Override
+        protected void onPostExecute(Integer integer) {
+            super.onPostExecute(integer);
+            _competitionTimer.setText(_currentTime.format("%H:%M:%S")+":"+String.valueOf(ms));
+            _timerParticipantTable.setText(_currentTime.format("%H:%M:%S")+":"+String.valueOf(ms));
+        }
+    }
 
+    class LoadingTask extends AsyncTask<Void, Integer, Void>
+    {
+        ProgressDialog dialog;
+        @Override
+        protected Void doInBackground(Void... params)
+        {
+            RealmSportsmenSaver saver = new RealmSportsmenSaver(getApplicationContext(), _currentCompetition.GetDbParticipantPath());
+            List<Sportsman> list = saver.GetSportsmen("number", true);
+            _megaSportsmen = new MegaSportsman[list.size()];
+            for(int i = 0; i<list.size(); i++)
+            {
+                _megaSportsmen[i] = new MegaSportsman(list.get(i));
+                _megaSportsmen[i].setLapsCount(lapsCount);
+                publishProgress(i);
+                try {
+                    TimeUnit.MILLISECONDS.sleep(2);
+                }catch (InterruptedException ex)
+                {
 
+                }
             }
 
+            return null;
+        }
 
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            dialog = new ProgressDialog(CompetitionsActivity.this);
+            dialog.setMessage("fegeg");
+            dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            dialog.setIndeterminate(false);
+            dialog.setCancelable(false);
+            dialog.setMax(_currentCompetition.GetMaxParticipantCount());
+            dialog.show();
+        }
 
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+            dialog.setProgress(values[0]);
+        }
 
-            final String msStr = String.valueOf(ms);
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    _competitionTimer.setText(_currentTime.format("%H:%M:%S")+":"+msStr);
-                    _timerParticipantTable.setText(_currentTime.format("%H:%M:%S")+":"+msStr);
-                }
-            });
-            return params[0];
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            dialog.dismiss();
         }
     }
 }
