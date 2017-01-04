@@ -5,7 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.FrameLayout;
 import android.widget.TextView;
+
+import java.util.List;
 
 /**
  * Created by Иван on 04.01.2017.
@@ -14,23 +17,24 @@ import android.widget.TextView;
 public class GridViewAdapter extends BaseAdapter
 {
     private Context _context;
-    public Integer[] _test = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20};
+    private List<Sportsman> _sportsmen;
 
-    public GridViewAdapter(Context context)
+    public GridViewAdapter(Context context, List<Sportsman> sportsmanList)
     {
         _context = context;
+        _sportsmen = sportsmanList;
     }
 
     @Override
     public int getCount()
     {
-        return _test.length;
+        return _sportsmen.size();
     }
 
     @Override
     public Object getItem(int position)
     {
-        return _test[position];
+        return _sportsmen.get(position);
     }
 
     @Override
@@ -53,8 +57,12 @@ public class GridViewAdapter extends BaseAdapter
         {
             gridElement = (View)convertView;
         }
-        TextView textView = (TextView) gridElement.findViewById(R.id.numberParticipantMyButton);
-        textView.setText(Integer.toString(_test[position]));
+        TextView number = (TextView) gridElement.findViewById(R.id.numberParticipantMyButton);
+        TextView lap = (TextView) gridElement.findViewById(R.id.lapParticipantMyButton);
+        FrameLayout background = (FrameLayout) gridElement.findViewById(R.id.backgroundMyButton);
+        number.setText(Integer.toString(_sportsmen.get(position).getNumber()));
+        lap.setText("0");
+        background.setBackgroundColor(_sportsmen.get(position).getColor());
         return gridElement;
     }
 }

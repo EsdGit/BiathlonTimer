@@ -72,38 +72,37 @@
 
     </FrameLayout>
 
-    <ScrollView
-        android:layout_marginTop="5dp"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="vertical"
-        android:id="@+id/competitionScrollView">
-
-        <GridLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:columnCount="6"
-            android:orientation="horizontal"
-            android:id="@+id/competitionGridLayout"
-            android:useDefaultMargins="true">
-
-        </GridLayout>
-
-    </ScrollView>
-
-    <!--<GridView-->
+    <!--<ScrollView-->
         <!--android:layout_marginTop="5dp"-->
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="match_parent"-->
-        <!--android:id="@+id/gridView"-->
-        <!--android:columnWidth="90dp"-->
-        <!--android:gravity="center"-->
-        <!--android:horizontalSpacing="10dp"-->
-        <!--android:numColumns="auto_fit"-->
-        <!--android:stretchMode="columnWidth"-->
-        <!--android:verticalSpacing="10dp">-->
+        <!--android:scrollbars="vertical"-->
+        <!--android:id="@+id/competitionScrollView">-->
 
-    <!--</GridView>-->
+        <!--<GridLayout-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center_horizontal"-->
+            <!--android:columnCount="6"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:id="@+id/competitionGridLayout"-->
+            <!--android:useDefaultMargins="true">-->
+
+        <!--</GridLayout>-->
+
+    <!--</ScrollView>-->
+
+    <GridView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/gridView"
+        android:columnWidth="90dp"
+        android:gravity="center"
+        android:horizontalSpacing="10dp"
+        android:numColumns="auto_fit"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="10dp">
+
+    </GridView>
 
 </LinearLayout>

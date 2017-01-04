@@ -19,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.GridLayout;
@@ -91,6 +92,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
     private android.text.format.Time _currentTime;
     private MegaSportsman[] _megaSportsmen;
     private ArrayList<TableLayout> _tablesCompetition;
+    private GridViewAdapter _viewAdapter;
     private int _currentTable = 0;
     private int _number = 0;
     private int lapsCount;
@@ -132,14 +134,17 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
 
         View page1 = inflater.inflate(R.layout.activity_competitions, null);
         pages.add(page1);
-        _participantGridLayout = (GridLayout) page1.findViewById(R.id.competitionGridLayout);
+        //_participantGridLayout = (GridLayout) page1.findViewById(R.id.competitionGridLayout);
         _competitionTimer = (TextView) page1.findViewById(R.id.competitionTimer);
         _startBtn = (ImageButton) page1.findViewById(R.id.competitionStart);
 
         //Тест
-        //_gridView = (GridView) page1.findViewById(R.id.gridView);
-        //_gridView.setAdapter(new GridViewAdapter(this));
-
+        RealmSportsmenSaver saver = new RealmSportsmenSaver(getApplicationContext(), _currentCompetition.GetDbParticipantPath());
+        List<Sportsman> list = saver.GetSportsmen("number", true);
+        _gridView = (GridView) page1.findViewById(R.id.gridView);
+        _viewAdapter = new GridViewAdapter(this, list);
+        _gridView.setAdapter(_viewAdapter);
+        _gridView.setOnItemClickListener(gridViewOnItemClickListner);
 
         View page2 = inflater.inflate(R.layout.activity_competition_tables, null);
         pages.add(page2);
@@ -214,6 +219,17 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         TimerStartPosition();
 
     }
+
+    //Здесь клик на ячейку
+    private GridView.OnItemClickListener gridViewOnItemClickListner = new GridView.OnItemClickListener()
+    {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+        {
+            TextView textView = (TextView) view.findViewById(R.id.numberParticipantMyButton);
+            Toast.makeText(getApplicationContext(), textView.getText(), Toast.LENGTH_SHORT).show();
+        }
+    };
 
     @Override
     protected void onStart() {
@@ -767,6 +783,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
     class LoadingTask extends AsyncTask<Void, Integer, Void>
     {
         ProgressDialog dialog;
+
         @Override
         protected Void doInBackground(Void... params)
         {
