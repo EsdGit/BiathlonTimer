@@ -148,6 +148,7 @@ public class RecyclerViewDatabaseAdapter extends RecyclerView.Adapter<RecyclerVi
         private TextView countryTextView;
         private LongClickListener longClickListener;
         private ClickListener clickListener;
+
         public ViewHolder(final View itemView)
         {
             super(itemView);

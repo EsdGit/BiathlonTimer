@@ -22,6 +22,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.GridLayout;
+import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -36,6 +37,7 @@ import com.esd.esd.biathlontimer.DatabaseClasses.DatabaseProvider;
 import com.esd.esd.biathlontimer.DatabaseClasses.RealmMegaSportsmanSaver;
 import com.esd.esd.biathlontimer.DatabaseClasses.RealmSportsmenSaver;
 import com.esd.esd.biathlontimer.ErrorsBuffer;
+import com.esd.esd.biathlontimer.GridViewAdapter;
 import com.esd.esd.biathlontimer.MegaSportsman;
 import com.esd.esd.biathlontimer.MyButton;
 import com.esd.esd.biathlontimer.PagerAdapterHelper;
@@ -62,6 +64,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
 {
 
     private GridLayout _participantGridLayout;
+    private GridView _gridView;
     private LinearLayout _containerTables;
     private TextView _currentRound;
     private TextView _competitionTimer;
@@ -132,6 +135,10 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         _participantGridLayout = (GridLayout) page1.findViewById(R.id.competitionGridLayout);
         _competitionTimer = (TextView) page1.findViewById(R.id.competitionTimer);
         _startBtn = (ImageButton) page1.findViewById(R.id.competitionStart);
+
+        //Тест
+        //_gridView = (GridView) page1.findViewById(R.id.gridView);
+        //_gridView.setAdapter(new GridViewAdapter(this));
 
 
         View page2 = inflater.inflate(R.layout.activity_competition_tables, null);
