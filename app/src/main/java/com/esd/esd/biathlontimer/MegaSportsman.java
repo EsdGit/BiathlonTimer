@@ -63,6 +63,19 @@ public class MegaSportsman extends RealmObject implements ISportsman
         _currentLap = 0;
     }
 
+    public MegaSportsman(MegaSportsman sportsman)
+    {
+        this.number = sportsman.getNumber();
+        this.name = sportsman.getName();
+        this.year = sportsman.getYear();
+        this.country = sportsman.getCountry();
+        this.group = sportsman.getGroup();
+        this.color = sportsman.getColor();
+        this.id = sportsman.getId();
+        this._startTime = sportsman.getStartTime();
+        _currentLap = 0;
+    }
+
 
     public MegaSportsman()
     {

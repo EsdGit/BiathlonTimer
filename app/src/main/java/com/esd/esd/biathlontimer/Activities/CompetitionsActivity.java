@@ -249,7 +249,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
                     newTime.minute = _currentTime.minute - _megaSportsmen[i].getStartTime().minute;
                     newTime.second = _currentTime.second - _megaSportsmen[i].getStartTime().second;
                     newTime.normalize(false);
-                    localSportsman = _megaSportsmen[i];
+                    localSportsman = new MegaSportsman(_megaSportsmen[i]);
                     break;
                 }
             }
