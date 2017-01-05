@@ -3,6 +3,7 @@ package com.esd.esd.biathlontimer;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.Time;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,14 +19,14 @@ import java.util.List;
 public class CompetitionTableAdapter extends RecyclerView.Adapter<CompetitionTableAdapter.ViewHolder> implements IMyAdapter<MegaSportsman>
 {
     private List<MegaSportsman> sportsmen;
-    private int layoutId;
+    private int _currentLap;
     private Context _localContext;
 
-    public CompetitionTableAdapter(Context context, int layoutId)
+    public CompetitionTableAdapter(Context context)
     {
         sportsmen = new ArrayList<MegaSportsman>();
         _localContext = context;
-        this.layoutId = layoutId;
+        _currentLap = 0;
     }
 
     @Override
@@ -40,10 +41,9 @@ public class CompetitionTableAdapter extends RecyclerView.Adapter<CompetitionTab
         MegaSportsman megaSportsman = sportsmen.get(position);
         holder.numberTextView.setText(String.valueOf(megaSportsman.getNumber()));
         holder.nameTextView.setText(megaSportsman.getName());
-        holder.positionTextView.setText("1");
-        holder.timeTextView.setText(megaSportsman.getResultTime(0).format("%H:%M:%S"));
-        holder.lagTextView.setText("00:00:00");
-
+        holder.positionTextView.setText(String.valueOf(megaSportsman.getPlace()));
+        holder.timeTextView.setText(megaSportsman.getResultTime().format("%H:%M:%S"));
+        holder.lagTextView.setText(GetLag(megaSportsman));
 
         holder.numberTextView.setTextColor(megaSportsman.getColor());
         holder.nameTextView.setTextColor(megaSportsman.getColor());
@@ -52,6 +52,16 @@ public class CompetitionTableAdapter extends RecyclerView.Adapter<CompetitionTab
         holder.lagTextView.setTextColor(megaSportsman.getColor());
     }
 
+    public String GetLag(MegaSportsman sportsman)
+    {
+        Time localTime = new Time(sportsman.getResultTime());
+        Time bestTime = new Time(sportsmen.get(0).getResultTime());
+        localTime.hour -= bestTime.hour;
+        localTime.minute -= bestTime.minute;
+        localTime.second -= bestTime.second;
+        localTime.normalize(false);
+        return localTime.format("%H:%M:%S");
+    }
     @Override
     public int getItemCount() {
         return sportsmen.size();
@@ -62,16 +72,20 @@ public class CompetitionTableAdapter extends RecyclerView.Adapter<CompetitionTab
     {
         if(sportsmen.contains(sportsman)) return;
         sportsmen.add(sportsman);
-        notifyDataSetChanged();
+        //notifyDataSetChanged();
+    }
+
+    public void ClearList(){sportsmen.clear();}
+
+    @Override
+    public void AddSportsmen(List<MegaSportsman> sportsmen)
+    {
+        this.sportsmen.addAll(sportsmen);
     }
 
     @Override
-    public void AddSportsmen(List<MegaSportsman> sportsmen) {
-
-    }
-
-    @Override
-    public void RemoveSportsman(MegaSportsman sportsman) {
+    public void RemoveSportsman(MegaSportsman sportsman)
+    {
 
     }
 

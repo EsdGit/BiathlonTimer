@@ -2,6 +2,8 @@ package com.esd.esd.biathlontimer;
 
 import android.text.format.Time;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 
 import io.realm.RealmObject;
@@ -32,15 +34,21 @@ public class MegaSportsman extends RealmObject implements ISportsman
     @Ignore
     private boolean isChecked;
     @Ignore
-    private Time[] _resultTime;
+    //private Time[] _resultTime;
+    private Time _resultTime;
     @Ignore
     private Time _startTime;
     @Ignore
-    private int[] _places;
+    //private int[] _places;
+    private Integer _place;
     @Ignore
-    private int[] _fineCount;
+    //private int[] _fineCount;
+    private int _fineCount;
     @Ignore
-    private Time[] _fineTime;
+    //private Time[] _fineTime;
+    private Time _fineTime;
+    @Ignore
+    private int _currentLap;
 
 
     public MegaSportsman(Sportsman sportsman)
@@ -52,6 +60,7 @@ public class MegaSportsman extends RealmObject implements ISportsman
         this.group = sportsman.getGroup();
         this.color = sportsman.getColor();
         this.id = sportsman.getId();
+        _currentLap = 0;
     }
 
 
@@ -68,32 +77,33 @@ public class MegaSportsman extends RealmObject implements ISportsman
         this.country = country;
         this.group = group;
         this.color = color;
+        _currentLap = 0;
     }
 
-    public void setLapsCount(int lapsCount)
-    {
-        _resultTime = new Time[lapsCount];
-        _places = new int[lapsCount];
-        _fineCount = new int[lapsCount];
-        _fineTime = new Time[lapsCount];
-    }
+//    public void setLapsCount(int lapsCount)
+//    {
+//        _resultTime = new Time[lapsCount];
+//        _places = new int[lapsCount];
+//        _fineCount = new int[lapsCount];
+//        _fineTime = new Time[lapsCount];
+//    }
 
-    public void makeForSaving()
-    {
-        _placesDb = "";
-        _resultsDb = "";
-        _finesCountDb = "";
-        _finesTimeDb = "";
-        for(int i = 0;i < _places.length; i++)
-        {
-            _placesDb += String.valueOf(_places[i])+",";
-            if(_resultTime[i] == null) _resultsDb += "null,";
-            else _resultsDb += _resultTime[i].format("%H:%M:%S")+",";
-            _finesCountDb += String.valueOf(_fineCount[i])+",";
-            if(_fineTime[i] == null) _finesTimeDb += "null,";
-            else _finesTimeDb += _fineTime[i].format("%H:%M:%S")+",";
-        }
-    }
+//    public void makeForSaving()
+//    {
+//        _placesDb = "";
+//        _resultsDb = "";
+//        _finesCountDb = "";
+//        _finesTimeDb = "";
+//        for(int i = 0;i < _places.length; i++)
+//        {
+//            _placesDb += String.valueOf(_places[i])+",";
+//            if(_resultTime[i] == null) _resultsDb += "null,";
+//            else _resultsDb += _resultTime[i].format("%H:%M:%S")+",";
+//            _finesCountDb += String.valueOf(_fineCount[i])+",";
+//            if(_fineTime[i] == null) _finesTimeDb += "null,";
+//            else _finesTimeDb += _fineTime[i].format("%H:%M:%S")+",";
+//        }
+//    }
 
     public String[] getPlaceArr()
     {
@@ -105,61 +115,82 @@ public class MegaSportsman extends RealmObject implements ISportsman
         return _resultsDb.split(",");
     }
 
-    public void setFineCount(int fineCount, int lapNumber)
+//    public void setFineCount(int fineCount, int lapNumber)
+//    {
+//        _fineCount[lapNumber] += fineCount;
+//    }
+    public void setFineCount(int fineCount)
     {
-        _fineCount[lapNumber] += fineCount;
+        _fineCount += fineCount;
     }
 
-    public int getFineCount(int lapNumber)
+//    public int getFineCount(int lapNumber)
+//    {
+//        return _fineCount[lapNumber];
+//    }
+    public int getFineCount()
     {
-        return _fineCount[lapNumber];
+        return _fineCount;
     }
 
-    public void setFineTime(Time fine, int lapNumber)
+//    public void setFineTime(Time fine, int lapNumber)
+//    {
+//        if(_fineTime[lapNumber] == null)
+//            _fineTime[lapNumber] = new Time(fine);
+//        else
+//        {
+//            _fineTime[lapNumber].second += fine.second;
+//            _fineTime[lapNumber].minute += fine.minute;
+//            _fineTime[lapNumber].hour += fine.hour;
+//            _fineTime[lapNumber].normalize(false);
+//        }
+//    }
+
+    public void setFineTime(Time fine)
     {
-        if(_fineTime[lapNumber] == null)
-            _fineTime[lapNumber] = new Time(fine);
+        if(_fineTime== null)
+            _fineTime = new Time(fine);
         else
         {
-            _fineTime[lapNumber].second += fine.second;
-            _fineTime[lapNumber].minute += fine.minute;
-            _fineTime[lapNumber].hour += fine.hour;
-            _fineTime[lapNumber].normalize(false);
+            _fineTime.second += fine.second;
+            _fineTime.minute += fine.minute;
+            _fineTime.hour += fine.hour;
+            _fineTime.normalize(false);
         }
     }
 
     public Time getFineTime(int lapNumber)
     {
-        return _fineTime[lapNumber];
+        return _fineTime;
     }
 
-    public void setResultTime(Time result, int lapNumber)
+    public void setResultTime(Time result)
     {
-        _resultTime[lapNumber] = new Time(result);
+        _resultTime = new Time(result);
     }
 
-    public Time getResultTime(int lapNumber)
+    public Time getResultTime()
     {
-        if(_fineTime[lapNumber] != null && _resultTime[lapNumber] != null)
+        if(_fineTime != null && _resultTime != null)
         {
-            Time localTime = new Time(_resultTime[lapNumber]);
-            localTime.hour += _fineTime[lapNumber].hour;
-            localTime.minute += _fineTime[lapNumber].minute;
-            localTime.second += _fineTime[lapNumber].second;
+            Time localTime = new Time(_resultTime);
+            localTime.hour += _fineTime.hour;
+            localTime.minute += _fineTime.minute;
+            localTime.second += _fineTime.second;
             localTime.normalize(false);
             return localTime;
         }
-        return _resultTime[lapNumber];
+        return _resultTime;
     }
 
-    public void setPlace(int place, int lapNumber)
+    public void setPlace(int place)
     {
-        _places[lapNumber] = place;
+        _place = place;
     }
 
-    public int getPlace(int lapNumber)
+    public Integer getPlace()
     {
-        return _places[lapNumber];
+        return _place;
     }
 
     public void setStartTime(Time startTime)
@@ -251,4 +282,9 @@ public class MegaSportsman extends RealmObject implements ISportsman
     public boolean isChecked() {
         return isChecked;
     }
+
+    public void setCurrentLap(int lap){_currentLap = lap;}
+
+    public int getCurrentLap(){return _currentLap;}
+
 }

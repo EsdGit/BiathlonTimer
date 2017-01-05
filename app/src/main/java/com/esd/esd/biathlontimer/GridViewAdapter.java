@@ -17,9 +17,9 @@ import java.util.List;
 public class GridViewAdapter extends BaseAdapter
 {
     private Context _context;
-    private List<Sportsman> _sportsmen;
+    private List<MegaSportsman> _sportsmen;
 
-    public GridViewAdapter(Context context, List<Sportsman> sportsmanList)
+    public GridViewAdapter(Context context, List<MegaSportsman> sportsmanList)
     {
         _context = context;
         _sportsmen = sportsmanList;
@@ -46,6 +46,7 @@ public class GridViewAdapter extends BaseAdapter
     @Override
     public View getView(int position, View convertView, ViewGroup parent)
     {
+        MegaSportsman sportsman = _sportsmen.get(position);
         View gridElement;
         if(convertView == null)
         {
@@ -60,9 +61,47 @@ public class GridViewAdapter extends BaseAdapter
         TextView number = (TextView) gridElement.findViewById(R.id.numberParticipantMyButton);
         TextView lap = (TextView) gridElement.findViewById(R.id.lapParticipantMyButton);
         FrameLayout background = (FrameLayout) gridElement.findViewById(R.id.backgroundMyButton);
-        number.setText(Integer.toString(_sportsmen.get(position).getNumber()));
-        lap.setText("0");
-        background.setBackgroundColor(_sportsmen.get(position).getColor());
+        number.setText(Integer.toString(sportsman.getNumber()));
+        lap.setText(String.valueOf(sportsman.getCurrentLap()));
+        background.setBackgroundColor(sportsman.getColor());
         return gridElement;
+    }
+
+    public void AddSportsman(MegaSportsman sportsman)
+    {
+        _sportsmen.add(sportsman);
+        notifyDataSetChanged();
+    }
+
+    public void ClearList()
+    {
+        _sportsmen.clear();
+        notifyDataSetChanged();
+    }
+
+    public void ChangeSportsmanLap(int number, int lap)
+    {
+        for(MegaSportsman sportsman:_sportsmen)
+        {
+            if(sportsman.getNumber() == number)
+            {
+                sportsman.setCurrentLap(lap);
+                break;
+            }
+        }
+        notifyDataSetChanged();
+    }
+
+    public void RemoveSportsman(int number)
+    {
+        for(MegaSportsman sportsman:_sportsmen)
+        {
+            if(sportsman.getNumber() == number)
+            {
+                _sportsmen.remove(sportsman);
+                notifyDataSetChanged();
+                break;
+            }
+        }
     }
 }
