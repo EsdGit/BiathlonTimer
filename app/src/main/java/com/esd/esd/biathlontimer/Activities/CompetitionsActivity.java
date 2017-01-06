@@ -101,7 +101,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
     private int _number = 0;
     private int lapsCount;
 
-    private FrameLayout _dialogOwnerView;
+    private View _dialogOwnerView;
 
     private CountDownTimer _countDownTimer;
 
@@ -145,7 +145,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
 
         //Тест
         _gridView = (GridView) page1.findViewById(R.id.gridView);
-
+        _gridView.setOnItemLongClickListener(gridViewOnItemLongClickListener);
 
         View page2 = inflater.inflate(R.layout.activity_competition_tables, null);
         pages.add(page2);
@@ -180,13 +180,14 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
                 int fineSeconds = Integer.valueOf(_currentCompetition.GetFineTime().split(":")[1]);
                 int fineMinutes = Integer.valueOf(_currentCompetition.GetFineTime().split(":")[0]);
                 android.text.format.Time fineTime = new android.text.format.Time();
-                int participantNumber = Integer.valueOf(_button.GetParticipantNumber(_dialogOwnerView));
-                int lapNumber = Integer.valueOf(_button.GetLap(_dialogOwnerView));
+                TextView NumberStr = (TextView) _dialogOwnerView.findViewById(R.id.numberParticipantMyButton);
+                TextView LapStr = (TextView) _dialogOwnerView.findViewById(R.id.lapParticipantMyButton);
+                int participantNumber = Integer.valueOf(NumberStr.getText().toString());
+                int lapNumber = Integer.valueOf(LapStr.getText().toString());
 
                 fineTime.second = fineCount*fineSeconds;
                 fineTime.minute = fineCount*fineMinutes;
                 fineTime.normalize(false);
-
                 for(int i = 0; i < _megaSportsmen.length; i++)
                 {
                     if(_megaSportsmen[i].getNumber() == participantNumber)
@@ -196,6 +197,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
                         break;
                     }
                 }
+
                 _dialogSeekBar.setProgress(0);
                 _dialogText.setText(getResources().getString(R.string.dialog_text_fine_competiton) + " 0");
 
@@ -230,6 +232,19 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
 
     }
 
+    private GridView.OnItemLongClickListener gridViewOnItemLongClickListener = new GridView.OnItemLongClickListener() {
+        @Override
+        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id)
+        {
+//            TextView NumberStr = (TextView) view.findViewById(R.id.numberParticipantMyButton);
+//            TextView LapStr = (TextView) view.findViewById(R.id.lapParticipantMyButton);
+//            int number = Integer.valueOf(NumberStr.getText().toString());
+//            int lap = Integer.valueOf(LapStr.getText().toString());
+            _dialogOwnerView = view;
+            _fineDialog.show();
+            return true;
+        }
+    };
     //Здесь клик на ячейку
     private GridView.OnItemClickListener gridViewOnItemClickListner = new GridView.OnItemClickListener()
     {
@@ -250,6 +265,8 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
                     newTime.second = _currentTime.second - _megaSportsmen[i].getStartTime().second;
                     newTime.normalize(false);
                     localSportsman = new MegaSportsman(_megaSportsmen[i]);
+                   // _megaSportsmen[i].setFineTime(null);
+                    _megaSportsmen[i].setFineCount(0);
                     break;
                 }
             }
@@ -327,20 +344,6 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
                 _arrayMegaSportsmen[lap].get(i).setPlace(_arrayMegaSportsmen[lap].get(i).getPlace()+1);
             }
         }
-//        if(place > _arrayMegaSportsmen[lap].size()) _arrayMegaSportsmen[lap].add(sportsman);
-//        else
-//        {
-//            int count = _arrayMegaSportsmen[lap].size();
-//            for (int i = 0; i < count; i++)
-//            {
-//                if (_arrayMegaSportsmen[lap].get(i).getPlace() >= place)
-//                {
-//                    _arrayMegaSportsmen[lap].get(i).setPlace(_arrayMegaSportsmen[lap].get(i).getPlace()+1);
-//                }
-//            }
-//            _arrayMegaSportsmen[lap].add(sportsman);
-//        }
-
     }
 
     public void imgBtnSettings_OnClick(View view)
@@ -534,13 +537,12 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
 
     private void SaveResultsToDatabase()
     {
-        RealmMegaSportsmanSaver megaSportsmanSaver = new RealmMegaSportsmanSaver(this, "RESULTS");
-        megaSportsmanSaver.DeleteTable();
-        megaSportsmanSaver = new RealmMegaSportsmanSaver(this, "RESULTS");
-        for(int i = 0; i<_megaSportsmen.length; i++)
+        for(int i = 0; i < lapsCount; i++)
         {
-            //_megaSportsmen[i].makeForSaving();
-            megaSportsmanSaver.SaveSportsman(_megaSportsmen[i]);
+            RealmMegaSportsmanSaver megaSportsmanSaver = new RealmMegaSportsmanSaver(this, "LAP"+i+_currentCompetition.GetNameDateString());
+            megaSportsmanSaver.DeleteTable();
+            megaSportsmanSaver = new RealmMegaSportsmanSaver(this, "LAP"+i+_currentCompetition.GetNameDateString());
+            megaSportsmanSaver.SaveSportsmen(_arrayMegaSportsmen[i]);
         }
     }
 
@@ -560,6 +562,8 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
                         _timer.cancel();
                         SaveResultsToDatabase();
                         Intent intent = new Intent(CompetitionsActivity.this, FinalActivity.class);
+                        intent.putExtra("Name",_currentCompetition.GetName());
+                        intent.putExtra("Date",_currentCompetition.GetDate());
                         startActivity(intent);
                         CompetitionsActivity.this.finish();
                     }

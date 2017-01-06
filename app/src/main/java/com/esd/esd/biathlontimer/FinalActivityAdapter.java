@@ -31,10 +31,10 @@ public class FinalActivityAdapter extends RecyclerView.Adapter<FinalActivityAdap
     public void onBindViewHolder(ViewHolder holder, int position)
     {
         MegaSportsman sportsman = _megaSportsmen.get(position);
-        holder._placeTextView.setText(sportsman.getPlaceArr()[0]);
+        holder._placeTextView.setText(String.valueOf(sportsman.getPlace()));
         holder._numberTextView.setText(String.valueOf(sportsman.getNumber()));
         holder._nameTextView.setText(sportsman.getName());
-        holder._timeTextView.setText(sportsman.getResultArr()[0]);
+        holder._timeTextView.setText(sportsman.getResult());
 
         holder._placeTextView.setTextColor(sportsman.getColor());
         holder._numberTextView.setTextColor(sportsman.getColor());

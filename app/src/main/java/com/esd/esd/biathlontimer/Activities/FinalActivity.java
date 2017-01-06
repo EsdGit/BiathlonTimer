@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.esd.esd.biathlontimer.Competition;
+import com.esd.esd.biathlontimer.DatabaseClasses.CompetitionSaver;
 import com.esd.esd.biathlontimer.DatabaseClasses.RealmMegaSportsmanSaver;
 import com.esd.esd.biathlontimer.ExcelHelper;
 import com.esd.esd.biathlontimer.FinalActivityAdapter;
@@ -48,7 +49,9 @@ public class FinalActivity extends AppCompatActivity
     private MenuItem _sendByMail;
 
     private int _test = 0;
-    List<MegaSportsman> list;
+    private int lapsCount;
+    private Competition _currentCompetition;
+    private List<MegaSportsman>[] _arrayMegaSportsman;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -60,30 +63,35 @@ public class FinalActivity extends AppCompatActivity
 
         _resultTable = (RecyclerView) findViewById(R.id.tableFinalActivity);
 
+        CompetitionSaver saver = new CompetitionSaver(this);
+        _currentCompetition = new Competition(getIntent().getStringExtra("Name"), getIntent().getStringExtra("Date"), this);
+        _currentCompetition.GetAllSettingsToComp();
+        lapsCount = Integer.valueOf(_currentCompetition.GetCheckPointsCount());
+        _arrayMegaSportsman = new ArrayList[lapsCount];
         //ExcelHelper excelHelper = new ExcelHelper();
         //excelHelper.CreateFileWithResult(5);
         LoadData loading = new LoadData();
         loading.execute();
     }
 
-    private List<MegaSportsman> SortByPlace(List<MegaSportsman> sportsmen)
-    {
-        MegaSportsman helperSportsman;
-        MegaSportsman[] localArr = sportsmen.toArray(new MegaSportsman[sportsmen.size()]);
-        int k = 0;
-        while(k<localArr.length-1) {
-            for (int i = 0; i < localArr.length -k- 1; i++) {
-                if (Integer.valueOf(localArr[i].getPlaceArr()[0]) > Integer.valueOf(localArr[i + 1].getPlaceArr()[0])) {
-                    helperSportsman = localArr[i];
-                    localArr[i] = localArr[i + 1];
-                    localArr[i + 1] = helperSportsman;
-                }
-            }
-            k++;
-        }
-        return new ArrayList<MegaSportsman>(Arrays.asList(localArr));
-
-    }
+//    private List<MegaSportsman> SortByPlace(List<MegaSportsman> sportsmen)
+//    {
+//        MegaSportsman helperSportsman;
+//        MegaSportsman[] localArr = sportsmen.toArray(new MegaSportsman[sportsmen.size()]);
+//        int k = 0;
+//        while(k<localArr.length-1) {
+//            for (int i = 0; i < localArr.length -k- 1; i++) {
+//                if (Integer.valueOf(localArr[i].getPlaceArr()[0]) > Integer.valueOf(localArr[i + 1].getPlaceArr()[0])) {
+//                    helperSportsman = localArr[i];
+//                    localArr[i] = localArr[i + 1];
+//                    localArr[i + 1] = helperSportsman;
+//                }
+//            }
+//            k++;
+//        }
+//        return new ArrayList<MegaSportsman>(Arrays.asList(localArr));
+//
+//    }
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
@@ -138,17 +146,12 @@ public class FinalActivity extends AppCompatActivity
         FinalActivityAdapter adapter;
         @Override
         protected Void doInBackground(Void... params) {
-            RealmMegaSportsmanSaver saver = new RealmMegaSportsmanSaver(getApplicationContext(), "RESULTS");
-            list = saver.GetSportsmen("number",true);
-            List<MegaSportsman> adapterList = new ArrayList<>();
-            for(int i = 0; i < list.size();i++)
+            for(int i = 0; i < lapsCount; i++)
             {
-                if(!list.get(i).getPlaceArr()[0].equals("0"))
-                {
-                    adapterList.add(list.get(i));
-                }
+                RealmMegaSportsmanSaver saver = new RealmMegaSportsmanSaver(getApplicationContext(), "LAP"+i+_currentCompetition.GetNameDateString());
+                _arrayMegaSportsman[i] = saver.GetSportsmen("_place",true);
             }
-            adapter = new FinalActivityAdapter(SortByPlace(adapterList));
+            adapter = new FinalActivityAdapter(_arrayMegaSportsman[0]);
             return null;
         }
 

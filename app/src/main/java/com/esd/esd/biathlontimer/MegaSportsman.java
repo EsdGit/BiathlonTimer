@@ -2,6 +2,8 @@ package com.esd.esd.biathlontimer;
 
 import android.text.format.Time;
 
+import org.apache.poi.ss.formula.ExternSheetReferenceToken;
+
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -26,11 +28,11 @@ public class MegaSportsman extends RealmObject implements ISportsman
     private String country;
     private String group;
     private int color;
-    private String _placesDb;
+
+    private Integer _place;
+    private int _fineCount;
     private String _resultsDb;
     private String _finesTimeDb;
-    private String _finesCountDb;
-    //private String results;
     @Ignore
     private boolean isChecked;
     @Ignore
@@ -38,12 +40,6 @@ public class MegaSportsman extends RealmObject implements ISportsman
     private Time _resultTime;
     @Ignore
     private Time _startTime;
-    @Ignore
-    //private int[] _places;
-    private Integer _place;
-    @Ignore
-    //private int[] _fineCount;
-    private int _fineCount;
     @Ignore
     //private Time[] _fineTime;
     private Time _fineTime;
@@ -73,6 +69,8 @@ public class MegaSportsman extends RealmObject implements ISportsman
         this.color = sportsman.getColor();
         this.id = sportsman.getId();
         this._startTime = sportsman.getStartTime();
+        this._fineCount = sportsman.getFineCount();
+        this._fineTime = sportsman.getFineTime();
         _currentLap = 0;
     }
 
@@ -118,16 +116,6 @@ public class MegaSportsman extends RealmObject implements ISportsman
 //        }
 //    }
 
-    public String[] getPlaceArr()
-    {
-        return _placesDb.split(",");
-    }
-
-    public String[] getResultArr()
-    {
-        return _resultsDb.split(",");
-    }
-
 //    public void setFineCount(int fineCount, int lapNumber)
 //    {
 //        _fineCount[lapNumber] += fineCount;
@@ -161,7 +149,12 @@ public class MegaSportsman extends RealmObject implements ISportsman
 
     public void setFineTime(Time fine)
     {
-        if(_fineTime== null)
+        if(fine == null)
+        {
+            _fineTime = null;
+            return;
+        }
+        if(_fineTime == null)
             _fineTime = new Time(fine);
         else
         {
@@ -170,9 +163,10 @@ public class MegaSportsman extends RealmObject implements ISportsman
             _fineTime.hour += fine.hour;
             _fineTime.normalize(false);
         }
+        _finesTimeDb = _fineTime.format("%H:%M:%S");
     }
 
-    public Time getFineTime(int lapNumber)
+    public Time getFineTime()
     {
         return _fineTime;
     }
@@ -180,6 +174,7 @@ public class MegaSportsman extends RealmObject implements ISportsman
     public void setResultTime(Time result)
     {
         _resultTime = new Time(result);
+        _resultsDb = _resultTime.format("%H:%M:%S");
     }
 
     public Time getResultTime()
@@ -194,6 +189,11 @@ public class MegaSportsman extends RealmObject implements ISportsman
             return localTime;
         }
         return _resultTime;
+    }
+
+    public String getResult()
+    {
+        return _resultsDb;
     }
 
     public void setPlace(int place)
