@@ -174,7 +174,7 @@ public class MegaSportsman extends RealmObject implements ISportsman
     public void setResultTime(Time result)
     {
         _resultTime = new Time(result);
-        _resultsDb = _resultTime.format("%H:%M:%S");
+        //_resultsDb = _resultTime.format("%H:%M:%S");
     }
 
     public Time getResultTime()
@@ -186,8 +186,10 @@ public class MegaSportsman extends RealmObject implements ISportsman
             localTime.minute += _fineTime.minute;
             localTime.second += _fineTime.second;
             localTime.normalize(false);
+            _resultsDb = localTime.format("%H:%M:%S");
             return localTime;
         }
+        _resultsDb = _resultTime.format("%H:%M:%S");
         return _resultTime;
     }
 
