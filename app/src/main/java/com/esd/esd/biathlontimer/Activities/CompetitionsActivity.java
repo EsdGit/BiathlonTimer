@@ -456,13 +456,17 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
                 {
                     _timer = new Timer();
                     _timer.schedule(task, 0,100);
-                    thread.start();
+                    if(!_currentCompetition.GetStartType().equals(getResources().getString(R.string.item_type_mas_start))) thread.start();
                     _competitionTimer.setTextColor(getResources().getColor(R.color.white));
                     _timerParticipantTable.setTextColor(getResources().getColor(R.color.white));
                     _competitionState = CompetitionState.Running;
                     if(_currentCompetition.GetStartType().equals(getResources().getString(R.string.item_type_mas_start)))
                     {
-                        _viewAdapter = new GridViewAdapter(CompetitionsActivity.this, Arrays.asList(_megaSportsmen));
+                        for(int i = 0; i < _megaSportsmen.length; i++)
+                        {
+                            _megaSportsmen[i].setStartTime(new android.text.format.Time());
+                        }
+                        _viewAdapter = new GridViewAdapter(CompetitionsActivity.this, new ArrayList<MegaSportsman>(Arrays.asList(_megaSportsmen)));
                     }
                     else
                         _viewAdapter = new GridViewAdapter(CompetitionsActivity.this, new ArrayList<MegaSportsman>());
