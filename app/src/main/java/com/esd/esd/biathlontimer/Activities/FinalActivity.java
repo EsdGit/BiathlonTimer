@@ -131,6 +131,8 @@ public class FinalActivity extends AppCompatActivity
                 Toast.makeText(getApplicationContext(),"Отправка",Toast.LENGTH_SHORT).show();
                 break;
             case R.id.action_bar_final_activity_send_by_whatsapp:
+                ExcelHelper excelHelper = new ExcelHelper();
+                excelHelper.CreateFileWithResult(_arrayMegaSportsman);
                 Toast.makeText(getApplicationContext(),"Отправка через WhatsApp",Toast.LENGTH_SHORT).show();
                 break;
             case R.id.action_bar_final_activity_send_by_mail:

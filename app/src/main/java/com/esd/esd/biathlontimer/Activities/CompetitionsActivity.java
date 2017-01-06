@@ -279,6 +279,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
                     return o1.getPlace().compareTo(o2.getPlace());
                 }
             });
+            GetLag(lap);
             if(_currentTable == lap)
             {
                 _tableAdapter.ClearList();
@@ -484,6 +485,23 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
 
         }
 
+    }
+
+    public void GetLag(int lap)
+    {
+        _arrayMegaSportsmen[lap].get(0).setLag("00:00:00");
+        android.text.format.Time bestTime = new android.text.format.Time(_arrayMegaSportsmen[lap].get(0).getResultTime());
+        android.text.format.Time localTime;
+        for(int i = 1; i < _arrayMegaSportsmen[lap].size(); i++)
+        {
+           localTime = new android.text.format.Time(_arrayMegaSportsmen[lap].get(i).getResultTime());
+           localTime.hour -= bestTime.hour;
+           localTime.minute -= bestTime.minute;
+           localTime.second -= bestTime.second;
+           localTime.normalize(false);
+           _arrayMegaSportsmen[lap].get(i).setLag(localTime.format("%H:%M:%S"));
+
+        }
     }
 
     @Override

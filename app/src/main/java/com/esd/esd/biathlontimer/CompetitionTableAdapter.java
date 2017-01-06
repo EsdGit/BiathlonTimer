@@ -43,7 +43,7 @@ public class CompetitionTableAdapter extends RecyclerView.Adapter<CompetitionTab
         holder.nameTextView.setText(megaSportsman.getName());
         holder.positionTextView.setText(String.valueOf(megaSportsman.getPlace()));
         holder.timeTextView.setText(megaSportsman.getResultTime().format("%H:%M:%S"));
-        holder.lagTextView.setText(GetLag(megaSportsman));
+        holder.lagTextView.setText(megaSportsman.getLag());
 
         holder.numberTextView.setTextColor(megaSportsman.getColor());
         holder.nameTextView.setTextColor(megaSportsman.getColor());
@@ -52,16 +52,6 @@ public class CompetitionTableAdapter extends RecyclerView.Adapter<CompetitionTab
         holder.lagTextView.setTextColor(megaSportsman.getColor());
     }
 
-    public String GetLag(MegaSportsman sportsman)
-    {
-        Time localTime = new Time(sportsman.getResultTime());
-        Time bestTime = new Time(sportsmen.get(0).getResultTime());
-        localTime.hour -= bestTime.hour;
-        localTime.minute -= bestTime.minute;
-        localTime.second -= bestTime.second;
-        localTime.normalize(false);
-        return localTime.format("%H:%M:%S");
-    }
     @Override
     public int getItemCount() {
         return sportsmen.size();

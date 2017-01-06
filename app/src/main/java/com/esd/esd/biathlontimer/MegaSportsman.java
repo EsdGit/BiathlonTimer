@@ -32,6 +32,8 @@ public class MegaSportsman extends RealmObject implements ISportsman
     private Integer _place;
     private int _fineCount;
     private String _resultsDb;
+    private String _resultRunOnly;
+    private String _lag;
     private String _finesTimeDb;
     @Ignore
     private boolean isChecked;
@@ -174,6 +176,7 @@ public class MegaSportsman extends RealmObject implements ISportsman
     public void setResultTime(Time result)
     {
         _resultTime = new Time(result);
+        _resultRunOnly = _resultTime.format("%H:%M:%S");
         //_resultsDb = _resultTime.format("%H:%M:%S");
     }
 
@@ -193,10 +196,16 @@ public class MegaSportsman extends RealmObject implements ISportsman
         return _resultTime;
     }
 
+    public void setLag(String lag){_lag = lag;}
+
+    public String getLag(){return _lag;}
+
     public String getResult()
     {
         return _resultsDb;
     }
+
+    public String getResultRun(){return _resultRunOnly;}
 
     public void setPlace(int place)
     {

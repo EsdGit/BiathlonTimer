@@ -19,6 +19,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 // Класс для работы с excel файлом
 public class ExcelHelper
@@ -32,47 +34,30 @@ public class ExcelHelper
 
 
     // Метод создаёт excel файл и сохраняет его в папку приложения
-    public static void CreateFileWithResult(int countLap)
+    public void CreateFileWithResult(List<MegaSportsman>[] arraySportsmen)
     {
         HSSFWorkbook resultWorkbook = new HSSFWorkbook();
         HSSFSheet sheet;
         HSSFRow row;
+        int countLap = arraySportsmen.length;
         for (int i = 0 ; i < countLap; i++)
         {
             sheet = resultWorkbook.createSheet("Круг " + Integer.toString(i + 1));
             row = sheet.createRow(0);
-            for(int j = 0; j < 9; j++)
+            CreateTableHead(row);
+            for(int j = 0; j < arraySportsmen[i].size(); j++)
             {
-                switch (j)
-                {
-                    case 0:
-                        row.createCell(0).setCellValue("Позиция");
-                        break;
-                    case 1:
-                        row.createCell(1).setCellValue("Номер");
-                        break;
-                    case 2:
-                        row.createCell(2).setCellValue("ФИО");
-                        break;
-                    case 3:
-                        row.createCell(3).setCellValue("Год");
-                        break;
-                    case 4:
-                        row.createCell(4).setCellValue("Страна");
-                        break;
-                    case 5:
-                        row.createCell(5).setCellValue("Время круга без штрафа");
-                        break;
-                    case 6:
-                        row.createCell(6).setCellValue("Количество штрафов");
-                        break;
-                    case 7:
-                        row.createCell(7).setCellValue("Время");
-                        break;
-                    case 8:
-                        row.createCell(8).setCellValue("Отставание");
-                        break;
-                }
+                row = sheet.createRow(j+1);
+                MegaSportsman localSportsman = arraySportsmen[i].get(j);
+                row.createCell(0).setCellValue(localSportsman.getPlace());
+                row.createCell(1).setCellValue(localSportsman.getNumber());
+                row.createCell(2).setCellValue(localSportsman.getName());
+                row.createCell(3).setCellValue(localSportsman.getYear());
+                row.createCell(4).setCellValue(localSportsman.getCountry());
+                row.createCell(5).setCellValue(localSportsman.getResultRun());
+                row.createCell(6).setCellValue(localSportsman.getFineCount());
+                row.createCell(7).setCellValue(localSportsman.getResult());
+                row.createCell(8).setCellValue(localSportsman.getLag());
             }
         }
 
@@ -91,5 +76,18 @@ public class ExcelHelper
         {
             Log.i("What", "wfe");
         }
+    }
+
+    private void CreateTableHead(HSSFRow row)
+    {
+        row.createCell(0).setCellValue("Позиция");
+        row.createCell(1).setCellValue("Номер");
+        row.createCell(2).setCellValue("ФИО");
+        row.createCell(3).setCellValue("Год рождения");
+        row.createCell(4).setCellValue("Страна");
+        row.createCell(5).setCellValue("Время круга без штрафа");
+        row.createCell(6).setCellValue("Количество штрафов");
+        row.createCell(7).setCellValue("Время");
+        row.createCell(8).setCellValue("Отставание");
     }
 }
