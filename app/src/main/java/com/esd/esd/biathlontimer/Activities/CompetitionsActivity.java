@@ -109,13 +109,16 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
 
     private CompetitionTableAdapter _tableAdapter;
     private RecyclerView _table;
+
     private enum CompetitionState
     {
         NotStarted,
         Started,
         Running
     }
+
     private ArrayList<MegaSportsman>[] _arrayMegaSportsmen;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {

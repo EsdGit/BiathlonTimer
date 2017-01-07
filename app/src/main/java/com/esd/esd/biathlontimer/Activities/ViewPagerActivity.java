@@ -20,6 +20,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
@@ -507,6 +508,15 @@ public class ViewPagerActivity extends AppCompatActivity
                     _participantPopupMenu = new PopupMenu(this, view);
                     MenuInflater menuInflater = _participantPopupMenu.getMenuInflater();
                     menuInflater.inflate(R.menu.sort_menu, _participantPopupMenu.getMenu());
+                    SubMenu localMenu =  _participantPopupMenu.getMenu().findItem(R.id.groupSort).getSubMenu();
+                    if(_arrayGroup != null)
+                    {
+                        localMenu.add("Все группы").setCheckable(true).setChecked(true).setOnMenuItemClickListener(_onMenuItemClickListener);
+                        for(int i = 0; i < _arrayGroup.length; i++)
+                        {
+                            localMenu.add(_arrayGroup[i]).setCheckable(true).setOnMenuItemClickListener(_onMenuItemClickListener);
+                        }
+                    }
 
                     _participantPopupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
                     {
@@ -858,6 +868,16 @@ public class ViewPagerActivity extends AppCompatActivity
         else
             return true;
     }
+
+    MenuItem.OnMenuItemClickListener _onMenuItemClickListener = new MenuItem.OnMenuItemClickListener()
+    {
+        @Override
+        public boolean onMenuItemClick(MenuItem item)
+        {
+            Toast.makeText(getApplicationContext(),"Вы выбрали пункт" + item.getTitle(), Toast.LENGTH_SHORT).show();
+            return false;
+        }
+    };
 
     private class CreateTableOfSportsman extends AsyncTask<Void, Sportsman, Void>
     {

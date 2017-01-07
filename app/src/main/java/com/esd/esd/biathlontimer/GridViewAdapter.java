@@ -10,9 +10,6 @@ import android.widget.TextView;
 
 import java.util.List;
 
-/**
- * Created by Иван on 04.01.2017.
- */
 
 public class GridViewAdapter extends BaseAdapter
 {

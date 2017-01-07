@@ -60,7 +60,6 @@ public class ExcelHelper
                 row.createCell(8).setCellValue(localSportsman.getLag());
             }
         }
-
         try {
             try
             {

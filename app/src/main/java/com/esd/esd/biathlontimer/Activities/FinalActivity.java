@@ -52,6 +52,7 @@ public class FinalActivity extends AppCompatActivity
     private int lapsCount;
     private Competition _currentCompetition;
     private List<MegaSportsman>[] _arrayMegaSportsman;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
