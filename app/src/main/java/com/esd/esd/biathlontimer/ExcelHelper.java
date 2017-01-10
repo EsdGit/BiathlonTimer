@@ -25,8 +25,6 @@ import java.util.List;
 // Класс для работы с excel файлом
 public class ExcelHelper
 {
-    private static final String _fileName ="/ResultCompetition2.xls";
-
     public ExcelHelper()
     {
 
@@ -34,7 +32,7 @@ public class ExcelHelper
 
 
     // Метод создаёт excel файл и сохраняет его в папку приложения
-    public void CreateFileWithResult(List<MegaSportsman>[] arraySportsmen)
+    public void CreateFileWithResult(List<MegaSportsman>[] arraySportsmen, String fileName)
     {
         HSSFWorkbook resultWorkbook = new HSSFWorkbook();
         HSSFSheet sheet;
@@ -63,7 +61,7 @@ public class ExcelHelper
         try {
             try
             {
-                resultWorkbook.write(new FileOutputStream(Environment.getExternalStorageDirectory().getPath() + _fileName));
+                resultWorkbook.write(new FileOutputStream(Environment.getExternalStorageDirectory().getPath() +"/" + fileName +" Результат.xls"));
                 resultWorkbook.close();
             }catch (FileNotFoundException e)
             {

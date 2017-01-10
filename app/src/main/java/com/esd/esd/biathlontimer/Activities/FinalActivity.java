@@ -3,8 +3,10 @@ package com.esd.esd.biathlontimer.Activities;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.PaintDrawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -32,6 +34,7 @@ import com.esd.esd.biathlontimer.R;
 
 import org.apache.poi.util.IntegerField;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -133,10 +136,27 @@ public class FinalActivity extends AppCompatActivity
                 break;
             case R.id.action_bar_final_activity_send_by_whatsapp:
                 ExcelHelper excelHelper = new ExcelHelper();
-                excelHelper.CreateFileWithResult(_arrayMegaSportsman);
+                excelHelper.CreateFileWithResult(_arrayMegaSportsman, _currentCompetition.GetNameDateString());
+
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("application/*");
+                File file = new File(Environment.getExternalStorageDirectory().getPath() +"/" + _currentCompetition.GetName()+" Результат" + ".xls");
+                intent.setPackage("com.whatsapp");
+                intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
+                startActivity(Intent.createChooser(intent, "Выбор"));
+
                 Toast.makeText(getApplicationContext(),"Отправка через WhatsApp",Toast.LENGTH_SHORT).show();
                 break;
             case R.id.action_bar_final_activity_send_by_mail:
+                ExcelHelper excelHelper1 = new ExcelHelper();
+                excelHelper1.CreateFileWithResult(_arrayMegaSportsman, _currentCompetition.GetNameDateString());
+
+                Intent intent1 = new Intent(Intent.ACTION_SEND);
+                intent1.setType("application/*");
+                File file1 = new File(Environment.getExternalStorageDirectory().getPath() +"/" + _currentCompetition.GetName()+" Результат.xls");
+                intent1.setPackage("com.google.android.gm");
+                intent1.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file1));
+                startActivity(Intent.createChooser(intent1, "Выбор"));
                 Toast.makeText(getApplicationContext(),"Отправка через Mail",Toast.LENGTH_SHORT).show();
                 break;
 

@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.PaintDrawable;
+import android.net.Uri;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
@@ -26,6 +28,7 @@ import com.esd.esd.biathlontimer.R;
 import com.esd.esd.biathlontimer.SettingsChangedEvent;
 
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
@@ -395,6 +398,7 @@ public class MainActivity extends AppCompatActivity {
         Intent settingPager = new Intent(this, SettingsActivity.class);
         settingPager.putExtra("isEditMode", "false");
         startActivity(settingPager);
+
 
 //        Intent finalPage = new Intent(this, FinalActivity.class);
 //        startActivity(finalPage);
