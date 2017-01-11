@@ -186,7 +186,7 @@
             android:gravity="center"
             android:textStyle="bold"
             android:textSize="@dimen/title_text_size"
-            android:layout_weight="0.8"
+            android:layout_weight="0.6"
             android:background="#ffffff"/>
 
         <TextView
@@ -202,7 +202,7 @@
             android:gravity="center"
             android:textStyle="bold"
             android:textSize="@dimen/title_text_size"
-            android:layout_weight="0.7"
+            android:layout_weight="0.9"
             android:background="#ffffff"/>
 
         <TextView

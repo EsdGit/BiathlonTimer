@@ -38,7 +38,7 @@
         android:gravity="center"
         android:layout_marginRight="1dp"
         android:layout_marginBottom="1dp"
-        android:layout_weight="0.8"/>
+        android:layout_weight="0.6"/>
     <TextView
         android:id="@+id/group"
         android:layout_width="0dp"
@@ -49,7 +49,7 @@
         android:gravity="center"
         android:layout_marginRight="1dp"
         android:layout_marginBottom="1dp"
-        android:layout_weight="0.7"/>
+        android:layout_weight="0.9"/>
     <TextView
         android:id="@+id/country"
         android:layout_width="0dp"

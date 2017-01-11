@@ -13,7 +13,7 @@
     <item android:title="@string/participant_list_group_sort"
           android:id="@+id/groupSort"
           android:checked="false">
-            <menu>
+            <menu >
 
             </menu>
     </item>

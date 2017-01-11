@@ -15,7 +15,6 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
-import android.text.format.Time;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -25,7 +24,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
@@ -39,9 +37,7 @@ import com.android.colorpicker.ColorPickerSwatch;
 import com.esd.esd.biathlontimer.Competition;
 import com.esd.esd.biathlontimer.DatabaseClasses.CompetitionSaver;
 import com.esd.esd.biathlontimer.DatabaseClasses.DatabaseProvider;
-import com.esd.esd.biathlontimer.DatabaseClasses.RealmMegaSportsmanSaver;
 import com.esd.esd.biathlontimer.DatabaseClasses.RealmSportsmenSaver;
-import com.esd.esd.biathlontimer.MegaSportsman;
 import com.esd.esd.biathlontimer.PagerAdapterHelper;
 import com.esd.esd.biathlontimer.R;
 import com.esd.esd.biathlontimer.RecyclerViewDatabaseAdapter;
@@ -511,13 +507,18 @@ public class ViewPagerActivity extends AppCompatActivity
                     SubMenu localMenu =  _participantPopupMenu.getMenu().findItem(R.id.groupSort).getSubMenu();
                     if(_arrayGroup != null)
                     {
-                        localMenu.add("Все группы").setCheckable(true).setChecked(true).setOnMenuItemClickListener(_onMenuItemClickListener);
                         for(int i = 0; i < _arrayGroup.length; i++)
                         {
-                            localMenu.add(_arrayGroup[i]).setCheckable(true).setOnMenuItemClickListener(_onMenuItemClickListener);
+                            //if(i == 0)
+                            //{
+                                localMenu.add(_arrayGroup[i]).setCheckable(true).setChecked(true).setOnMenuItemClickListener(_onMenuItemClickListener);
+                            //}
+//                            else
+//                            {
+//                                localMenu.add(_arrayGroup[i]).setCheckable(true).setChecked(false).setOnMenuItemClickListener(_onMenuItemClickListener);
+//                            }
                         }
                     }
-
                     _participantPopupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
                     {
                         @Override
@@ -874,8 +875,35 @@ public class ViewPagerActivity extends AppCompatActivity
         @Override
         public boolean onMenuItemClick(MenuItem item)
         {
-            Toast.makeText(getApplicationContext(),"Вы выбрали пункт" + item.getTitle(), Toast.LENGTH_SHORT).show();
-            return false;
+//            boolean found = false;
+//            List<Sportsman> localList = saver.GetSportsmen("number", true);
+//            for (int i = 0; i < localList.size(); i++)
+//            {
+//                if(localList.get(i).getGroup().equals(item.getTitle()))
+//                {
+//                    found = true;
+//                    break;
+//                }
+//            }
+//            if(found)
+//            {
+                //Если группа выбрана
+                if(item.isChecked())
+                {
+                    //Если группа была отменена
+                    item.setChecked(false);
+                }
+                else
+                {
+                    //Если группа бала отмечена
+                    item.setChecked(true);
+                }
+//            }
+//            else
+//            {
+//
+//            }
+            return true;
         }
     };
 
@@ -892,7 +920,7 @@ public class ViewPagerActivity extends AppCompatActivity
                     final Sportsman sportsman = new Sportsman(i, "Спортсмен " + String.valueOf(counter + 1), 1996, "Россия", "Без группы");
                     sportsman.setColor(Color.BLACK);
                     publishProgress(sportsman);
-                    getFloor(0);
+                    SleepProgress(0);
                     counter++;
                 }
                 TimeUnit.NANOSECONDS.sleep(10);
@@ -931,7 +959,7 @@ public class ViewPagerActivity extends AppCompatActivity
 //            _progressDialog.incrementSecondaryProgressBy(1);
         }
 
-        private void getFloor(int floor) throws InterruptedException {
+        private void SleepProgress(int floor) throws InterruptedException {
             //TimeUnit.NANOSECONDS.sleep(1000);
             TimeUnit.MILLISECONDS.sleep(5);
         }

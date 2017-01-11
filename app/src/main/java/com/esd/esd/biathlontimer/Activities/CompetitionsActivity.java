@@ -661,7 +661,8 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
     {
 
         @Override
-        protected Integer doInBackground(Integer... params) {
+        protected Integer doInBackground(Integer... params)
+        {
             if(!_isPaused) ms++;
             if(ms>9)
             {
@@ -674,7 +675,8 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         }
 
         @Override
-        protected void onPostExecute(Integer integer) {
+        protected void onPostExecute(Integer integer)
+        {
             super.onPostExecute(integer);
             _competitionTimer.setText(_currentTime.format("%H:%M:%S")+":"+String.valueOf(ms));
             _timerParticipantTable.setText(_currentTime.format("%H:%M:%S")+":"+String.valueOf(ms));
@@ -708,10 +710,11 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         }
 
         @Override
-        protected void onPreExecute() {
+        protected void onPreExecute()
+        {
             super.onPreExecute();
             dialog = new ProgressDialog(CompetitionsActivity.this);
-            dialog.setMessage("fegeg");
+            dialog.setMessage("Подождите. Идет загрузка...");
             dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
             dialog.setIndeterminate(false);
             dialog.setCancelable(false);
@@ -720,13 +723,15 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         }
 
         @Override
-        protected void onProgressUpdate(Integer... values) {
+        protected void onProgressUpdate(Integer... values)
+        {
             super.onProgressUpdate(values);
             dialog.setProgress(values[0]);
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
+        protected void onPostExecute(Void aVoid)
+        {
             super.onPostExecute(aVoid);
             dialog.dismiss();
         }
