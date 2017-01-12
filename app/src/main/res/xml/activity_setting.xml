@@ -30,7 +30,6 @@
         android:title="@string/setting_activity_title_type_start"
         android:dialogTitle="@string/dialog_title_type_start"
         android:summary="@string/summary_type_start"
-        android:defaultValue="0"
         android:entries="@array/type_start"
         android:entryValues="@array/type_start"/>
 

@@ -875,34 +875,17 @@ public class ViewPagerActivity extends AppCompatActivity
         @Override
         public boolean onMenuItemClick(MenuItem item)
         {
-//            boolean found = false;
-//            List<Sportsman> localList = saver.GetSportsmen("number", true);
-//            for (int i = 0; i < localList.size(); i++)
-//            {
-//                if(localList.get(i).getGroup().equals(item.getTitle()))
-//                {
-//                    found = true;
-//                    break;
-//                }
-//            }
-//            if(found)
-//            {
-                //Если группа выбрана
-                if(item.isChecked())
-                {
-                    //Если группа была отменена
-                    item.setChecked(false);
-                }
-                else
-                {
-                    //Если группа бала отмечена
-                    item.setChecked(true);
-                }
-//            }
-//            else
-//            {
-//
-//            }
+            //Если группа выбрана
+            if(item.isChecked())
+            {
+                //Если группа была отменена
+                item.setChecked(false);
+            }
+            else
+            {
+                //Если группа бала отмечена
+                item.setChecked(true);
+            }
             return true;
         }
     };
