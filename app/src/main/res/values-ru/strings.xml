@@ -84,8 +84,8 @@
     <string name="dialog_fine_title">Установите время штрафа</string>
     <string name="summary_fine_after_set">"Штраф - "</string>
     <string name="dialog_title_start_number">Установите номер старта и количесвто участников</string>
-    <string name="summary_after_set_start_nmber">Стартовый номер - </string>
-    <string name="summary_after_set_count_participant"> Количество участников - </string>
+    <string name="summary_after_set_start_nmber">"Стартовый номер - "</string>
+    <string name="summary_after_set_count_participant">". Количество участников - "</string>
     <string name="dialog_hint_start_number">Стартовый номер</string>
     <string name="dialog_hint_count_participant">Кол-во участников</string>
 

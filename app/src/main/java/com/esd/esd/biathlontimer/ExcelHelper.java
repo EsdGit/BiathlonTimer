@@ -61,7 +61,7 @@ public class ExcelHelper
         try {
             try
             {
-                resultWorkbook.write(new FileOutputStream(Environment.getExternalStorageDirectory().getPath() +"/" + fileName +" Результат.xls"));
+                resultWorkbook.write(new FileOutputStream(Environment.getExternalStorageDirectory().getPath() + "/" + fileName +" Результат.xls"));
                 resultWorkbook.close();
             }catch (FileNotFoundException e)
             {

@@ -17,11 +17,18 @@ import android.widget.Toast;
 import com.esd.esd.biathlontimer.Competition;
 import com.esd.esd.biathlontimer.DatabaseClasses.CompetitionSaver;
 import com.esd.esd.biathlontimer.DatabaseClasses.DatabaseProvider;
+import com.esd.esd.biathlontimer.DatabaseClasses.RealmMegaSportsmanSaver;
+import com.esd.esd.biathlontimer.DatabaseClasses.RealmSportsmenSaver;
+import com.esd.esd.biathlontimer.MegaSportsman;
 import com.esd.esd.biathlontimer.R;
 import com.esd.esd.biathlontimer.SettingsChangedEvent;
 import com.esd.esd.biathlontimer.SettingsFragment;
+import com.esd.esd.biathlontimer.Sportsman;
 
+import org.greenrobot.eventbus.EventBus;
 
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class SettingsActivity extends PreferenceActivity
@@ -30,7 +37,7 @@ public class SettingsActivity extends PreferenceActivity
     private Intent _localIntent;
     private boolean isFirstLoad = true;
 
-    //private EventBus _eventBus;
+    private EventBus _eventBus;
 
     private Competition _oldCompetititon;
     @Override
@@ -56,7 +63,7 @@ public class SettingsActivity extends PreferenceActivity
         }
         getFragmentManager().beginTransaction().replace(android.R.id.content, new SettingsFragment()).commit();
 
-        //_eventBus = EventBus.getDefault();
+        _eventBus = EventBus.getDefault();
     }
 
 
@@ -87,8 +94,7 @@ public class SettingsActivity extends PreferenceActivity
             String date = _localIntent.getStringExtra("Date");
             _oldCompetititon = new Competition(name, date, this);
             _oldCompetititon.GetAllSettingsToComp();
-            SettingsFragment.SetAllSummaries(this, name, date, _oldCompetititon.GetInterval(), _oldCompetititon.GetStartType(), _oldCompetititon.GetGroups(),
-                    _oldCompetititon.GetCheckPointsCount(), _oldCompetititon.GetTimeToStart(), _oldCompetititon.GetSecondInterval(), _oldCompetititon.GetNumberSecondInterval(), _oldCompetititon.GetFineTime());
+            SettingsFragment.SetAllSummaries(this, _oldCompetititon);
             isFirstLoad = false;
         }
     }
@@ -133,21 +139,19 @@ public class SettingsActivity extends PreferenceActivity
                 }
                 else
                 {
-//                    ParticipantSaver partSaver = new ParticipantSaver(this);
-//                    Participant[] participants = partSaver.GetAllParticipants(_oldCompetititon.GetDbParticipantPath(), DatabaseProvider.DbParticipant.COLUMN_NAME);
-//                    DatabaseProvider dbProvider = new DatabaseProvider(this);
-//                    dbProvider.DeleteTable(_oldCompetititon.GetDbParticipantPath());
-//                    dbProvider.DeleteTable(_oldCompetititon.GetSettingsPath());
-//                    saver.DeleteCompetitionFromDatabase(_oldCompetititon);
-//                    Competition newCompetition = SettingsFragment.GetCurrentCompetition(this);
-//                    for(int i = 0; i<participants.length;i++)
-//                    {
-//                        newCompetition.AddParticipant(participants[i]);
-//                    }
-//                    saver.SaveCompetitionToDatabase(newCompetition);
-//                    SettingsChangedEvent event = new SettingsChangedEvent();
-//                    _eventBus.post(event);
-//                    this.finish();
+                    RealmSportsmenSaver realmSaver = new RealmSportsmenSaver(this, _oldCompetititon.GetDbParticipantPath());
+                    List<Sportsman> sportsmenList = realmSaver.GetSportsmen("number", true);
+                    realmSaver.DeleteTable();
+                    DatabaseProvider dbProvider = new DatabaseProvider(this);
+                    dbProvider.DeleteTable(_oldCompetititon.GetSettingsPath());
+                    saver.DeleteCompetitionFromDatabase(_oldCompetititon);
+                    Competition newCompetition = SettingsFragment.GetCurrentCompetition(this);
+                    realmSaver = new RealmSportsmenSaver(this, newCompetition.GetDbParticipantPath());
+                    realmSaver.SaveSportsmen(sportsmenList);
+                    saver.SaveCompetitionToDatabase(newCompetition);
+                    SettingsChangedEvent event = new SettingsChangedEvent();
+                    _eventBus.post(event);
+                    this.finish();
                 }
             }
         }

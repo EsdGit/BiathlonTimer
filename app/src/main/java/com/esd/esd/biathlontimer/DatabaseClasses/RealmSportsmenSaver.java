@@ -90,8 +90,8 @@ public class RealmSportsmenSaver
 
     public void DeleteTable()
     {
-        realm.close();
         RealmConfiguration configuration = realm.getConfiguration();
+        realm.close();
         Realm.deleteRealm(configuration);
     }
 }

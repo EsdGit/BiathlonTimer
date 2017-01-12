@@ -28,6 +28,9 @@ import com.esd.esd.biathlontimer.R;
 import com.esd.esd.biathlontimer.SettingsChangedEvent;
 
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -38,7 +41,7 @@ import io.realm.RealmConfiguration;
 
 public class MainActivity extends AppCompatActivity {
 
-   // private EventBus _eventBus;
+   private EventBus _eventBus;
 
     private TextView _nameTextView;
     private TextView _dateTextView;
@@ -72,8 +75,8 @@ public class MainActivity extends AppCompatActivity {
         _headTableLayout = (LinearLayout) findViewById(R.id.headTable);
         _saver = new CompetitionSaver(this);
 
-       // _eventBus = EventBus.getDefault();
-       // _eventBus.register(this);
+        _eventBus = EventBus.getDefault();
+        _eventBus.register(this);
     }
 
     @Override
@@ -93,18 +96,18 @@ public class MainActivity extends AppCompatActivity {
        EmptyListCompetition();
     }
 
-//    @Subscribe
-//    public void SettinsChanged(final SettingsChangedEvent event)
-//    {
-//        _tableLayout.removeAllViews();
-//        Competition[] localArr = _saver.GetAllCompetitions(DatabaseProvider.DbCompetitions.COLUMN_COMPETITION_DATE);
-//        _competitions = new Competition[localArr.length];
-//        for (int i = 0; i < localArr.length; i++)
-//        {
-//            _competitions[i] = localArr[i];
-//            AddCompetitionRow(localArr[i]);
-//        }
-//    }
+    @Subscribe
+    public void SettinsChanged(final SettingsChangedEvent event)
+    {
+        _tableLayout.removeAllViews();
+        Competition[] localArr = _saver.GetAllCompetitions(DatabaseProvider.DbCompetitions.COLUMN_COMPETITION_DATE);
+        _competitions = new Competition[localArr.length];
+        for (int i = 0; i < localArr.length; i++)
+        {
+            _competitions[i] = localArr[i];
+            AddCompetitionRow(localArr[i]);
+        }
+    }
 
     private Competition[] GetCheckedCompetitions(boolean needDelete)
     {
