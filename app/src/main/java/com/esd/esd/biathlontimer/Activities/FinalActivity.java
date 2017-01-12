@@ -1,49 +1,42 @@
 package com.esd.esd.biathlontimer.Activities;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.PaintDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.design.widget.TabLayout;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
-import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.TableLayout;
-import android.widget.TableRow;
-import android.widget.TextView;
 import android.widget.Toast;
-
 import com.esd.esd.biathlontimer.Competition;
 import com.esd.esd.biathlontimer.DatabaseClasses.CompetitionSaver;
 import com.esd.esd.biathlontimer.DatabaseClasses.RealmMegaSportsmanSaver;
 import com.esd.esd.biathlontimer.ExcelHelper;
 import com.esd.esd.biathlontimer.FinalActivityAdapter;
 import com.esd.esd.biathlontimer.MegaSportsman;
+import com.esd.esd.biathlontimer.PagerAdapterHelper;
 import com.esd.esd.biathlontimer.R;
-
-import org.apache.poi.util.IntegerField;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 
 
-public class FinalActivity extends AppCompatActivity
-{
+public class FinalActivity extends AppCompatActivity {
     private RecyclerView _resultTable;
+    private ViewPager _containerTable;
+    private ArrayList<RecyclerView> _arrayRecycleView;
+    private PagerAdapter _pageAdapter;
 
     private MenuItem _placeSort;
     private MenuItem _nameSort;
@@ -53,8 +46,11 @@ public class FinalActivity extends AppCompatActivity
 
     private int _test = 0;
     private int lapsCount;
+    private float fromPosition;
     private Competition _currentCompetition;
     private List<MegaSportsman>[] _arrayMegaSportsman;
+
+    private static final float MOVE_LENGTH = 150;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -65,13 +61,27 @@ public class FinalActivity extends AppCompatActivity
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getSupportActionBar().setTitle((Html.fromHtml("<font color=\"#FFFFFF\">"  + "<big>" + getResources().getString(R.string.title_final_activity) + "</big>" + "</font>")));
 
-        _resultTable = (RecyclerView) findViewById(R.id.tableFinalActivity);
+        //_resultTable = (RecyclerView) findViewById(R.id.tableFinalActivity);
+        _containerTable = (ViewPager) findViewById(R.id.tableContainer);
 
         CompetitionSaver saver = new CompetitionSaver(this);
         _currentCompetition = new Competition(getIntent().getStringExtra("Name"), getIntent().getStringExtra("Date"), this);
         _currentCompetition.GetAllSettingsToComp();
         lapsCount = Integer.valueOf(_currentCompetition.GetCheckPointsCount());
         _arrayMegaSportsman = new ArrayList[lapsCount];
+
+        LayoutInflater inflater = LayoutInflater.from(this);
+        _arrayRecycleView = new ArrayList<>();
+        List<View> pages = new ArrayList<>();
+        for (int i = 0; i < lapsCount; i++)
+        {
+            View page = inflater.inflate(R.layout.table_fragment, null);
+            _arrayRecycleView.add((RecyclerView)page.findViewById(R.id.tableFinalActivity));
+            pages.add(page);
+        }
+        PagerAdapterHelper pagerAdapter = new PagerAdapterHelper(pages);
+        _containerTable.setAdapter(pagerAdapter);
+        _containerTable.setCurrentItem(0);
         //ExcelHelper excelHelper = new ExcelHelper();
         //excelHelper.CreateFileWithResult(5);
         LoadData loading = new LoadData();
@@ -164,27 +174,40 @@ public class FinalActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+
+
     class LoadData extends AsyncTask<Void, Void, Void>
     {
-        FinalActivityAdapter adapter;
+        ArrayList<FinalActivityAdapter> adapter;
         @Override
-        protected Void doInBackground(Void... params) {
+        protected Void doInBackground(Void... params)
+        {
+            adapter = new ArrayList<>();
             for(int i = 0; i < lapsCount; i++)
             {
                 RealmMegaSportsmanSaver saver = new RealmMegaSportsmanSaver(getApplicationContext(), "LAP"+i+_currentCompetition.GetNameDateString());
                 _arrayMegaSportsman[i] = saver.GetSportsmen("_place",true);
+                adapter.add(new FinalActivityAdapter(_arrayMegaSportsman[i]));
             }
-            adapter = new FinalActivityAdapter(_arrayMegaSportsman[0]);
+            //adapter = new FinalActivityAdapter(_arrayMegaSportsman[0]);
             return null;
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            _resultTable.setAdapter(adapter);
-            _resultTable.setItemAnimator(new DefaultItemAnimator());
-            _resultTable.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+            for(int i = 0; i < adapter.size(); i++)
+            {
+                _arrayRecycleView.get(i).setAdapter(adapter.get(i));
+                _arrayRecycleView.get(i).setItemAnimator(new DefaultItemAnimator());
+                _arrayRecycleView.get(i).setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+            }
+//            _resultTable.setAdapter(adapter);
+//            _resultTable.setItemAnimator(new DefaultItemAnimator());
+//            _resultTable.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         }
     }
+
+
 }
 
