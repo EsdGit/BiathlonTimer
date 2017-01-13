@@ -141,6 +141,9 @@ public class FinalActivity extends AppCompatActivity {
             case R.id.action_bar_final_activity_name_sort:
                 Toast.makeText(getApplicationContext(),"Сортировка по имени",Toast.LENGTH_SHORT).show();
                 break;
+            case R.id.action_bar_final_activity_save:
+                Toast.makeText(getApplicationContext(),"Сохранить файл",Toast.LENGTH_SHORT).show();
+                break;
             case R.id.action_bar_final_activity_send:
                 Toast.makeText(getApplicationContext(),"Отправка",Toast.LENGTH_SHORT).show();
                 break;

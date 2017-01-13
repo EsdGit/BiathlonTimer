@@ -124,6 +124,7 @@
     <string name="final_activity_send">Отправка</string>
     <string name="final_activity_send_by_whatsapp">WhatsApp</string>
     <string name="final_activity_send_by_mail">Почта</string>
+    <string name="final_activity_save">Сохранить</string>
 
     //Общие
     <string name="default_group">Без группы</string>

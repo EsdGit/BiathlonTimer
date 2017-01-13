@@ -16,6 +16,14 @@
         android:visible="true"/>
 
     <item
+        android:title="@string/final_activity_save"
+        android:icon="@drawable/ic_save"
+        android:id="@+id/action_bar_final_activity_save"
+        app:showAsAction="always"
+        android:orderInCategory="100"
+        android:visible="true"/>
+
+    <item
         android:icon="@drawable/ic_send"
         android:title="@string/final_activity_send"
         app:showAsAction="always"
