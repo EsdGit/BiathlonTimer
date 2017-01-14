@@ -47,5 +47,6 @@ dependencies {
     compile files('libs/poi-ooxml-3.15.jar')
     compile files('libs/poi-ooxml-schemas-3.15.jar')
     compile 'org.greenrobot:eventbus:3.0.0'
+    compile ('net.rdrei.android.dirchooser:library:3.2@aar'){transitive = true;}
 
 }

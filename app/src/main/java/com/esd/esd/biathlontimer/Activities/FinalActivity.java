@@ -27,6 +27,9 @@ import com.esd.esd.biathlontimer.MegaSportsman;
 import com.esd.esd.biathlontimer.PagerAdapterHelper;
 import com.esd.esd.biathlontimer.R;
 
+import net.rdrei.android.dirchooser.DirectoryChooserActivity;
+import net.rdrei.android.dirchooser.DirectoryChooserConfig;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +54,10 @@ public class FinalActivity extends AppCompatActivity {
     private List<MegaSportsman>[] _arrayMegaSportsman;
 
     private static final float MOVE_LENGTH = 150;
+    private final int REQUEST_DIRECTORY = 0;
+    private final int WHATS_APP_CODE = 1;
+
+    private ExcelHelper excelHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -82,8 +89,7 @@ public class FinalActivity extends AppCompatActivity {
         PagerAdapterHelper pagerAdapter = new PagerAdapterHelper(pages);
         _containerTable.setAdapter(pagerAdapter);
         _containerTable.setCurrentItem(0);
-        //ExcelHelper excelHelper = new ExcelHelper();
-        //excelHelper.CreateFileWithResult(5);
+        excelHelper = new ExcelHelper();
         LoadData loading = new LoadData();
         loading.execute();
     }
@@ -142,27 +148,36 @@ public class FinalActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),"Сортировка по имени",Toast.LENGTH_SHORT).show();
                 break;
             case R.id.action_bar_final_activity_save:
+                final Intent chooserIntent = new Intent(this, DirectoryChooserActivity.class);
+
+                final DirectoryChooserConfig config = DirectoryChooserConfig.builder()
+                        .newDirectoryName("DirChooserSample")
+                        .allowReadOnlyDirectory(true)
+                        .allowNewDirectoryNameModification(true)
+                        .build();
+
+                chooserIntent.putExtra(DirectoryChooserActivity.EXTRA_CONFIG, config);
+
+                startActivityForResult(chooserIntent, REQUEST_DIRECTORY);
                 Toast.makeText(getApplicationContext(),"Сохранить файл",Toast.LENGTH_SHORT).show();
                 break;
             case R.id.action_bar_final_activity_send:
                 Toast.makeText(getApplicationContext(),"Отправка",Toast.LENGTH_SHORT).show();
                 break;
             case R.id.action_bar_final_activity_send_by_whatsapp:
-                ExcelHelper excelHelper = new ExcelHelper();
-                excelHelper.CreateFileWithResult(_arrayMegaSportsman, _currentCompetition.GetNameDateString());
+                String path = Environment.getExternalStorageDirectory().getPath() + "/" + _currentCompetition.GetName() +" Результат.xls";
+                excelHelper.CreateFileWithResult(_arrayMegaSportsman, path);
 
                 Intent intent = new Intent(Intent.ACTION_SEND);
                 intent.setType("application/*");
-                File file = new File(Environment.getExternalStorageDirectory().getPath() +"/" + _currentCompetition.GetName()+" Результат" + ".xls");
+                File file = new File(path);
                 intent.setPackage("com.whatsapp");
                 intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
-                startActivity(Intent.createChooser(intent, "Выбор"));
-
+                startActivityForResult(Intent.createChooser(intent, "Выбор"), WHATS_APP_CODE);
                 Toast.makeText(getApplicationContext(),"Отправка через WhatsApp",Toast.LENGTH_SHORT).show();
                 break;
             case R.id.action_bar_final_activity_send_by_mail:
-                ExcelHelper excelHelper1 = new ExcelHelper();
-                excelHelper1.CreateFileWithResult(_arrayMegaSportsman, _currentCompetition.GetNameDateString());
+                excelHelper.CreateFileWithResult(_arrayMegaSportsman, _currentCompetition.GetNameDateString());
 
                 Intent intent1 = new Intent(Intent.ACTION_SEND);
                 intent1.setType("application/*");
@@ -177,7 +192,27 @@ public class FinalActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
+    String path;
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch(requestCode)
+        {
+            case REQUEST_DIRECTORY:
+                if (resultCode == DirectoryChooserActivity.RESULT_CODE_DIR_SELECTED)
+                {
+                    path = data.getStringExtra(DirectoryChooserActivity.RESULT_SELECTED_DIR);
+                    excelHelper.CreateFileWithResult(_arrayMegaSportsman, path + "/"+_currentCompetition.GetName()+" Результат.xls");
+                } else {
+                    Toast.makeText(getApplicationContext(), "Файл не был сохранён", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case WHATS_APP_CODE:
+                File file = new File(Environment.getExternalStorageDirectory().getPath() + "/" + _currentCompetition.GetName() +" Результат.xls");
+                if(file.exists()) file.delete();
+                break;
+        }
+    }
 
     class LoadData extends AsyncTask<Void, Void, Void>
     {

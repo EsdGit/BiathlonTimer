@@ -35,6 +35,7 @@
                   android:theme="@style/AppTheme"
                   android:screenOrientation="landscape">
         </activity>
+        <activity android:name="net.rdrei.android.dirchooser.DirectoryChooserActivity" />
     </application>
 
 </manifest>

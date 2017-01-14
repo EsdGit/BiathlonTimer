@@ -32,7 +32,7 @@ public class ExcelHelper
 
 
     // Метод создаёт excel файл и сохраняет его в папку приложения
-    public void CreateFileWithResult(List<MegaSportsman>[] arraySportsmen, String fileName)
+    public void CreateFileWithResult(List<MegaSportsman>[] arraySportsmen, String path)
     {
         HSSFWorkbook resultWorkbook = new HSSFWorkbook();
         HSSFSheet sheet;
@@ -61,7 +61,7 @@ public class ExcelHelper
         try {
             try
             {
-                resultWorkbook.write(new FileOutputStream(Environment.getExternalStorageDirectory().getPath() + "/" + fileName +" Результат.xls"));
+                resultWorkbook.write(new FileOutputStream(path));
                 resultWorkbook.close();
             }catch (FileNotFoundException e)
             {
