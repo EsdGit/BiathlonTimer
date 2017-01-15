@@ -16,7 +16,7 @@ public interface IMyAdapter<T>
     void RemoveSportsman(T sportsman);
     void RemoveSportsmen(List<T> sportsmen);
 
-    void ChangeSportsman(T newSportsman, T oldSportsman);
+    boolean ChangeSportsman(T newSportsman, T oldSportsman);
 
     List<T> GetCheckedSportsmen();
 

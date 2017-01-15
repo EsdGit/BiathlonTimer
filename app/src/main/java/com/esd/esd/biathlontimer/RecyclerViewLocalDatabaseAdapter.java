@@ -96,11 +96,13 @@ public class RecyclerViewLocalDatabaseAdapter extends RecyclerView.Adapter<Recyc
     }
 
     @Override
-    public void ChangeSportsman(Sportsman newSportsman, Sportsman oldSportsman)
+    public boolean ChangeSportsman(Sportsman newSportsman, Sportsman oldSportsman)
     {
+        if(sportsmen.contains(newSportsman)) return false;
         int pos = sportsmen.indexOf(oldSportsman);
         sportsmen.set(pos, new Sportsman(newSportsman));
         notifyItemChanged(pos);
+        return true;
     }
 
     @Override

@@ -139,16 +139,16 @@ public class SettingsActivity extends PreferenceActivity
                 }
                 else
                 {
+                    // Проверяем количество участников
                     RealmSportsmenSaver realmSaver = new RealmSportsmenSaver(this, _oldCompetititon.GetDbParticipantPath());
                     List<Sportsman> sportsmenList = realmSaver.GetSportsmen("number", true);
                     realmSaver.DeleteTable();
                     DatabaseProvider dbProvider = new DatabaseProvider(this);
                     dbProvider.DeleteTable(_oldCompetititon.GetSettingsPath());
                     saver.DeleteCompetitionFromDatabase(_oldCompetititon);
-                    Competition newCompetition = SettingsFragment.GetCurrentCompetition(this);
-                    realmSaver = new RealmSportsmenSaver(this, newCompetition.GetDbParticipantPath());
+                    realmSaver = new RealmSportsmenSaver(this, newComp.GetDbParticipantPath());
                     realmSaver.SaveSportsmen(sportsmenList);
-                    saver.SaveCompetitionToDatabase(newCompetition);
+                    saver.SaveCompetitionToDatabase(newComp);
                     SettingsChangedEvent event = new SettingsChangedEvent();
                     _eventBus.post(event);
                     this.finish();

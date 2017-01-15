@@ -228,9 +228,15 @@ public class ViewPagerActivity extends AppCompatActivity
                         {
                             int color = ((ColorDrawable) _colorRenameDialog.getBackground()).getColor();
                             sportsman.setColor(color);
-                            _recyclerViewLocalDatabaseAdapter.ChangeSportsman(sportsman, _renameSportsman);
-                            saver.DeleteSportsman(_renameSportsman);
-                            saver.SaveSportsman(sportsman);
+                            if(!_recyclerViewLocalDatabaseAdapter.ChangeSportsman(sportsman, _renameSportsman))
+                            {
+                                saver.DeleteSportsman(_renameSportsman);
+                                saver.SaveSportsman(sportsman);
+                            }
+                            else
+                            {
+                                Toast.makeText(getApplicationContext(),getResources().getString(R.string.participant_already_exists_in_database),Toast.LENGTH_SHORT).show();
+                            }
                         }
                         else
                         {
@@ -242,8 +248,15 @@ public class ViewPagerActivity extends AppCompatActivity
                     {
                         sportsman.setColor(Color.BLACK);
                         sportsman.setNumber(0);
-                        _recyclerViewDatabaseAdapter.ChangeSportsman(sportsman, _renameSportsman);
-                        mainSaver.DeleteSportsman(_renameSportsman);
+                        if(_recyclerViewDatabaseAdapter.ChangeSportsman(sportsman, _renameSportsman))
+                        {
+                            mainSaver.DeleteSportsman(_renameSportsman);
+                        }
+                        else
+                        {
+                            Toast.makeText(getApplicationContext(),getResources().getString(R.string.participant_already_exists_in_database),Toast.LENGTH_SHORT).show();
+                        }
+
                         SetStartPosition(2, _recyclerViewDatabaseAdapter.getItemCount());
                     }
                     sportsman.setColor(Color.BLACK);

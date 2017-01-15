@@ -85,8 +85,8 @@ public class CompetitionTableAdapter extends RecyclerView.Adapter<CompetitionTab
     }
 
     @Override
-    public void ChangeSportsman(MegaSportsman newSportsman, MegaSportsman oldSportsman) {
-
+    public boolean ChangeSportsman(MegaSportsman newSportsman, MegaSportsman oldSportsman) {
+        return true;
     }
 
     @Override

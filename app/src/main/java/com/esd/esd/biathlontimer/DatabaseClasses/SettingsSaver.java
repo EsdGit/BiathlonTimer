@@ -46,6 +46,7 @@ public class SettingsSaver
                 };
         Cursor cursor = _db.query(competition.GetSettingsPath(), proj, null, null, null, null,null);
         cursor.moveToFirst();
+        _db.close();
         return cursor.getString(0);
     }
 
