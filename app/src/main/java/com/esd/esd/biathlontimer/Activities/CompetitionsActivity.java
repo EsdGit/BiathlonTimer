@@ -85,6 +85,8 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
 
     private AlertDialog _fineDialog;
     private AlertDialog.Builder _builderFineDialog;
+    private AlertDialog.Builder _timerDialogBuilder;
+    private AlertDialog _timerDialog;
     private View _dialogFineForm;
     private SeekBar _dialogSeekBar;
     private TextView _dialogText;
@@ -172,6 +174,29 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         _dialogText = (TextView) _dialogFineForm.findViewById(R.id.count_fine);
         _dialogSeekBar.setOnSeekBarChangeListener(this);
         _dialogText.setText(getResources().getString(R.string.dialog_text_fine_competiton) + " 0");
+
+        _timerDialogBuilder = new AlertDialog.Builder(this);
+        _timerDialogBuilder.setTitle("Выберите действие для продолжения.");
+        _timerDialogBuilder.setPositiveButton(getResources().getString(R.string.finish), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(getApplicationContext(),"Завершить соревнование",Toast.LENGTH_SHORT).show();
+            }
+        });
+        _timerDialogBuilder.setNegativeButton(getResources().getString(R.string.reset), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(getApplicationContext(),"Сброс",Toast.LENGTH_SHORT).show();
+            }
+        });
+        _timerDialogBuilder.setNeutralButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(getApplicationContext(),"Отмена",Toast.LENGTH_SHORT).show();
+            }
+        });
+        _timerDialogBuilder.setCancelable(false);
+        _timerDialog = _timerDialogBuilder.create();
 
         _builderFineDialog = new AlertDialog.Builder(CompetitionsActivity.this);
         _builderFineDialog.setView(_dialogFineForm);
@@ -618,6 +643,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
 
     public void stopBtnClick(View view)
     {
+        //_timerDialog.show(); Раскомментить для появления диалога!!!
         // Здесь сброс
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(getResources().getString(R.string.reset_title));

@@ -109,6 +109,8 @@
     <string name="add">Добавить</string>
     <string name="cancel">Отмена</string>
     <string name="accept">Принять</string>
+    <string name="finish">Завершить</string>
+    <string name="reset">Сброс</string>
 
    //Уведомления
     <string name="competition_already_exists">Соревнование уже существует!</string>
@@ -124,6 +126,7 @@
     <string name="final_activity_send">Отправка</string>
     <string name="final_activity_send_by_whatsapp">WhatsApp</string>
     <string name="final_activity_send_by_mail">Почта</string>
+    <string name="final_activity_send_by_googledrive">GoogleDrive</string>
     <string name="final_activity_save">Сохранить</string>
 
     //Общие

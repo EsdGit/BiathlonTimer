@@ -188,6 +188,10 @@ public class FinalActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),"Отправка через Mail",Toast.LENGTH_SHORT).show();
                 break;
 
+            case R.id.action_bar_final_activity_send_by_googledrive:
+                Toast.makeText(getApplicationContext(),"GoogleDrive",Toast.LENGTH_SHORT).show();
+                break;
+
         }
         return super.onOptionsItemSelected(item);
     }

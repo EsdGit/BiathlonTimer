@@ -47,6 +47,14 @@
                 android:showAsAction="never"
                 android:orderInCategory="100"
                 android:visible="true"/>
+
+            <item
+                android:icon="@drawable/googledrive"
+                android:title="@string/final_activity_send_by_googledrive"
+                android:id="@+id/action_bar_final_activity_send_by_googledrive"
+                android:showAsAction="never"
+                android:orderInCategory="100"
+                android:visible="true"/>
         </menu>
     </item>
 
