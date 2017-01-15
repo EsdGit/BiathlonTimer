@@ -57,6 +57,7 @@ public class FinalActivity extends AppCompatActivity {
     private final int REQUEST_DIRECTORY = 0;
 
     private ExcelHelper excelHelper;
+    private String temporaryPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -89,6 +90,7 @@ public class FinalActivity extends AppCompatActivity {
         _containerTable.setAdapter(pagerAdapter);
         _containerTable.setCurrentItem(0);
         excelHelper = new ExcelHelper();
+        temporaryPath = Environment.getExternalStorageDirectory().getPath() + "/" + _currentCompetition.GetName() +" Результат.xls";
         LoadData loading = new LoadData();
         loading.execute();
     }
@@ -108,11 +110,13 @@ public class FinalActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() {
+    protected void onDestroy()
+    {
         super.onDestroy();
-        File file = new File(Environment.getExternalStorageDirectory().getPath() + "/" + _currentCompetition.GetName() +" Результат.xls");
+        File file = new File(temporaryPath);
         if(file.exists()) file.delete();
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
@@ -143,23 +147,19 @@ public class FinalActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),"Отправка",Toast.LENGTH_SHORT).show();
                 break;
             case R.id.action_bar_final_activity_send_by_whatsapp:
-                String path = Environment.getExternalStorageDirectory().getPath() + "/" + _currentCompetition.GetName() +" Результат.xls";
-                excelHelper.CreateFileWithResult(_arrayMegaSportsman, path);
 
                 Intent intent = new Intent(Intent.ACTION_SEND);
                 intent.setType("application/*");
-                File file = new File(path);
+                File file = new File(temporaryPath);
                 intent.setPackage("com.whatsapp");
                 intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
                 startActivity(Intent.createChooser(intent, "Выбор"));
                 Toast.makeText(getApplicationContext(),"Отправка через WhatsApp",Toast.LENGTH_SHORT).show();
                 break;
             case R.id.action_bar_final_activity_send_by_mail:
-                excelHelper.CreateFileWithResult(_arrayMegaSportsman, _currentCompetition.GetNameDateString());
-
                 Intent intent1 = new Intent(Intent.ACTION_SEND);
                 intent1.setType("application/*");
-                File file1 = new File(Environment.getExternalStorageDirectory().getPath() +"/" + _currentCompetition.GetName()+" Результат.xls");
+                File file1 = new File(temporaryPath);
                 intent1.setPackage("com.google.android.gm");
                 intent1.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file1));
                 startActivity(Intent.createChooser(intent1, "Выбор"));
@@ -167,12 +167,9 @@ public class FinalActivity extends AppCompatActivity {
                 break;
 
             case R.id.action_bar_final_activity_send_by_googledrive:
-                String pathFile = Environment.getExternalStorageDirectory().getPath() + "/" + _currentCompetition.GetName() +" Результат.xls";
-                excelHelper.CreateFileWithResult(_arrayMegaSportsman, pathFile);
-
                 Intent driveIntent = new Intent(Intent.ACTION_SEND);
                 driveIntent.setType("application/*");
-                File fileExc = new File(pathFile);
+                File fileExc = new File(temporaryPath);
                 driveIntent.setPackage("com.google.android.apps.docs");
                 driveIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(fileExc));
                 startActivity(Intent.createChooser(driveIntent, "Выбор"));
@@ -228,6 +225,7 @@ public class FinalActivity extends AppCompatActivity {
                 _arrayRecycleView.get(i).setItemAnimator(new DefaultItemAnimator());
                 _arrayRecycleView.get(i).setLayoutManager(new LinearLayoutManager(getApplicationContext()));
             }
+            excelHelper.CreateFileWithResult(_arrayMegaSportsman, temporaryPath);
 //            _resultTable.setAdapter(adapter);
 //            _resultTable.setItemAnimator(new DefaultItemAnimator());
 //            _resultTable.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
