@@ -180,19 +180,44 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         _timerDialogBuilder.setPositiveButton(getResources().getString(R.string.finish), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                // Завершить соревнование
+                if(_competitionState == CompetitionState.Running)
+                {
+                    _timer.cancel();
+                    SaveResultsToDatabase();
+                    Intent intent = new Intent(CompetitionsActivity.this, FinalActivity.class);
+                    intent.putExtra("Name", _currentCompetition.GetName());
+                    intent.putExtra("Date", _currentCompetition.GetDate());
+                    startActivity(intent);
+                    CompetitionsActivity.this.finish();
+                }
                 Toast.makeText(getApplicationContext(),"Завершить соревнование",Toast.LENGTH_SHORT).show();
             }
         });
-        _timerDialogBuilder.setNegativeButton(getResources().getString(R.string.reset), new DialogInterface.OnClickListener() {
+        _timerDialogBuilder.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(getApplicationContext(),"Сброс",Toast.LENGTH_SHORT).show();
+            public void onClick(DialogInterface dialog, int which)
+            {
+                Toast.makeText(getApplicationContext(),"Отмена",Toast.LENGTH_SHORT).show();
             }
         });
-        _timerDialogBuilder.setNeutralButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+        _timerDialogBuilder.setNeutralButton(getResources().getString(R.string.reset), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(getApplicationContext(),"Отмена",Toast.LENGTH_SHORT).show();
+                if(_competitionState == CompetitionState.NotStarted) return;
+                if(_countDownTimer != null) _countDownTimer.cancel();
+                if(_timer != null) _timer.cancel();
+                TimerStartPosition();
+                _tableAdapter.ClearList();
+                _tableAdapter.notifyDataSetChanged();
+                for(int j = 0; j < lapsCount; j++)
+                {
+                    _arrayMegaSportsmen[j].clear();
+                }
+                _viewAdapter.ClearList();
+                _competitionState = CompetitionState.NotStarted;
+                _number = 0;
+                Toast.makeText(getApplicationContext(),"Сброс",Toast.LENGTH_SHORT).show();
             }
         });
         _timerDialogBuilder.setCancelable(false);
@@ -485,7 +510,10 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
                 {
                     _timer = new Timer();
                     _timer.schedule(task, 0,100);
-                    if(!_currentCompetition.GetStartType().equals(getResources().getString(R.string.item_type_mas_start))) thread.start();
+                    if(!_currentCompetition.GetStartType().equals(getResources().getString(R.string.item_type_mas_start)))
+                    {
+                        if(!thread.isAlive()) thread.start();
+                    }
                     _competitionTimer.setTextColor(getResources().getColor(R.color.white));
                     _timerParticipantTable.setTextColor(getResources().getColor(R.color.white));
                     _competitionState = CompetitionState.Running;
@@ -643,43 +671,43 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
 
     public void stopBtnClick(View view)
     {
-        //_timerDialog.show(); Раскомментить для появления диалога!!!
+        _timerDialog.show(); //Раскомментить для появления диалога!!!
         // Здесь сброс
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(getResources().getString(R.string.reset_title));
-        builder.setMessage(getResources().getString(R.string.message_dialog_reset));
-        builder.setPositiveButton(getResources().getString(R.string.accept), new DialogInterface.OnClickListener()
-        {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i)
-            {
-                if(_countDownTimer != null) _countDownTimer.cancel();
-                if(_timer != null) _timer.cancel();
-                TimerStartPosition();
-//                for(int j = 0; j < _tablesCompetition.size(); j++)
+//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//        builder.setTitle(getResources().getString(R.string.reset_title));
+//        builder.setMessage(getResources().getString(R.string.message_dialog_reset));
+//        builder.setPositiveButton(getResources().getString(R.string.accept), new DialogInterface.OnClickListener()
+//        {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i)
+//            {
+//                if(_countDownTimer != null) _countDownTimer.cancel();
+//                if(_timer != null) _timer.cancel();
+//                TimerStartPosition();
+////                for(int j = 0; j < _tablesCompetition.size(); j++)
+////                {
+////                    _tablesCompetition.get(j).removeAllViews();
+////                }
+//                _tableAdapter.ClearList();
+//                _tableAdapter.notifyDataSetChanged();
+//                for(int j = 0; j < lapsCount; j++)
 //                {
-//                    _tablesCompetition.get(j).removeAllViews();
+//                    _arrayMegaSportsmen[j].clear();
 //                }
-                _tableAdapter.ClearList();
-                _tableAdapter.notifyDataSetChanged();
-                for(int j = 0; j < lapsCount; j++)
-                {
-                    _arrayMegaSportsmen[j].clear();
-                }
-                _viewAdapter.ClearList();
-                _competitionState = CompetitionState.NotStarted;
-                _number = 0;
-            }
-        });
-
-        builder.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-
-            }
-        });
-
-        builder.show();
+//                _viewAdapter.ClearList();
+//                _competitionState = CompetitionState.NotStarted;
+//                _number = 0;
+//            }
+//        });
+//
+//        builder.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//
+//            }
+//        });
+//
+//        builder.show();
         Toast.makeText(getApplicationContext(),"Стоп",Toast.LENGTH_SHORT).show();
     }
 

@@ -55,7 +55,6 @@ public class FinalActivity extends AppCompatActivity {
 
     private static final float MOVE_LENGTH = 150;
     private final int REQUEST_DIRECTORY = 0;
-    private final int WHATS_APP_CODE = 1;
 
     private ExcelHelper excelHelper;
 
@@ -94,34 +93,6 @@ public class FinalActivity extends AppCompatActivity {
         loading.execute();
     }
 
-//    private List<MegaSportsman> SortByPlace(List<MegaSportsman> sportsmen)
-//    {
-//        MegaSportsman helperSportsman;
-//        MegaSportsman[] localArr = sportsmen.toArray(new MegaSportsman[sportsmen.size()]);
-//        int k = 0;
-//        while(k<localArr.length-1) {
-//            for (int i = 0; i < localArr.length -k- 1; i++) {
-//                if (Integer.valueOf(localArr[i].getPlaceArr()[0]) > Integer.valueOf(localArr[i + 1].getPlaceArr()[0])) {
-//                    helperSportsman = localArr[i];
-//                    localArr[i] = localArr[i + 1];
-//                    localArr[i + 1] = helperSportsman;
-//                }
-//            }
-//            k++;
-//        }
-//        return new ArrayList<MegaSportsman>(Arrays.asList(localArr));
-//
-//    }
-
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-//        for(int i = 0; i<list.size(); i++)
-//        {
-//            AddResultRow(list.get(i), 0);
-//        }
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
@@ -134,6 +105,13 @@ public class FinalActivity extends AppCompatActivity {
         _sendByMail = (MenuItem) menu.findItem(R.id.action_bar_final_activity_send_by_mail);
 
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        File file = new File(Environment.getExternalStorageDirectory().getPath() + "/" + _currentCompetition.GetName() +" Результат.xls");
+        if(file.exists()) file.delete();
     }
 
     @Override
@@ -173,7 +151,7 @@ public class FinalActivity extends AppCompatActivity {
                 File file = new File(path);
                 intent.setPackage("com.whatsapp");
                 intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
-                startActivityForResult(Intent.createChooser(intent, "Выбор"), WHATS_APP_CODE);
+                startActivity(Intent.createChooser(intent, "Выбор"));
                 Toast.makeText(getApplicationContext(),"Отправка через WhatsApp",Toast.LENGTH_SHORT).show();
                 break;
             case R.id.action_bar_final_activity_send_by_mail:
@@ -189,6 +167,16 @@ public class FinalActivity extends AppCompatActivity {
                 break;
 
             case R.id.action_bar_final_activity_send_by_googledrive:
+                String pathFile = Environment.getExternalStorageDirectory().getPath() + "/" + _currentCompetition.GetName() +" Результат.xls";
+                excelHelper.CreateFileWithResult(_arrayMegaSportsman, pathFile);
+
+                Intent driveIntent = new Intent(Intent.ACTION_SEND);
+                driveIntent.setType("application/*");
+                File fileExc = new File(pathFile);
+                driveIntent.setPackage("com.google.android.apps.docs");
+                driveIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(fileExc));
+                startActivity(Intent.createChooser(driveIntent, "Выбор"));
+
                 Toast.makeText(getApplicationContext(),"GoogleDrive",Toast.LENGTH_SHORT).show();
                 break;
 
@@ -210,10 +198,6 @@ public class FinalActivity extends AppCompatActivity {
                 } else {
                     Toast.makeText(getApplicationContext(), "Файл не был сохранён", Toast.LENGTH_SHORT).show();
                 }
-                break;
-            case WHATS_APP_CODE:
-                File file = new File(Environment.getExternalStorageDirectory().getPath() + "/" + _currentCompetition.GetName() +" Результат.xls");
-                if(file.exists()) file.delete();
                 break;
         }
     }
