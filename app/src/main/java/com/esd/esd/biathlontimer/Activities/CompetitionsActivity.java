@@ -227,6 +227,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
                     if (_megaSportsmen[i].getNumber() == participantNumber) {
                         _megaSportsmen[i].setFineCount(fineCount);
                         _megaSportsmen[i].setFineTime(fineTime);
+                        AddRowToLastEventTable(_megaSportsmen[i], false);
                         break;
                     }
                 }
@@ -267,7 +268,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         final TableRow newRow = new TableRow(this);
         newRow.setWeightSum(100);
         final TextView newTextView = new TextView(this);
-        newTextView.setText("87");
+        newTextView.setText(String.valueOf(megaSportsman.getNumber()));
         newTextView.setGravity(Gravity.CENTER);
         newTextView.setTextColor(Color.BLACK);
         newTextView.setBackground(new PaintDrawable(Color.WHITE));
@@ -275,7 +276,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         newTextView.setLayoutParams(new TableRow.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 10f));
         ((TableRow.LayoutParams) newTextView.getLayoutParams()).setMargins(2, 0, 2, 2);
         final TextView newTextView2 = new TextView(this);
-        newTextView2.setText("23");
+        newTextView2.setText(String.valueOf(megaSportsman.getPlace()));
         newTextView2.setGravity(Gravity.CENTER);
         newTextView2.setTextColor(Color.BLACK);
         newTextView2.setBackground(new PaintDrawable(Color.WHITE));
@@ -283,7 +284,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         newTextView2.setLayoutParams(new TableRow.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 10f));
         ((TableRow.LayoutParams) newTextView2.getLayoutParams()).setMargins(0, 0, 2, 2);
         final TextView newTextView3 = new TextView(this);
-        newTextView3.setText("имя");
+        newTextView3.setText(megaSportsman.getName());
         newTextView3.setGravity(Gravity.CENTER);
         newTextView3.setTextColor(Color.BLACK);
         newTextView3.setBackground(new PaintDrawable(Color.WHITE));
@@ -291,7 +292,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         newTextView3.setLayoutParams(new TableRow.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 40f));
         ((TableRow.LayoutParams) newTextView3.getLayoutParams()).setMargins(0, 0, 2, 2);
         final TextView newTextView4 = new TextView(this);
-        newTextView4.setText("Время");
+        newTextView4.setText(megaSportsman.getResult());
         newTextView4.setGravity(Gravity.CENTER);
         newTextView4.setTextColor(Color.BLACK);
         newTextView4.setBackground(new PaintDrawable(Color.WHITE));
@@ -299,7 +300,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         newTextView4.setLayoutParams(new TableRow.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 20f));
         ((TableRow.LayoutParams) newTextView4.getLayoutParams()).setMargins(0, 0, 2, 2);
         final TextView newTextView5 = new TextView(this);
-        newTextView5.setText("Отставание");
+        newTextView5.setText(megaSportsman.getLag());
         newTextView5.setGravity(Gravity.CENTER);
         newTextView5.setTextColor(Color.BLACK);
         newTextView5.setBackground(new PaintDrawable(Color.WHITE));
@@ -320,7 +321,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         final TableRow newRow = new TableRow(this);
         newRow.setWeightSum(100);
         final TextView newTextView = new TextView(this);
-        newTextView.setText("Какой то крутой текст, который я не придумал еще");
+        newTextView.setText("Участнику №"+String.valueOf(megaSportsman.getNumber())+" начислен штраф: "+String.valueOf(megaSportsman.getFineCount()));
         newTextView.setGravity(Gravity.CENTER);
         newTextView.setTextColor(Color.BLACK);
         newTextView.setBackground(new PaintDrawable(Color.WHITE));
@@ -336,10 +337,6 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         @Override
         public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id)
         {
-//            TextView NumberStr = (TextView) view.findViewById(R.id.numberParticipantMyButton);
-//            TextView LapStr = (TextView) view.findViewById(R.id.lapParticipantMyButton);
-//            int number = Integer.valueOf(NumberStr.getText().toString());
-//            int lap = Integer.valueOf(LapStr.getText().toString());
             _dialogOwnerView = view;
             _fineDialog.show();
             return true;
@@ -380,6 +377,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
                 }
             });
             GetLag(lap);
+            AddRowToLastEventTable(localSportsman, true);
             if(_currentTable == lap)
             {
                 _tableAdapter.ClearList();
@@ -398,6 +396,22 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         super.onStart();
         LoadingTask loadingTask = new LoadingTask();
         loadingTask.execute();
+    }
+
+    private void AddRowToLastEventTable(MegaSportsman megaSportsman, boolean isFromButtonClick)
+    {
+        if(_lastTable.getChildCount() >= 3)
+        {
+            _lastTable.removeViewAt(0);
+        }
+        if(isFromButtonClick)
+        {
+            AddRowAsTableCompetitions(megaSportsman);
+        }
+        else
+        {
+            AddRowZeroColumn(megaSportsman);
+        }
     }
 
     private void TimerStartPosition()
@@ -616,12 +630,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
 
     public void returnLastStepOnClick(View view)
     {
-        if(_lastTable.getChildCount() == 0)
-            AddRowZeroColumn(_megaSportsmen[0]);
-        else
-            AddRowAsTableCompetitions(_megaSportsmen[0]);
-
-
+       // Здесь отмена действий
     }
 
     public void OnClickNextTable(View view)
@@ -678,37 +687,6 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
 
     public boolean onKeyDown(int keyCode, KeyEvent event)
     {
-        if(keyCode == (KeyEvent.KEYCODE_BACK))
-        {
-            if(_competitionState != CompetitionState.NotStarted)
-            {
-                AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-                dialog.setTitle(getResources().getString(R.string.warning_dialog_title));
-                dialog.setMessage(getResources().getString(R.string.message_end_competition));
-                dialog.setPositiveButton(getResources().getString(R.string.accept), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        // заканчиваем нахер
-                        _timer.cancel();
-                        SaveResultsToDatabase();
-                        Intent intent = new Intent(CompetitionsActivity.this, FinalActivity.class);
-                        intent.putExtra("Name",_currentCompetition.GetName());
-                        intent.putExtra("Date",_currentCompetition.GetDate());
-                        startActivity(intent);
-                        CompetitionsActivity.this.finish();
-                    }
-                });
-
-                dialog.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                    }
-                });
-
-                dialog.show();
-            }
-        }
         return super.onKeyDown(keyCode, event);
     }
 
@@ -723,43 +701,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
 
     public void stopBtnClick(View view)
     {
-        _timerDialog.show(); //Раскомментить для появления диалога!!!
-        // Здесь сброс
-//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//        builder.setTitle(getResources().getString(R.string.reset_title));
-//        builder.setMessage(getResources().getString(R.string.message_dialog_reset));
-//        builder.setPositiveButton(getResources().getString(R.string.accept), new DialogInterface.OnClickListener()
-//        {
-//            @Override
-//            public void onClick(DialogInterface dialogInterface, int i)
-//            {
-//                if(_countDownTimer != null) _countDownTimer.cancel();
-//                if(_timer != null) _timer.cancel();
-//                TimerStartPosition();
-////                for(int j = 0; j < _tablesCompetition.size(); j++)
-////                {
-////                    _tablesCompetition.get(j).removeAllViews();
-////                }
-//                _tableAdapter.ClearList();
-//                _tableAdapter.notifyDataSetChanged();
-//                for(int j = 0; j < lapsCount; j++)
-//                {
-//                    _arrayMegaSportsmen[j].clear();
-//                }
-//                _viewAdapter.ClearList();
-//                _competitionState = CompetitionState.NotStarted;
-//                _number = 0;
-//            }
-//        });
-//
-//        builder.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialogInterface, int i) {
-//
-//            }
-//        });
-//
-//        builder.show();
+        _timerDialog.show();
         Toast.makeText(getApplicationContext(),"Стоп",Toast.LENGTH_SHORT).show();
     }
 
