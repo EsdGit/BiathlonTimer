@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.PaintDrawable;
-import android.icu.text.MessagePattern;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -23,13 +22,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.GridLayout;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -38,10 +34,8 @@ import android.widget.Toast;
 
 import com.esd.esd.biathlontimer.Competition;
 import com.esd.esd.biathlontimer.CompetitionTableAdapter;
-import com.esd.esd.biathlontimer.DatabaseClasses.DatabaseProvider;
 import com.esd.esd.biathlontimer.DatabaseClasses.RealmMegaSportsmanSaver;
 import com.esd.esd.biathlontimer.DatabaseClasses.RealmSportsmenSaver;
-import com.esd.esd.biathlontimer.ErrorsBuffer;
 import com.esd.esd.biathlontimer.GridViewAdapter;
 import com.esd.esd.biathlontimer.MegaSportsman;
 import com.esd.esd.biathlontimer.MyButton;
@@ -49,27 +43,20 @@ import com.esd.esd.biathlontimer.PagerAdapterHelper;
 import com.esd.esd.biathlontimer.R;
 import com.esd.esd.biathlontimer.Sportsman;
 
-import org.apache.poi.hssf.usermodel.HeaderFooter;
-import org.w3c.dom.Text;
-
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
-import java.util.zip.Inflater;
 
 
-public class CompetitionsActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener
-{
+public class CompetitionsActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener {
 
     private GridLayout _participantGridLayout;
+    private TableLayout _lastTable;
     private GridView _gridView;
     private LinearLayout _containerTables;
     private TextView _currentRound;
@@ -112,8 +99,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
     private CompetitionTableAdapter _tableAdapter;
     private RecyclerView _table;
 
-    private enum CompetitionState
-    {
+    private enum CompetitionState {
         NotStarted,
         Started,
         Running
@@ -122,11 +108,10 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
     private ArrayList<MegaSportsman>[] _arrayMegaSportsmen;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_competitions);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getSupportActionBar().hide();
 
 
@@ -155,6 +140,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         View page2 = inflater.inflate(R.layout.activity_competition_tables, null);
         pages.add(page2);
         //_containerTables = (LinearLayout) page2.findViewById(R.id.containerTablesCompetition);
+        _lastTable = (TableLayout) page2.findViewById(R.id.tableLast);
         _currentRound = (TextView) page2.findViewById(R.id.currentRound);
         _numberParticipant = (TextView) page2.findViewById(R.id.numberParticipantCompetitionTable);
         _positionParticipant = (TextView) page2.findViewById(R.id.positionParticipantCompetitionTable);
@@ -181,8 +167,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // Завершить соревнование
-                if(_competitionState == CompetitionState.Running)
-                {
+                if (_competitionState == CompetitionState.Running) {
                     _timer.cancel();
                     SaveResultsToDatabase();
                     Intent intent = new Intent(CompetitionsActivity.this, FinalActivity.class);
@@ -191,33 +176,31 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
                     startActivity(intent);
                     CompetitionsActivity.this.finish();
                 }
-                Toast.makeText(getApplicationContext(),"Завершить соревнование",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Завершить соревнование", Toast.LENGTH_SHORT).show();
             }
         });
         _timerDialogBuilder.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which)
-            {
-                Toast.makeText(getApplicationContext(),"Отмена",Toast.LENGTH_SHORT).show();
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(getApplicationContext(), "Отмена", Toast.LENGTH_SHORT).show();
             }
         });
         _timerDialogBuilder.setNeutralButton(getResources().getString(R.string.reset), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if(_competitionState == CompetitionState.NotStarted) return;
-                if(_countDownTimer != null) _countDownTimer.cancel();
-                if(_timer != null) _timer.cancel();
+                if (_competitionState == CompetitionState.NotStarted) return;
+                if (_countDownTimer != null) _countDownTimer.cancel();
+                if (_timer != null) _timer.cancel();
                 TimerStartPosition();
                 _tableAdapter.ClearList();
                 _tableAdapter.notifyDataSetChanged();
-                for(int j = 0; j < lapsCount; j++)
-                {
+                for (int j = 0; j < lapsCount; j++) {
                     _arrayMegaSportsmen[j].clear();
                 }
                 _viewAdapter.ClearList();
                 _competitionState = CompetitionState.NotStarted;
                 _number = 0;
-                Toast.makeText(getApplicationContext(),"Сброс",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Сброс", Toast.LENGTH_SHORT).show();
             }
         });
         _timerDialogBuilder.setCancelable(false);
@@ -227,8 +210,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         _builderFineDialog.setView(_dialogFineForm);
         _builderFineDialog.setPositiveButton(getResources().getString(R.string.accept), new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which)
-            {
+            public void onClick(DialogInterface dialog, int which) {
                 int fineCount = _dialogSeekBar.getProgress();
                 int fineSeconds = Integer.valueOf(_currentCompetition.GetFineTime().split(":")[1]);
                 int fineMinutes = Integer.valueOf(_currentCompetition.GetFineTime().split(":")[0]);
@@ -238,13 +220,11 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
                 int participantNumber = Integer.valueOf(NumberStr.getText().toString());
                 int lapNumber = Integer.valueOf(LapStr.getText().toString());
 
-                fineTime.second = fineCount*fineSeconds;
-                fineTime.minute = fineCount*fineMinutes;
+                fineTime.second = fineCount * fineSeconds;
+                fineTime.minute = fineCount * fineMinutes;
                 fineTime.normalize(false);
-                for(int i = 0; i < _megaSportsmen.length; i++)
-                {
-                    if(_megaSportsmen[i].getNumber() == participantNumber)
-                    {
+                for (int i = 0; i < _megaSportsmen.length; i++) {
+                    if (_megaSportsmen[i].getNumber() == participantNumber) {
                         _megaSportsmen[i].setFineCount(fineCount);
                         _megaSportsmen[i].setFineTime(fineTime);
                         break;
@@ -259,8 +239,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         });
         _builderFineDialog.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which)
-            {
+            public void onClick(DialogInterface dialog, int which) {
                 _dialogSeekBar.setProgress(0);
                 _dialogText.setText(getResources().getString(R.string.dialog_text_fine_competiton) + " 0");
             }
@@ -270,8 +249,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
 
         lapsCount = Integer.valueOf(_currentCompetition.GetCheckPointsCount());
         _arrayMegaSportsmen = new ArrayList[lapsCount];
-        for(int i = 0; i < lapsCount; i++)
-        {
+        for (int i = 0; i < lapsCount; i++) {
             _arrayMegaSportsmen[i] = new ArrayList<MegaSportsman>();
         }
         //CreateTables(lapsCount);
@@ -284,6 +262,75 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         TimerStartPosition();
 
     }
+
+    private void AddRowAsTableCompetitions(MegaSportsman megaSportsman) {
+        final TableRow newRow = new TableRow(this);
+        newRow.setWeightSum(100);
+        final TextView newTextView = new TextView(this);
+        newTextView.setText("87");
+        newTextView.setGravity(Gravity.CENTER);
+        newTextView.setTextColor(Color.BLACK);
+        newTextView.setBackground(new PaintDrawable(Color.WHITE));
+        newTextView.setTextSize(getResources().getDimension(R.dimen.normal_text_size));
+        newTextView.setLayoutParams(new TableRow.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 10f));
+        ((TableRow.LayoutParams) newTextView.getLayoutParams()).setMargins(2, 0, 2, 2);
+        final TextView newTextView2 = new TextView(this);
+        newTextView2.setText("23");
+        newTextView2.setGravity(Gravity.CENTER);
+        newTextView2.setTextColor(Color.BLACK);
+        newTextView2.setBackground(new PaintDrawable(Color.WHITE));
+        newTextView2.setTextSize(getResources().getDimension(R.dimen.normal_text_size));
+        newTextView2.setLayoutParams(new TableRow.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 10f));
+        ((TableRow.LayoutParams) newTextView2.getLayoutParams()).setMargins(0, 0, 2, 2);
+        final TextView newTextView3 = new TextView(this);
+        newTextView3.setText("имя");
+        newTextView3.setGravity(Gravity.CENTER);
+        newTextView3.setTextColor(Color.BLACK);
+        newTextView3.setBackground(new PaintDrawable(Color.WHITE));
+        newTextView3.setTextSize(getResources().getDimension(R.dimen.normal_text_size));
+        newTextView3.setLayoutParams(new TableRow.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 40f));
+        ((TableRow.LayoutParams) newTextView3.getLayoutParams()).setMargins(0, 0, 2, 2);
+        final TextView newTextView4 = new TextView(this);
+        newTextView4.setText("Время");
+        newTextView4.setGravity(Gravity.CENTER);
+        newTextView4.setTextColor(Color.BLACK);
+        newTextView4.setBackground(new PaintDrawable(Color.WHITE));
+        newTextView4.setTextSize(getResources().getDimension(R.dimen.normal_text_size));
+        newTextView4.setLayoutParams(new TableRow.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 20f));
+        ((TableRow.LayoutParams) newTextView4.getLayoutParams()).setMargins(0, 0, 2, 2);
+        final TextView newTextView5 = new TextView(this);
+        newTextView5.setText("Отставание");
+        newTextView5.setGravity(Gravity.CENTER);
+        newTextView5.setTextColor(Color.BLACK);
+        newTextView5.setBackground(new PaintDrawable(Color.WHITE));
+        newTextView5.setTextSize(getResources().getDimension(R.dimen.normal_text_size));
+        newTextView5.setLayoutParams(new TableRow.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 20f));
+        ((TableRow.LayoutParams) newTextView5.getLayoutParams()).setMargins(0, 0, 2, 2);
+        newRow.addView(newTextView);
+        newRow.addView(newTextView2);
+        newRow.addView(newTextView3);
+        newRow.addView(newTextView4);
+        newRow.addView(newTextView5);
+        _lastTable.addView(newRow);
+    }
+
+    private void AddRowZeroColumn(MegaSportsman megaSportsman)
+    {
+        //int width = _nameParticipant.getMeasuredWidth() + _numberParticipant.getMeasuredHeight() + _positionParticipant.getMeasuredHeight() + _timeParticipant.getMeasuredHeight() + _lagParticipant.getMeasuredHeight();
+        final TableRow newRow = new TableRow(this);
+        newRow.setWeightSum(100);
+        final TextView newTextView = new TextView(this);
+        newTextView.setText("Какой то крутой текст, который я не придумал еще");
+        newTextView.setGravity(Gravity.CENTER);
+        newTextView.setTextColor(Color.BLACK);
+        newTextView.setBackground(new PaintDrawable(Color.WHITE));
+        newTextView.setTextSize(getResources().getDimension(R.dimen.normal_text_size));
+        newTextView.setLayoutParams(new TableRow.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT,100f));
+        ((TableRow.LayoutParams) newTextView.getLayoutParams()).setMargins(2, 0, 2, 2);
+        newRow.addView(newTextView);
+        _lastTable.addView(newRow);
+    }
+
 
     private GridView.OnItemLongClickListener gridViewOnItemLongClickListener = new GridView.OnItemLongClickListener() {
         @Override
@@ -569,6 +616,11 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
 
     public void returnLastStepOnClick(View view)
     {
+        if(_lastTable.getChildCount() == 0)
+            AddRowZeroColumn(_megaSportsmen[0]);
+        else
+            AddRowAsTableCompetitions(_megaSportsmen[0]);
+
 
     }
 
