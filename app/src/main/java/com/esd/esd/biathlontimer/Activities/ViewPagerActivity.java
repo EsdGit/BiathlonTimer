@@ -228,7 +228,7 @@ public class ViewPagerActivity extends AppCompatActivity
                         {
                             int color = ((ColorDrawable) _colorRenameDialog.getBackground()).getColor();
                             sportsman.setColor(color);
-                            if(!_recyclerViewLocalDatabaseAdapter.ChangeSportsman(sportsman, _renameSportsman))
+                            if(_recyclerViewLocalDatabaseAdapter.ChangeSportsman(sportsman, _renameSportsman))
                             {
                                 saver.DeleteSportsman(_renameSportsman);
                                 saver.SaveSportsman(sportsman);
@@ -886,20 +886,35 @@ public class ViewPagerActivity extends AppCompatActivity
     MenuItem.OnMenuItemClickListener _onMenuItemClickListener = new MenuItem.OnMenuItemClickListener()
     {
         @Override
-        public boolean onMenuItemClick(MenuItem item)
+        public boolean onMenuItemClick(final MenuItem item)
         {
-            //Если группа выбрана
-            if(item.isChecked())
-            {
-                //Если группа была отменена
-                item.setChecked(false);
-            }
-            else
-            {
-                //Если группа бала отмечена
-                item.setChecked(true);
-            }
-            return true;
+            item.setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+            item.setActionView(new View(_viewPagerContext));
+            item.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+                @Override
+                public boolean onMenuItemActionExpand(MenuItem menuItem)
+                {
+                    //Если группа выбрана
+                    if(!item.isChecked())
+                    {
+                        //Если группа была отменена
+                        item.setChecked(false);
+                    }
+                    else
+                    {
+                        //Если группа бала отмечена
+                        item.setChecked(true);
+                    }
+                    return false;
+                }
+
+                @Override
+                public boolean onMenuItemActionCollapse(MenuItem menuItem)
+                {
+                    return false;
+                }
+            });
+            return false;
         }
     };
 
