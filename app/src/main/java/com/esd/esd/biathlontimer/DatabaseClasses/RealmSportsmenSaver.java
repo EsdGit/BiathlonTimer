@@ -83,6 +83,11 @@ public class RealmSportsmenSaver
 
     }
 
+    public List<Sportsman> SortByGroup()
+    {
+        return realm.copyFromRealm(realm.where(Sportsman.class).equalTo("group", "Без группы").findAll());
+    }
+
     public void Dispose()
     {
         realm.close();
