@@ -124,7 +124,7 @@ public class ViewPagerActivity extends AppCompatActivity
     private Context _viewPagerContext;
     private ProgressDialog _progressDialog;
 
-    private String[] _groupSortArray;
+    private ArrayList<String>_groupSortArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,10 +156,10 @@ public class ViewPagerActivity extends AppCompatActivity
         }
         _arrayGroup[0]=getResources().getString(R.string.default_group);;
 
-        _groupSortArray = new String[_arrayGroup.length];
+        _groupSortArray = new ArrayList<>();
         for(int i =0; i < _arrayGroup.length; i++)
         {
-            _groupSortArray[i] = _arrayGroup[i];
+            _groupSortArray.add(_arrayGroup[i]);
         }
 
         _needDeleteTables = Boolean.valueOf(intent.getStringExtra("NeedDelete"));
@@ -495,12 +495,14 @@ public class ViewPagerActivity extends AppCompatActivity
         List<Sportsman> sortedList;
         if(recyclerView == _recyclerView)
         {
-            sortedList = saver.GetSportsmen(orderBy, sortState);
+            //sortedList = saver.GetSportsmen(orderBy, sortState);
+            sortedList = saver.SortBy(orderBy, sortState, _groupSortArray);
             _recyclerViewLocalDatabaseAdapter.SortList(sortedList);
         }
         else
         {
             sortedList = mainSaver.GetSportsmen(orderBy, sortState);
+            //sortedList = mainSaver.SortBy(orderBy, sortState, _groupSortArray);
             _recyclerViewDatabaseAdapter.SortList(sortedList);
         }
 
@@ -546,7 +548,6 @@ public class ViewPagerActivity extends AppCompatActivity
                             switch (item.getItemId())
                             {
                                 case R.id.groupSort:
-                                    //SortTableBy(_recyclerView, "group", item.isChecked());
                                     Toast.makeText(getApplicationContext(),"Сортировка списка участников по группам",Toast.LENGTH_SHORT).show();
                                     return true;
                                 case R.id.nameSort:
@@ -899,19 +900,26 @@ public class ViewPagerActivity extends AppCompatActivity
                 @Override
                 public boolean onMenuItemActionExpand(MenuItem menuItem)
                 {
+                    String name = String.valueOf(item.getTitle());
                     //Если группа выбрана
                     if(!item.isChecked())
                     {
                         //Если группа была отменена
                         item.setChecked(false);
+                        if(_groupSortArray.contains(name))
+                        {
+                            _groupSortArray.remove(name);
+                        }
                     }
                     else
                     {
                         //Если группа бала отмечена
                         item.setChecked(true);
+                        if(!_groupSortArray.contains(name))
+                        {
+                            _groupSortArray.add(name);
+                        }
                     }
-                    //Сортируем по групам
-                    String name = String.valueOf(item.getTitle());
                     SortByGroup();
                     return false;
                 }
@@ -928,7 +936,7 @@ public class ViewPagerActivity extends AppCompatActivity
 
     private void SortByGroup()
     {
-        List<Sportsman> localList = saver.SortByGroup();
+        List<Sportsman> localList = saver.SortByGroup(_groupSortArray);
         _recyclerViewLocalDatabaseAdapter.SortList(localList);
     }
 

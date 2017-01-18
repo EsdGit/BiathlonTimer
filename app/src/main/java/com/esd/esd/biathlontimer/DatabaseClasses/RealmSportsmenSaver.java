@@ -5,11 +5,13 @@ import android.graphics.Color;
 
 import com.esd.esd.biathlontimer.Sportsman;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import io.realm.RealmList;
 import io.realm.RealmResults;
 import io.realm.Sort;
 
@@ -83,9 +85,19 @@ public class RealmSportsmenSaver
 
     }
 
-    public List<Sportsman> SortByGroup()
+    public List<Sportsman> SortByGroup(ArrayList<String> group)
     {
-        return realm.copyFromRealm(realm.where(Sportsman.class).equalTo("group", "Без группы").findAll());
+        List<Sportsman> localList = realm.copyFromRealm(realm.where(Sportsman.class).in("group", group.toArray(new String[group.size()])).findAll());
+        return localList;
+    }
+
+    public List<Sportsman> SortBy(String sortBy, boolean state, ArrayList<String> group)
+    {
+        Sort sort;
+        if(state) sort = Sort.ASCENDING;
+        else sort = Sort.DESCENDING;
+        List<Sportsman> results = realm.copyFromRealm(realm.where(Sportsman.class).in("group", group.toArray(new String[group.size()])).findAllSorted(sortBy, sort));
+        return results;
     }
 
     public void Dispose()
