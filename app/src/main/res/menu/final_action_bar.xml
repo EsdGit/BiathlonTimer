@@ -15,6 +15,14 @@
         android:orderInCategory="100"
         android:visible="true"/>
 
+
+    <item
+        android:title="@string/final_activity_group_sort"
+        android:id="@+id/action_bar_final_activity_group_sort"
+        android:showAsAction="never"
+        android:orderInCategory="100"
+        android:visible="true" />
+
     <item
         android:title="@string/final_activity_save"
         android:icon="@drawable/ic_save"

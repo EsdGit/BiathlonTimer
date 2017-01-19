@@ -1,5 +1,6 @@
 package com.esd.esd.biathlontimer.Activities;
 
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -125,6 +126,7 @@ public class ViewPagerActivity extends AppCompatActivity
     private ProgressDialog _progressDialog;
 
     private ArrayList<String>_groupSortArray;
+    private ActionBar test;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -154,7 +156,7 @@ public class ViewPagerActivity extends AppCompatActivity
         {
             _arrayGroup = new String[1];
         }
-        _arrayGroup[0]=getResources().getString(R.string.default_group);;
+        _arrayGroup[0]=getResources().getString(R.string.default_group);
 
         _groupSortArray = new ArrayList<>();
         for(int i =0; i < _arrayGroup.length; i++)
@@ -529,14 +531,7 @@ public class ViewPagerActivity extends AppCompatActivity
                     {
                         for(int i = 0; i < _arrayGroup.length; i++)
                         {
-                            //if(i == 0)
-                            //{
-                                localMenu.add(_arrayGroup[i]).setCheckable(true).setChecked(true).setOnMenuItemClickListener(_onMenuItemClickListener);
-                            //}
-//                            else
-//                            {
-//                                localMenu.add(_arrayGroup[i]).setCheckable(true).setChecked(false).setOnMenuItemClickListener(_onMenuItemClickListener);
-//                            }
+                            localMenu.add(_arrayGroup[i]).setCheckable(true).setChecked(true).setOnMenuItemClickListener(_onMenuItemClickListener);
                         }
                     }
                     _participantPopupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()

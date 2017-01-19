@@ -123,6 +123,7 @@
     <string name="time_column_final_activity">Время</string>
     <string name="final_activity_place_sort">Сортировка по месту</string>
     <string name="final_activity_name_sort">Сортировка по имени</string>
+    <string name="final_activity_group_sort">Сортировка по группам</string>
     <string name="final_activity_send">Отправка</string>
     <string name="final_activity_send_by_whatsapp">WhatsApp</string>
     <string name="final_activity_send_by_mail">Почта</string>

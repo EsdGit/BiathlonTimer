@@ -30,6 +30,7 @@
     <style name="popupMenu" parent="Widget.AppCompat.PopupMenu">
         <item name="android:windowDisablePreview">true</item>
         <item name="overlapAnchor">false</item>
+        <item name="vertical"
     </style>
     
     <style name="MyColorPicker" parent="AlertDialog.AppCompat.Light">
