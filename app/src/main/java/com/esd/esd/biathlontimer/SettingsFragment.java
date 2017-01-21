@@ -584,7 +584,8 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
         if(Integer.valueOf(countCheckPoints) <= 0) return null;
         Competition localCompetition = new Competition(_nameCompetition.getSummary().toString(),_setData.getSummary().toString(), context);
         localCompetition.SetCompetitionSettings(_typeStart.getSummary().toString(), _setInterval.getSummary().toString(),
-                countCheckPoints,_setStartTimer.getSummary().toString(),groups, secondInterval[0], secondInterval[1],fine, startNumber, maxPartCount);
+                Integer.valueOf(countCheckPoints),_setStartTimer.getSummary().toString(),groups, secondInterval[0], secondInterval[1],fine, startNumber, maxPartCount);
+        localCompetition.setFinished(false);
         return localCompetition;
     }
 
@@ -638,25 +639,25 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
 
     public static void SetAllSummaries(Context context,Competition competition)
     {
-        _nameCompetition.setSummary(competition.GetName());
-        _setData.setSummary(competition.GetDate());
-        _setInterval.setSummary(competition.GetInterval());
-        _setStartTimer.setSummary(competition.GetTimeToStart());
-        _setSecondInterval.setSummary(competition.GetSecondInterval()+context.getResources().getString(R.string.summary_second_interval_helper)+competition.GetNumberSecondInterval());
-        _fine.setSummary(context.getResources().getString(R.string.summary_fine_after_set)+competition.GetFineTime());
-        if(!competition.GetGroups().isEmpty())
+        _nameCompetition.setSummary(competition.getName());
+        _setData.setSummary(competition.getDate());
+        _setInterval.setSummary(competition.getInterval());
+        _setStartTimer.setSummary(competition.getTimeToStart());
+        _setSecondInterval.setSummary(competition.getSecondInterval()+context.getResources().getString(R.string.summary_second_interval_helper)+String.valueOf(competition.getNumberSecondInterval()));
+        _fine.setSummary(context.getResources().getString(R.string.summary_fine_after_set)+competition.getFineTime());
+        if(!competition.getGroups().isEmpty())
         {
-            _group.setSummary(context.getResources().getString(R.string.aftter_add_summary_group)+competition.GetGroups());
-            String[] allGroups = competition.GetGroups().split(",");
+            _group.setSummary(context.getResources().getString(R.string.aftter_add_summary_group)+competition.getGroups());
+            String[] allGroups = competition.getGroups().split(",");
             for(int i = 0; i < allGroups.length; i++)
             {
                 _dialogItemsList.add(i ,allGroups[i]);
             }
             _dialogItems = _dialogItemsList.toArray(new String[_dialogItemsList.size()]);
         }
-        _typeStart.setSummary(competition.GetStartType());
-        _numberStart.setSummary(context.getResources().getString(R.string.summary_after_set_start_nmber) + String.valueOf(competition.GetStartNumber()) + context.getResources().getString(R.string.summary_after_set_count_participant) + String.valueOf(competition.GetMaxParticipantCount()) + "." );
-        _countCheckPoint.setSummary(context.getResources().getString(R.string.summary_count_checkpoint)+competition.GetCheckPointsCount());
+        _typeStart.setSummary(competition.getStartType());
+        _numberStart.setSummary(context.getResources().getString(R.string.summary_after_set_start_nmber) + String.valueOf(competition.getStartNumber()) + context.getResources().getString(R.string.summary_after_set_count_participant) + String.valueOf(competition.getMaxParticipantCount()) + "." );
+        _countCheckPoint.setSummary(context.getResources().getString(R.string.summary_count_checkpoint)+String.valueOf(competition.getCheckPointsCount()));
     }
 
 }

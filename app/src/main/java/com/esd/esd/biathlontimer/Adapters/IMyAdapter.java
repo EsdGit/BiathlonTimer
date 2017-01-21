@@ -1,4 +1,4 @@
-package com.esd.esd.biathlontimer;
+package com.esd.esd.biathlontimer.Adapters;
 
 import java.util.ArrayList;
 import java.util.List;

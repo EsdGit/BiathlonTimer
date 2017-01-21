@@ -15,8 +15,8 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.esd.esd.biathlontimer.Competition;
-import com.esd.esd.biathlontimer.DatabaseClasses.CompetitionSaver;
 import com.esd.esd.biathlontimer.DatabaseClasses.DatabaseProvider;
+import com.esd.esd.biathlontimer.DatabaseClasses.RealmCompetitionSaver;
 import com.esd.esd.biathlontimer.DatabaseClasses.RealmMegaSportsmanSaver;
 import com.esd.esd.biathlontimer.DatabaseClasses.RealmSportsmenSaver;
 import com.esd.esd.biathlontimer.MegaSportsman;
@@ -92,8 +92,9 @@ public class SettingsActivity extends PreferenceActivity
         {
             String name = _localIntent.getStringExtra("Name");
             String date = _localIntent.getStringExtra("Date");
-            _oldCompetititon = new Competition(name, date, this);
-            _oldCompetititon.GetAllSettingsToComp();
+            RealmCompetitionSaver saver = new RealmCompetitionSaver(this, "COMPETITIONS");
+            _oldCompetititon = saver.GetCompetition(name, date);
+            saver.Dispose();
             SettingsFragment.SetAllSummaries(this, _oldCompetititon);
             isFirstLoad = false;
         }
@@ -112,8 +113,8 @@ public class SettingsActivity extends PreferenceActivity
     {
         if(item.getItemId() == R.id.accept_setting)
         {
-            CompetitionSaver saver = new CompetitionSaver(this);
-            Competition[] localArr = saver.GetAllCompetitions(DatabaseProvider.DbCompetitions.COLUMN_COMPETITION_NAME);
+            RealmCompetitionSaver saver = new RealmCompetitionSaver(this, "COMPETITIONS");
+            List<Competition> localList = saver.GetAllCompetitions();
             Competition newComp = SettingsFragment.GetCurrentCompetition(this);
             if(newComp == null)
             {
@@ -123,8 +124,8 @@ public class SettingsActivity extends PreferenceActivity
             boolean _canAddCompetition = true;
             if(!isEditMode)
             {
-                for (int i = 0; i < localArr.length; i++) {
-                    if (newComp.equals(localArr[i])) {
+                for (int i = 0; i < localList.size(); i++) {
+                    if (newComp.equals(localList.get(i))) {
                         _canAddCompetition = false;
                         Toast.makeText(this, getResources().getString(R.string.competition_already_exists), Toast.LENGTH_LONG).show();
                         break;
@@ -133,22 +134,24 @@ public class SettingsActivity extends PreferenceActivity
             }
             if(_canAddCompetition)
             {
-                if(!isEditMode) {
+                if(!isEditMode)
+                {
+                    saver.SaveCompetition(newComp);
                     Intent myIntent = SettingsFragment.GetIntent(this);
                     startActivity(myIntent);
                 }
                 else
                 {
                     // Проверяем количество участников
-                    RealmSportsmenSaver realmSaver = new RealmSportsmenSaver(this, _oldCompetititon.GetDbParticipantPath());
+                    RealmSportsmenSaver realmSaver = new RealmSportsmenSaver(this, _oldCompetititon.getDbParticipantPath());
                     List<Sportsman> sportsmenList = realmSaver.GetSportsmen("number", true);
                     realmSaver.DeleteTable();
-                    DatabaseProvider dbProvider = new DatabaseProvider(this);
-                    dbProvider.DeleteTable(_oldCompetititon.GetSettingsPath());
-                    saver.DeleteCompetitionFromDatabase(_oldCompetititon);
-                    realmSaver = new RealmSportsmenSaver(this, newComp.GetDbParticipantPath());
+                    saver.DeleteCompetition(_oldCompetititon);
+                    saver.SaveCompetition(newComp);
+                    realmSaver = new RealmSportsmenSaver(this, newComp.getDbParticipantPath());
                     realmSaver.SaveSportsmen(sportsmenList);
-                    saver.SaveCompetitionToDatabase(newComp);
+                    realmSaver.Dispose();
+                    saver.Dispose();
                     SettingsChangedEvent event = new SettingsChangedEvent();
                     _eventBus.post(event);
                     this.finish();

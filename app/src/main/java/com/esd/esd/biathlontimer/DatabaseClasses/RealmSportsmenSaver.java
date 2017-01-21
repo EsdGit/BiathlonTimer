@@ -23,7 +23,6 @@ public class RealmSportsmenSaver
 {
     private Realm realm;
     private AtomicLong keyId;
-    private boolean isMainDb = false;
     public RealmSportsmenSaver(Context context, String databaseName)
     {
         Realm.init(context);

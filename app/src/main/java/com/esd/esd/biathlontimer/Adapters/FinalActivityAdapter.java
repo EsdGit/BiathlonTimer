@@ -1,4 +1,4 @@
-package com.esd.esd.biathlontimer;
+package com.esd.esd.biathlontimer.Adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -6,7 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.esd.esd.biathlontimer.Activities.FinalActivity;
+import com.esd.esd.biathlontimer.MegaSportsman;
+import com.esd.esd.biathlontimer.R;
 
 import java.util.List;
 

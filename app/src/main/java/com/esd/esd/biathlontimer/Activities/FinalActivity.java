@@ -2,14 +2,10 @@ package com.esd.esd.biathlontimer.Activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Canvas;
-import android.graphics.ColorFilter;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -17,22 +13,20 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.SubMenu;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.esd.esd.biathlontimer.Competition;
-import com.esd.esd.biathlontimer.DatabaseClasses.CompetitionSaver;
+import com.esd.esd.biathlontimer.DatabaseClasses.RealmCompetitionSaver;
 import com.esd.esd.biathlontimer.DatabaseClasses.RealmMegaSportsmanSaver;
 import com.esd.esd.biathlontimer.ExcelHelper;
-import com.esd.esd.biathlontimer.FinalActivityAdapter;
+import com.esd.esd.biathlontimer.Adapters.FinalActivityAdapter;
 import com.esd.esd.biathlontimer.MegaSportsman;
 import com.esd.esd.biathlontimer.PagerAdapterHelper;
 import com.esd.esd.biathlontimer.R;
@@ -40,12 +34,9 @@ import com.esd.esd.biathlontimer.R;
 import net.rdrei.android.dirchooser.DirectoryChooserActivity;
 import net.rdrei.android.dirchooser.DirectoryChooserConfig;
 
-import org.greenrobot.eventbus.EventBus;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Handler;
 
 
 public class FinalActivity extends AppCompatActivity {
@@ -95,10 +86,10 @@ public class FinalActivity extends AppCompatActivity {
         _context = getApplicationContext();
 
 
-        CompetitionSaver saver = new CompetitionSaver(this);
-        _currentCompetition = new Competition(getIntent().getStringExtra("Name"), getIntent().getStringExtra("Date"), this);
-        _currentCompetition.GetAllSettingsToComp();
-        String groups = _currentCompetition.GetGroups();
+        RealmCompetitionSaver saverComp = new RealmCompetitionSaver(this, "COMPETITIONS");
+        _currentCompetition = saverComp.GetCompetition(getIntent().getStringExtra("Name"), getIntent().getStringExtra("Date"));
+        saverComp.Dispose();
+        String groups = _currentCompetition.getGroups();
         if(!groups.isEmpty())
         {
             String[] localArray = groups.split(",");
@@ -113,7 +104,7 @@ public class FinalActivity extends AppCompatActivity {
         }
         _arrayGroup[0]=getResources().getString(R.string.default_group);
 
-        lapsCount = Integer.valueOf(_currentCompetition.GetCheckPointsCount());
+        lapsCount = _currentCompetition.getCheckPointsCount();
         _arrayMegaSportsman = new ArrayList[lapsCount];
 
         LayoutInflater inflater = LayoutInflater.from(this);
@@ -156,7 +147,7 @@ public class FinalActivity extends AppCompatActivity {
                 }
             }
         });
-        temporaryPath = Environment.getExternalStorageDirectory().getPath() + "/" + _currentCompetition.GetName() +" Результат.xls";
+        temporaryPath = Environment.getExternalStorageDirectory().getPath() + "/" + _currentCompetition.getName() +" Результат.xls";
         LoadData loading = new LoadData();
         loading.execute();
 
@@ -285,7 +276,7 @@ public class FinalActivity extends AppCompatActivity {
                 if (resultCode == DirectoryChooserActivity.RESULT_CODE_DIR_SELECTED)
                 {
                     path = data.getStringExtra(DirectoryChooserActivity.RESULT_SELECTED_DIR);
-                    excelHelper.CreateFileWithResult(_arrayMegaSportsman, path + "/"+_currentCompetition.GetName()+" Результат.xls");
+                    excelHelper.CreateFileWithResult(_arrayMegaSportsman, path + "/"+_currentCompetition.getName()+" Результат.xls");
                 } else {
                     Toast.makeText(getApplicationContext(), "Файл не был сохранён", Toast.LENGTH_SHORT).show();
                 }
@@ -337,7 +328,7 @@ public class FinalActivity extends AppCompatActivity {
             adapter = new ArrayList<>();
             for(int i = 0; i < lapsCount; i++)
             {
-                RealmMegaSportsmanSaver saver = new RealmMegaSportsmanSaver(getApplicationContext(), "LAP"+i+_currentCompetition.GetNameDateString());
+                RealmMegaSportsmanSaver saver = new RealmMegaSportsmanSaver(getApplicationContext(), "LAP"+i+_currentCompetition.getNameDateString());
                 _arrayMegaSportsman[i] = saver.GetSportsmen("_place",true);
                 adapter.add(new FinalActivityAdapter(_arrayMegaSportsman[i]));
             }

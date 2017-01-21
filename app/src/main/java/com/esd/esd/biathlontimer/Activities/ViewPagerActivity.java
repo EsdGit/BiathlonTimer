@@ -36,13 +36,13 @@ import android.widget.Toast;
 import com.android.colorpicker.ColorPickerDialog;
 import com.android.colorpicker.ColorPickerSwatch;
 import com.esd.esd.biathlontimer.Competition;
-import com.esd.esd.biathlontimer.DatabaseClasses.CompetitionSaver;
 import com.esd.esd.biathlontimer.DatabaseClasses.DatabaseProvider;
+import com.esd.esd.biathlontimer.DatabaseClasses.RealmCompetitionSaver;
 import com.esd.esd.biathlontimer.DatabaseClasses.RealmSportsmenSaver;
 import com.esd.esd.biathlontimer.PagerAdapterHelper;
 import com.esd.esd.biathlontimer.R;
-import com.esd.esd.biathlontimer.RecyclerViewDatabaseAdapter;
-import com.esd.esd.biathlontimer.RecyclerViewLocalDatabaseAdapter;
+import com.esd.esd.biathlontimer.Adapters.RecyclerViewDatabaseAdapter;
+import com.esd.esd.biathlontimer.Adapters.RecyclerViewLocalDatabaseAdapter;
 import com.esd.esd.biathlontimer.Sportsman;
 
 import java.util.ArrayList;
@@ -141,9 +141,10 @@ public class ViewPagerActivity extends AppCompatActivity
         Intent intent = getIntent();
         String name = intent.getStringExtra("CompetitionName");
         String date = intent.getStringExtra("CompetitionDate");
-        _currentCompetition = new Competition(name, date, this);
-        _currentCompetition.GetAllSettingsToComp();
-        String groups = _currentCompetition.GetGroups();
+        RealmCompetitionSaver saverComp = new RealmCompetitionSaver(this, "COMPETITIONS");
+        _currentCompetition = saverComp.GetCompetition(name, date);
+        saverComp.Dispose();
+        String groups = _currentCompetition.getGroups();
         if(!groups.isEmpty())
         {
             String[] localArray = groups.split(",");
@@ -346,11 +347,11 @@ public class ViewPagerActivity extends AppCompatActivity
     private void AddDataFromBases()
     {
         mainSaver = new RealmSportsmenSaver(this, "MAIN");
-        saver = new RealmSportsmenSaver(this, _currentCompetition.GetDbParticipantPath());
+        saver = new RealmSportsmenSaver(this, _currentCompetition.getDbParticipantPath());
 
         if(_needDeleteTables)
         {
-            GenerateStandartParticipants(_currentCompetition.GetStartNumber(), _currentCompetition.GetMaxParticipantCount());
+            GenerateStandartParticipants(_currentCompetition.getStartNumber(), _currentCompetition.getMaxParticipantCount());
         }
         else
         {
@@ -409,7 +410,7 @@ public class ViewPagerActivity extends AppCompatActivity
         _progressDialog.setMessage("Подождите. Идет загрузка...");
         _progressDialog.setIndeterminate(false);
         _progressDialog.setCancelable(false);
-        _progressDialog.setMax(_currentCompetition.GetMaxParticipantCount());
+        _progressDialog.setMax(_currentCompetition.getMaxParticipantCount());
         _progressDialog.show();
         CreateTableOfSportsman createTableOfSportsman = new CreateTableOfSportsman();
         createTableOfSportsman.execute();
@@ -611,13 +612,12 @@ public class ViewPagerActivity extends AppCompatActivity
 
     public void OnClickAcceptParticipant(View view)
     {
-        CompetitionSaver competitionSaver = new CompetitionSaver(this);
-        competitionSaver.SaveCompetitionToDatabase(_currentCompetition);
+        // Со
         _needDeleteTables = false;
         Toast.makeText(getApplicationContext(),"Сохранить список и перейти к соревнованию",Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, CompetitionsActivity.class);
-        intent.putExtra("Name", _currentCompetition.GetName());
-        intent.putExtra("Date", _currentCompetition.GetDate());
+        intent.putExtra("Name", _currentCompetition.getName());
+        intent.putExtra("Date", _currentCompetition.getDate());
         startActivity(intent);
     }
 
@@ -842,8 +842,7 @@ public class ViewPagerActivity extends AppCompatActivity
         mainSaver.Dispose();
         if(_needDeleteTables)
         {
-            DatabaseProvider provider = new DatabaseProvider(ViewPagerActivity.this);
-            provider.DeleteTable(_currentCompetition.GetSettingsPath());
+            // Удаляем соревнование
             saver.DeleteTable();
         }
     }
@@ -878,7 +877,7 @@ public class ViewPagerActivity extends AppCompatActivity
                 }
             }
 
-        if((_currentCompetition.GetStartNumber() + _currentCompetition.GetMaxParticipantCount()) - 1 < number || _currentCompetition.GetStartNumber() > number)
+        if((_currentCompetition.getStartNumber() + _currentCompetition.getMaxParticipantCount()) - 1 < number || _currentCompetition.getStartNumber() > number)
             return false;
         else
             return true;
@@ -937,8 +936,8 @@ public class ViewPagerActivity extends AppCompatActivity
 
     private class CreateTableOfSportsman extends AsyncTask<Void, Sportsman, Void>
     {
-        private int _firstNumber = _currentCompetition.GetStartNumber();
-        private int _count = _currentCompetition.GetStartNumber() +  _currentCompetition.GetMaxParticipantCount();
+        private int _firstNumber = _currentCompetition.getStartNumber();
+        private int _count = _currentCompetition.getStartNumber() +  _currentCompetition.getMaxParticipantCount();
         @Override
         protected Void doInBackground(Void... params) {
             try {

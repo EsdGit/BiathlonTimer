@@ -33,10 +33,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.esd.esd.biathlontimer.Competition;
-import com.esd.esd.biathlontimer.CompetitionTableAdapter;
+import com.esd.esd.biathlontimer.Adapters.CompetitionTableAdapter;
+import com.esd.esd.biathlontimer.DatabaseClasses.RealmCompetitionSaver;
 import com.esd.esd.biathlontimer.DatabaseClasses.RealmMegaSportsmanSaver;
 import com.esd.esd.biathlontimer.DatabaseClasses.RealmSportsmenSaver;
-import com.esd.esd.biathlontimer.GridViewAdapter;
+import com.esd.esd.biathlontimer.Adapters.GridViewAdapter;
 import com.esd.esd.biathlontimer.MegaSportsman;
 import com.esd.esd.biathlontimer.MyButton;
 import com.esd.esd.biathlontimer.PagerAdapterHelper;
@@ -119,9 +120,9 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         _currentInterval = new android.text.format.Time();
         _button = new MyButton(this);
 
-        _currentCompetition = new Competition(getIntent().getStringExtra("Name"), getIntent().getStringExtra("Date"), this);
-        _currentCompetition.GetAllSettingsToComp();
-
+        RealmCompetitionSaver saverComp = new RealmCompetitionSaver(this, "COMPETITIONS");
+        _currentCompetition = saverComp.GetCompetition(getIntent().getStringExtra("Name"), getIntent().getStringExtra("Date"));
+        saverComp.Dispose();
         _competitionState = CompetitionState.NotStarted;
 
         LayoutInflater inflater = LayoutInflater.from(this);
@@ -171,8 +172,8 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
                     _timer.cancel();
                     SaveResultsToDatabase();
                     Intent intent = new Intent(CompetitionsActivity.this, FinalActivity.class);
-                    intent.putExtra("Name", _currentCompetition.GetName());
-                    intent.putExtra("Date", _currentCompetition.GetDate());
+                    intent.putExtra("Name", _currentCompetition.getName());
+                    intent.putExtra("Date", _currentCompetition.getDate());
                     startActivity(intent);
                     CompetitionsActivity.this.finish();
                 }
@@ -212,8 +213,8 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 int fineCount = _dialogSeekBar.getProgress();
-                int fineSeconds = Integer.valueOf(_currentCompetition.GetFineTime().split(":")[1]);
-                int fineMinutes = Integer.valueOf(_currentCompetition.GetFineTime().split(":")[0]);
+                int fineSeconds = Integer.valueOf(_currentCompetition.getFineTime().split(":")[1]);
+                int fineMinutes = Integer.valueOf(_currentCompetition.getFineTime().split(":")[0]);
                 android.text.format.Time fineTime = new android.text.format.Time();
                 TextView NumberStr = (TextView) _dialogOwnerView.findViewById(R.id.numberParticipantMyButton);
                 TextView LapStr = (TextView) _dialogOwnerView.findViewById(R.id.lapParticipantMyButton);
@@ -248,7 +249,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
 
         _fineDialog = _builderFineDialog.create();
 
-        lapsCount = Integer.valueOf(_currentCompetition.GetCheckPointsCount());
+        lapsCount = _currentCompetition.getCheckPointsCount();
         _arrayMegaSportsmen = new ArrayList[lapsCount];
         for (int i = 0; i < lapsCount; i++) {
             _arrayMegaSportsmen[i] = new ArrayList<MegaSportsman>();
@@ -416,15 +417,15 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
 
     private void TimerStartPosition()
     {
-        if(_currentCompetition.GetStartType().equals(getResources().getString(R.string.item_type_mas_start)))
+        if(_currentCompetition.getStartType().equals(getResources().getString(R.string.item_type_mas_start)))
         {
             _currentInterval.second = 0;
             _currentInterval.minute = 0;
         }
         else
         {
-            _currentInterval.second = Integer.valueOf(_currentCompetition.GetInterval().split(":")[1]);
-            _currentInterval.minute = Integer.valueOf(_currentCompetition.GetInterval().split(":")[0]);
+            _currentInterval.second = Integer.valueOf(_currentCompetition.getInterval().split(":")[1]);
+            _currentInterval.minute = Integer.valueOf(_currentCompetition.getInterval().split(":")[0]);
         }
 
 
@@ -433,8 +434,8 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
 
         _competitionTimer.setTextColor(getResources().getColor(R.color.timerStart));
         _timerParticipantTable.setTextColor(getResources().getColor(R.color.timerStart));
-        _competitionTimer.setText(_currentCompetition.GetTimeToStart());
-        _timerParticipantTable.setText(_currentCompetition.GetTimeToStart());
+        _competitionTimer.setText(_currentCompetition.getTimeToStart());
+        _timerParticipantTable.setText(_currentCompetition.getTimeToStart());
     }
 
     private void GetPlace(MegaSportsman sportsman, int lap)
@@ -474,22 +475,22 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
             while(true) {
                 if (android.text.format.Time.compare(_currentTime, _timeNextParticipant) == 0 && _number < _megaSportsmen.length) {
 
-                    if (!_currentCompetition.GetSecondInterval().equals("")) {
-                        if (_number == Integer.valueOf(_currentCompetition.GetNumberSecondInterval()) - 1) {
-                            _currentInterval.second = Integer.valueOf(_currentCompetition.GetSecondInterval().split(":")[1]);
-                            _currentInterval.minute = Integer.valueOf(_currentCompetition.GetSecondInterval().split(":")[0]);
+                    if (!_currentCompetition.getSecondInterval().equals("")) {
+                        if (_number == Integer.valueOf(_currentCompetition.getNumberSecondInterval()) - 1) {
+                            _currentInterval.second = Integer.valueOf(_currentCompetition.getSecondInterval().split(":")[1]);
+                            _currentInterval.minute = Integer.valueOf(_currentCompetition.getSecondInterval().split(":")[0]);
                         }
                     }
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            if (_currentCompetition.GetStartType().equals(getResources().getString(R.string.item_type_single_start))) {
+                            if (_currentCompetition.getStartType().equals(getResources().getString(R.string.item_type_single_start))) {
                                 //_participantGridLayout.addView(CreateButton(_megaSportsmen[_number], "0"));
                                 _megaSportsmen[_number].setStartTime(_currentTime);
                                 _viewAdapter.AddSportsman(_megaSportsmen[_number]);
                                 _number++;
                             } else {
-                                if (_currentCompetition.GetStartType().equals(getResources().getString(R.string.item_type_double_start))) {
+                                if (_currentCompetition.getStartType().equals(getResources().getString(R.string.item_type_double_start))) {
                                     //_participantGridLayout.addView(CreateButton(_megaSportsmen[_number], "0"));
                                     _megaSportsmen[_number].setStartTime(_currentTime);
                                     _viewAdapter.AddSportsman(_megaSportsmen[_number]);
@@ -532,8 +533,8 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
             _isPaused = false;
             //_startBtn.setText(getResources().getString(R.string.stop_timer));
             final android.text.format.Time timeCountDown = new android.text.format.Time();
-            timeCountDown.minute = Integer.valueOf(_currentCompetition.GetTimeToStart().split(":")[0]);
-            timeCountDown.second = Integer.valueOf(_currentCompetition.GetTimeToStart().split(":")[1]);
+            timeCountDown.minute = Integer.valueOf(_currentCompetition.getTimeToStart().split(":")[0]);
+            timeCountDown.second = Integer.valueOf(_currentCompetition.getTimeToStart().split(":")[1]);
             final long ms1 = timeCountDown.minute*60000+timeCountDown.second*1000;
 
             _currentTime = new android.text.format.Time(_timeNextParticipant);
@@ -571,14 +572,14 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
                 {
                     _timer = new Timer();
                     _timer.schedule(task, 0,100);
-                    if(!_currentCompetition.GetStartType().equals(getResources().getString(R.string.item_type_mas_start)))
+                    if(!_currentCompetition.getStartType().equals(getResources().getString(R.string.item_type_mas_start)))
                     {
                         if(!thread.isAlive()) thread.start();
                     }
                     _competitionTimer.setTextColor(getResources().getColor(R.color.white));
                     _timerParticipantTable.setTextColor(getResources().getColor(R.color.white));
                     _competitionState = CompetitionState.Running;
-                    if(_currentCompetition.GetStartType().equals(getResources().getString(R.string.item_type_mas_start)))
+                    if(_currentCompetition.getStartType().equals(getResources().getString(R.string.item_type_mas_start)))
                     {
                         for(int i = 0; i < _megaSportsmen.length; i++)
                         {
@@ -678,9 +679,9 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
     {
         for(int i = 0; i < lapsCount; i++)
         {
-            RealmMegaSportsmanSaver megaSportsmanSaver = new RealmMegaSportsmanSaver(this, "LAP"+i+_currentCompetition.GetNameDateString());
+            RealmMegaSportsmanSaver megaSportsmanSaver = new RealmMegaSportsmanSaver(this, "LAP"+i+_currentCompetition.getNameDateString());
             megaSportsmanSaver.DeleteTable();
-            megaSportsmanSaver = new RealmMegaSportsmanSaver(this, "LAP"+i+_currentCompetition.GetNameDateString());
+            megaSportsmanSaver = new RealmMegaSportsmanSaver(this, "LAP"+i+_currentCompetition.getNameDateString());
             megaSportsmanSaver.SaveSportsmen(_arrayMegaSportsmen[i]);
         }
     }
@@ -738,7 +739,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         @Override
         protected Void doInBackground(Void... params)
         {
-            RealmSportsmenSaver saver = new RealmSportsmenSaver(getApplicationContext(), _currentCompetition.GetDbParticipantPath());
+            RealmSportsmenSaver saver = new RealmSportsmenSaver(getApplicationContext(), _currentCompetition.getDbParticipantPath());
             List<Sportsman> list = saver.GetSportsmen("number", true);
             _megaSportsmen = new MegaSportsman[list.size()];
             for(int i = 0; i<list.size(); i++)
@@ -766,7 +767,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
             dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
             dialog.setIndeterminate(false);
             dialog.setCancelable(false);
-            dialog.setMax(_currentCompetition.GetMaxParticipantCount());
+            dialog.setMax(_currentCompetition.getMaxParticipantCount());
             dialog.show();
         }
 
