@@ -170,7 +170,7 @@
             android:gravity="center"
             android:textSize="@dimen/title_text_size"
             android:textStyle="bold"
-            android:layout_weight="2.5"
+            android:layout_weight="1.7"
             android:background="#ffffff"/>
 
         <TextView
@@ -220,6 +220,23 @@
             android:textSize="@dimen/title_text_size"
             android:layout_weight="0.7"
             android:background="#ffffff"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/startTimeParticipantList"
+            android:typeface="serif"
+            android:layout_marginRight="1dp"
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="1dp"
+            android:textColor="#000000"
+            android:text="@string/strat_time_col_title"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textSize="@dimen/title_text_size"
+            android:layout_weight="0.8"
+            android:background="#ffffff"/>
+
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView

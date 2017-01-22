@@ -451,7 +451,7 @@ public class ViewPagerActivity extends AppCompatActivity
         _deleteParticipantImBtn = (ImageButton) page1.findViewById(R.id.delete_participant);
         _editParticipantImBtn = (ImageButton) page1.findViewById(R.id.edit_participant);
 
-        _nameOfParticipantList.setText(Html.fromHtml("<font>"  + "<big>" + getResources().getString(R.string.participant_list_actvity_head) + "</big>" + "</font>"));
+        _nameOfParticipantList.setText(Html.fromHtml("<font>"  + "<big>"  + getResources().getString(R.string.participant_list_actvity_head) +  "</big>" + "</font>"));
 
         _nameDialog = (EditText) _dialogForm.findViewById(R.id.dialogName);
         _birthdayDialog = (EditText) _dialogForm.findViewById(R.id.dialogBirthday);
