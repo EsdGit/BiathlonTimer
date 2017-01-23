@@ -33,6 +33,7 @@ import com.esd.esd.biathlontimer.R;
 
 import net.rdrei.android.dirchooser.DirectoryChooserActivity;
 import net.rdrei.android.dirchooser.DirectoryChooserConfig;
+import net.rdrei.android.dirchooser.DirectoryChooserFragment;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -204,8 +205,6 @@ public class FinalActivity extends AppCompatActivity {
                         .allowReadOnlyDirectory(true)
                         .allowNewDirectoryNameModification(true)
                         .build();
-
-                chooserIntent.putExtra(DirectoryChooserActivity.EXTRA_CONFIG, config);
 
                 startActivityForResult(chooserIntent, REQUEST_DIRECTORY);
                 Toast.makeText(getApplicationContext(),"Сохранить файл",Toast.LENGTH_SHORT).show();

@@ -3,12 +3,14 @@ package com.esd.esd.biathlontimer.Adapters;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.Time;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.esd.esd.biathlontimer.Activities.ViewPagerActivity;
+import com.esd.esd.biathlontimer.Competition;
 import com.esd.esd.biathlontimer.R;
 import com.esd.esd.biathlontimer.Sportsman;
 
@@ -25,10 +27,20 @@ public class RecyclerViewLocalDatabaseAdapter extends RecyclerView.Adapter<Recyc
     private boolean _haveMarkedParticipant = false;
     private int _countMarkedParticipant = 0;
     private Context _localContext;
+    private String _competitionType;
+    private String _interval;
+    private String _secondInterval;
+    private String _numberSecondInterval;
+    private int _startNumber;
 
-    public RecyclerViewLocalDatabaseAdapter(Context context, List<Sportsman> sportsmen)
+    public RecyclerViewLocalDatabaseAdapter(Context context, List<Sportsman> sportsmen, Competition competition)
     {
         _localContext = context;
+        _competitionType = competition.getStartType();
+        _interval = competition.getInterval();
+        _secondInterval = competition.getSecondInterval();
+        _numberSecondInterval = competition.getNumberSecondInterval();
+        _startNumber = competition.getStartNumber();
         this.sportsmen = sportsmen;
     }
 
@@ -48,6 +60,7 @@ public class RecyclerViewLocalDatabaseAdapter extends RecyclerView.Adapter<Recyc
         holder.yearTextView.setText(String.valueOf(sportsman.getYear()));
         holder.countryTextView.setText(sportsman.getCountry());
         holder.groupTextView.setText(sportsman.getGroup());
+        holder.startTimeTextView.setText(GetStartTime(sportsman));
 
         holder.nameTextView.setTextColor(sportsman.getColor());
         holder.yearTextView.setTextColor(sportsman.getColor());
@@ -78,6 +91,59 @@ public class RecyclerViewLocalDatabaseAdapter extends RecyclerView.Adapter<Recyc
 
     }
 
+    private String GetStartTime(Sportsman sportsman)
+    {
+        Time startTime = new Time();
+        boolean isFirstInterval = true;
+        if(sportsman.getNumber() < Integer.valueOf(_numberSecondInterval))
+        {
+            startTime.second = Integer.valueOf(_interval.split(":")[1]);
+            startTime.minute = Integer.valueOf(_interval.split(":")[0]);
+        }
+        else
+        {
+            startTime.second = Integer.valueOf(_secondInterval.split(":")[1]);
+            startTime.minute = Integer.valueOf(_secondInterval.split(":")[0]);
+            isFirstInterval = false;
+        }
+        int number;
+        if(_competitionType.equals(_localContext.getString(R.string.item_type_single_start)))
+        {
+            if(isFirstInterval) {
+                number = sportsman.getNumber() - _startNumber + 1;
+                startTime.second = startTime.second * number;
+                startTime.minute = startTime.minute * number;
+                startTime.normalize(false);
+                return startTime.format("%H:%M:%S");
+            }else
+            {
+                number = sportsman.getNumber() - Integer.valueOf(_numberSecondInterval) + 1;
+                int numberFirstInterval = Integer.valueOf(_numberSecondInterval) - _startNumber;
+                Time startTimeSec = new Time();
+                startTimeSec.second = Integer.valueOf(_interval.split(":")[1]);
+                startTimeSec.minute = Integer.valueOf(_interval.split(":")[0]);
+                startTimeSec.second = startTimeSec.second*numberFirstInterval;
+                startTimeSec.minute = startTimeSec.minute*numberFirstInterval;
+                startTimeSec.normalize(false);
+                startTime.second = startTime.second * number;
+                startTime.minute = startTime.minute * number;
+                startTime.normalize(false);
+                startTime.second += startTimeSec.second;
+                startTime.minute += startTimeSec.minute;
+                startTime.hour += startTimeSec.hour;
+                startTime.normalize(false);
+                return startTime.format("%H:%M:%S");
+            }
+        }
+        else
+        {
+            if(_competitionType.equals(_localContext.getString(R.string.item_type_double_start)))
+            {
+
+            }
+        }
+        return "00:00:00";
+    }
 
     @Override
     public void SortList(List<Sportsman> sortedList)
@@ -171,6 +237,7 @@ public class RecyclerViewLocalDatabaseAdapter extends RecyclerView.Adapter<Recyc
         private TextView yearTextView;
         private TextView countryTextView;
         private TextView groupTextView;
+        private TextView startTimeTextView;
         private LongClickListener longClickListener;
         private ClickListener clickListener;
 
@@ -182,6 +249,7 @@ public class RecyclerViewLocalDatabaseAdapter extends RecyclerView.Adapter<Recyc
             yearTextView = (TextView) itemView.findViewById(R.id.year);
             countryTextView = (TextView) itemView.findViewById(R.id.country);
             groupTextView = (TextView) itemView.findViewById(R.id.group);
+            startTimeTextView = (TextView) itemView.findViewById(R.id.timeStart);
             longClickListener = new LongClickListener();
             clickListener = new ClickListener();
             itemView.setOnLongClickListener(longClickListener);

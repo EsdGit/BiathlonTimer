@@ -355,7 +355,7 @@ public class ViewPagerActivity extends AppCompatActivity
         }
         else
         {
-            _recyclerViewLocalDatabaseAdapter = new RecyclerViewLocalDatabaseAdapter(this, saver.GetSportsmen("number", true));
+            _recyclerViewLocalDatabaseAdapter = new RecyclerViewLocalDatabaseAdapter(this, saver.GetSportsmen("number", true), _currentCompetition);
             LinearLayoutManager layoutManager = new LinearLayoutManager(this);
             RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
 
@@ -966,7 +966,7 @@ public class ViewPagerActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            _recyclerViewLocalDatabaseAdapter = new RecyclerViewLocalDatabaseAdapter(getApplicationContext(), saver.GetSportsmen("number", true));
+            _recyclerViewLocalDatabaseAdapter = new RecyclerViewLocalDatabaseAdapter(getApplicationContext(), saver.GetSportsmen("number", true), _currentCompetition);
             LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
             RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
             _recyclerView.setAdapter(_recyclerViewLocalDatabaseAdapter);
