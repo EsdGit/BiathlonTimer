@@ -67,6 +67,7 @@ public class RecyclerViewLocalDatabaseAdapter extends RecyclerView.Adapter<Recyc
         holder.numberTextView.setTextColor(sportsman.getColor());
         holder.countryTextView.setTextColor(sportsman.getColor());
         holder.groupTextView.setTextColor(sportsman.getColor());
+        holder.startTimeTextView.setTextColor(sportsman.getColor());
 
         holder.longClickListener.setSportsman(sportsman);
         holder.clickListener.setSportsman(sportsman);
@@ -78,6 +79,7 @@ public class RecyclerViewLocalDatabaseAdapter extends RecyclerView.Adapter<Recyc
             holder.yearTextView.setBackgroundColor(color);
             holder.countryTextView.setBackgroundColor(color);
             holder.groupTextView.setBackgroundColor(color);
+            holder.startTimeTextView.setBackgroundColor(color);
         }
         else
         {
@@ -86,6 +88,7 @@ public class RecyclerViewLocalDatabaseAdapter extends RecyclerView.Adapter<Recyc
             holder.yearTextView.setBackgroundColor(Color.WHITE);
             holder.countryTextView.setBackgroundColor(Color.WHITE);
             holder.groupTextView.setBackgroundColor(Color.WHITE);
+            holder.startTimeTextView.setBackgroundColor(Color.WHITE);
         }
 
 

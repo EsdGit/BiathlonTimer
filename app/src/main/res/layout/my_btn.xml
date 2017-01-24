@@ -8,9 +8,9 @@
 
 
     <FrameLayout
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_margin="7.5dp"
+        android:layout_width="59dp"
+        android:layout_height="59dp"
+        android:layout_margin="8dp"
         android:id="@+id/backgroundMyButton"
         android:background="#ff0000">
 
@@ -25,9 +25,9 @@
     </FrameLayout>
 
     <FrameLayout
-        android:layout_width="62dp"
-        android:layout_height="62dp"
-        android:layout_margin="6.5dp">
+        android:layout_width="63dp"
+        android:layout_height="63dp"
+        android:layout_margin="6dp">
 
         <View
             android:layout_width="match_parent"
