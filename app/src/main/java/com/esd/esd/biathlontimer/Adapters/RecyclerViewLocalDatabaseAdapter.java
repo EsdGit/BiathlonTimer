@@ -98,25 +98,26 @@ public class RecyclerViewLocalDatabaseAdapter extends RecyclerView.Adapter<Recyc
     {
         Time startTime = new Time();
         boolean isFirstInterval = true;
-        if(!_numberSecondInterval.equals(""))
-        {
-            if (sportsman.getNumber() < Integer.valueOf(_numberSecondInterval)) {
-                startTime.second = Integer.valueOf(_interval.split(":")[1]);
-                startTime.minute = Integer.valueOf(_interval.split(":")[0]);
-            } else {
-                startTime.second = Integer.valueOf(_secondInterval.split(":")[1]);
-                startTime.minute = Integer.valueOf(_secondInterval.split(":")[0]);
-                isFirstInterval = false;
-            }
-        }
-        else
-        {
-            startTime.second = Integer.valueOf(_interval.split(":")[1]);
-            startTime.minute = Integer.valueOf(_interval.split(":")[0]);
-        }
+
         int number;
         if(_competitionType.equals(_localContext.getString(R.string.item_type_single_start)))
         {
+            if(!_numberSecondInterval.equals(""))
+            {
+                if (sportsman.getNumber() < Integer.valueOf(_numberSecondInterval)) {
+                    startTime.second = Integer.valueOf(_interval.split(":")[1]);
+                    startTime.minute = Integer.valueOf(_interval.split(":")[0]);
+                } else {
+                    startTime.second = Integer.valueOf(_secondInterval.split(":")[1]);
+                    startTime.minute = Integer.valueOf(_secondInterval.split(":")[0]);
+                    isFirstInterval = false;
+                }
+            }
+            else
+            {
+                startTime.second = Integer.valueOf(_interval.split(":")[1]);
+                startTime.minute = Integer.valueOf(_interval.split(":")[0]);
+            }
             if(isFirstInterval) {
                 number = sportsman.getNumber() - _startNumber + 1;
                 startTime.second = startTime.second * number;
@@ -147,18 +148,37 @@ public class RecyclerViewLocalDatabaseAdapter extends RecyclerView.Adapter<Recyc
         {
             if(_competitionType.equals(_localContext.getString(R.string.item_type_double_start)))
             {
+                number = sportsman.getNumber() - _startNumber + 1;
+                if((number % 2) == 0)
+                {
+                    number /= 2;
+                }
+                else
+                {
+                    number/=2;
+                    number++;
+                }
+                if(!_numberSecondInterval.equals(""))
+                {
+                    if (number < Integer.valueOf(_numberSecondInterval))
+                    {
+                        startTime.second = Integer.valueOf(_interval.split(":")[1]);
+                        startTime.minute = Integer.valueOf(_interval.split(":")[0]);
+                    } else
+                    {
+                        startTime.second = Integer.valueOf(_secondInterval.split(":")[1]);
+                        startTime.minute = Integer.valueOf(_secondInterval.split(":")[0]);
+                        isFirstInterval = false;
+                    }
+                }
+                else
+                {
+                    startTime.second = Integer.valueOf(_interval.split(":")[1]);
+                    startTime.minute = Integer.valueOf(_interval.split(":")[0]);
+                }
                 if(isFirstInterval)
                 {
-                    number = sportsman.getNumber() - _startNumber + 1;
-                    if((sportsman.getNumber() % 2) == 0)
-                    {
-                        number /= 2;
-                    }
-                    else
-                    {
-                        number/=2;
-                        number++;
-                    }
+
                     startTime.second = startTime.second * number;
                     startTime.minute = startTime.minute * number;
                     startTime.normalize(false);
@@ -166,8 +186,20 @@ public class RecyclerViewLocalDatabaseAdapter extends RecyclerView.Adapter<Recyc
                 }
                 else
                 {
-                    number = sportsman.getNumber() - Integer.valueOf(_numberSecondInterval) + 1;
-                    int numberFirstInterval = Integer.valueOf(_numberSecondInterval) - _startNumber;
+                    number = sportsman.getNumber() - _startNumber + 1;
+                    int numberFirstInterval;
+                    if(number % 2 == 0)
+                    {
+                        number /= 2;
+                    }
+                    else
+                    {
+                        number /= 2;
+                        number++;
+                    }
+
+                    numberFirstInterval = Integer.valueOf(_numberSecondInterval) - 1;
+                    number = number - Integer.valueOf(_numberSecondInterval) + 1;
                     Time startTimeSec = new Time();
                     startTimeSec.second = Integer.valueOf(_interval.split(":")[1]);
                     startTimeSec.minute = Integer.valueOf(_interval.split(":")[0]);
