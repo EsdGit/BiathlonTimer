@@ -98,16 +98,20 @@ public class RecyclerViewLocalDatabaseAdapter extends RecyclerView.Adapter<Recyc
     {
         Time startTime = new Time();
         boolean isFirstInterval = true;
-        if(sportsman.getNumber() < Integer.valueOf(_numberSecondInterval))
+        if(!_numberSecondInterval.equals(""))
         {
-            startTime.second = Integer.valueOf(_interval.split(":")[1]);
-            startTime.minute = Integer.valueOf(_interval.split(":")[0]);
+            if (sportsman.getNumber() < Integer.valueOf(_numberSecondInterval)) {
+                startTime.second = Integer.valueOf(_interval.split(":")[1]);
+                startTime.minute = Integer.valueOf(_interval.split(":")[0]);
+            } else {
+                startTime.second = Integer.valueOf(_secondInterval.split(":")[1]);
+                startTime.minute = Integer.valueOf(_secondInterval.split(":")[0]);
+                isFirstInterval = false;
+            }
         }
         else
         {
-            startTime.second = Integer.valueOf(_secondInterval.split(":")[1]);
-            startTime.minute = Integer.valueOf(_secondInterval.split(":")[0]);
-            isFirstInterval = false;
+            
         }
         int number;
         if(_competitionType.equals(_localContext.getString(R.string.item_type_single_start)))
@@ -142,7 +146,42 @@ public class RecyclerViewLocalDatabaseAdapter extends RecyclerView.Adapter<Recyc
         {
             if(_competitionType.equals(_localContext.getString(R.string.item_type_double_start)))
             {
-
+                if(isFirstInterval)
+                {
+                    number = sportsman.getNumber() - _startNumber + 1;
+                    if((sportsman.getNumber() % 2) == 0)
+                    {
+                        number /= 2;
+                    }
+                    else
+                    {
+                        number/=2;
+                        number++;
+                    }
+                    startTime.second = startTime.second * number;
+                    startTime.minute = startTime.minute * number;
+                    startTime.normalize(false);
+                    return startTime.format("%H:%M:%S");
+                }
+                else
+                {
+                    number = sportsman.getNumber() - Integer.valueOf(_numberSecondInterval) + 1;
+                    int numberFirstInterval = Integer.valueOf(_numberSecondInterval) - _startNumber;
+                    Time startTimeSec = new Time();
+                    startTimeSec.second = Integer.valueOf(_interval.split(":")[1]);
+                    startTimeSec.minute = Integer.valueOf(_interval.split(":")[0]);
+                    startTimeSec.second = startTimeSec.second*numberFirstInterval;
+                    startTimeSec.minute = startTimeSec.minute*numberFirstInterval;
+                    startTimeSec.normalize(false);
+                    startTime.second = startTime.second * number;
+                    startTime.minute = startTime.minute * number;
+                    startTime.normalize(false);
+                    startTime.second += startTimeSec.second;
+                    startTime.minute += startTimeSec.minute;
+                    startTime.hour += startTimeSec.hour;
+                    startTime.normalize(false);
+                    return startTime.format("%H:%M:%S");
+                }
             }
         }
         return "00:00:00";
