@@ -396,6 +396,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
             }
             if (lap == lapsCount - 1)
             {
+                _viewAdapter.ChangeSportsmanLap(number, 0);
                 _viewAdapter.RemoveSportsman(number);
             }
         }
