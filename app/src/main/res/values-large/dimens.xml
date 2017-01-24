@@ -6,6 +6,7 @@
     <dimen name="normal_text_size">28sp</dimen>
     <dimen name="text_size_double_table">18sp</dimen>
     <dimen name="title_text_size_double_table">22sp</dimen>
+    <dimen name="text_size_last_step">28sp</dimen>
 
     <!-- indent -->
     <dimen name="large_fab_margin">48dp</dimen>

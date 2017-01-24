@@ -8,5 +8,6 @@
     <!-- indent -->
     <dimen name="small_indent">24dp</dimen>
     <dimen name="normal_indent">32dp</dimen>
+    <dimen name="text_size_last_step">10.25sp</dimen>
 
 </resources>

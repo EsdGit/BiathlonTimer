@@ -273,7 +273,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         newTextView.setGravity(Gravity.CENTER);
         newTextView.setTextColor(Color.BLACK);
         newTextView.setBackground(new PaintDrawable(Color.WHITE));
-        newTextView.setTextSize(getResources().getDimension(R.dimen.normal_text_size));
+        newTextView.setTextSize(getResources().getDimension(R.dimen.text_size_last_step));
         newTextView.setLayoutParams(new TableRow.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 8f));
         ((TableRow.LayoutParams) newTextView.getLayoutParams()).setMargins(2, 0, 2, 2);
         final TextView newTextView2 = new TextView(this);
@@ -281,7 +281,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         newTextView2.setGravity(Gravity.CENTER);
         newTextView2.setTextColor(Color.BLACK);
         newTextView2.setBackground(new PaintDrawable(Color.WHITE));
-        newTextView2.setTextSize(getResources().getDimension(R.dimen.normal_text_size));
+        newTextView2.setTextSize(getResources().getDimension(R.dimen.text_size_last_step));
         newTextView2.setLayoutParams(new TableRow.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 8f));
         ((TableRow.LayoutParams) newTextView2.getLayoutParams()).setMargins(0, 0, 2, 2);
         final TextView newTextView3 = new TextView(this);
@@ -289,7 +289,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         newTextView3.setGravity(Gravity.CENTER);
         newTextView3.setTextColor(Color.BLACK);
         newTextView3.setBackground(new PaintDrawable(Color.WHITE));
-        newTextView3.setTextSize(getResources().getDimension(R.dimen.normal_text_size));
+        newTextView3.setTextSize(getResources().getDimension(R.dimen.text_size_last_step));
         newTextView3.setLayoutParams(new TableRow.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 30f));
         ((TableRow.LayoutParams) newTextView3.getLayoutParams()).setMargins(0, 0, 2, 2);
         final TextView newTextView4 = new TextView(this);
@@ -297,7 +297,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         newTextView4.setGravity(Gravity.CENTER);
         newTextView4.setTextColor(Color.BLACK);
         newTextView4.setBackground(new PaintDrawable(Color.WHITE));
-        newTextView4.setTextSize(getResources().getDimension(R.dimen.normal_text_size));
+        newTextView4.setTextSize(getResources().getDimension(R.dimen.text_size_last_step));
         newTextView4.setLayoutParams(new TableRow.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 14f));
         ((TableRow.LayoutParams) newTextView4.getLayoutParams()).setMargins(0, 0, 2, 2);
         final TextView newTextView5 = new TextView(this);
@@ -305,7 +305,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         newTextView5.setGravity(Gravity.CENTER);
         newTextView5.setTextColor(Color.BLACK);
         newTextView5.setBackground(new PaintDrawable(Color.WHITE));
-        newTextView5.setTextSize(getResources().getDimension(R.dimen.normal_text_size));
+        newTextView5.setTextSize(getResources().getDimension(R.dimen.text_size_last_step));
         newTextView5.setLayoutParams(new TableRow.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 20f));
         ((TableRow.LayoutParams) newTextView5.getLayoutParams()).setMargins(0, 0, 2, 2);
         final TextView newTextView6 = new TextView(this);
@@ -313,7 +313,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         newTextView6.setGravity(Gravity.CENTER);
         newTextView6.setTextColor(Color.BLACK);
         newTextView6.setBackground(new PaintDrawable(Color.WHITE));
-        newTextView6.setTextSize(getResources().getDimension(R.dimen.normal_text_size));
+        newTextView6.setTextSize(getResources().getDimension(R.dimen.text_size_last_step));
         newTextView6.setLayoutParams(new TableRow.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 20f));
         ((TableRow.LayoutParams) newTextView6.getLayoutParams()).setMargins(0, 0, 2, 2);
         newRow.addView(newTextView);
@@ -335,7 +335,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         newTextView.setGravity(Gravity.CENTER);
         newTextView.setTextColor(Color.BLACK);
         newTextView.setBackground(new PaintDrawable(Color.WHITE));
-        newTextView.setTextSize(getResources().getDimension(R.dimen.normal_text_size));
+        newTextView.setTextSize(getResources().getDimension(R.dimen.text_size_last_step));
         newTextView.setLayoutParams(new TableRow.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT,100f));
         ((TableRow.LayoutParams) newTextView.getLayoutParams()).setMargins(2, 0, 2, 2);
         newRow.addView(newTextView);
