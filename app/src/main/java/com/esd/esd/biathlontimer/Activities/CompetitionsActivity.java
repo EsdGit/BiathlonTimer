@@ -694,6 +694,11 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
             megaSportsmanSaver = new RealmMegaSportsmanSaver(this, "LAP"+i+_currentCompetition.getNameDateString());
             megaSportsmanSaver.SaveSportsmen(_arrayMegaSportsmen[i]);
         }
+        RealmCompetitionSaver compSaver = new RealmCompetitionSaver(this, "COMPETITIONS");
+        compSaver.DeleteCompetition(_currentCompetition);
+        _currentCompetition.setFinished(true);
+        compSaver.SaveCompetition(_currentCompetition);
+        compSaver.Dispose();
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event)

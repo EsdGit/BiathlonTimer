@@ -8,7 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.esd.esd.biathlontimer.Activities.FinalActivity;
 import com.esd.esd.biathlontimer.Activities.MainActivity;
 import com.esd.esd.biathlontimer.Activities.ViewPagerActivity;
 import com.esd.esd.biathlontimer.Competition;
@@ -136,6 +138,15 @@ public class CompetitionAdapter extends RecyclerView.Adapter<CompetitionAdapter.
         {
             if(!_haveMarkedCompetition)
             {
+                if(competition.isFinished())
+                {
+                    Intent finalIntent = new Intent(_localContext.getApplicationContext(), FinalActivity.class);
+                    finalIntent.putExtra("Name", competition.getName());
+                    finalIntent.putExtra("Date", competition.getDate());
+                    _localContext.startActivity(finalIntent);
+                }
+                else
+                {
                     Intent myIntent = new Intent(_localContext.getApplicationContext(), ViewPagerActivity.class);
                     myIntent.putExtra("CompetitionName", competition.getName());
                     myIntent.putExtra("CompetitionDate", competition.getDate());
@@ -145,6 +156,7 @@ public class CompetitionAdapter extends RecyclerView.Adapter<CompetitionAdapter.
                     myIntent.putExtra("NeedDelete", "false");
                     myIntent.putExtra("ArrayGroup", new String[]{});
                     _localContext.startActivity(myIntent);
+                }
             }
             else
             {
