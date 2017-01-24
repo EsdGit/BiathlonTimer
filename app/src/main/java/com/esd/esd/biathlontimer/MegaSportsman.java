@@ -91,6 +91,7 @@ public class MegaSportsman extends RealmObject implements ISportsman
         this.group = group;
         this.color = color;
         _currentLap = 0;
+        _fineCount = 0;
     }
 
 //    public void setLapsCount(int lapsCount)

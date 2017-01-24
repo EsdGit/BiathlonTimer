@@ -988,7 +988,7 @@ public class ViewPagerActivity extends AppCompatActivity
 
         private void SleepProgress(int floor) throws InterruptedException {
             //TimeUnit.NANOSECONDS.sleep(1000);
-            TimeUnit.MILLISECONDS.sleep(5);
+            TimeUnit.MILLISECONDS.sleep(1);
         }
     }
 

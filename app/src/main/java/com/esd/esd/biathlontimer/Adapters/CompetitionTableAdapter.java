@@ -45,12 +45,15 @@ public class CompetitionTableAdapter extends RecyclerView.Adapter<CompetitionTab
         holder.positionTextView.setText(String.valueOf(megaSportsman.getPlace()));
         holder.timeTextView.setText(megaSportsman.getResultTime().format("%H:%M:%S"));
         holder.lagTextView.setText(megaSportsman.getLag());
+        holder.fineTextView.setText(String.valueOf(megaSportsman.getFineCount()));
+
 
         holder.numberTextView.setTextColor(megaSportsman.getColor());
         holder.nameTextView.setTextColor(megaSportsman.getColor());
         holder.positionTextView.setTextColor(megaSportsman.getColor());
         holder.timeTextView.setTextColor(megaSportsman.getColor());
         holder.lagTextView.setTextColor(megaSportsman.getColor());
+        holder.fineTextView.setTextColor(megaSportsman.getColor());
     }
 
     @Override
@@ -114,6 +117,7 @@ public class CompetitionTableAdapter extends RecyclerView.Adapter<CompetitionTab
         private TextView positionTextView;
         private TextView timeTextView;
         private TextView lagTextView;
+        private TextView fineTextView;
 
         public ViewHolder(final View itemView)
         {
@@ -123,6 +127,7 @@ public class CompetitionTableAdapter extends RecyclerView.Adapter<CompetitionTab
             positionTextView = (TextView) itemView.findViewById(R.id.positionCompetitionTable);
             timeTextView = (TextView) itemView.findViewById(R.id.timeCompetitionTable);
             lagTextView = (TextView) itemView.findViewById(R.id.lagCompetitionTable);
+            fineTextView = (TextView) itemView.findViewById(R.id.countFineCompetitionTable);
         }
     }
 }

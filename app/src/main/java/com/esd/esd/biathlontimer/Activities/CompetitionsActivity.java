@@ -373,7 +373,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
                     newTime.normalize(false);
                     localSportsman = new MegaSportsman(_megaSportsmen[i]);
                    // _megaSportsmen[i].setFineTime(null);
-                    _megaSportsmen[i].setFineCount(0);
+                   // _megaSportsmen[i].setFineCount(0);
                     break;
                 }
             }
