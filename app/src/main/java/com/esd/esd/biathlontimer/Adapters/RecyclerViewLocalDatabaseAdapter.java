@@ -111,7 +111,8 @@ public class RecyclerViewLocalDatabaseAdapter extends RecyclerView.Adapter<Recyc
         }
         else
         {
-            
+            startTime.second = Integer.valueOf(_interval.split(":")[1]);
+            startTime.minute = Integer.valueOf(_interval.split(":")[0]);
         }
         int number;
         if(_competitionType.equals(_localContext.getString(R.string.item_type_single_start)))

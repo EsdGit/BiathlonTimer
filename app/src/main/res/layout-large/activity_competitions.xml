@@ -43,7 +43,8 @@
                     android:tint="@color/white"
                     android:onClick="startBtnClick"
                     android:id="@+id/competitionStart"
-                    android:layout_marginRight="2.5dp"/>
+                    android:layout_marginRight="5dp"
+                    android:layout_marginLeft="5dp"/>
 
                 <ImageButton
                     android:layout_width="wrap_content"
@@ -52,8 +53,8 @@
                     android:layout_gravity="center_vertical"
                     android:background="@null"
                     android:tint="@color/white"
-                    android:layout_marginRight="2.5dp"
-                    android:layout_marginLeft="2.5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginLeft="5dp"
                     android:onClick="pauseBtnClick"/>
 
                 <ImageButton
@@ -63,7 +64,8 @@
                     android:layout_gravity="center_vertical"
                     android:background="@null"
                     android:tint="@color/white"
-                    android:layout_marginLeft="2.5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
                     android:onClick="stopBtnClick"/>
 
             </LinearLayout>
@@ -100,10 +102,10 @@
         android:id="@+id/gridView"
         android:columnWidth="90dp"
         android:gravity="center"
-        android:horizontalSpacing="10dp"
+        android:horizontalSpacing="20dp"
         android:numColumns="auto_fit"
         android:stretchMode="columnWidth"
-        android:verticalSpacing="10dp">
+        android:verticalSpacing="20dp">
 
     </GridView>
 

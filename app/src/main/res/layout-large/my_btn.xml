@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="100dp"
+    android:layout_height="100dp"
+    android:id="@+id/general_layout"
+    android:background="@color/white">
+
+
+    <FrameLayout
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_margin="10dp"
+        android:id="@+id/backgroundMyButton"
+        android:background="#ff0000">
+
+        <ImageView
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:id="@+id/imageMyButton"
+            android:src="@drawable/ic_launcher"
+            android:tint="#ffffff"
+            android:layout_gravity="center"/>
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="88dp"
+        android:layout_height="88dp"
+        android:layout_margin="6dp">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="@drawable/round_btn"/>
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textColor="#000000"
+            android:textStyle="bold"
+            android:typeface="serif"
+            android:id="@+id/numberParticipantMyButton"
+            android:textSize="@dimen/title_text_size"
+            android:text="543"
+            android:layout_gravity="center"
+            android:gravity="center"/>
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@drawable/oval_text"
+        android:layout_gravity="right">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/lapParticipantMyButton"
+            android:background="@drawable/round_text"
+            android:text="15"
+            android:textSize="14sp"
+            android:textColor="#000000"
+            android:gravity="center"/>
+
+    </FrameLayout>
+
+</FrameLayout>
