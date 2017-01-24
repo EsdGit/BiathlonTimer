@@ -34,13 +34,13 @@
             android:id="@+id/CompetitionsNameTextView"
             android:layout_margin="1dp"
             android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:gravity="center"
             android:textSize="@dimen/title_text_size"
             android:textColor="#000000"
             android:text="@string/main_activity_name_col"
             android:textStyle="bold"
-            android:layout_weight="2.5"
+            android:layout_weight="2.2"
             android:background="#ffffff">
         </TextView>
 
@@ -50,13 +50,13 @@
             android:layout_marginTop="1dp"
             android:layout_marginBottom="1dp"
             android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:gravity="center"
             android:textColor="#000000"
             android:textSize="@dimen/title_text_size"
             android:text="@string/main_activity_date_col"
             android:textStyle="bold"
-            android:layout_weight="0.5"
+            android:layout_weight="0.8"
             android:background="#ffffff">
         </TextView>
 
@@ -78,13 +78,14 @@
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:src="@drawable/ic_add_file"
-            android:layout_marginBottom="@dimen/fab_margin"
-            android:layout_marginRight="@dimen/fab_margin"
+            android:layout_marginBottom="@dimen/large_fab_margin"
+            android:layout_marginRight="@dimen/large_fab_margin"
             app:fabSize = "normal"
             app:backgroundTint = "@color/colorPrimary"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:onClick="OnClick"
-            android:layout_above="@+id/scrollView"/>
+            android:layout_above="@+id/scrollView"
+            style="@style/Fab"/>
 
 </RelativeLayout>

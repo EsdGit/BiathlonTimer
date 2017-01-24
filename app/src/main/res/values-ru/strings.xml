@@ -88,6 +88,7 @@
     <string name="summary_after_set_count_participant">". Количество участников - "</string>
     <string name="dialog_hint_start_number">Стартовый номер</string>
     <string name="dialog_hint_count_participant">Кол-во участников</string>
+    <string name="dialog_second_interval">Номер участника/Номер пары</string>
 
     //Соревнование (Таблицы, участники)
     <string name="number">Номер</string>
