@@ -94,30 +94,6 @@ public class MegaSportsman extends RealmObject implements ISportsman
         _fineCount = 0;
     }
 
-//    public void setLapsCount(int lapsCount)
-//    {
-//        _resultTime = new Time[lapsCount];
-//        _places = new int[lapsCount];
-//        _fineCount = new int[lapsCount];
-//        _fineTime = new Time[lapsCount];
-//    }
-
-//    public void makeForSaving()
-//    {
-//        _placesDb = "";
-//        _resultsDb = "";
-//        _finesCountDb = "";
-//        _finesTimeDb = "";
-//        for(int i = 0;i < _places.length; i++)
-//        {
-//            _placesDb += String.valueOf(_places[i])+",";
-//            if(_resultTime[i] == null) _resultsDb += "null,";
-//            else _resultsDb += _resultTime[i].format("%H:%M:%S")+",";
-//            _finesCountDb += String.valueOf(_fineCount[i])+",";
-//            if(_fineTime[i] == null) _finesTimeDb += "null,";
-//            else _finesTimeDb += _fineTime[i].format("%H:%M:%S")+",";
-//        }
-//    }
 
 //    public void setFineCount(int fineCount, int lapNumber)
 //    {

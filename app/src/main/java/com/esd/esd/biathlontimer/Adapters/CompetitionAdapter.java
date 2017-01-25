@@ -18,6 +18,8 @@ import com.esd.esd.biathlontimer.R;
 import com.esd.esd.biathlontimer.Sportsman;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -76,6 +78,12 @@ public class CompetitionAdapter extends RecyclerView.Adapter<CompetitionAdapter.
         return checkedCompetitions;
     }
 
+    public void SortBy(List<Competition> sortedList)
+    {
+        competitions.clear();
+        competitions.addAll(sortedList);
+        notifyDataSetChanged();
+    }
     public void RemoveCompetition(Competition competition)
     {
         int pos = competitions.indexOf(competition);
@@ -83,6 +91,16 @@ public class CompetitionAdapter extends RecyclerView.Adapter<CompetitionAdapter.
         notifyItemRemoved(pos);
     }
 
+    public void SortByDate()
+    {
+        Collections.sort(competitions,new Comparator<Competition>() {
+            @Override
+            public int compare(Competition competition, Competition t1) {
+                return competition.getRealDate().compareTo(t1.getRealDate());
+            }
+        });
+        notifyDataSetChanged();
+    }
     public void ResetHaveMarkedFlag() {
 
         _haveMarkedCompetition = false;

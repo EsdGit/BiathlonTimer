@@ -15,7 +15,6 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.esd.esd.biathlontimer.Competition;
-import com.esd.esd.biathlontimer.DatabaseClasses.DatabaseProvider;
 import com.esd.esd.biathlontimer.DatabaseClasses.RealmCompetitionSaver;
 import com.esd.esd.biathlontimer.DatabaseClasses.RealmMegaSportsmanSaver;
 import com.esd.esd.biathlontimer.DatabaseClasses.RealmSportsmenSaver;
@@ -114,7 +113,7 @@ public class SettingsActivity extends PreferenceActivity
         if(item.getItemId() == R.id.accept_setting)
         {
             RealmCompetitionSaver saver = new RealmCompetitionSaver(this, "COMPETITIONS");
-            List<Competition> localList = saver.GetAllCompetitions();
+            List<Competition> localList = saver.GetAllCompetitions(true);
             Competition newComp = SettingsFragment.GetCurrentCompetition(this);
             if(newComp == null)
             {

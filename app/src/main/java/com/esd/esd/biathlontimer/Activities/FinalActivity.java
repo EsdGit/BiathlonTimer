@@ -71,6 +71,8 @@ public class FinalActivity extends AppCompatActivity {
     Thread checkLapNumberThread;
     RecyclerView _currentRecyclerView;
 
+    ArrayList<FinalActivityAdapter> adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -320,7 +322,7 @@ public class FinalActivity extends AppCompatActivity {
 
     class LoadData extends AsyncTask<Void, Void, Void>
     {
-        ArrayList<FinalActivityAdapter> adapter;
+
         @Override
         protected Void doInBackground(Void... params)
         {

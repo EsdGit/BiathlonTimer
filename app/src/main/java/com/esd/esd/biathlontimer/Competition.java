@@ -3,7 +3,9 @@ package com.esd.esd.biathlontimer;
 
 import android.content.Context;
 
-import com.esd.esd.biathlontimer.DatabaseClasses.DatabaseProvider;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import io.realm.RealmObject;
 import io.realm.annotations.Ignore;
@@ -38,6 +40,8 @@ public class Competition extends RealmObject
     private String _settingsPath;
     @Ignore
     private Context _localContext;
+    @Ignore
+    private Date Date;
     public String getName()
     {
         return name;
@@ -103,14 +107,21 @@ public class Competition extends RealmObject
     {
         this.name = name;
         this.date = date;
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+        try {
+            Date = sdf.parse(date);
+        }catch (ParseException ex)
+        {
+
+        }
+
         name = removePunct(name);
         date = removePunct(date);
         _nameDateString = name+date;
         _settingsPath = "settings"+name+date;
         _dbParticipantPath = "participants"+name+date;
         _localContext = context;
-        //GenerateParticipantDb();
-        //GenerateSettingsDb();
+
     }
 
     public Competition()
@@ -131,6 +142,21 @@ public class Competition extends RealmObject
         return result.toString();
     }
 
+    public Date getRealDate()
+    {
+        if(Date == null)
+        {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+            try {
+                Date = sdf.parse(date);
+            }catch (ParseException ex)
+            {
+
+            }
+        }
+        return Date;
+    }
+
     public void SetCompetitionSettings(String startType, String interval, int checkPointsCount, String timeToStart,
                                        String groups, String secondInterval, String numberSecondInterval, String fineTime, int startNumber, int maxPartCount)
     {
@@ -144,117 +170,6 @@ public class Competition extends RealmObject
         this.fineTime = fineTime;
         this.startNumber = startNumber;
         maxParticipantCount = maxPartCount;
-    }
-
-//    public void GetAllSettingsToComp()
-//    {
-//        SettingsSaver saver = new SettingsSaver(_localContext);
-//        interval = saver.GetSetting(this, DatabaseProvider.DbSettings.COLUMN_INTERVAL);
-//        timeToStart = saver.GetSetting(this, DatabaseProvider.DbSettings.COLUMN_TIME_TO_START);
-//        checkPointsCount = saver.GetSetting(this, DatabaseProvider.DbSettings.COLUMN_CHECK_POINTS);
-//        groups = saver.GetSetting(this, DatabaseProvider.DbSettings.COLUMN_GROUPS);
-//        startType = saver.GetSetting(this, DatabaseProvider.DbSettings.COLUMN_START_TYPE);
-//        secondInterval = saver.GetSetting(this, DatabaseProvider.DbSettings.COLUMN_SECOND_INTERVAL);
-//        numberSecondInterval = saver.GetSetting(this, DatabaseProvider.DbSettings.COLUMN_NUMBER_SECOND_INTERVAL);
-//        fineTime = saver.GetSetting(this, DatabaseProvider.DbSettings.COLUMN_FINE);
-//        String startNumberFromDb = saver.GetSetting(this, DatabaseProvider.DbSettings.COLUMN_PARTICIPANT_COUNT);
-//        startNumber = Integer.valueOf(startNumberFromDb.split(",")[0]);
-//        maxParticipantCount = Integer.valueOf(startNumberFromDb.split(",")[1]);
-//    }
-
-//    public void GetAllParticipantsToComp()
-//    {
-//        ParticipantSaver saver = new ParticipantSaver(_localContext);
-//        Participant[] localArr = saver.GetAllParticipants(GetDbParticipantPath(), DatabaseProvider.DbParticipant.COLUMN_NAME);
-//        localArr = SortByNumber(localArr);
-//        for(int i = 0; i<localArr.length;i++)
-//        {
-//            _participants.add(localArr[i]);
-//        }
-//    }
-
-//    private Participant[] SortByNumber(Participant[] arr)
-//    {
-//        Participant[] localArr = arr;
-//        int count = localArr.length;
-//        if(count == 0) return null;
-//        int first;
-//        int second;
-//        int k = 0;
-//        Participant helper;
-//        while(k != count)
-//        {
-//            for(int i = 0; i < count - k - 1; i++)
-//            {
-//                first = Integer.valueOf(localArr[i].GetNumber());
-//                second = Integer.valueOf(localArr[i+1].GetNumber());
-//                if(first > second)
-//                {
-//                    helper = localArr[i];
-//                    localArr[i]  = localArr[i+1];
-//                    localArr[i+1] = helper;
-//                }
-//            }
-//            k++;
-//        }
-//        return localArr;
-//    }
-    // Метод добавления участников соревнований, если такого участника нет
-//    public void AddParticipant(Participant participant)
-//    {
-//        Participant[] localArr = _participants.toArray(new Participant[_participants.size()]);
-//        for(int i = 0; i < localArr.length; i++)
-//        {
-//            if(localArr[i].equals(participant)) return;
-//        }
-//
-//        _participants.add(participant);
-//
-//        ParticipantSaver ps = new ParticipantSaver(_localContext);
-//        ps.SaveParticipantToDatabase(participant, _dbParticipantPath);
-//    }
-
-//    public void GenerateSettingsDb()
-//    {
-//        DatabaseProvider dbProvider = new DatabaseProvider(_localContext);
-//        dbProvider.AddNewSettingsTable(_settingsPath);
-//    }
-//
-//    private void GenerateParticipantDb()
-//    {
-//        DatabaseProvider dbProvider = new DatabaseProvider(_localContext);
-//        dbProvider.AddNewParticipantTable(_dbParticipantPath);
-//    }
-
-//    public void DeleteParticipantsFromCompetition(Participant participant)
-//    {
-//        ParticipantSaver ps = new ParticipantSaver(_localContext);
-//        Participant[] localArr = _participants.toArray(new Participant[_participants.size()]);
-//        for(int i = 0; i < localArr.length; i++)
-//        {
-//            if(localArr[i].equals(participant))
-//            {
-//                _participants.remove(participant);
-//                ps.DeleteParticipant(participant, _dbParticipantPath);
-//            }
-//        }
-//    }
-//
-//    public int GetParticipantCount()
-//    {
-//        return _participants.size();
-//    }
-
-
-//    public Participant[] GetAllParticipants()
-//    {
-//        return _participants.toArray(new Participant[_participants.size()]);
-//    }
-
-    public void FinishCompetition()
-    {
-        _settingsPath = "null";
-        // Удалить базу данных с настройками соревнования
     }
 
     @Override

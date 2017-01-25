@@ -26,7 +26,6 @@ import android.widget.Toast;
 
 import com.esd.esd.biathlontimer.Adapters.CompetitionAdapter;
 import com.esd.esd.biathlontimer.Competition;
-import com.esd.esd.biathlontimer.DatabaseClasses.DatabaseProvider;
 import com.esd.esd.biathlontimer.DatabaseClasses.RealmCompetitionSaver;
 import com.esd.esd.biathlontimer.DatabaseClasses.RealmSportsmenSaver;
 import com.esd.esd.biathlontimer.R;
@@ -83,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         _headTableLayout = (LinearLayout) findViewById(R.id.headTable);
 
         RealmCompetitionSaver saver = new RealmCompetitionSaver(this, "COMPETITIONS");
-        competitionAdapter = new CompetitionAdapter(this, saver.GetAllCompetitions());
+        competitionAdapter = new CompetitionAdapter(this, saver.GetAllCompetitions(true));
         _recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         _recyclerView.setAdapter(competitionAdapter);
         _recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -173,6 +172,14 @@ public class MainActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    public void SortByName(boolean isChecked)
+    {
+        RealmCompetitionSaver saver = new RealmCompetitionSaver(this, "COMPETITIONS");
+        List<Competition> list = saver.GetAllCompetitions(isChecked);
+        saver.Dispose();
+        competitionAdapter.SortBy(list);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
@@ -180,11 +187,11 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId())
         {
             case R.id.mainMenuNameSort:
-                //SortCompetitionsBy(DatabaseProvider.DbCompetitions.COLUMN_COMPETITION_NAME, item.isChecked());
+                SortByName(item.isChecked());
                 Toast.makeText(getApplicationContext(),"Сортировка по названию", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.mainMenuDataSort:
-                //SortByDate(item.isChecked());
+                competitionAdapter.SortByDate();
                 Toast.makeText(getApplicationContext(),"Сортировка по дате", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.mainEditCompetition:

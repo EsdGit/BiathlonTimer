@@ -10,6 +10,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import io.realm.Sort;
 
 /**
  * Created by Oleg on 20.01.2017.
@@ -39,9 +40,13 @@ public class RealmCompetitionSaver
 
     }
 
-    public List<Competition> GetAllCompetitions()
+    public List<Competition> GetAllCompetitions(boolean isAscending)
     {
-        return realm.copyFromRealm(realm.where(Competition.class).findAll());
+        Sort sort;
+        if(isAscending) sort = Sort.ASCENDING;
+        else sort = Sort.DESCENDING;
+        return realm.copyFromRealm(realm.where(Competition.class).findAllSorted("name", sort));
+
     }
 
     public Competition GetCompetition(String name, String date)

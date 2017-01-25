@@ -88,9 +88,13 @@ public class FinalActivityAdapter extends RecyclerView.Adapter<FinalActivityAdap
     }
 
     @Override
-    public void SortList(List<MegaSportsman> sortedList) {
-
+    public void SortList(List<MegaSportsman> sortedList)
+    {
+        _megaSportsmen.clear();
+        _megaSportsmen = sortedList;
+        notifyDataSetChanged();
     }
+
 
     class ViewHolder extends RecyclerView.ViewHolder
     {
