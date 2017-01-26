@@ -643,11 +643,18 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
         _setData.setSummary(competition.getDate());
         _setInterval.setSummary(competition.getInterval());
         _setStartTimer.setSummary(competition.getTimeToStart());
-        _setSecondInterval.setSummary(competition.getSecondInterval()+context.getResources().getString(R.string.summary_second_interval_helper)+String.valueOf(competition.getNumberSecondInterval()));
+        if(competition.getSecondInterval().isEmpty())
+        {
+            _setSecondInterval.setSummary(context.getResources().getString(R.string.summary_interval));
+        }
+        else
+        {
+            _setSecondInterval.setSummary(competition.getSecondInterval() + context.getResources().getString(R.string.summary_second_interval_helper) + String.valueOf(competition.getNumberSecondInterval()));
+        }
         _fine.setSummary(context.getResources().getString(R.string.summary_fine_after_set)+competition.getFineTime());
         if(!competition.getGroups().isEmpty())
         {
-            _group.setSummary(context.getResources().getString(R.string.aftter_add_summary_group)+competition.getGroups());
+            _group.setSummary(context.getResources().getString(R.string.aftter_add_summary_group) + competition.getGroups());
             String[] allGroups = competition.getGroups().split(",");
             for(int i = 0; i < allGroups.length; i++)
             {
