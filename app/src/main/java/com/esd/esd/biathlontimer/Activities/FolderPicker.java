@@ -1,5 +1,7 @@
 package com.esd.esd.biathlontimer.Activities;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.PersistableBundle;
@@ -12,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -29,12 +32,14 @@ import java.util.List;
 public class FolderPicker extends AppCompatActivity
 {
     private List<String> _arrayDir;
-    private FolderAdapter _adapter;
+    private static FolderAdapter _adapter;
 
     RecyclerView _recyclerView;
-    TextView _pathText;
+    static TextView _pathText;
+    Button _acceptButton;
+    Button _declineButton;
 
-    String _currentPath;
+    static String _currentPath;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -43,6 +48,8 @@ public class FolderPicker extends AppCompatActivity
         setContentView(R.layout.file_diretory);
         _recyclerView = (RecyclerView) findViewById(R.id.list_file);
         _pathText = (TextView) findViewById(R.id.path_file);
+        _acceptButton = (Button) findViewById(R.id.positive_button);
+        _declineButton = (Button) findViewById(R.id.negative_button);
 
         _currentPath = Environment.getExternalStorageDirectory().getPath();
 
@@ -55,10 +62,33 @@ public class FolderPicker extends AppCompatActivity
 
         getFiles();
 
+        _acceptButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent();
+                intent.putExtra("url", _currentPath);
+                setResult(Activity.RESULT_OK, intent);
+                finish();
+            }
+        });
+
+        _declineButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                try {
+                    this.finalize();
+                }catch (Throwable ex)
+                {
+
+                }
+            }
+        });
+
 
     }
 
-    private void getFiles()
+    public static void getFiles()
     {
         List<String> localList = new ArrayList<String>();
         File[] files = new File(_currentPath).listFiles();
@@ -94,6 +124,8 @@ public class FolderPicker extends AppCompatActivity
         {
             String fileName = fileNames.get(position);
             holder.fileNameText.setText(fileName);
+            holder.clickListener.setFileName(fileName);
+
         }
 
         public void ChangeList(List<String> list)
@@ -110,9 +142,25 @@ public class FolderPicker extends AppCompatActivity
         public class ViewHolder extends RecyclerView.ViewHolder
         {
             private TextView fileNameText;
+            private ClickListener clickListener;
             public ViewHolder(View itemView) {
                 super(itemView);
                 fileNameText = (TextView) itemView.findViewById(R.id.file);
+                clickListener = new ClickListener();
+                itemView.setOnClickListener(clickListener);
+            }
+
+            private class ClickListener implements View.OnClickListener
+            {
+                private String fileName;
+                @Override
+                public void onClick(View view)
+                {
+                    _currentPath += "/"+fileName;
+                    FolderPicker.getFiles();
+
+                }
+                public void setFileName(String fileName){this.fileName = fileName;}
             }
         }
     }
