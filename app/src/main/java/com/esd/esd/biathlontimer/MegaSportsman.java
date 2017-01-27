@@ -72,7 +72,7 @@ public class MegaSportsman extends RealmObject implements ISportsman
         this.id = sportsman.getId();
         this._startTime = sportsman.getStartTime();
         this._fineCount = sportsman.getFineCount();
-        this._fineTime = sportsman.getFineTime();
+        if(sportsman.getFineTime() != null) this._fineTime = new Time(sportsman.getFineTime());
         _currentLap = 0;
     }
 
