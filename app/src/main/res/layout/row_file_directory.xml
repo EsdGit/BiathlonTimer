@@ -8,7 +8,7 @@
         android:layout_height="match_parent"
         android:id="@+id/file"
         android:gravity="left"
-        android:textColor="@color/white"
+        android:textColor="@color/black"
         android:textSize="@dimen/title_text_size"
         android:background="@color/white"
         android:layout_marginLeft="1dp"
