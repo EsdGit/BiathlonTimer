@@ -720,6 +720,29 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
 
     public boolean onKeyDown(int keyCode, KeyEvent event)
     {
+        if(keyCode == KeyEvent.KEYCODE_BACK)
+        {
+            AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+            dialog.setTitle(getResources().getString(R.string.warning_dialog_title));
+            dialog.setMessage(getResources().getString(R.string.message_dialog_warning));
+            dialog.setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                    Intent intent = new Intent(CompetitionsActivity.this, ViewPagerActivity.class);
+                    CompetitionsActivity.this.finish();
+                    startActivity(intent);
+                }
+            });
+            dialog.setNegativeButton(getResources().getString(R.string.no), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                }
+            });
+            dialog.setCancelable(false);
+            dialog.show();
+        }
         return super.onKeyDown(keyCode, event);
     }
 

@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,16 +77,30 @@ public class FolderPicker extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
-                try {
-                    this.finalize();
-                }catch (Throwable ex)
-                {
-
-                }
+                finish();
             }
         });
 
 
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+        if(keyCode == (KeyEvent.KEYCODE_BACK))
+        {
+           // if(_currentPath.equals(Environment.getExternalStorageDirectory().getPath())) return false;
+            String[] splits = _currentPath.split("/");
+            if(splits.length > 2)
+            {
+                _currentPath = splits[0];
+                for (int i = 1; i < splits.length - 1; i++) {
+                    _currentPath += "/" + splits[i];
+                }
+                getFiles();
+            }
+        }
+        return false;
     }
 
     public static void getFiles()
