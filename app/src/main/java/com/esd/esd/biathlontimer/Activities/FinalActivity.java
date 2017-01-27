@@ -200,15 +200,17 @@ public class FinalActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),"Сортировка по имени",Toast.LENGTH_SHORT).show();
                 break;
             case R.id.action_bar_final_activity_save:
-                final Intent chooserIntent = new Intent(this, DirectoryChooserActivity.class);
-
-                final DirectoryChooserConfig config = DirectoryChooserConfig.builder()
-                        .newDirectoryName("DirChooserSample")
-                        .allowReadOnlyDirectory(true)
-                        .allowNewDirectoryNameModification(true)
-                        .build();
-
-                startActivityForResult(chooserIntent, REQUEST_DIRECTORY);
+//                final Intent chooserIntent = new Intent(this, DirectoryChooserActivity.class);
+//
+//                final DirectoryChooserConfig config = DirectoryChooserConfig.builder()
+//                        .newDirectoryName("DirChooserSample")
+//                        .allowReadOnlyDirectory(true)
+//                        .allowNewDirectoryNameModification(true)
+//                        .build();
+//
+//                startActivityForResult(chooserIntent, REQUEST_DIRECTORY);
+                Intent intentFolders = new Intent(this, FolderPicker.class);
+                startActivity(intentFolders);
                 Toast.makeText(getApplicationContext(),"Сохранить файл",Toast.LENGTH_SHORT).show();
                 break;
             case R.id.action_bar_final_activity_send:
