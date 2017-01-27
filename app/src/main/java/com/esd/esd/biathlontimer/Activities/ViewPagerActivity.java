@@ -450,8 +450,6 @@ public class ViewPagerActivity extends AppCompatActivity
         _deleteParticipantImBtn = (ImageButton) page1.findViewById(R.id.delete_participant);
         _editParticipantImBtn = (ImageButton) page1.findViewById(R.id.edit_participant);
 
-        _nameOfParticipantList.setText(Html.fromHtml("<font>"  + "<big>"  + getResources().getString(R.string.participant_list_actvity_head) +  "</big>" + "</font>"));
-
         _nameDialog = (EditText) _dialogForm.findViewById(R.id.dialogName);
         _birthdayDialog = (EditText) _dialogForm.findViewById(R.id.dialogBirthday);
         _countryDialog = (EditText) _dialogForm.findViewById(R.id.dialogCountry);
@@ -459,28 +457,49 @@ public class ViewPagerActivity extends AppCompatActivity
         _colorDialog = (TextView) _dialogForm.findViewById(R.id.dialogColor);
         _spinnerOfGroup = (Spinner) _dialogForm.findViewById(R.id.spinnerOfGroup);
 
-        //Работа с DataBaseList
-        View page2 = inflater.inflate(R.layout.activity_database_list, null);
-        pages.add(page2);
+        if(!getResources().getBoolean(R.bool.isTablet))
+        {
+            _nameOfParticipantList.setText(Html.fromHtml("<font>"  + "<big>"  + getResources().getString(R.string.participant_list_actvity_head) +  "</big>" + "</font>"));
+            //Работа с DataBaseList
+            View page2 = inflater.inflate(R.layout.activity_database_list, null);
+            pages.add(page2);
 
-        _recyclerViewDatabase = (RecyclerView) page2.findViewById(R.id.gridViewDataBaseLayout);
-        _headDataBase = (LinearLayout) page2.findViewById(R.id.headTableDataBaseLayout);
-        _nameOfDataBaseList = (TextView) page2.findViewById(R.id.database_list_head);
-        _emptyDataBaseList = (TextView) page2.findViewById(R.id.emptyDataBaseTextView);
-        _acceptDataBaseImBtn = (ImageButton) page2.findViewById(R.id.accept_database);
-        _deleteDataBaseImBtn = (ImageButton) page2.findViewById(R.id.delete_database);
-        _menuDataBaseImBtn = (ImageButton) page2.findViewById(R.id.menu_database);
-        _deleteDataBaseImBtn = (ImageButton) page2.findViewById(R.id.delete_database);
-        _editDataBaseImBtn = (ImageButton) page2.findViewById(R.id.edit_database);
-        _secondAcceptDataBaseImBtn = (ImageButton) page2.findViewById(R.id.second_accept_database);
+            _recyclerViewDatabase = (RecyclerView) page2.findViewById(R.id.gridViewDataBaseLayout);
+            _headDataBase = (LinearLayout) page2.findViewById(R.id.headTableDataBaseLayout);
+            _nameOfDataBaseList = (TextView) page2.findViewById(R.id.database_list_head);
+            _emptyDataBaseList = (TextView) page2.findViewById(R.id.emptyDataBaseTextView);
+            _acceptDataBaseImBtn = (ImageButton) page2.findViewById(R.id.accept_database);
+            _deleteDataBaseImBtn = (ImageButton) page2.findViewById(R.id.delete_database);
+            _menuDataBaseImBtn = (ImageButton) page2.findViewById(R.id.menu_database);
+            _deleteDataBaseImBtn = (ImageButton) page2.findViewById(R.id.delete_database);
+            _editDataBaseImBtn = (ImageButton) page2.findViewById(R.id.edit_database);
+            _secondAcceptDataBaseImBtn = (ImageButton) page2.findViewById(R.id.second_accept_database);
 
-        _nameOfDataBaseList.setText(Html.fromHtml("<font>"  + "<big>" + getResources().getString(R.string.db_list_activity_head) + "</big>" + "</font>"));
+            _nameOfDataBaseList.setText(Html.fromHtml("<font>" + "<big>" + getResources().getString(R.string.db_list_activity_head) + "</big>" + "</font>"));
 
-        PagerAdapterHelper pagerAdapter = new PagerAdapterHelper(pages);
-        ViewPager viewPager = new ViewPager(this);
-        viewPager.setAdapter(pagerAdapter);
-        viewPager.setCurrentItem(0);
-        setContentView(viewPager);
+            PagerAdapterHelper pagerAdapter = new PagerAdapterHelper(pages);
+            ViewPager viewPager = new ViewPager(this);
+            viewPager.setAdapter(pagerAdapter);
+            viewPager.setCurrentItem(0);
+            setContentView(viewPager);
+        }
+        else
+        {
+            _nameOfParticipantList.setText(Html.fromHtml("<font>"   + getResources().getString(R.string.participant_list_actvity_head) +  "</font>"));
+            _recyclerViewDatabase = (RecyclerView) page1.findViewById(R.id.gridViewDataBaseLayout);
+            _headDataBase = (LinearLayout) page1.findViewById(R.id.headTableDataBaseLayout);
+            _nameOfDataBaseList = (TextView) page1.findViewById(R.id.database_list_head);
+            _emptyDataBaseList = (TextView) page1.findViewById(R.id.emptyDataBaseTextView);
+            _acceptDataBaseImBtn = (ImageButton) page1.findViewById(R.id.accept_database);
+            _deleteDataBaseImBtn = (ImageButton) page1.findViewById(R.id.delete_database);
+            _menuDataBaseImBtn = (ImageButton) page1.findViewById(R.id.menu_database);
+            _deleteDataBaseImBtn = (ImageButton) page1.findViewById(R.id.delete_database);
+            _editDataBaseImBtn = (ImageButton) page1.findViewById(R.id.edit_database);
+            _secondAcceptDataBaseImBtn = (ImageButton) page1.findViewById(R.id.second_accept_database);
+
+            _nameOfDataBaseList.setText(Html.fromHtml("<font>" + getResources().getString(R.string.db_list_activity_head) + "</font>"));
+            setContentView(page1);
+        }
     }
 
     /*

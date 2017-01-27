@@ -138,23 +138,41 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         _gridView = (GridView) page1.findViewById(R.id.gridView);
         _gridView.setOnItemLongClickListener(gridViewOnItemLongClickListener);
 
-        View page2 = inflater.inflate(R.layout.activity_competition_tables, null);
-        pages.add(page2);
-        //_containerTables = (LinearLayout) page2.findViewById(R.id.containerTablesCompetition);
-        _lastTable = (TableLayout) page2.findViewById(R.id.tableLast);
-        _currentRound = (TextView) page2.findViewById(R.id.currentRound);
-        _numberParticipant = (TextView) page2.findViewById(R.id.numberParticipantCompetitionTable);
-        _positionParticipant = (TextView) page2.findViewById(R.id.positionParticipantCompetitionTable);
-        _nameParticipant = (TextView) page2.findViewById(R.id.nameParticipantCompetitionTable);
-        _timeParticipant = (TextView) page2.findViewById(R.id.timeParticipantCompetitionTable);
-        _lagParticipant = (TextView) page2.findViewById(R.id.lagParticipantCompetitionTable);
-        _timerParticipantTable = (TextView) page2.findViewById(R.id.competitionTimer);
+        if(!getResources().getBoolean(R.bool.isTablet))
+        {
+            View page2 = inflater.inflate(R.layout.activity_competition_tables, null);
+            pages.add(page2);
+            //_containerTables = (LinearLayout) page2.findViewById(R.id.containerTablesCompetition);
+            _lastTable = (TableLayout) page2.findViewById(R.id.tableLast);
+            _currentRound = (TextView) page2.findViewById(R.id.currentRound);
+            _numberParticipant = (TextView) page2.findViewById(R.id.numberParticipantCompetitionTable);
+            _positionParticipant = (TextView) page2.findViewById(R.id.positionParticipantCompetitionTable);
+            _nameParticipant = (TextView) page2.findViewById(R.id.nameParticipantCompetitionTable);
+            _timeParticipant = (TextView) page2.findViewById(R.id.timeParticipantCompetitionTable);
+            _lagParticipant = (TextView) page2.findViewById(R.id.lagParticipantCompetitionTable);
+            _timerParticipantTable = (TextView) page2.findViewById(R.id.competitionTimer);
+            _table = (RecyclerView) page2.findViewById(R.id.recyclerViewTableCompetition);
 
-        PagerAdapterHelper pagerAdapter = new PagerAdapterHelper(pages);
-        ViewPager viewPager = new ViewPager(this);
-        viewPager.setAdapter(pagerAdapter);
-        viewPager.setCurrentItem(0);
-        setContentView(viewPager);
+            PagerAdapterHelper pagerAdapter = new PagerAdapterHelper(pages);
+            ViewPager viewPager = new ViewPager(this);
+            viewPager.setAdapter(pagerAdapter);
+            viewPager.setCurrentItem(0);
+            setContentView(viewPager);
+        }
+        else
+        {
+            _lastTable = (TableLayout) page1.findViewById(R.id.tableLast);
+            _currentRound = (TextView) page1.findViewById(R.id.currentRound);
+            _numberParticipant = (TextView) page1.findViewById(R.id.numberParticipantCompetitionTable);
+            _positionParticipant = (TextView) page1.findViewById(R.id.positionParticipantCompetitionTable);
+            _nameParticipant = (TextView) page1.findViewById(R.id.nameParticipantCompetitionTable);
+            _timeParticipant = (TextView) page1.findViewById(R.id.timeParticipantCompetitionTable);
+            _lagParticipant = (TextView) page1.findViewById(R.id.lagParticipantCompetitionTable);
+            _timerParticipantTable = (TextView) page1.findViewById(R.id.competitionTimer);
+            _table = (RecyclerView) page1.findViewById(R.id.recyclerViewTableCompetition);
+
+            setContentView(page1);
+        }
 
         _dialogFineForm = inflater.inflate(R.layout.dialog_fine_competition_activity, null);
         _dialogSeekBar = (SeekBar) _dialogFineForm.findViewById(R.id.seek_bar_competition_activity);
@@ -257,7 +275,6 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         //CreateTables(lapsCount);
         _currentRound.setText(_currentRound.getText() + " - " + Integer.toString(_currentTable + 1));
         _tableAdapter = new CompetitionTableAdapter(this);
-        _table = (RecyclerView) page2.findViewById(R.id.recyclerViewTableCompetition);
         _table.setAdapter(_tableAdapter);
         _table.setItemAnimator(new DefaultItemAnimator());
         _table.setLayoutManager(new LinearLayoutManager(this));
