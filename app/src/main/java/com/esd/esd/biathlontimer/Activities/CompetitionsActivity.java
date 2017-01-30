@@ -56,20 +56,11 @@ import java.util.concurrent.TimeUnit;
 
 public class CompetitionsActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener {
 
-    private GridLayout _participantGridLayout;
     private TableLayout _lastTable;
     private GridView _gridView;
-    private LinearLayout _containerTables;
     private TextView _currentRound;
     private TextView _competitionTimer;
-    private TextView _numberParticipant;
-    private TextView _positionParticipant;
-    private TextView _nameParticipant;
-    private TextView _timeParticipant;
-    private TextView _lagParticipant;
     private TextView _timerParticipantTable;
-    private ImageButton _startBtn;
-    private MyButton _button;
 
     private AlertDialog _fineDialog;
     private AlertDialog.Builder _builderFineDialog;
@@ -90,6 +81,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
     private int _currentTable = 0;
     private int _number = 0;
     private int lapsCount;
+    private boolean _isFirstLoad = true;
 
     private View _dialogOwnerView;
 
@@ -118,7 +110,6 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
 
         _timeNextParticipant = new android.text.format.Time();
         _currentInterval = new android.text.format.Time();
-        _button = new MyButton(this);
 
         RealmCompetitionSaver saverComp = new RealmCompetitionSaver(this, "COMPETITIONS");
         _currentCompetition = saverComp.GetCompetition(getIntent().getStringExtra("Name"), getIntent().getStringExtra("Date"));
@@ -130,9 +121,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
 
         View page1 = inflater.inflate(R.layout.activity_competitions, null);
         pages.add(page1);
-        //_participantGridLayout = (GridLayout) page1.findViewById(R.id.competitionGridLayout);
         _competitionTimer = (TextView) page1.findViewById(R.id.competitionTimer);
-        _startBtn = (ImageButton) page1.findViewById(R.id.competitionStart);
 
         //Тест
         _gridView = (GridView) page1.findViewById(R.id.gridView);
@@ -145,11 +134,6 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
             //_containerTables = (LinearLayout) page2.findViewById(R.id.containerTablesCompetition);
             _lastTable = (TableLayout) page2.findViewById(R.id.tableLast);
             _currentRound = (TextView) page2.findViewById(R.id.currentRound);
-            _numberParticipant = (TextView) page2.findViewById(R.id.numberParticipantCompetitionTable);
-            _positionParticipant = (TextView) page2.findViewById(R.id.positionParticipantCompetitionTable);
-            _nameParticipant = (TextView) page2.findViewById(R.id.nameParticipantCompetitionTable);
-            _timeParticipant = (TextView) page2.findViewById(R.id.timeParticipantCompetitionTable);
-            _lagParticipant = (TextView) page2.findViewById(R.id.lagParticipantCompetitionTable);
             _timerParticipantTable = (TextView) page2.findViewById(R.id.competitionTimer);
             _table = (RecyclerView) page2.findViewById(R.id.recyclerViewTableCompetition);
 
@@ -163,11 +147,6 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         {
             _lastTable = (TableLayout) page1.findViewById(R.id.tableLast);
             _currentRound = (TextView) page1.findViewById(R.id.currentRound);
-            _numberParticipant = (TextView) page1.findViewById(R.id.numberParticipantCompetitionTable);
-            _positionParticipant = (TextView) page1.findViewById(R.id.positionParticipantCompetitionTable);
-            _nameParticipant = (TextView) page1.findViewById(R.id.nameParticipantCompetitionTable);
-            _timeParticipant = (TextView) page1.findViewById(R.id.timeParticipantCompetitionTable);
-            _lagParticipant = (TextView) page1.findViewById(R.id.lagParticipantCompetitionTable);
             _timerParticipantTable = (TextView) page1.findViewById(R.id.competitionTimer);
             _table = (RecyclerView) page1.findViewById(R.id.recyclerViewTableCompetition);
 
@@ -280,7 +259,6 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         for (int i = 0; i < lapsCount; i++) {
             _arrayMegaSportsmen[i] = new ArrayList<MegaSportsman>();
         }
-        //CreateTables(lapsCount);
         _currentRound.setText(_currentRound.getText() + " - " + Integer.toString(_currentTable + 1));
         _tableAdapter = new CompetitionTableAdapter(this);
         _table.setAdapter(_tableAdapter);
@@ -430,8 +408,12 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
     @Override
     protected void onStart() {
         super.onStart();
-        LoadingTask loadingTask = new LoadingTask();
-        loadingTask.execute();
+        if(_isFirstLoad)
+        {
+            LoadingTask loadingTask = new LoadingTask();
+            loadingTask.execute();
+            _isFirstLoad = false;
+        }
     }
 
     private void AddRowToLastEventTable(MegaSportsman megaSportsman, boolean isFromButtonClick)
