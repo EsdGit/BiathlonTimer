@@ -216,6 +216,13 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
                 for (int j = 0; j < lapsCount; j++) {
                     _arrayMegaSportsmen[j].clear();
                 }
+
+                for(int j = 0; j < _megaSportsmen.length; j++)
+                {
+                    _megaSportsmen[j].clearFineCount();
+                    _megaSportsmen[j].setFineTime(null);
+                }
+                _lastTable.removeAllViews();
                 _viewAdapter.ClearList();
                 _competitionState = CompetitionState.NotStarted;
                 _number = 0;
@@ -390,7 +397,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
                     newTime.normalize(false);
                     localSportsman = new MegaSportsman(_megaSportsmen[i]);
                    // _megaSportsmen[i].setFineTime(null);
-                    _megaSportsmen[i].setFineCount(0);
+                   // _megaSportsmen[i].setFineCount(0);
                     break;
                 }
             }
@@ -720,8 +727,35 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
 
     public boolean onKeyDown(int keyCode, KeyEvent event)
     {
+        if(keyCode == KeyEvent.KEYCODE_BACK)
+        {
+            AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+            dialog.setTitle(getResources().getString(R.string.warning_dialog_title));
+            dialog.setMessage(getResources().getString(R.string.message_dialog_warning));
+            dialog.setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if (_countDownTimer != null) _countDownTimer.cancel();
+                    if (_timer != null) _timer.cancel();
+                    Intent intent = new Intent(CompetitionsActivity.this, ViewPagerActivity.class);
+                    intent.putExtra("CompetitionName", _currentCompetition.getName());
+                    intent.putExtra("CompetitionDate", _currentCompetition.getDate());
+                    startActivity(intent);
+                    CompetitionsActivity.this.finish();
+                }
+            });
+            dialog.setNegativeButton(getResources().getString(R.string.no), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                }
+            });
+            dialog.setCancelable(false);
+            dialog.show();
+        }
         return super.onKeyDown(keyCode, event);
     }
+
 
     public void pauseBtnClick(View view)
     {

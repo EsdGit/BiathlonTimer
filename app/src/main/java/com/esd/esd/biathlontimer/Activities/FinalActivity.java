@@ -210,7 +210,7 @@ public class FinalActivity extends AppCompatActivity {
 //
 //                startActivityForResult(chooserIntent, REQUEST_DIRECTORY);
                 Intent intentFolders = new Intent(this, FolderPicker.class);
-                startActivity(intentFolders);
+                startActivityForResult(intentFolders,1);
                 Toast.makeText(getApplicationContext(),"Сохранить файл",Toast.LENGTH_SHORT).show();
                 break;
             case R.id.action_bar_final_activity_send:
@@ -269,22 +269,24 @@ public class FinalActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    String path;
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch(requestCode)
-        {
-            case REQUEST_DIRECTORY:
-                if (resultCode == DirectoryChooserActivity.RESULT_CODE_DIR_SELECTED)
-                {
-                    path = data.getStringExtra(DirectoryChooserActivity.RESULT_SELECTED_DIR);
-                    excelHelper.CreateFileWithResult(_arrayMegaSportsman, path + "/"+_currentCompetition.getName()+" Результат.xls");
-                } else {
-                    Toast.makeText(getApplicationContext(), "Файл не был сохранён", Toast.LENGTH_SHORT).show();
-                }
-                break;
-        }
+//        switch(requestCode)
+//        {
+//            case REQUEST_DIRECTORY:
+//                if (resultCode == DirectoryChooserActivity.RESULT_CODE_DIR_SELECTED)
+//                {
+//                    path = data.getStringExtra(DirectoryChooserActivity.RESULT_SELECTED_DIR);
+//                    excelHelper.CreateFileWithResult(_arrayMegaSportsman, path + "/"+_currentCompetition.getName()+" Результат.xls");
+//                } else {
+//                    Toast.makeText(getApplicationContext(), "Файл не был сохранён", Toast.LENGTH_SHORT).show();
+//                }
+//                break;
+//        }
+        if(data == null) return;
+        String path = data.getStringExtra("url");
+        excelHelper.CreateFileWithResult(_arrayMegaSportsman, path + "/"+_currentCompetition.getName()+" Результат.xls");
     }
 
     MenuItem.OnMenuItemClickListener _onMenuItemClickListener = new MenuItem.OnMenuItemClickListener()
