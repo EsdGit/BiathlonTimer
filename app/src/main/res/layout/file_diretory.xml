@@ -17,10 +17,9 @@
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:id="@+id/list_file"
-        android:layout_alignTop="@+id/path_file"
         android:layout_height="wrap_content"
-        android:layout_below="@id/path_file"
-        android:layout_above="@+id/buttons">
+        android:layout_above="@+id/buttons"
+        android:layout_below="@+id/path_file">
     </android.support.v7.widget.RecyclerView>
 
     <LinearLayout
@@ -36,10 +35,9 @@
             android:layout_weight="1"
             android:id="@+id/negative_button"
             android:text="@string/cancel"
+            android:textColor="@color/white"
             android:background="@color/colorPrimary"
-            android:layout_marginLeft="1dp"
-            android:layout_marginRight="1dp"
-            android:layout_marginBottom="1dp"/>
+            android:layout_margin="1dp"/>
 
         <Button
             android:layout_width="0dp"
@@ -47,7 +45,9 @@
             android:layout_weight="1"
             android:id="@+id/positive_button"
             android:text="@string/accept"
+            android:textColor="@color/white"
             android:background="@color/colorPrimary"
+            android:layout_marginTop="1dp"
             android:layout_marginRight="1dp"
             android:layout_marginBottom="1dp"/>
 

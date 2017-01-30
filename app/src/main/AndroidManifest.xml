@@ -35,7 +35,9 @@
                   android:theme="@style/AppTheme"
                   android:screenOrientation="landscape">
         </activity>
-        <activity android:name=".Activities.FolderPicker" android:screenOrientation="landscape" />
+        <activity android:name=".Activities.FolderPicker"
+                  android:screenOrientation="landscape"
+                  android:theme="@style/AppTheme"/>
     </application>
 
 </manifest>

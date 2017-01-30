@@ -2,6 +2,7 @@
     <string name="app_name">Таймер для биатлона</string>
 
     //Активити
+    <string name="folder_activity_name">Выберите папку</string>
     //Соревнования
     <string name="main_activity_head">Список файлов соревнований</string>
     <string name="main_activity_name_col">Название соревнования</string>
