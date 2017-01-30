@@ -104,6 +104,7 @@ public class MegaSportsman extends RealmObject implements ISportsman
         _fineCount += fineCount;
     }
 
+    public void clearFineCount(){_fineCount = 0;}
 //    public int getFineCount(int lapNumber)
 //    {
 //        return _fineCount[lapNumber];

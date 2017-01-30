@@ -630,13 +630,13 @@ public class ViewPagerActivity extends AppCompatActivity
 
     public void OnClickAcceptParticipant(View view)
     {
-        // Со
         _needDeleteTables = false;
         Toast.makeText(getApplicationContext(),"Сохранить список и перейти к соревнованию",Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, CompetitionsActivity.class);
         intent.putExtra("Name", _currentCompetition.getName());
         intent.putExtra("Date", _currentCompetition.getDate());
         startActivity(intent);
+        this.finish();
     }
 
     public void OnClickEditParticipant(View view)

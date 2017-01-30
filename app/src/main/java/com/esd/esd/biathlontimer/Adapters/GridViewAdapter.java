@@ -75,6 +75,10 @@ public class GridViewAdapter extends BaseAdapter
 
     public void ClearList()
     {
+        for(int i = 0; i < _sportsmen.size(); i++)
+        {
+            _sportsmen.get(i).setCurrentLap(0);
+        }
         _sportsmen.clear();
         notifyDataSetChanged();
     }
@@ -92,12 +96,14 @@ public class GridViewAdapter extends BaseAdapter
         notifyDataSetChanged();
     }
 
+
     public void RemoveSportsman(int number)
     {
         for(MegaSportsman sportsman:_sportsmen)
         {
             if(sportsman.getNumber() == number)
             {
+                sportsman.setCurrentLap(0);
                 _sportsmen.remove(sportsman);
                 notifyDataSetChanged();
                 break;
