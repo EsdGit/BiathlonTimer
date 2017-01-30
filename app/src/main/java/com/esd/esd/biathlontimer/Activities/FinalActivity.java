@@ -31,10 +31,6 @@ import com.esd.esd.biathlontimer.MegaSportsman;
 import com.esd.esd.biathlontimer.PagerAdapterHelper;
 import com.esd.esd.biathlontimer.R;
 
-import net.rdrei.android.dirchooser.DirectoryChooserActivity;
-import net.rdrei.android.dirchooser.DirectoryChooserConfig;
-import net.rdrei.android.dirchooser.DirectoryChooserFragment;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -200,15 +196,6 @@ public class FinalActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),"Сортировка по имени",Toast.LENGTH_SHORT).show();
                 break;
             case R.id.action_bar_final_activity_save:
-//                final Intent chooserIntent = new Intent(this, DirectoryChooserActivity.class);
-//
-//                final DirectoryChooserConfig config = DirectoryChooserConfig.builder()
-//                        .newDirectoryName("DirChooserSample")
-//                        .allowReadOnlyDirectory(true)
-//                        .allowNewDirectoryNameModification(true)
-//                        .build();
-//
-//                startActivityForResult(chooserIntent, REQUEST_DIRECTORY);
                 Intent intentFolders = new Intent(this, FolderPicker.class);
                 startActivityForResult(intentFolders,1);
                 Toast.makeText(getApplicationContext(),"Сохранить файл",Toast.LENGTH_SHORT).show();

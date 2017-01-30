@@ -45,8 +45,8 @@ public class CompetitionTableAdapter extends RecyclerView.Adapter<CompetitionTab
         holder.positionTextView.setText(String.valueOf(megaSportsman.getPlace()));
         holder.timeTextView.setText(megaSportsman.getResultTime().format("%H:%M:%S"));
         holder.lagTextView.setText(megaSportsman.getLag());
-        holder.fineTextView.setText(String.valueOf(megaSportsman.getFineCount()));
-
+        //holder.fineTextView.setText(String.valueOf(megaSportsman.getFineCount()));
+        holder.fineTextView.setText(megaSportsman.getFineCountArrString());
 
         holder.numberTextView.setTextColor(megaSportsman.getColor());
         holder.nameTextView.setTextColor(megaSportsman.getColor());

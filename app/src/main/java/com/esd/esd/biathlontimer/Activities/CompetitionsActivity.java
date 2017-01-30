@@ -251,7 +251,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
                 fineTime.normalize(false);
                 for (int i = 0; i < _megaSportsmen.length; i++) {
                     if (_megaSportsmen[i].getNumber() == participantNumber) {
-                        _megaSportsmen[i].setFineCount(fineCount);
+                        _megaSportsmen[i].setFineCount(fineCount, lapNumber);
                         _megaSportsmen[i].setFineTime(fineTime);
                         AddRowToLastEventTable(_megaSportsmen[i], false);
                         break;
@@ -275,6 +275,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         _fineDialog = _builderFineDialog.create();
 
         lapsCount = _currentCompetition.getCheckPointsCount();
+        MegaSportsman.setLapsCount(lapsCount);
         _arrayMegaSportsmen = new ArrayList[lapsCount];
         for (int i = 0; i < lapsCount; i++) {
             _arrayMegaSportsmen[i] = new ArrayList<MegaSportsman>();
@@ -496,11 +497,6 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         }
     }
 
-    public void imgBtnSettings_OnClick(View view)
-    {
-        Intent intent = new Intent(this, SettingsActivity.class);
-        startActivity(intent);
-    }
     Handler handler;
     Thread thread = new Thread(new Runnable() {
         @Override

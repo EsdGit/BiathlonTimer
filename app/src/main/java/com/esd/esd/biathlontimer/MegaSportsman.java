@@ -38,16 +38,17 @@ public class MegaSportsman extends RealmObject implements ISportsman
     @Ignore
     private boolean isChecked;
     @Ignore
-    //private Time[] _resultTime;
     private Time _resultTime;
     @Ignore
     private Time _startTime;
     @Ignore
-    //private Time[] _fineTime;
     private Time _fineTime;
     @Ignore
     private int _currentLap;
-
+    @Ignore
+    private int[] _fineCountArr;
+    @Ignore
+    public static int LapsCount;
 
     public MegaSportsman(Sportsman sportsman)
     {
@@ -72,8 +73,9 @@ public class MegaSportsman extends RealmObject implements ISportsman
         this.id = sportsman.getId();
         this._startTime = sportsman.getStartTime();
         this._fineCount = sportsman.getFineCount();
+        this._fineCountArr = sportsman.getFineCountArr().clone();
         if(sportsman.getFineTime() != null) this._fineTime = new Time(sportsman.getFineTime());
-        _currentLap = 0;
+        _currentLap = sportsman.getCurrentLap();
     }
 
 
@@ -94,17 +96,49 @@ public class MegaSportsman extends RealmObject implements ISportsman
         _fineCount = 0;
     }
 
+    public static void setLapsCount(int lapsCount)
+    {
+        LapsCount = lapsCount;
+    }
 
 //    public void setFineCount(int fineCount, int lapNumber)
 //    {
 //        _fineCount[lapNumber] += fineCount;
 //    }
-    public void setFineCount(int fineCount)
+    public void setFineCount(int fineCount, int lapNumber)
     {
+        if(_fineCountArr == null) _fineCountArr = new int[LapsCount];
         _fineCount += fineCount;
+        _fineCountArr[lapNumber] += fineCount;
     }
 
-    public void clearFineCount(){_fineCount = 0;}
+    public String getFineCountArrString()
+    {
+        if(_fineCountArr == null) _fineCountArr = new int[LapsCount];
+        String localStr = String.valueOf(_fineCountArr[0]);
+        for(int i = 1; i < _currentLap; i++)
+        {
+            localStr += "-"+String.valueOf(_fineCountArr[i]);
+        }
+        return localStr;
+    }
+
+    public int[] getFineCountArr()
+    {
+        if(_fineCountArr == null) _fineCountArr = new int[LapsCount];
+        return _fineCountArr;
+    }
+
+    public void clearFineCount()
+    {
+        _fineCount = 0;
+        if(_fineCountArr != null)
+        {
+            for (int i = 0; i < LapsCount; i++) {
+                _fineCountArr[i] = 0;
+            }
+        }
+    }
 //    public int getFineCount(int lapNumber)
 //    {
 //        return _fineCount[lapNumber];
