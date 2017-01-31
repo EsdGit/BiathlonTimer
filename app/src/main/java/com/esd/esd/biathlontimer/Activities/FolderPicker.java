@@ -70,7 +70,7 @@ public class FolderPicker extends AppCompatActivity
         _recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         getFiles();
-        
+
     }
 
     @Override
