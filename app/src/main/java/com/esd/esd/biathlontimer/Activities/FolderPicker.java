@@ -2,6 +2,7 @@ package com.esd.esd.biathlontimer.Activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.PersistableBundle;
@@ -12,6 +13,8 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -20,6 +23,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.esd.esd.biathlontimer.Adapters.CompetitionAdapter;
 import com.esd.esd.biathlontimer.R;
@@ -36,6 +40,8 @@ public class FolderPicker extends AppCompatActivity
 {
     private List<String> _arrayDir;
     private static FolderAdapter _adapter;
+    private MenuItem _accept;
+    private MenuItem _cancel;
 
     RecyclerView _recyclerView;
     static TextView _pathText;
@@ -53,8 +59,6 @@ public class FolderPicker extends AppCompatActivity
         getSupportActionBar().setTitle((Html.fromHtml("<font color=\"#FFFFFF\">"  + "<big>" + getResources().getString(R.string.folder_activity_name) + "</big>" + "</font>")));
         _recyclerView = (RecyclerView) findViewById(R.id.list_file);
         _pathText = (TextView) findViewById(R.id.path_file);
-        _acceptButton = (Button) findViewById(R.id.positive_button);
-        _declineButton = (Button) findViewById(R.id.negative_button);
 
         _currentPath = Environment.getExternalStorageDirectory().getPath();
 
@@ -66,26 +70,38 @@ public class FolderPicker extends AppCompatActivity
         _recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         getFiles();
+        
+    }
 
-        _acceptButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        getMenuInflater().inflate(R.menu.menu_file_directory, menu);
+        _accept = (MenuItem) menu.findItem(R.id.file_directory_accept);
+        _cancel = (MenuItem) menu.findItem(R.id.file_directory_cancel);
+        _accept.getIcon().setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+        _cancel.getIcon().setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch(item.getItemId())
+        {
+            case R.id.file_directory_accept:
+                Toast.makeText(getApplicationContext(),"принять",Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent();
                 intent.putExtra("url", _currentPath);
                 setResult(Activity.RESULT_OK, intent);
                 finish();
-            }
-        });
-
-        _declineButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view)
-            {
+                break;
+            case R.id.file_directory_cancel:
+                Toast.makeText(getApplicationContext(),"отмена",Toast.LENGTH_SHORT).show();
                 finish();
-            }
-        });
-
-
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
