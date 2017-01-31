@@ -36,11 +36,13 @@ public class FinalActivityAdapter extends RecyclerView.Adapter<FinalActivityAdap
         holder._numberTextView.setText(String.valueOf(sportsman.getNumber()));
         holder._nameTextView.setText(sportsman.getName());
         holder._timeTextView.setText(sportsman.getResult());
+        holder._groupTextView.setText(sportsman.getGroup());
 
         holder._placeTextView.setTextColor(sportsman.getColor());
         holder._numberTextView.setTextColor(sportsman.getColor());
         holder._nameTextView.setTextColor(sportsman.getColor());
         holder._timeTextView.setTextColor(sportsman.getColor());
+        holder._groupTextView.setTextColor(sportsman.getColor());
     }
 
     @Override
@@ -102,6 +104,7 @@ public class FinalActivityAdapter extends RecyclerView.Adapter<FinalActivityAdap
         private TextView _numberTextView;
         private TextView _nameTextView;
         private TextView _timeTextView;
+        private TextView _groupTextView;
 
         public ViewHolder(View itemView)
         {
@@ -110,6 +113,7 @@ public class FinalActivityAdapter extends RecyclerView.Adapter<FinalActivityAdap
             _numberTextView = (TextView) itemView.findViewById(R.id.number_final_table);
             _nameTextView = (TextView) itemView.findViewById(R.id.fio_final_table);
             _timeTextView = (TextView) itemView.findViewById(R.id.time_final_table);
+            _groupTextView = (TextView) itemView.findViewById(R.id.group_final_table);
         }
     }
 }
