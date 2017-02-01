@@ -37,29 +37,16 @@ import java.util.List;
 
 
 public class FinalActivity extends AppCompatActivity {
-    private RecyclerView _resultTable;
     private ViewPager _containerTable;
     private ArrayList<RecyclerView> _arrayRecycleView;
-    private PagerAdapter _pageAdapter;
     private TextView _currentRound;
     private PopupMenu _popupMenuSortGroup;
 
-    private MenuItem _placeSort;
-    private MenuItem _nameSort;
-    private MenuItem _send;
-    private MenuItem _sendByWhatsApp;
-    private MenuItem _sendByMail;
-    private MenuItem _groupSort;
 
-    private int _test = 0;
     private int lapsCount;
-    private float fromPosition;
     private Competition _currentCompetition;
     private List<MegaSportsman>[] _arrayMegaSportsman;
     private String[] _arrayGroup;
-
-    private static final float MOVE_LENGTH = 150;
-    private final int REQUEST_DIRECTORY = 0;
 
     private ExcelHelper excelHelper;
     private String temporaryPath;
@@ -78,7 +65,6 @@ public class FinalActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getSupportActionBar().setTitle((Html.fromHtml("<font color=\"#FFFFFF\">"  + "<big>" + getResources().getString(R.string.title_final_activity) + "</big>" + "</font>")));
 
-        //_resultTable = (RecyclerView) findViewById(R.id.tableFinalActivity);
         _containerTable = (ViewPager) findViewById(R.id.tableContainer);
         _currentRound = (TextView) findViewById(R.id.currentRoundFinalActivity);
         _currentRound.setText("1");
@@ -156,22 +142,6 @@ public class FinalActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu)
     {
         getMenuInflater().inflate(R.menu.final_action_bar, menu);
-
-        _placeSort = (MenuItem) menu.findItem(R.id.action_bar_final_activity_place_sort);
-        _nameSort = (MenuItem) menu.findItem(R.id.action_bar_final_activity_name_sort);
-        _send = (MenuItem) menu.findItem(R.id.action_bar_final_activity_send);
-        _sendByWhatsApp = (MenuItem) menu.findItem(R.id.action_bar_final_activity_send_by_whatsapp);
-        _sendByMail = (MenuItem) menu.findItem(R.id.action_bar_final_activity_send_by_mail);
-        _groupSort = (MenuItem) menu.findItem(R.id.action_bar_final_activity_group_sort);
-//        SubMenu subMenu = _groupSort.getSubMenu();
-//        if(_arrayGroup != null)
-//        {
-//            for(int i = 0; i < _arrayGroup.length; i++)
-//            {
-//                subMenu.add(_arrayGroup[i]).setCheckable(true).setChecked(true).setOnMenuItemClickListener(_onMenuItemClickListener);
-//            }
-//        }
-
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -187,12 +157,15 @@ public class FinalActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
+        item.setChecked(!item.isChecked());
         switch (item.getItemId())
         {
             case R.id.action_bar_final_activity_place_sort:
+                SortBy("_place", item.isChecked());
                 Toast.makeText(getApplicationContext(),"Сортировка по месту",Toast.LENGTH_SHORT).show();
                 break;
             case R.id.action_bar_final_activity_name_sort:
+                SortBy("name", item.isChecked());
                 Toast.makeText(getApplicationContext(),"Сортировка по имени",Toast.LENGTH_SHORT).show();
                 break;
             case R.id.action_bar_final_activity_save:
@@ -256,21 +229,20 @@ public class FinalActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private void SortBy(String sortBy, boolean order)
+    {
+        for(int i =0 ; i < lapsCount; i++)
+        {
+            RealmMegaSportsmanSaver saver = new RealmMegaSportsmanSaver(getApplicationContext(), "LAP"+i+_currentCompetition.getNameDateString());
+            _arrayMegaSportsman[i] = saver.GetSportsmen(sortBy, order);
+            adapter.get(i).SortList(_arrayMegaSportsman[i]);
+        }
+
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-//        switch(requestCode)
-//        {
-//            case REQUEST_DIRECTORY:
-//                if (resultCode == DirectoryChooserActivity.RESULT_CODE_DIR_SELECTED)
-//                {
-//                    path = data.getStringExtra(DirectoryChooserActivity.RESULT_SELECTED_DIR);
-//                    excelHelper.CreateFileWithResult(_arrayMegaSportsman, path + "/"+_currentCompetition.getName()+" Результат.xls");
-//                } else {
-//                    Toast.makeText(getApplicationContext(), "Файл не был сохранён", Toast.LENGTH_SHORT).show();
-//                }
-//                break;
-//        }
         if(data == null) return;
         String path = data.getStringExtra("url");
         excelHelper.CreateFileWithResult(_arrayMegaSportsman, path + "/"+_currentCompetition.getName()+" Результат.xls");
@@ -324,7 +296,6 @@ public class FinalActivity extends AppCompatActivity {
                 _arrayMegaSportsman[i] = saver.GetSportsmen("_place",true);
                 adapter.add(new FinalActivityAdapter(_arrayMegaSportsman[i]));
             }
-            //adapter = new FinalActivityAdapter(_arrayMegaSportsman[0]);
             return null;
         }
 
@@ -339,9 +310,6 @@ public class FinalActivity extends AppCompatActivity {
             }
             excelHelper.CreateFileWithResult(_arrayMegaSportsman, temporaryPath);
             checkLapNumberThread.start();
-//            _resultTable.setAdapter(adapter);
-//            _resultTable.setItemAnimator(new DefaultItemAnimator());
-//            _resultTable.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         }
     }
 
