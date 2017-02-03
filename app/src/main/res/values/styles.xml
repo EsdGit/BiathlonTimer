@@ -9,6 +9,11 @@
         <item name="actionOverflowButtonStyle">@style/OverFlow</item>
         <item name="actionOverflowMenuStyle">@style/popupMenuActionBar</item>
         <item name="popupMenuStyle">@style/popupMenu</item>
+        <item name="seekBarStyle">@style/Widget.AppCompat.SeekBar.Discrete</item>
+    </style>
+
+    <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@drawable/splash_screen1</item>
     </style>
 
     <style name="PreferenceScreen" parent="Theme.AppCompat.Light.DarkActionBar">

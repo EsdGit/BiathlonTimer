@@ -147,7 +147,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         {
             _lastTable = (TableLayout) page1.findViewById(R.id.tableLast);
             _currentRound = (TextView) page1.findViewById(R.id.currentRound);
-            _timerParticipantTable = (TextView) page1.findViewById(R.id.competitionTimer);
+            _timerParticipantTable = (TextView) page1.findViewById(R.id.competitionTimerTable);
             _table = (RecyclerView) page1.findViewById(R.id.recyclerViewTableCompetition);
 
             setContentView(page1);

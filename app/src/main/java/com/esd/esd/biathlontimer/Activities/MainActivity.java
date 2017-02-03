@@ -246,4 +246,5 @@ public class MainActivity extends AppCompatActivity {
             _headTableLayout.setVisibility(View.VISIBLE);
         }
     }
+
 }
