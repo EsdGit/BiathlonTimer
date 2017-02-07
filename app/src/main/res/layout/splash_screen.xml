@@ -7,6 +7,6 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/testlaunche"
-        android:scaleType="center"/>
+        android:src="@drawable/testlaunche2"
+        android:scaleType="fitCenter"/>
 </LinearLayout>
