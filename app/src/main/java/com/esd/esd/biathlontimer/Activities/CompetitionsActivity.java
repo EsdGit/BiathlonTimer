@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.GridLayout;
 import android.widget.GridView;
 import android.widget.ImageButton;
@@ -32,6 +33,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.esd.esd.biathlontimer.Adapters.FineAdapter;
 import com.esd.esd.biathlontimer.Competition;
 import com.esd.esd.biathlontimer.Adapters.CompetitionTableAdapter;
 import com.esd.esd.biathlontimer.DatabaseClasses.RealmCompetitionSaver;
@@ -46,6 +48,7 @@ import com.esd.esd.biathlontimer.Sportsman;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -58,6 +61,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
 
     private TableLayout _lastTable;
     private GridView _gridView;
+    private GridView _fineGridView;
     private TextView _currentRound;
     private TextView _competitionTimer;
     private TextView _timerParticipantTable;
@@ -78,6 +82,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
     private android.text.format.Time _currentTime;
     private MegaSportsman[] _megaSportsmen;
     private GridViewAdapter _viewAdapter;
+    private FineAdapter _fineAdapter;
     private int _currentTable = 0;
     private int _number = 0;
     private int lapsCount;
@@ -153,11 +158,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
             setContentView(page1);
         }
 
-        _dialogFineForm = inflater.inflate(R.layout.dialog_fine_competition_activity, null);
-        _dialogSeekBar = (SeekBar) _dialogFineForm.findViewById(R.id.seek_bar_competition_activity);
-        _dialogText = (TextView) _dialogFineForm.findViewById(R.id.count_fine);
-        _dialogSeekBar.setOnSeekBarChangeListener(this);
-        _dialogText.setText(getResources().getString(R.string.dialog_text_fine_competiton) + " 0");
+
 
         _timerDialogBuilder = new AlertDialog.Builder(this);
         _timerDialogBuilder.setTitle("Выберите действие для продолжения.");
@@ -211,12 +212,24 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         _timerDialogBuilder.setCancelable(false);
         _timerDialog = _timerDialogBuilder.create();
 
+        _dialogFineForm = inflater.inflate(R.layout.dialog_fine_competition_activity, null);
+        //_dialogSeekBar = (SeekBar) _dialogFineForm.findViewById(R.id.seek_bar_competition_activity);
+        _dialogText = (TextView) _dialogFineForm.findViewById(R.id.count_fine);
+        //_dialogSeekBar.setOnSeekBarChangeListener(this);
+        _dialogText.setText(getResources().getString(R.string.dialog_text_fine_competiton) + " 0");
+        _fineGridView = (GridView) _dialogFineForm.findViewById(R.id.fineGridView);
+        final String[] countFine = new String[] {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20"};
+        _fineAdapter = new FineAdapter(this, _fineGridView, countFine);
+        _fineGridView.setAdapter(_fineAdapter);
+
+
         _builderFineDialog = new AlertDialog.Builder(CompetitionsActivity.this);
         _builderFineDialog.setView(_dialogFineForm);
-        _builderFineDialog.setPositiveButton(getResources().getString(R.string.accept), new DialogInterface.OnClickListener() {
+        _builderFineDialog.setPositiveButton(getResources().getString(R.string.accept), new DialogInterface.OnClickListener()
+        {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                int fineCount = _dialogSeekBar.getProgress();
+                int fineCount = _fineAdapter.getCurrentCountFine();//_dialogSeekBar.getProgress();
                 int fineSeconds = Integer.valueOf(_currentCompetition.getFineTime().split(":")[1]);
                 int fineMinutes = Integer.valueOf(_currentCompetition.getFineTime().split(":")[0]);
                 android.text.format.Time fineTime = new android.text.format.Time();
@@ -237,7 +250,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
                     }
                 }
 
-                _dialogSeekBar.setProgress(0);
+                //_dialogSeekBar.setProgress(0);
                 _dialogText.setText(getResources().getString(R.string.dialog_text_fine_competiton) + " 0");
 
 
@@ -246,7 +259,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         _builderFineDialog.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                _dialogSeekBar.setProgress(0);
+                //_dialogSeekBar.setProgress(0);
                 _dialogText.setText(getResources().getString(R.string.dialog_text_fine_competiton) + " 0");
             }
         });
@@ -267,6 +280,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         TimerStartPosition();
 
     }
+
 
     private void AddRowAsTableCompetitions(MegaSportsman megaSportsman) {
         final TableRow newRow = new TableRow(this);
@@ -351,10 +365,14 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id)
         {
             _dialogOwnerView = view;
+            _fineAdapter.setCountFine(_megaSportsmen[position].getFineCount());
             _fineDialog.show();
             return true;
         }
     };
+
+
+
     //Здесь клик на ячейку
     private GridView.OnItemClickListener gridViewOnItemClickListner = new GridView.OnItemClickListener()
     {
