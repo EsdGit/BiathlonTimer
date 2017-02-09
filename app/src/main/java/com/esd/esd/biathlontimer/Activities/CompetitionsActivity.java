@@ -86,6 +86,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
     private int _currentTable = 0;
     private int _number = 0;
     private int lapsCount;
+    private int _currentSportsman;
     private boolean _isFirstLoad = true;
 
     private View _dialogOwnerView;
@@ -229,7 +230,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                int fineCount = _fineAdapter.getCurrentCountFine();//_dialogSeekBar.getProgress();
+                int fineCount = _fineAdapter.getCurrentCountFine() - _megaSportsmen[_currentSportsman].getFineCount();//_dialogSeekBar.getProgress();
                 int fineSeconds = Integer.valueOf(_currentCompetition.getFineTime().split(":")[1]);
                 int fineMinutes = Integer.valueOf(_currentCompetition.getFineTime().split(":")[0]);
                 android.text.format.Time fineTime = new android.text.format.Time();
@@ -366,6 +367,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         {
             _dialogOwnerView = view;
             _fineAdapter.setCountFine(_megaSportsmen[position].getFineCount());
+            _currentSportsman = position;
             _fineDialog.show();
             return true;
         }
