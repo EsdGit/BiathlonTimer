@@ -60,6 +60,7 @@ import java.util.concurrent.TimeUnit;
 public class CompetitionsActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener {
 
     private TableLayout _lastTable;
+    private ViewPager _viewPagerLap;
     private GridView _gridView;
     private GridView _fineGridView;
     private TextView _currentRound;
@@ -88,7 +89,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
     private int lapsCount;
     private int _currentSportsman;
     private boolean _isFirstLoad = true;
-
+    private ArrayList<RecyclerView> _arrayRecycleView;
     private View _dialogOwnerView;
 
     private CountDownTimer _countDownTimer;
@@ -97,6 +98,8 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
 
     private CompetitionTableAdapter _tableAdapter;
     private RecyclerView _table;
+    private RecyclerView _currentRecyclerView;
+    private Thread checkLapNumberThread;
 
     private enum CompetitionState {
         NotStarted,
@@ -155,7 +158,57 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
             _currentRound = (TextView) page1.findViewById(R.id.currentRound);
             _timerParticipantTable = (TextView) page1.findViewById(R.id.competitionTimerTable);
             _table = (RecyclerView) page1.findViewById(R.id.recyclerViewTableCompetition);
+            _viewPagerLap = (ViewPager) page1.findViewById(R.id.viewPagerTableCompetition);
+            lapsCount = _currentCompetition.getCheckPointsCount();
+            _arrayRecycleView = new ArrayList<>();
+            List<View> ListPages = new ArrayList<>();
+            for (int i = 0; i < lapsCount; i++)
+            {
+                View page = inflater.inflate(R.layout.table_fragment, null);
+                _arrayRecycleView.add((RecyclerView)page.findViewById(R.id.tableFinalActivity));
 
+//                CompetitionTableAdapter testAdapte = new CompetitionTableAdapter(CompetitionsActivity.this);
+//                testAdapte.AddSportsmen(_arrayMegaSportsmen[i]);
+//                _arrayRecycleView.get(i).setAdapter(testAdapte);
+
+                ListPages.add(page);
+            }
+            _currentRecyclerView = _arrayRecycleView.get(0);
+            PagerAdapterHelper pagerAdapter = new PagerAdapterHelper(ListPages);
+            _viewPagerLap.setAdapter(pagerAdapter);
+            _viewPagerLap.setCurrentItem(0);
+            checkLapNumberThread = new Thread(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    while(true)
+                    {
+                        final int lapNumber = _viewPagerLap.getCurrentItem();
+                        if (!_currentRecyclerView.equals(_arrayRecycleView.get(lapNumber)))
+                        {
+                            _currentRecyclerView = _arrayRecycleView.get(lapNumber);
+                            //_currentRecyclerView.getAdapter().notifyDataSetChanged();
+                            runOnUiThread(new Runnable()
+                            {
+                                @Override
+                                public void run()
+                                {
+                                    _currentRound.setText(getResources().getString(R.string.current_round) + " - " + String.valueOf(lapNumber+1));
+                                }
+                            });
+                        }
+                        try
+                        {
+                            Thread.sleep(100);
+                        }
+                        catch (Exception ex)
+                        {
+
+                        }
+                    }
+                }
+            });
             setContentView(page1);
         }
 
@@ -275,9 +328,22 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         }
         _currentRound.setText(_currentRound.getText() + " - " + Integer.toString(_currentTable + 1));
         _tableAdapter = new CompetitionTableAdapter(this);
-        _table.setAdapter(_tableAdapter);
-        _table.setItemAnimator(new DefaultItemAnimator());
-        _table.setLayoutManager(new LinearLayoutManager(this));
+        if(!getResources().getBoolean(R.bool.isTablet))
+        {
+            _table.setAdapter(_tableAdapter);
+            _table.setItemAnimator(new DefaultItemAnimator());
+            _table.setLayoutManager(new LinearLayoutManager(this));
+        }
+        else
+        {
+            for(int i = 0; i < lapsCount; i++)
+            {
+//                _tableAdapter.ClearList();
+//                _tableAdapter.AddSportsmen(_arrayMegaSportsmen[i]);
+//                _tableAdapter.notifyDataSetChanged();
+//                _arrayRecycleView.get(i).setAdapter(_tableAdapter);
+            }
+        }
         TimerStartPosition();
 
     }
@@ -413,9 +479,17 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
             AddRowToLastEventTable(localSportsman, true);
             if(_currentTable == lap)
             {
-                _tableAdapter.ClearList();
-                _tableAdapter.AddSportsmen(_arrayMegaSportsmen[lap]);
-                _tableAdapter.notifyDataSetChanged();
+                if(!getResources().getBoolean(R.bool.isTablet))
+                {
+                    _tableAdapter.ClearList();
+                    _tableAdapter.AddSportsmen(_arrayMegaSportsmen[lap]);
+                    _tableAdapter.notifyDataSetChanged();
+                }
+                else
+                {
+                   //Видимо тут код добавления
+
+                }
             }
             if (lap == lapsCount - 1)
             {
@@ -846,6 +920,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         protected void onPostExecute(Void aVoid)
         {
             super.onPostExecute(aVoid);
+            checkLapNumberThread.start();
             dialog.dismiss();
         }
     }
