@@ -920,7 +920,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         protected void onPostExecute(Void aVoid)
         {
             super.onPostExecute(aVoid);
-            checkLapNumberThread.start();
+            if(checkLapNumberThread != null) checkLapNumberThread.start();
             dialog.dismiss();
         }
     }

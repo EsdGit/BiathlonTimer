@@ -5,6 +5,7 @@ import android.content.Context;
 import com.esd.esd.biathlontimer.MegaSportsman;
 import com.esd.esd.biathlontimer.Sportsman;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -78,6 +79,12 @@ public class RealmMegaSportsmanSaver
             }
         }
         return 0;
+    }
+
+    public List<MegaSportsman> SortByGroup(ArrayList<String> group)
+    {
+        List<MegaSportsman> localList = realm.copyFromRealm(realm.where(MegaSportsman.class).in("group", group.toArray(new String[group.size()])).findAll());
+        return localList;
     }
 
     public void DeleteSportsmen(List<MegaSportsman> sportsmen)

@@ -30,6 +30,7 @@ import com.esd.esd.biathlontimer.Adapters.FinalActivityAdapter;
 import com.esd.esd.biathlontimer.MegaSportsman;
 import com.esd.esd.biathlontimer.PagerAdapterHelper;
 import com.esd.esd.biathlontimer.R;
+import com.esd.esd.biathlontimer.Sportsman;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -55,6 +56,8 @@ public class FinalActivity extends AppCompatActivity {
     RecyclerView _currentRecyclerView;
 
     ArrayList<FinalActivityAdapter> adapter;
+
+    private ArrayList<String>_groupSortArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -88,6 +91,12 @@ public class FinalActivity extends AppCompatActivity {
             _arrayGroup = new String[1];
         }
         _arrayGroup[0]=getResources().getString(R.string.default_group);
+
+        _groupSortArray = new ArrayList<>();
+        for(int i =0; i < _arrayGroup.length; i++)
+        {
+            _groupSortArray.add(_arrayGroup[i]);
+        }
 
         lapsCount = _currentCompetition.getCheckPointsCount();
         _arrayMegaSportsman = new ArrayList[lapsCount];
@@ -259,17 +268,27 @@ public class FinalActivity extends AppCompatActivity {
                 @Override
                 public boolean onMenuItemActionExpand(MenuItem menuItem)
                 {
+                    String name = String.valueOf(item.getTitle());
                     //Если группа выбрана
                     if(item.isChecked())
                     {
                         //Если группа была отменена
                         item.setChecked(false);
+                        if(_groupSortArray.contains(name))
+                        {
+                            _groupSortArray.remove(name);
+                        }
                     }
                     else
                     {
                         //Если группа бала отмечена
                         item.setChecked(true);
+                        if(!_groupSortArray.contains(name))
+                        {
+                            _groupSortArray.add(name);
+                        }
                     }
+                    SortByGroup();
                     return false;
                 }
 
@@ -282,6 +301,21 @@ public class FinalActivity extends AppCompatActivity {
             return false;
         }
     };
+
+    private void SortByGroup()
+    {
+        for(int i = 0; i < lapsCount; i++)
+        {
+            if (_groupSortArray.size() == 0)
+                adapter.get(i).SortList(new ArrayList<MegaSportsman>());
+            else
+            {
+                RealmMegaSportsmanSaver saver = new RealmMegaSportsmanSaver(getApplicationContext(), "LAP"+i+_currentCompetition.getNameDateString());
+                List<MegaSportsman> localList = saver.SortByGroup(_groupSortArray);
+                adapter.get(i).SortList(localList);
+            }
+        }
+    }
 
     class LoadData extends AsyncTask<Void, Void, Void>
     {

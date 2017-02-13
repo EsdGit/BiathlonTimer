@@ -948,8 +948,12 @@ public class ViewPagerActivity extends AppCompatActivity
 
     private void SortByGroup()
     {
-        List<Sportsman> localList = saver.SortByGroup(_groupSortArray);
-        _recyclerViewLocalDatabaseAdapter.SortList(localList);
+        if(_groupSortArray.size() == 0) _recyclerViewLocalDatabaseAdapter.SortList(new ArrayList<Sportsman>());
+        else
+        {
+            List<Sportsman> localList = saver.SortByGroup(_groupSortArray);
+            _recyclerViewLocalDatabaseAdapter.SortList(localList);
+        }
     }
 
     private class CreateTableOfSportsman extends AsyncTask<Void, Sportsman, Void>
