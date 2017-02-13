@@ -90,6 +90,8 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
     private int _currentSportsman;
     private boolean _isFirstLoad = true;
     private ArrayList<RecyclerView> _arrayRecycleView;
+    private ArrayList<CompetitionTableAdapter> _arrayAdapters;
+
     private View _dialogOwnerView;
 
     private CountDownTimer _countDownTimer;
@@ -161,16 +163,16 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
             _viewPagerLap = (ViewPager) page1.findViewById(R.id.viewPagerTableCompetition);
             lapsCount = _currentCompetition.getCheckPointsCount();
             _arrayRecycleView = new ArrayList<>();
+            _arrayAdapters = new ArrayList<>();
             List<View> ListPages = new ArrayList<>();
             for (int i = 0; i < lapsCount; i++)
             {
                 View page = inflater.inflate(R.layout.table_fragment, null);
                 _arrayRecycleView.add((RecyclerView)page.findViewById(R.id.tableFinalActivity));
-
-//                CompetitionTableAdapter testAdapte = new CompetitionTableAdapter(CompetitionsActivity.this);
-//                testAdapte.AddSportsmen(_arrayMegaSportsmen[i]);
-//                _arrayRecycleView.get(i).setAdapter(testAdapte);
-
+                _arrayAdapters.add(new CompetitionTableAdapter(this));
+                _arrayRecycleView.get(i).setLayoutManager(new LinearLayoutManager(this));
+                _arrayRecycleView.get(i).setItemAnimator(new DefaultItemAnimator());
+                _arrayRecycleView.get(i).setAdapter(_arrayAdapters.get(i));
                 ListPages.add(page);
             }
             _currentRecyclerView = _arrayRecycleView.get(0);
@@ -188,6 +190,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
                         if (!_currentRecyclerView.equals(_arrayRecycleView.get(lapNumber)))
                         {
                             _currentRecyclerView = _arrayRecycleView.get(lapNumber);
+                            _currentTable = lapNumber;
                             //_currentRecyclerView.getAdapter().notifyDataSetChanged();
                             runOnUiThread(new Runnable()
                             {
@@ -477,20 +480,22 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
             });
             GetLag(lap);
             AddRowToLastEventTable(localSportsman, true);
-            if(_currentTable == lap)
+            if(!getResources().getBoolean(R.bool.isTablet))
             {
-                if(!getResources().getBoolean(R.bool.isTablet))
-                {
+                if(_currentTable == lap) {
                     _tableAdapter.ClearList();
                     _tableAdapter.AddSportsmen(_arrayMegaSportsmen[lap]);
                     _tableAdapter.notifyDataSetChanged();
                 }
-                else
-                {
-                   //Видимо тут код добавления
-
-                }
             }
+            else
+            {
+                   //Видимо тут код добавления
+                _arrayAdapters.get(lap).ClearList();
+                _arrayAdapters.get(lap).AddSportsmen(_arrayMegaSportsmen[lap]);
+                _arrayAdapters.get(lap).notifyDataSetChanged();
+            }
+
             if (lap == lapsCount - 1)
             {
                 _viewAdapter.ChangeSportsmanLap(number, 0);
