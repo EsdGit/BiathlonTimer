@@ -241,7 +241,7 @@ public class MainActivity extends AppCompatActivity {
         if(competitionAdapter.getItemCount() == 0)
         {
             _emptyText.setVisibility(View.VISIBLE);
-            _headTableLayout.setVisibility(View.INVISIBLE);
+            _headTableLayout.setVisibility(View.GONE);
         }
         else
         {
