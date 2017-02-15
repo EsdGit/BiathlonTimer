@@ -41,4 +41,8 @@
         <item name="android:alignmentMode">alignBounds</item>
     </style>
 
+    <style name="DialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:background">#FFFFFF</item>
+    </style>
+
 </resources>

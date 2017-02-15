@@ -5,7 +5,7 @@
     <item>
         <bitmap
             android:gravity="center"
-            android:src="@drawable/testlaunche"/>
+            android:src="@drawable/loading_img"/>
     </item>
 
 </layer-list>

@@ -271,16 +271,16 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
 
         _dialogFineForm = inflater.inflate(R.layout.dialog_fine_competition_activity, null);
         //_dialogSeekBar = (SeekBar) _dialogFineForm.findViewById(R.id.seek_bar_competition_activity);
-        _dialogText = (TextView) _dialogFineForm.findViewById(R.id.count_fine);
+        //_dialogText = (TextView) _dialogFineForm.findViewById(R.id.count_fine);
         //_dialogSeekBar.setOnSeekBarChangeListener(this);
-        _dialogText.setText(getResources().getString(R.string.dialog_text_fine_competiton) + " 0");
+        //_dialogText.setText(getResources().getString(R.string.dialog_text_fine_competiton) + " 0");
         _fineGridView = (GridView) _dialogFineForm.findViewById(R.id.fineGridView);
         final String[] countFine = new String[] {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20"};
         _fineAdapter = new FineAdapter(this, _fineGridView, countFine);
         _fineGridView.setAdapter(_fineAdapter);
 
 
-        _builderFineDialog = new AlertDialog.Builder(CompetitionsActivity.this);
+        _builderFineDialog = new AlertDialog.Builder(CompetitionsActivity.this, R.style.DialogStyle);
         _builderFineDialog.setView(_dialogFineForm);
         _builderFineDialog.setPositiveButton(getResources().getString(R.string.accept), new DialogInterface.OnClickListener()
         {
@@ -308,7 +308,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
                 }
 
                 //_dialogSeekBar.setProgress(0);
-                _dialogText.setText(getResources().getString(R.string.dialog_text_fine_competiton) + " 0");
+                //_dialogText.setText(getResources().getString(R.string.dialog_text_fine_competiton) + " 0");
 
 
             }
@@ -317,7 +317,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 //_dialogSeekBar.setProgress(0);
-                _dialogText.setText(getResources().getString(R.string.dialog_text_fine_competiton) + " 0");
+                //_dialogText.setText(getResources().getString(R.string.dialog_text_fine_competiton) + " 0");
             }
         });
 
