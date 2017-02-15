@@ -1,6 +1,7 @@
 package com.esd.esd.biathlontimer.Activities;
 
 import android.app.AlertDialog;
+import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -23,6 +24,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.GridLayout;
 import android.widget.GridView;
 import android.widget.ImageButton;
@@ -169,7 +171,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
             {
                 View page = inflater.inflate(R.layout.table_fragment, null);
                 _arrayRecycleView.add((RecyclerView)page.findViewById(R.id.tableFinalActivity));
-                _arrayAdapters.add(new CompetitionTableAdapter(this));
+                _arrayAdapters.add(new CompetitionTableAdapter(this, this.getFragmentManager()));
                 _arrayRecycleView.get(i).setLayoutManager(new LinearLayoutManager(this));
                 _arrayRecycleView.get(i).setItemAnimator(new DefaultItemAnimator());
                 _arrayRecycleView.get(i).setAdapter(_arrayAdapters.get(i));
@@ -214,8 +216,6 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
             });
             setContentView(page1);
         }
-
-
 
         _timerDialogBuilder = new AlertDialog.Builder(this);
         _timerDialogBuilder.setTitle("Выберите действие для продолжения.");
@@ -279,7 +279,6 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         _fineAdapter = new FineAdapter(this, _fineGridView, countFine);
         _fineGridView.setAdapter(_fineAdapter);
 
-
         _builderFineDialog = new AlertDialog.Builder(CompetitionsActivity.this);
         _builderFineDialog.setView(_dialogFineForm);
         _builderFineDialog.setPositiveButton(getResources().getString(R.string.accept), new DialogInterface.OnClickListener()
@@ -330,7 +329,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
             _arrayMegaSportsmen[i] = new ArrayList<MegaSportsman>();
         }
         _currentRound.setText(_currentRound.getText() + " - " + Integer.toString(_currentTable + 1));
-        _tableAdapter = new CompetitionTableAdapter(this);
+        _tableAdapter = new CompetitionTableAdapter(this, this.getFragmentManager());
         if(!getResources().getBoolean(R.bool.isTablet))
         {
             _table.setAdapter(_tableAdapter);
@@ -452,54 +451,67 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         {
             TextView NumberStr = (TextView) view.findViewById(R.id.numberParticipantMyButton);
             TextView LapStr = (TextView) view.findViewById(R.id.lapParticipantMyButton);
+            FrameLayout finishedLayout = (FrameLayout)view.findViewById(R.id.second_layout);
             int number = Integer.valueOf(NumberStr.getText().toString());
             int lap = Integer.valueOf(LapStr.getText().toString());
-            MegaSportsman localSportsman = null;
-            _viewAdapter.ChangeSportsmanLap(number, lap+1);
-            android.text.format.Time newTime = new android.text.format.Time();
-            for (int i = 0; i < _megaSportsmen.length; i++) {
-                if (number == _megaSportsmen[i].getNumber()) {
-                    newTime.hour = _currentTime.hour - _megaSportsmen[i].getStartTime().hour;
-                    newTime.minute = _currentTime.minute - _megaSportsmen[i].getStartTime().minute;
-                    newTime.second = _currentTime.second - _megaSportsmen[i].getStartTime().second;
-                    newTime.normalize(false);
-                    localSportsman = new MegaSportsman(_megaSportsmen[i]);
-                   // _megaSportsmen[i].setFineTime(null);
-                   // _megaSportsmen[i].setFineCount(0);
-                    break;
+            int currentSportsmen = 0;
+            boolean isFinished = false;
+            for(int i = 0; i < _megaSportsmen.length; i ++)
+            {
+                if (number == _megaSportsmen[i].getNumber())
+                {
+                    isFinished = _megaSportsmen[i].getFinished();
+                    currentSportsmen = i;
                 }
             }
+            if(!isFinished)
+            {
+                MegaSportsman localSportsman = null;
+                _viewAdapter.ChangeSportsmanLap(number, lap + 1);
+                android.text.format.Time newTime = new android.text.format.Time();
+                for (int i = 0; i < _megaSportsmen.length; i++) {
+                    if (number == _megaSportsmen[i].getNumber())
+                    {
+                        newTime.hour = _currentTime.hour - _megaSportsmen[i].getStartTime().hour;
+                        newTime.minute = _currentTime.minute - _megaSportsmen[i].getStartTime().minute;
+                        newTime.second = _currentTime.second - _megaSportsmen[i].getStartTime().second;
+                        newTime.normalize(false);
+                        localSportsman = new MegaSportsman(_megaSportsmen[i]);
+                        // _megaSportsmen[i].setFineTime(null);
+                        // _megaSportsmen[i].setFineCount(0);
+                        break;
+                    }
+                }
 
-            localSportsman.setResultTime(newTime);
-            GetPlace(localSportsman, lap);
-            Collections.sort(_arrayMegaSportsmen[lap], new Comparator<MegaSportsman>() {
-                @Override
-                public int compare(MegaSportsman o1, MegaSportsman o2) {
-                    return o1.getPlace().compareTo(o2.getPlace());
+                localSportsman.setResultTime(newTime);
+                GetPlace(localSportsman, lap);
+                Collections.sort(_arrayMegaSportsmen[lap], new Comparator<MegaSportsman>() {
+                    @Override
+                    public int compare(MegaSportsman o1, MegaSportsman o2) {
+                        return o1.getPlace().compareTo(o2.getPlace());
+                    }
+                });
+                GetLag(lap);
+                AddRowToLastEventTable(localSportsman, true);
+                if (!getResources().getBoolean(R.bool.isTablet)) {
+                    if (_currentTable == lap) {
+                        _tableAdapter.ClearList();
+                        _tableAdapter.AddSportsmen(_arrayMegaSportsmen[lap]);
+                        _tableAdapter.notifyDataSetChanged();
+                    }
+                } else {
+                    //Видимо тут код добавления
+                    _arrayAdapters.get(lap).ClearList();
+                    _arrayAdapters.get(lap).AddSportsmen(_arrayMegaSportsmen[lap]);
+                    _arrayAdapters.get(lap).notifyDataSetChanged();
                 }
-            });
-            GetLag(lap);
-            AddRowToLastEventTable(localSportsman, true);
-            if(!getResources().getBoolean(R.bool.isTablet))
-            {
-                if(_currentTable == lap) {
-                    _tableAdapter.ClearList();
-                    _tableAdapter.AddSportsmen(_arrayMegaSportsmen[lap]);
-                    _tableAdapter.notifyDataSetChanged();
-                }
-            }
-            else
-            {
-                   //Видимо тут код добавления
-                _arrayAdapters.get(lap).ClearList();
-                _arrayAdapters.get(lap).AddSportsmen(_arrayMegaSportsmen[lap]);
-                _arrayAdapters.get(lap).notifyDataSetChanged();
-            }
 
-            if (lap == lapsCount - 1)
-            {
-                _viewAdapter.ChangeSportsmanLap(number, 0);
-                _viewAdapter.RemoveSportsman(number);
+                if (lap == lapsCount - 1) {
+                    //_viewAdapter.ChangeSportsmanLap(number, 0);
+                    //_viewAdapter.RemoveSportsman(number);
+                    _megaSportsmen[currentSportsmen].setFinished(true);
+                    finishedLayout.setVisibility(View.VISIBLE);
+                }
             }
         }
     };

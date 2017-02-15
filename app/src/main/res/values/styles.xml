@@ -41,4 +41,7 @@
         <item name="android:alignmentMode">alignBounds</item>
     </style>
 
+    <style name="test" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:gravity">center</item>
+    </style>
 </resources>

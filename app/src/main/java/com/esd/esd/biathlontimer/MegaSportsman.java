@@ -28,6 +28,7 @@ public class MegaSportsman extends RealmObject implements ISportsman
     private String country;
     private String group;
     private int color;
+    private boolean isFinished;
 
     private Integer _place;
     private int _fineCount;
@@ -59,6 +60,7 @@ public class MegaSportsman extends RealmObject implements ISportsman
         this.group = sportsman.getGroup();
         this.color = sportsman.getColor();
         this.id = sportsman.getId();
+        this.isFinished = false;
         _currentLap = 0;
     }
 
@@ -74,6 +76,7 @@ public class MegaSportsman extends RealmObject implements ISportsman
         this._startTime = sportsman.getStartTime();
         this._fineCount = sportsman.getFineCount();
         this._fineCountArr = sportsman.getFineCountArr().clone();
+        this.isFinished = false;
         if(sportsman.getFineTime() != null) this._fineTime = new Time(sportsman.getFineTime());
         _currentLap = sportsman.getCurrentLap();
     }
@@ -92,6 +95,7 @@ public class MegaSportsman extends RealmObject implements ISportsman
         this.country = country;
         this.group = group;
         this.color = color;
+        this.isFinished = false;
         _currentLap = 0;
         _fineCount = 0;
     }
@@ -278,6 +282,10 @@ public class MegaSportsman extends RealmObject implements ISportsman
     public void setId(long id) {
         this.id = id;
     }
+
+    public void setFinished(boolean finished){this.isFinished = finished;}
+
+    public boolean getFinished() {return isFinished;}
 
     @Override
     public int getColor() {

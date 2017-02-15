@@ -816,7 +816,7 @@ public class ViewPagerActivity extends AppCompatActivity
         if(_recyclerViewDatabase.getChildCount() == 0)
         {
             _emptyDataBaseList.setVisibility(View.VISIBLE);
-            _headDataBase.setVisibility(View.INVISIBLE);
+            _headDataBase.setVisibility(View.GONE);
         }
         else
         {
