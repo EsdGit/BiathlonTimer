@@ -2,6 +2,7 @@ package com.esd.esd.biathlontimer.Adapters;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +13,11 @@ import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.esd.esd.biathlontimer.MegaSportsman;
 import com.esd.esd.biathlontimer.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by NIL_RIMS_4 on 07.02.2017.
@@ -25,6 +30,9 @@ public class FineAdapter extends BaseAdapter
     private Drawable drawableTegOn;
     private Drawable drawableTegOff;
     private GridView _parentGridView;
+    private int _fineCount;
+
+    private MegaSportsman _megaSportsman;
 
     public FineAdapter(Context context, GridView gridView, String[] objects)
     {
@@ -72,6 +80,7 @@ public class FineAdapter extends BaseAdapter
             @Override
             public void onClick(View view)
             {
+                if((Integer.valueOf(number.getText().toString()) < _fineCount)) return;
                 Toast.makeText(_context,number.getText().toString(),Toast.LENGTH_SHORT).show();
                 if(view.findViewById(R.id.button_fine).getTag() == drawableTegOn)
                 {
@@ -108,6 +117,11 @@ public class FineAdapter extends BaseAdapter
         return gridElement;
     }
 
+    public void SetMegaSportsman(MegaSportsman megaSportsman, int lapNumber)
+    {
+        int[] localArray = megaSportsman.getFineCountArr();
+        _fineCount = megaSportsman.getFineCount() - localArray[lapNumber];
+    }
     public int getCurrentCountFine()
     {
         int count = 0;

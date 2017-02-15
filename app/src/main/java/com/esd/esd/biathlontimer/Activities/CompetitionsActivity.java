@@ -351,7 +351,6 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
 
     }
 
-
     private void AddRowAsTableCompetitions(MegaSportsman megaSportsman) {
         final TableRow newRow = new TableRow(this);
         newRow.setWeightSum(100);
@@ -437,6 +436,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
             _dialogOwnerView = view;
             _fineAdapter.setCountFine(_megaSportsmen[position].getFineCount());
             _currentSportsman = position;
+            _fineAdapter.SetMegaSportsman(_megaSportsmen[position], Integer.valueOf(((TextView)view.findViewById(R.id.lapParticipantMyButton)).getText().toString()));
             _fineDialog.show();
             return true;
         }
