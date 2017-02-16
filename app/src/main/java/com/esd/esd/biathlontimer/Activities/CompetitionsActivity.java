@@ -433,6 +433,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         @Override
         public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id)
         {
+            if(_megaSportsmen[position].getFinished()) return true;
             _dialogOwnerView = view;
             _fineAdapter.setCountFine(_megaSportsmen[position].getFineCount());
             _currentSportsman = position;

@@ -11,7 +11,7 @@ import com.esd.esd.biathlontimer.R;
 
 public class SplashScreen extends AppCompatActivity
 {
-    private static final int SLEEP_TIME = 2000;
+    private static final int SLEEP_TIME = 1000;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

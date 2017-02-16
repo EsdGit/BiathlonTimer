@@ -4,6 +4,7 @@ package com.esd.esd.biathlontimer.Adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,9 +31,8 @@ public class FineAdapter extends BaseAdapter
     private Drawable drawableTegOn;
     private Drawable drawableTegOff;
     private GridView _parentGridView;
-    private int _fineCount;
-
-    private MegaSportsman _megaSportsman;
+    private int _fineCount;//Минимальное число штрафа (нельзя отменить)
+    private int _currentFineCount;//Текущее число штрафов спортсмена
 
     public FineAdapter(Context context, GridView gridView, String[] objects)
     {
@@ -74,7 +74,20 @@ public class FineAdapter extends BaseAdapter
         }
         final TextView number = (TextView) gridElement.findViewById(R.id.number_fine);
         final Button button = (Button) gridElement.findViewById(R.id.button_fine);
-        button.setTag(drawableTegOff);
+        for(int j = 0; j < _parentGridView.getChildCount(); j++)
+        {
+            if(j < _currentFineCount)
+            {
+                _parentGridView.getChildAt(j).findViewById(R.id.button_fine).setBackground(_context.getResources().getDrawable(R.drawable.background_fine_button_on));
+                _parentGridView.getChildAt(j).findViewById(R.id.button_fine).setTag(drawableTegOn);
+            }
+            else
+            {
+                _parentGridView.getChildAt(j).findViewById(R.id.button_fine).setBackground(_context.getResources().getDrawable(R.drawable.background_fine_button_off));
+                _parentGridView.getChildAt(j).findViewById(R.id.button_fine).setTag(drawableTegOff);
+            }
+        }
+        //button.setTag(drawableTegOff);
         number.setText(sportsman);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,7 +95,11 @@ public class FineAdapter extends BaseAdapter
             {
                 if((Integer.valueOf(number.getText().toString()) < _fineCount)) return;
                 Toast.makeText(_context,number.getText().toString(),Toast.LENGTH_SHORT).show();
-                if(view.findViewById(R.id.button_fine).getTag() == drawableTegOn)
+                Button localButton = (Button) view.findViewById(R.id.button_fine);
+                Log.i("Teg", localButton.getTag().toString());
+                Log.i("Teg",drawableTegOn.toString());
+                Log.i("Teg",drawableTegOff.toString());
+                if(localButton.getTag() == drawableTegOn)
                 {
                     for(int i = 0; i < _parentGridView.getChildCount(); i++)
                     {
@@ -122,6 +139,7 @@ public class FineAdapter extends BaseAdapter
         int[] localArray = megaSportsman.getFineCountArr();
         _fineCount = megaSportsman.getFineCount() - localArray[lapNumber];
     }
+
     public int getCurrentCountFine()
     {
         int count = 0;
@@ -137,19 +155,7 @@ public class FineAdapter extends BaseAdapter
 
     public void setCountFine(int count)
     {
-        for(int i = 0; i < _parentGridView.getChildCount(); i++)
-        {
-            if(i < count)
-            {
-                _parentGridView.getChildAt(i).findViewById(R.id.button_fine).setBackground(_context.getResources().getDrawable(R.drawable.background_fine_button_on));
-                _parentGridView.getChildAt(i).findViewById(R.id.button_fine).setTag(drawableTegOn);
-            }
-            else
-            {
-                _parentGridView.getChildAt(i).findViewById(R.id.button_fine).setBackground(_context.getResources().getDrawable(R.drawable.background_fine_button_off));
-                _parentGridView.getChildAt(i).findViewById(R.id.button_fine).setTag(drawableTegOff);
-            }
-        }
+        _currentFineCount = count;
     }
 
 
