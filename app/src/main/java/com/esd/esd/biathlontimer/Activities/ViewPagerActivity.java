@@ -802,7 +802,7 @@ public class ViewPagerActivity extends AppCompatActivity
         if(_recyclerView.getChildCount() == 0)
         {
             _emptyParticipantList.setVisibility(View.VISIBLE);
-            _headParticipant.setVisibility(View.INVISIBLE);
+            _headParticipant.setVisibility(View.GONE);
         }
         else
         {

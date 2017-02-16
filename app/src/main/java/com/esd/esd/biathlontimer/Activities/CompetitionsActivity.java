@@ -754,11 +754,6 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
     }
 
 
-    public void returnLastStepOnClick(View view)
-    {
-       // Здесь отмена действий
-    }
-
     public void OnClickNextTable(View view)
     {
         if(_currentTable < lapsCount - 1)

@@ -36,23 +36,6 @@
             android:layout_gravity="center"
             android:gravity="center"/>
 
-        <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:layout_gravity="right|center_vertical">
-
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:id="@+id/returnLastStep"
-                android:src="@drawable/ic_return_last_step"
-                android:tint="#ffffff"
-                android:background="@null"
-                android:layout_weight="0.5"
-                android:onClick="returnLastStepOnClick"/>
-
-        </FrameLayout>
     </FrameLayout>
 
     <LinearLayout
