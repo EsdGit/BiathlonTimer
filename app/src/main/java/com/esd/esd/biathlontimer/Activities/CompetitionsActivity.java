@@ -36,6 +36,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.esd.esd.biathlontimer.Adapters.FineAdapter;
+import com.esd.esd.biathlontimer.ChangeColorEvent;
 import com.esd.esd.biathlontimer.Competition;
 import com.esd.esd.biathlontimer.Adapters.CompetitionTableAdapter;
 import com.esd.esd.biathlontimer.DatabaseClasses.RealmCompetitionSaver;
@@ -47,6 +48,10 @@ import com.esd.esd.biathlontimer.MyButton;
 import com.esd.esd.biathlontimer.PagerAdapterHelper;
 import com.esd.esd.biathlontimer.R;
 import com.esd.esd.biathlontimer.Sportsman;
+import com.esd.esd.biathlontimer.SportsmanDeleteEvent;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -105,6 +110,8 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
     private RecyclerView _currentRecyclerView;
     private Thread checkLapNumberThread;
 
+    private EventBus _event;
+
     private enum CompetitionState {
         NotStarted,
         Started,
@@ -136,6 +143,8 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         pages.add(page1);
         _competitionTimer = (TextView) page1.findViewById(R.id.competitionTimer);
 
+        _event = EventBus.getDefault();
+        _event.register(this);
         //Тест
         _gridView = (GridView) page1.findViewById(R.id.gridView);
         _gridView.setOnItemLongClickListener(gridViewOnItemLongClickListener);
@@ -348,6 +357,56 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
             }
         }
         TimerStartPosition();
+
+    }
+
+    @Subscribe
+    public void OnSportsmanDelete(SportsmanDeleteEvent sportsmanDeleteEvent)
+    {
+        int number = sportsmanDeleteEvent.GetSportsmanNumber();
+        for(int i = 0; i < _megaSportsmen.length; i++)
+        {
+            if(number == _megaSportsmen[i].getNumber())
+            {
+                _tableAdapter.RemoveSportsman(_megaSportsmen[i]);
+                _tableAdapter.notifyDataSetChanged();
+                _viewAdapter.ChangeSportsmanLap(number, _megaSportsmen[i].getCurrentLap() - 1);
+                _viewAdapter.notifyDataSetChanged();
+                _megaSportsmen[i].setCurrentLap(_megaSportsmen[i].getCurrentLap() - 1);
+                break;
+            }
+        }
+
+    }
+
+    @Subscribe
+    public void OnColorChanged(ChangeColorEvent changeColorEvent)
+    {
+        int number = changeColorEvent.GetSportsmanNumber();
+        int color = changeColorEvent.GetColor();
+
+        for(int i = 0; i < _megaSportsmen.length; i++)
+        {
+            if(number == _megaSportsmen[i].getNumber())
+            {
+                _megaSportsmen[i].setColor(color);
+                break;
+            }
+        }
+
+        for(int i = 0; i < _arrayMegaSportsmen.length; i++)
+        {
+            for(int j = 0; j < _arrayMegaSportsmen[i].size(); j++)
+            {
+                if(_arrayMegaSportsmen[i].get(j).getNumber() == number)
+                {
+                    _arrayMegaSportsmen[i].get(j).setColor(color);
+                    break;
+                }
+            }
+        }
+        _tableAdapter.notifyDataSetChanged();
+        _viewAdapter.notifyDataSetChanged();
 
     }
 

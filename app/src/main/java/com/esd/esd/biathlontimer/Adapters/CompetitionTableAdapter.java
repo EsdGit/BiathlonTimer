@@ -15,8 +15,13 @@ import android.widget.Toast;
 import com.android.colorpicker.ColorPickerDialog;
 import com.android.colorpicker.ColorPickerSwatch;
 import com.esd.esd.biathlontimer.Activities.CompetitionsActivity;
+import com.esd.esd.biathlontimer.ChangeColorEvent;
 import com.esd.esd.biathlontimer.MegaSportsman;
 import com.esd.esd.biathlontimer.R;
+import com.esd.esd.biathlontimer.SportsmanDeleteEvent;
+
+import org.apache.poi.ss.formula.functions.Even;
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +36,7 @@ public class CompetitionTableAdapter extends RecyclerView.Adapter<CompetitionTab
     private int _currentLap;
     private Context _localContext;
     private android.app.FragmentManager _fragmentManager;
+    private EventBus eventBus;
 
     public CompetitionTableAdapter(Context context, android.app.FragmentManager fragmentManager)
     {
@@ -38,6 +44,7 @@ public class CompetitionTableAdapter extends RecyclerView.Adapter<CompetitionTab
         _localContext = context;
         _fragmentManager = fragmentManager;
         _currentLap = 0;
+        eventBus = EventBus.getDefault();
     }
 
     @Override
@@ -155,7 +162,10 @@ public class CompetitionTableAdapter extends RecyclerView.Adapter<CompetitionTab
             });
             _builderChooseDialog.setPositiveButton(_localContext.getResources().getString(R.string.delete), new DialogInterface.OnClickListener() {
                 @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
+                public void onClick(DialogInterface dialogInterface, int i)
+                {
+                    //SportsmanDeleteEvent event = new SportsmanDeleteEvent(Integer.valueOf(numberTextView.getText().toString()),2);
+                    //eventBus.post(event);
                     Toast.makeText(_localContext, "удалить", Toast.LENGTH_SHORT).show();
                 }
             });
@@ -177,8 +187,10 @@ public class CompetitionTableAdapter extends RecyclerView.Adapter<CompetitionTab
 
             _chooseColorDialog.setOnColorSelectedListener(new ColorPickerSwatch.OnColorSelectedListener() {
                 @Override
-                public void onColorSelected(int colour)
+                public void onColorSelected(int color)
                 {
+                    ChangeColorEvent event = new ChangeColorEvent(color, Integer.valueOf(numberTextView.getText().toString()));
+                    eventBus.post(event);
                     Toast.makeText(_localContext, "Выюран цвет", Toast.LENGTH_SHORT).show();
                 }
             });
