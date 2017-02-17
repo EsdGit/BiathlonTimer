@@ -105,7 +105,7 @@ public class FineAdapter extends BaseAdapter
                     {
                         if(_parentGridView.getChildAt(i).findViewById(R.id.button_fine).getTag() == drawableTegOn)
                         {
-                            if(Integer.valueOf(((TextView)_parentGridView.getChildAt(i).findViewById(R.id.number_fine)).getText().toString()) > Integer.valueOf(number.getText().toString()))
+                            if((Integer.valueOf(((TextView)_parentGridView.getChildAt(i).findViewById(R.id.number_fine)).getText().toString()) > Integer.valueOf(number.getText().toString())) || Integer.valueOf(number.getText().toString()) == 1)
                             {
                                 _parentGridView.getChildAt(i).findViewById(R.id.button_fine).setBackground(_context.getResources().getDrawable(R.drawable.background_fine_button_off));
                                 _parentGridView.getChildAt(i).findViewById(R.id.button_fine).setTag(drawableTegOff);
