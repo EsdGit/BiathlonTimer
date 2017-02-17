@@ -33,12 +33,14 @@ public class FineAdapter extends BaseAdapter
     private GridView _parentGridView;
     private int _fineCount;//Минимальное число штрафа (нельзя отменить)
     private int _currentFineCount;//Текущее число штрафов спортсмена
+    private int _currentCheckedFine;//Число отмеченных гтрафов
 
     public FineAdapter(Context context, GridView gridView, String[] objects)
     {
         _context = context;
         _objects = objects;
         _parentGridView = gridView;
+        _currentCheckedFine = 0;
         drawableTegOn =  _context.getResources().getDrawable(R.drawable.background_fine_button_on);
         drawableTegOff =  _context.getResources().getDrawable(R.drawable.background_fine_button_off);
     }
@@ -105,10 +107,11 @@ public class FineAdapter extends BaseAdapter
                     {
                         if(_parentGridView.getChildAt(i).findViewById(R.id.button_fine).getTag() == drawableTegOn)
                         {
-                            if((Integer.valueOf(((TextView)_parentGridView.getChildAt(i).findViewById(R.id.number_fine)).getText().toString()) > Integer.valueOf(number.getText().toString())) || Integer.valueOf(number.getText().toString()) == 1)
+                            if((Integer.valueOf(((TextView)_parentGridView.getChildAt(i).findViewById(R.id.number_fine)).getText().toString()) > Integer.valueOf(number.getText().toString())) || _currentCheckedFine == 1)
                             {
                                 _parentGridView.getChildAt(i).findViewById(R.id.button_fine).setBackground(_context.getResources().getDrawable(R.drawable.background_fine_button_off));
                                 _parentGridView.getChildAt(i).findViewById(R.id.button_fine).setTag(drawableTegOff);
+                                _currentCheckedFine--;
                             }
                         }
                     }
@@ -124,10 +127,12 @@ public class FineAdapter extends BaseAdapter
                             if(((TextView)_parentGridView.getChildAt(i).findViewById(R.id.number_fine)).getText().toString().equals(number.getText().toString()) ) break;
                             _parentGridView.getChildAt(i).findViewById(R.id.button_fine).setBackground(_context.getResources().getDrawable(R.drawable.background_fine_button_on));
                             _parentGridView.getChildAt(i).findViewById(R.id.button_fine).setTag(drawableTegOn);
+                            _currentCheckedFine++;
                         }
                     }
                     view.findViewById(R.id.button_fine).setBackground(_context.getResources().getDrawable(R.drawable.background_fine_button_on));
                     view.findViewById(R.id.button_fine).setTag(drawableTegOn);
+                    _currentCheckedFine++;
                 }
             }
         });
@@ -156,6 +161,7 @@ public class FineAdapter extends BaseAdapter
     public void setCountFine(int count)
     {
         _currentFineCount = count;
+        _currentCheckedFine = count;
     }
 
 
