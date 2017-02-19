@@ -62,6 +62,18 @@ public class SportsmanButtonAdapter extends RecyclerView.Adapter<SportsmanButton
 
     }
 
+    private void setIsFinished(int number, boolean isFinished)
+    {
+        for(int i = 0; i < sportsmen.size(); i++)
+        {
+            if(number == sportsmen.get(i).getNumber())
+            {
+                sportsmen.get(i).setFinished(isFinished);
+                break;
+            }
+        }
+    }
+
     @Override
     public void AddSportsman(MegaSportsman sportsman)
     {
@@ -80,8 +92,6 @@ public class SportsmanButtonAdapter extends RecyclerView.Adapter<SportsmanButton
     {
         MegaSportsman megaSportsman = sportsmen.get(position);
         holder.numberTextView.setText(megaSportsman.getNumber());
-
-
         holder.numberTextView.setTextColor(megaSportsman.getColor());
     }
 

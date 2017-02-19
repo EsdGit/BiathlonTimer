@@ -64,6 +64,15 @@ public class GridViewAdapter extends BaseAdapter
         number.setText(Integer.toString(sportsman.getNumber()));
         lap.setText(String.valueOf(sportsman.getCurrentLap()));
         background.setBackgroundColor(sportsman.getColor());
+        FrameLayout finishedLayout = (FrameLayout) gridElement.findViewById(R.id.second_layout);
+        if(sportsman.getFinished())
+        {
+            finishedLayout.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            finishedLayout.setVisibility(View.GONE);
+        }
         return gridElement;
     }
 
@@ -81,6 +90,30 @@ public class GridViewAdapter extends BaseAdapter
         }
         _sportsmen.clear();
         notifyDataSetChanged();
+    }
+
+    public void setIsFinished(int number, boolean isFinished)
+    {
+        for(int i = 0; i < _sportsmen.size(); i++)
+        {
+            if(number == _sportsmen.get(i).getNumber())
+            {
+                _sportsmen.get(i).setFinished(isFinished);
+                break;
+            }
+        }
+    }
+
+    public boolean getFinished(int number)
+    {
+        for(int i = 0; i < _sportsmen.size(); i++)
+        {
+            if(number == _sportsmen.get(i).getNumber())
+            {
+                return _sportsmen.get(i).getFinished();
+            }
+        }
+        return false;
     }
 
     public void ChangeSportsmanLap(int number, int lap)

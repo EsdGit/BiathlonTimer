@@ -265,6 +265,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
 
                 for(int j = 0; j < _megaSportsmen.length; j++)
                 {
+                    _megaSportsmen[j].setFinished(false); //????
                     _megaSportsmen[j].clearFineCount();
                     _megaSportsmen[j].setFineTime(null);
                 }
@@ -512,19 +513,20 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
         {
             TextView NumberStr = (TextView) view.findViewById(R.id.numberParticipantMyButton);
             TextView LapStr = (TextView) view.findViewById(R.id.lapParticipantMyButton);
-            FrameLayout finishedLayout = (FrameLayout)view.findViewById(R.id.second_layout);
+            //FrameLayout finishedLayout = (FrameLayout)view.findViewById(R.id.second_layout);
             int number = Integer.valueOf(NumberStr.getText().toString());
             int lap = Integer.valueOf(LapStr.getText().toString());
             int currentSportsmen = 0;
             boolean isFinished = false;
-            for(int i = 0; i < _megaSportsmen.length; i ++)
-            {
-                if (number == _megaSportsmen[i].getNumber())
-                {
-                    isFinished = _megaSportsmen[i].getFinished();
-                    currentSportsmen = i;
-                }
-            }
+//            for(int i = 0; i < _megaSportsmen.length; i ++)
+//            {
+//                if (number == _megaSportsmen[i].getNumber())
+//                {
+//                    isFinished = _megaSportsmen[i].getFinished();
+//                    currentSportsmen = i;
+//                }
+//            }
+            isFinished = _viewAdapter.getFinished(number);
             if(!isFinished)
             {
                 MegaSportsman localSportsman = null;
@@ -568,10 +570,7 @@ public class CompetitionsActivity extends AppCompatActivity implements SeekBar.O
                 }
 
                 if (lap == lapsCount - 1) {
-                    //_viewAdapter.ChangeSportsmanLap(number, 0);
-                    //_viewAdapter.RemoveSportsman(number);
-                    _megaSportsmen[currentSportsmen].setFinished(true);
-                    finishedLayout.setVisibility(View.VISIBLE);
+                    _viewAdapter.setIsFinished(number, true);
                 }
             }
         }
