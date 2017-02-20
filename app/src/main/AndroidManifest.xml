@@ -13,7 +13,8 @@
         android:name=".MyApp">
         <activity android:name=".Activities.SplashScreen"
             android:theme="@style/AppTheme"
-            android:screenOrientation="landscape">
+            android:screenOrientation="landscape"
+            android:configChanges="keyboardHidden|orientation">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -22,27 +23,33 @@
         </activity>
         <activity android:name=".Activities.MainActivity"
                   android:theme="@style/AppTheme"
-                  android:screenOrientation="landscape">
+                  android:screenOrientation="landscape"
+                    android:configChanges="keyboardHidden|orientation">
         </activity>
         <activity android:name=".Activities.ViewPagerActivity"
                   android:theme="@style/AppTheme"
-                  android:screenOrientation="landscape">
+                  android:screenOrientation="landscape"
+            android:configChanges="keyboardHidden|orientation">
         </activity>
         <activity android:name=".Activities.SettingsActivity"
                   android:screenOrientation="landscape"
-                  android:theme="@style/PreferenceScreen">
+                  android:theme="@style/PreferenceScreen"
+            android:configChanges="keyboardHidden|orientation">
         </activity>
         <activity android:name=".Activities.CompetitionsActivity"
                   android:theme="@style/AppTheme"
-                  android:screenOrientation="landscape"/>
+                  android:screenOrientation="landscape"
+            android:configChanges="keyboardHidden|orientation"/>
         <activity android:name=".Activities.FinalActivity"
                   android:theme="@style/AppTheme"
-                  android:screenOrientation="landscape">
+                  android:screenOrientation="landscape"
+            android:configChanges="keyboardHidden|orientation">
         </activity>
         <activity android:name=".Activities.FolderPicker"
                   android:screenOrientation="landscape"
-                  android:theme="@style/AppTheme"/>
-        <service android:name=".Activities.TestService"/>
+                  android:theme="@style/AppTheme"
+                     android:configChanges="keyboardHidden|orientation"/>
+        <service android:name=".Activities.TestService" />
     </application>
 
 </manifest>

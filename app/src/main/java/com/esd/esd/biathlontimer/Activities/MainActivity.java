@@ -88,8 +88,6 @@ public class MainActivity extends AppCompatActivity {
         _recyclerView.setItemAnimator(new DefaultItemAnimator());
         _recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        Intent serviseIntent = new Intent(this, TestService.class);
-        startService(serviseIntent);
 //        _eventBus = EventBus.getDefault();
 //        _eventBus.register(this);
         saver.Dispose();
