@@ -24,6 +24,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="@dimen/title_text_size_double_table"
                 android:text="Тут таймер"
                 android:id="@+id/competitionTimer"
                 android:textAppearance="?android:attr/textAppearanceMedium"
@@ -133,8 +134,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/title_text_size"
                 android:layout_marginLeft="10dp"
+                android:textSize="@dimen/title_text_size_double_table"
                 android:text="@string/current_round"
                 android:textColor="@color/white"
                 android:id="@+id/currentRound"
@@ -145,7 +146,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/title_text_size"
+                android:textSize="@dimen/title_text_size_double_table"
                 android:text="Тут таймер"
                 android:textColor="@color/timerStart"
                 android:id="@+id/competitionTimerTable"

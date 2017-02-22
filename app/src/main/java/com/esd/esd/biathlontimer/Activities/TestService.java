@@ -32,14 +32,16 @@ import java.util.TimerTask;
 public class TestService extends Service {
     private static Timer _timer;
     private Competition _currentCompetition;
-    private  android.text.format.Time _timeNextParticipant;
-    private  android.text.format.Time _currentInterval;
+    private android.text.format.Time _timeNextParticipant;
+    private android.text.format.Time _currentInterval;
     private static android.text.format.Time _currentTime;
     private CountDownTimer _countDownTimer;
-    private  MegaSportsman[] _megaSportsmen;
+    private MegaSportsman[] _megaSportsmen;
+    private Intent _myIntent;
 
     private static String SingleStart;
     private static String PairStart;
+    private static CompetitionsActivity.CompetitionState _currentState;
 
     private static int _number;
     private static GridViewAdapter _viewAdapter;
@@ -121,6 +123,7 @@ public class TestService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId)
     {
+        if(_myIntent == null) _myIntent = intent;
         RealmCompetitionSaver compSaver = new RealmCompetitionSaver(this, "COMPETITIONS");
         _currentCompetition = compSaver.GetCompetition(intent.getStringExtra("CompetitionName"), intent.getStringExtra("CompetitionDate"));
         SingleStart = getResources().getString(R.string.item_type_single_start);
@@ -229,6 +232,16 @@ public class TestService extends Service {
         }
     }
 
+    public static void SetCurrentState(CompetitionsActivity.CompetitionState state)
+    {
+        _currentState = state;
+    }
+
+    public static CompetitionsActivity.CompetitionState GetCurrentState()
+    {
+        return _currentState;
+    }
+
     public static void ResetService()
     {
         if(_timer != null) _timer.cancel();
@@ -274,6 +287,7 @@ public class TestService extends Service {
                 @Override
                 public void run() {
                     if(CompetitionsActivity.GetAdapterFromGridView() == null) CompetitionsActivity.SetAdapterToGridView(_viewAdapter);
+                    if(CompetitionsActivity.GetIntentService() == null) CompetitionsActivity.SetIntentService(_myIntent);
                 }
             });
             if(ms>9)

@@ -1,5 +1,7 @@
 package com.esd.esd.biathlontimer.Activities;
 
+import android.app.ActivityManager;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.app.Service;
@@ -17,6 +19,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.Time;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -68,7 +71,7 @@ public class CompetitionsActivity extends AppCompatActivity {
     private static TextView _competitionTimer;
     private static TextView _timerParticipantTable;
 
-    private Intent serviceIntent;
+    private static Intent serviceIntent;
 
     private AlertDialog _fineDialog;
     private AlertDialog.Builder _builderFineDialog;
@@ -118,13 +121,25 @@ public class CompetitionsActivity extends AppCompatActivity {
         if(savedInstanceState != null)
         {
             _isFirstLoad = savedInstanceState.getBoolean("IsFirstLoading");
+            _competitionState = TestService.GetCurrentState();
+            ActivityManager am = (ActivityManager) this.getSystemService(ACTIVITY_SERVICE);
+            List<ActivityManager.RunningServiceInfo> rs = am.getRunningServices(Integer.MAX_VALUE);
+            for(int i = 0; i < rs.size(); i++)
+            {
+                ActivityManager.RunningServiceInfo rsi = rs.get(i);
+                Log.i("Service", rsi.service.getShortClassName());
+            }
+
         }
 
 
         RealmCompetitionSaver saverComp = new RealmCompetitionSaver(this, "COMPETITIONS");
         _currentCompetition = saverComp.GetCompetition(getIntent().getStringExtra("Name"), getIntent().getStringExtra("Date"));
         saverComp.Dispose();
-        _competitionState = CompetitionState.NotStarted;
+        if(_competitionState == null)
+        {
+            _competitionState = CompetitionState.NotStarted;
+        }
 
         LayoutInflater inflater = LayoutInflater.from(this);
         List<View> pages = new ArrayList<>();
@@ -344,7 +359,7 @@ public class CompetitionsActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState)
     {
-        outState.putBoolean("IsFirstLoading",_isFirstLoad);
+        outState.putBoolean("IsFirstLoading", _isFirstLoad);
         super.onSaveInstanceState(outState);
     }
 
@@ -574,6 +589,13 @@ public class CompetitionsActivity extends AppCompatActivity {
             serviceIntent.putExtra("CompetitionDate", _currentCompetition.getDate());
             _isFirstLoad = false;
         }
+    }
+
+    @Override
+    protected void onStop()
+    {
+        TestService.SetCurrentState(_competitionState);
+        super.onStop();
     }
 
     private void AddRowToLastEventTable(MegaSportsman megaSportsman, boolean isFromButtonClick)
@@ -891,6 +913,10 @@ public class CompetitionsActivity extends AppCompatActivity {
         Toast.makeText(getApplicationContext(),"Стоп",Toast.LENGTH_SHORT).show();
     }
 
+    public static CompetitionState GetCompetitionState()
+    {
+        return _competitionState;
+    }
     public static void SetCompetitionState(CompetitionState state)
     {
         _competitionState = state;
@@ -919,6 +945,16 @@ public class CompetitionsActivity extends AppCompatActivity {
     public static GridViewAdapter GetAdapterFromGridView()
     {
         return  (GridViewAdapter)_gridView.getAdapter();
+    }
+
+    public static Intent GetIntentService()
+    {
+        return serviceIntent;
+    }
+
+    public static void SetIntentService(Intent intentService)
+    {
+        serviceIntent = intentService;
     }
     class LoadingTask extends AsyncTask<Void, Integer, Void>
     {
