@@ -16,6 +16,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.graphics.ColorUtils;
 import android.text.format.Time;
 
+import com.esd.esd.biathlontimer.Adapters.CompetitionTableAdapter;
 import com.esd.esd.biathlontimer.Adapters.GridViewAdapter;
 import com.esd.esd.biathlontimer.Competition;
 import com.esd.esd.biathlontimer.DatabaseClasses.RealmCompetitionSaver;
@@ -25,6 +26,7 @@ import com.esd.esd.biathlontimer.R;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -42,9 +44,11 @@ public class TestService extends Service {
     private static String SingleStart;
     private static String PairStart;
     private static CompetitionsActivity.CompetitionState _currentState;
+    private static ArrayList<MegaSportsman>[] _arrayMegaSportsmen;
 
     private static int _number;
     private static GridViewAdapter _viewAdapter;
+    private static CompetitionTableAdapter _tableAdapter;
 
      static int ms;
 
@@ -52,6 +56,7 @@ public class TestService extends Service {
     public void onCreate() {
         super.onCreate();
         _megaSportsmen = CompetitionsActivity.GetMegaSportsmanArray();
+        _tableAdapter = new CompetitionTableAdapter(this, CompetitionsActivity.GetFragmentManager());
         threadFlag = false;
         thread.start();
         Notification.Builder builder = new Notification.Builder(this)
@@ -232,6 +237,25 @@ public class TestService extends Service {
         }
     }
 
+    public static void SetArrayMegaSportsman(ArrayList<MegaSportsman>[] arrayMegaSportsmen)
+    {
+//        _arrayMegaSportsmen = new ArrayList[arrayMegaSportsmen.length];
+//        for (int i = 0; i < arrayMegaSportsmen.length; i++)
+//        {
+//            _arrayMegaSportsmen[i] = new ArrayList<MegaSportsman>();
+//            for(int j = 0; j < arrayMegaSportsmen[i].size(); j++)
+//            {
+//                _arrayMegaSportsmen[i].add(arrayMegaSportsmen[i].get(j));
+//            }
+//        }
+        _arrayMegaSportsmen = arrayMegaSportsmen;
+    }
+
+    public static ArrayList<MegaSportsman>[] GetArrayMegaSportsman()
+    {
+        return _arrayMegaSportsmen;
+    }
+
     public static void SetCurrentState(CompetitionsActivity.CompetitionState state)
     {
         _currentState = state;
@@ -277,6 +301,21 @@ public class TestService extends Service {
     {
         _viewAdapter.ClearList();
     }
+
+    public static CompetitionTableAdapter GetCompetitionTableAdapter()
+    {
+        return _tableAdapter;
+    }
+
+    public static void AddSportsmanToCompetitionAdapter(List<MegaSportsman> megaSportsmanList)
+    {
+        _tableAdapter.ClearList();
+        if(megaSportsmanList != null)
+        {
+            _tableAdapter.AddSportsmen(megaSportsmanList);
+        }
+        _tableAdapter.notifyDataSetChanged();
+    }
     class MyTimerTask extends AsyncTask<Integer, Integer, Integer>
     {
         @Override
@@ -288,6 +327,7 @@ public class TestService extends Service {
                 public void run() {
                     if(CompetitionsActivity.GetAdapterFromGridView() == null) CompetitionsActivity.SetAdapterToGridView(_viewAdapter);
                     if(CompetitionsActivity.GetIntentService() == null) CompetitionsActivity.SetIntentService(_myIntent);
+                    if(CompetitionsActivity.GetAdapterFromCompetitionTable() == null) CompetitionsActivity.SetAdapterToTableCompetition(_tableAdapter);
                 }
             });
             if(ms>9)

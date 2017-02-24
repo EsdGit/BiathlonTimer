@@ -13,6 +13,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -72,6 +73,7 @@ public class CompetitionsActivity extends AppCompatActivity {
     private static TextView _timerParticipantTable;
 
     private static Intent serviceIntent;
+    private static android.app.FragmentManager _fragmentManager;
 
     private AlertDialog _fineDialog;
     private AlertDialog.Builder _builderFineDialog;
@@ -97,7 +99,7 @@ public class CompetitionsActivity extends AppCompatActivity {
     private static boolean _isPaused = true;
 
     private CompetitionTableAdapter _tableAdapter;
-    private RecyclerView _table;
+    private static RecyclerView _table;
     private RecyclerView _currentRecyclerView;
     private Thread checkLapNumberThread;
 
@@ -109,7 +111,7 @@ public class CompetitionsActivity extends AppCompatActivity {
         Running
     }
 
-    private ArrayList<MegaSportsman>[] _arrayMegaSportsmen;
+    private static ArrayList<MegaSportsman>[] _arrayMegaSportsmen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,11 +119,13 @@ public class CompetitionsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_competitions);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getSupportActionBar().hide();
-
+        _fragmentManager = this.getFragmentManager();
         if(savedInstanceState != null)
         {
             _isFirstLoad = savedInstanceState.getBoolean("IsFirstLoading");
+            _currentTable = savedInstanceState.getInt("CurrentTable");
             _competitionState = TestService.GetCurrentState();
+            _arrayMegaSportsmen = TestService.GetArrayMegaSportsman();
             ActivityManager am = (ActivityManager) this.getSystemService(ACTIVITY_SERVICE);
             List<ActivityManager.RunningServiceInfo> rs = am.getRunningServices(Integer.MAX_VALUE);
             for(int i = 0; i < rs.size(); i++)
@@ -263,8 +267,9 @@ public class CompetitionsActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 if (_competitionState == CompetitionState.NotStarted) return;
                 if(serviceIntent != null) TestService.ResetService();
-                _tableAdapter.ClearList();
-                _tableAdapter.notifyDataSetChanged();
+                TestService.AddSportsmanToCompetitionAdapter(null);
+                //_tableAdapter.ClearList();
+                //_tableAdapter.notifyDataSetChanged();
                 for (int j = 0; j < lapsCount; j++) {
                     _arrayMegaSportsmen[j].clear();
                 }
@@ -330,15 +335,18 @@ public class CompetitionsActivity extends AppCompatActivity {
 
         lapsCount = _currentCompetition.getCheckPointsCount();
         MegaSportsman.setLapsCount(lapsCount);
-        _arrayMegaSportsmen = new ArrayList[lapsCount];
-        for (int i = 0; i < lapsCount; i++) {
-            _arrayMegaSportsmen[i] = new ArrayList<MegaSportsman>();
+        if(_arrayMegaSportsmen == null)
+        {
+            _arrayMegaSportsmen = new ArrayList[lapsCount];
+            for (int i = 0; i < lapsCount; i++) {
+                _arrayMegaSportsmen[i] = new ArrayList<MegaSportsman>();
+            }
         }
         _currentRound.setText(_currentRound.getText() + " - " + Integer.toString(_currentTable + 1));
-        _tableAdapter = new CompetitionTableAdapter(this, this.getFragmentManager());
+        //_tableAdapter = new CompetitionTableAdapter(this, this.getFragmentManager());
         if(!getResources().getBoolean(R.bool.isTablet))
         {
-            _table.setAdapter(_tableAdapter);
+            _table.setAdapter(TestService.GetCompetitionTableAdapter());
             _table.setItemAnimator(new DefaultItemAnimator());
             _table.setLayoutManager(new LinearLayoutManager(this));
         }
@@ -360,6 +368,7 @@ public class CompetitionsActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState)
     {
         outState.putBoolean("IsFirstLoading", _isFirstLoad);
+        outState.putInt("CurrentTable", _currentTable);
         super.onSaveInstanceState(outState);
     }
 
@@ -407,7 +416,7 @@ public class CompetitionsActivity extends AppCompatActivity {
                 }
             }
         }
-        _tableAdapter.notifyDataSetChanged();
+        ((CompetitionTableAdapter)TestService.GetCompetitionTableAdapter()).notifyDataSetChanged();
 
     }
 
@@ -557,10 +566,12 @@ public class CompetitionsActivity extends AppCompatActivity {
                 GetLag(lap);
                 AddRowToLastEventTable(localSportsman, true);
                 if (!getResources().getBoolean(R.bool.isTablet)) {
-                    if (_currentTable == lap) {
-                        _tableAdapter.ClearList();
-                        _tableAdapter.AddSportsmen(_arrayMegaSportsmen[lap]);
-                        _tableAdapter.notifyDataSetChanged();
+                    if (_currentTable == lap)
+                    {
+                        TestService.AddSportsmanToCompetitionAdapter(_arrayMegaSportsmen[lap]);
+//                        _tableAdapter.ClearList();
+//                        _tableAdapter.AddSportsmen(_arrayMegaSportsmen[lap]);
+//                        _tableAdapter.notifyDataSetChanged();
                     }
                 } else {
                     //Видимо тут код добавления
@@ -595,6 +606,7 @@ public class CompetitionsActivity extends AppCompatActivity {
     protected void onStop()
     {
         TestService.SetCurrentState(_competitionState);
+        TestService.SetArrayMegaSportsman(_arrayMegaSportsmen);
         super.onStop();
     }
 
@@ -832,9 +844,10 @@ public class CompetitionsActivity extends AppCompatActivity {
         if(_currentTable < lapsCount - 1)
         {
             _currentTable++;
-            _tableAdapter.ClearList();
-            _tableAdapter.AddSportsmen(_arrayMegaSportsmen[_currentTable]);
-            _tableAdapter.notifyDataSetChanged();
+            TestService.AddSportsmanToCompetitionAdapter(_arrayMegaSportsmen[_currentTable]);
+//            _tableAdapter.ClearList();
+//            _tableAdapter.AddSportsmen(_arrayMegaSportsmen[_currentTable]);
+//            _tableAdapter.notifyDataSetChanged();
             _currentRound.setText(getResources().getString(R.string.current_round) + " - " + Integer.toString(_currentTable + 1));
         }
     }
@@ -844,9 +857,10 @@ public class CompetitionsActivity extends AppCompatActivity {
         if(_currentTable > 0)
         {
             _currentTable--;
-            _tableAdapter.ClearList();
-            _tableAdapter.AddSportsmen(_arrayMegaSportsmen[_currentTable]);
-            _tableAdapter.notifyDataSetChanged();
+            TestService.AddSportsmanToCompetitionAdapter(_arrayMegaSportsmen[_currentTable]);
+//            _tableAdapter.ClearList();
+//            _tableAdapter.AddSportsmen(_arrayMegaSportsmen[_currentTable]);
+//            _tableAdapter.notifyDataSetChanged();
             _currentRound.setText(getResources().getString(R.string.current_round) + " - " + Integer.toString(_currentTable + 1));
         }
     }
@@ -913,14 +927,20 @@ public class CompetitionsActivity extends AppCompatActivity {
         Toast.makeText(getApplicationContext(),"Стоп",Toast.LENGTH_SHORT).show();
     }
 
+    public static android.app.FragmentManager GetFragmentManager()
+    {
+        return _fragmentManager;
+    }
     public static CompetitionState GetCompetitionState()
     {
         return _competitionState;
     }
+
     public static void SetCompetitionState(CompetitionState state)
     {
         _competitionState = state;
     }
+
     public static void SetTime(Time currentTime, int ms)
     {
         _competitionTimer.setText(currentTime.format("%H:%M:%S")+":"+String.valueOf(ms));
@@ -947,6 +967,16 @@ public class CompetitionsActivity extends AppCompatActivity {
         return  (GridViewAdapter)_gridView.getAdapter();
     }
 
+    public static CompetitionTableAdapter GetAdapterFromCompetitionTable()
+    {
+        return (CompetitionTableAdapter) _table.getAdapter();
+    }
+
+    public  static void SetAdapterToTableCompetition(CompetitionTableAdapter adapter)
+    {
+        _table.setAdapter(adapter);
+    }
+
     public static Intent GetIntentService()
     {
         return serviceIntent;
@@ -956,6 +986,7 @@ public class CompetitionsActivity extends AppCompatActivity {
     {
         serviceIntent = intentService;
     }
+
     class LoadingTask extends AsyncTask<Void, Integer, Void>
     {
         ProgressDialog dialog;
