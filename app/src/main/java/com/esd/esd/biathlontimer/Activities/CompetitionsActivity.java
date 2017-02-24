@@ -390,6 +390,7 @@ public class CompetitionsActivity extends AppCompatActivity {
             }
         }
         TestService.ChangeSportsmanLap(number, lap-1);
+        TestService.SetFinish(number, false);
 
     }
 
