@@ -331,4 +331,14 @@ public class MegaSportsman extends RealmObject implements ISportsman
 
     public int getCurrentLap(){return _currentLap;}
 
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == null || !(obj instanceof MegaSportsman)) return false;
+
+        if(this.name.equals(((MegaSportsman) obj).name) && this.year == ((MegaSportsman) obj).year && this.country.equals(((MegaSportsman) obj).country))
+        {
+            return true;
+        }
+        return false;
+    }
 }
