@@ -97,6 +97,7 @@ public class CompetitionsActivity extends AppCompatActivity {
 
 
     private static boolean _isPaused = true;
+    private boolean _save = true;
 
     private CompetitionTableAdapter _tableAdapter;
     private static RecyclerView _table;
@@ -120,21 +121,7 @@ public class CompetitionsActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getSupportActionBar().hide();
         _fragmentManager = this.getFragmentManager();
-        if(savedInstanceState != null)
-        {
-            _isFirstLoad = savedInstanceState.getBoolean("IsFirstLoading");
-            _currentTable = savedInstanceState.getInt("CurrentTable");
-            _competitionState = TestService.GetCurrentState();
-            _arrayMegaSportsmen = TestService.GetArrayMegaSportsman();
-            ActivityManager am = (ActivityManager) this.getSystemService(ACTIVITY_SERVICE);
-            List<ActivityManager.RunningServiceInfo> rs = am.getRunningServices(Integer.MAX_VALUE);
-            for(int i = 0; i < rs.size(); i++)
-            {
-                ActivityManager.RunningServiceInfo rsi = rs.get(i);
-                Log.i("Service", rsi.service.getShortClassName());
-            }
 
-        }
 
 
         RealmCompetitionSaver saverComp = new RealmCompetitionSaver(this, "COMPETITIONS");
@@ -234,6 +221,27 @@ public class CompetitionsActivity extends AppCompatActivity {
                 }
             });
             setContentView(page1);
+        }
+
+        if(savedInstanceState != null)
+        {
+            _isFirstLoad = savedInstanceState.getBoolean("IsFirstLoading");
+            _currentTable = savedInstanceState.getInt("CurrentTable");
+            _competitionState = TestService.GetCurrentState();
+            _arrayMegaSportsmen = TestService.GetArrayMegaSportsman();
+            ArrayList<String[]> localArray = new ArrayList<>();
+            localArray = TestService.GetRowFromLastTable();
+            for(int i = 0; i < localArray.size(); i++)
+            {
+                if(localArray.get(i).length > 1)
+                {
+                    AddRowAsTableCompetitions(null, localArray.get(i));
+                }
+                else
+                {
+                    AddRowZeroColumn(null, localArray.get(i));
+                }
+            }
         }
 
         _timerDialogBuilder = new AlertDialog.Builder(this);
@@ -367,8 +375,11 @@ public class CompetitionsActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState)
     {
-        outState.putBoolean("IsFirstLoading", _isFirstLoad);
-        outState.putInt("CurrentTable", _currentTable);
+        if(_save)
+        {
+            outState.putBoolean("IsFirstLoading", _isFirstLoad);
+            outState.putInt("CurrentTable", _currentTable);
+        }
         super.onSaveInstanceState(outState);
     }
 
@@ -433,11 +444,11 @@ public class CompetitionsActivity extends AppCompatActivity {
         TestService.NotifyViewAdapter();
     }
 
-    private void AddRowAsTableCompetitions(MegaSportsman megaSportsman) {
+    private void AddRowAsTableCompetitions(MegaSportsman megaSportsman, String[] textRow) {
         final TableRow newRow = new TableRow(this);
         newRow.setWeightSum(100);
         final TextView newTextView = new TextView(this);
-        newTextView.setText(String.valueOf(megaSportsman.getNumber()));
+
         newTextView.setGravity(Gravity.CENTER);
         newTextView.setTextColor(Color.BLACK);
         newTextView.setBackground(new PaintDrawable(Color.WHITE));
@@ -445,7 +456,7 @@ public class CompetitionsActivity extends AppCompatActivity {
         newTextView.setLayoutParams(new TableRow.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 8f));
         ((TableRow.LayoutParams) newTextView.getLayoutParams()).setMargins(2, 0, 2, 2);
         final TextView newTextView2 = new TextView(this);
-        newTextView2.setText(String.valueOf(megaSportsman.getPlace()));
+
         newTextView2.setGravity(Gravity.CENTER);
         newTextView2.setTextColor(Color.BLACK);
         newTextView2.setBackground(new PaintDrawable(Color.WHITE));
@@ -453,7 +464,7 @@ public class CompetitionsActivity extends AppCompatActivity {
         newTextView2.setLayoutParams(new TableRow.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 8f));
         ((TableRow.LayoutParams) newTextView2.getLayoutParams()).setMargins(0, 0, 2, 2);
         final TextView newTextView3 = new TextView(this);
-        newTextView3.setText(megaSportsman.getName());
+
         newTextView3.setGravity(Gravity.CENTER);
         newTextView3.setTextColor(Color.BLACK);
         newTextView3.setBackground(new PaintDrawable(Color.WHITE));
@@ -461,7 +472,7 @@ public class CompetitionsActivity extends AppCompatActivity {
         newTextView3.setLayoutParams(new TableRow.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 30f));
         ((TableRow.LayoutParams) newTextView3.getLayoutParams()).setMargins(0, 0, 2, 2);
         final TextView newTextView4 = new TextView(this);
-        newTextView4.setText(megaSportsman.getFineCountArrString());
+
         newTextView4.setGravity(Gravity.CENTER);
         newTextView4.setTextColor(Color.BLACK);
         newTextView4.setBackground(new PaintDrawable(Color.WHITE));
@@ -469,7 +480,7 @@ public class CompetitionsActivity extends AppCompatActivity {
         newTextView4.setLayoutParams(new TableRow.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 14f));
         ((TableRow.LayoutParams) newTextView4.getLayoutParams()).setMargins(0, 0, 2, 2);
         final TextView newTextView5 = new TextView(this);
-        newTextView5.setText(megaSportsman.getResult());
+
         newTextView5.setGravity(Gravity.CENTER);
         newTextView5.setTextColor(Color.BLACK);
         newTextView5.setBackground(new PaintDrawable(Color.WHITE));
@@ -477,13 +488,31 @@ public class CompetitionsActivity extends AppCompatActivity {
         newTextView5.setLayoutParams(new TableRow.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 20f));
         ((TableRow.LayoutParams) newTextView5.getLayoutParams()).setMargins(0, 0, 2, 2);
         final TextView newTextView6 = new TextView(this);
-        newTextView6.setText(megaSportsman.getLag());
+
         newTextView6.setGravity(Gravity.CENTER);
         newTextView6.setTextColor(Color.BLACK);
         newTextView6.setBackground(new PaintDrawable(Color.WHITE));
         newTextView6.setTextSize(getResources().getDimension(R.dimen.text_size_last_step));
         newTextView6.setLayoutParams(new TableRow.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 20f));
         ((TableRow.LayoutParams) newTextView6.getLayoutParams()).setMargins(0, 0, 2, 2);
+        if(megaSportsman != null)
+        {
+            newTextView.setText(String.valueOf(megaSportsman.getNumber()));
+            newTextView2.setText(String.valueOf(megaSportsman.getPlace()));
+            newTextView3.setText(megaSportsman.getName());
+            newTextView4.setText(megaSportsman.getFineCountArrString());
+            newTextView5.setText(megaSportsman.getResult());
+            newTextView6.setText(megaSportsman.getLag());
+        }
+        else
+        {
+            newTextView.setText(String.valueOf(textRow[0]));
+            newTextView2.setText(String.valueOf(textRow[1]));
+            newTextView3.setText(textRow[2]);
+            newTextView4.setText(textRow[3]);
+            newTextView5.setText(textRow[4]);
+            newTextView6.setText(textRow[5]);
+        }
         newRow.addView(newTextView);
         newRow.addView(newTextView2);
         newRow.addView(newTextView3);
@@ -493,13 +522,20 @@ public class CompetitionsActivity extends AppCompatActivity {
         _lastTable.addView(newRow);
     }
 
-    private void AddRowZeroColumn(MegaSportsman megaSportsman)
+    private void AddRowZeroColumn(MegaSportsman megaSportsman, String[] textRow)
     {
         //int width = _nameParticipant.getMeasuredWidth() + _numberParticipant.getMeasuredHeight() + _positionParticipant.getMeasuredHeight() + _timeParticipant.getMeasuredHeight() + _lagParticipant.getMeasuredHeight();
         final TableRow newRow = new TableRow(this);
         newRow.setWeightSum(100);
         final TextView newTextView = new TextView(this);
-        newTextView.setText("Участнику №"+String.valueOf(megaSportsman.getNumber())+" начислен штраф: "+String.valueOf(megaSportsman.getFineCount()));
+        if(megaSportsman != null)
+        {
+            newTextView.setText("Участнику №"+String.valueOf(megaSportsman.getNumber())+" начислен штраф: "+String.valueOf(megaSportsman.getFineCount()));
+        }
+        else
+        {
+            newTextView.setText(textRow[0]);
+        }
         newTextView.setGravity(Gravity.CENTER);
         newTextView.setTextColor(Color.BLACK);
         newTextView.setBackground(new PaintDrawable(Color.WHITE));
@@ -620,6 +656,7 @@ public class CompetitionsActivity extends AppCompatActivity {
     {
         TestService.SetCurrentState(_competitionState);
         TestService.SetArrayMegaSportsman(_arrayMegaSportsmen);
+        TestService.SetLastStep(_lastTable);
         super.onStop();
     }
 
@@ -631,11 +668,11 @@ public class CompetitionsActivity extends AppCompatActivity {
         }
         if(isFromButtonClick)
         {
-            AddRowAsTableCompetitions(megaSportsman);
+            AddRowAsTableCompetitions(megaSportsman, null);
         }
         else
         {
-            AddRowZeroColumn(megaSportsman);
+            AddRowZeroColumn(megaSportsman, null);
         }
     }
 
@@ -909,6 +946,8 @@ public class CompetitionsActivity extends AppCompatActivity {
                     intent.putExtra("CompetitionName", _currentCompetition.getName());
                     intent.putExtra("CompetitionDate", _currentCompetition.getDate());
                     startActivity(intent);
+                    stopService(serviceIntent);
+                    _save = false;
                     CompetitionsActivity.this.finish();
                 }
             });

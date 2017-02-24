@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -15,6 +16,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.graphics.ColorUtils;
 import android.text.format.Time;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
 
 import com.esd.esd.biathlontimer.Adapters.CompetitionTableAdapter;
 import com.esd.esd.biathlontimer.Adapters.GridViewAdapter;
@@ -50,11 +56,15 @@ public class TestService extends Service {
     private static GridViewAdapter _viewAdapter;
     private static CompetitionTableAdapter _tableAdapter;
 
+    private static ArrayList<String> _lastStep;
+
      static int ms;
 
     @Override
-    public void onCreate() {
+    public void onCreate()
+    {
         super.onCreate();
+        _lastStep = new ArrayList<>();
         _megaSportsmen = CompetitionsActivity.GetMegaSportsmanArray();
         _tableAdapter = new CompetitionTableAdapter(this, CompetitionsActivity.GetFragmentManager());
         threadFlag = false;
@@ -235,6 +245,37 @@ public class TestService extends Service {
             am.setExact(AlarmManager.RTC, System.currentTimeMillis() + 3000, pi);
             startService(restartIntent);
         }
+    }
+
+    public static void SetLastStep(TableLayout table)
+    {
+        TableRow row;
+        String resultString = "";
+        _lastStep.clear();
+        for(int i = 0; i < table.getChildCount(); i++)
+        {
+            row = (TableRow)table.getChildAt(i);
+            for(int j = 0; j < row.getChildCount(); j++)
+            {
+                    resultString += ((TextView) row.getChildAt(j)).getText().toString();
+                    resultString += ';';
+            }
+            _lastStep.add(resultString);
+            resultString = "";
+        }
+
+    }
+
+    public static ArrayList<String[]> GetRowFromLastTable()
+    {
+        String[] localString;
+        ArrayList<String[]> _rows = new ArrayList<>();
+        for(int i = 0; i < _lastStep.size(); i++ )
+        {
+            localString = ((String)_lastStep.get(i)).split(";");
+            _rows.add(localString);
+        }
+        return _rows;
     }
 
     public static void SetArrayMegaSportsman(ArrayList<MegaSportsman>[] arrayMegaSportsmen)
