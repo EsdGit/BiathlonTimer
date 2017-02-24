@@ -4,20 +4,13 @@ import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.IBinder;
-import android.provider.SyncStateContract;
-import android.support.annotation.Nullable;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.graphics.ColorUtils;
 import android.text.format.Time;
-import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -26,7 +19,6 @@ import com.esd.esd.biathlontimer.Adapters.CompetitionTableAdapter;
 import com.esd.esd.biathlontimer.Adapters.GridViewAdapter;
 import com.esd.esd.biathlontimer.Competition;
 import com.esd.esd.biathlontimer.DatabaseClasses.RealmCompetitionSaver;
-import com.esd.esd.biathlontimer.DatabaseClasses.RealmMegaSportsmanSaver;
 import com.esd.esd.biathlontimer.MegaSportsman;
 import com.esd.esd.biathlontimer.R;
 
@@ -191,6 +183,7 @@ public class TestService extends Service {
                 }
                 CompetitionsActivity.SetTime(_currentTime, ms);
                 CompetitionsActivity.SetCompetitionState(CompetitionsActivity.CompetitionState.Running);
+                CompetitionsActivity.SetColorTimer();
                 if(_currentCompetition.getStartType().equals(getResources().getString(R.string.item_type_mas_start)))
                 {
                     for(int i = 0; i < _megaSportsmen.length; i++)
@@ -320,6 +313,8 @@ public class TestService extends Service {
         _tableAdapter.ClearList();
         _viewAdapter.ClearList();
         _currentTime = new Time();
+        _currentState = CompetitionsActivity.CompetitionState.NotStarted;
+        CompetitionsActivity.SetCompetitionState(_currentState);
         CompetitionsActivity.SetTime(_currentTime, ms);
     }
 

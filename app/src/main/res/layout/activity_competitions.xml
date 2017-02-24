@@ -16,7 +16,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Тут таймер"
+            android:text="00:00"
             android:id="@+id/competitionTimer"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:typeface="serif"

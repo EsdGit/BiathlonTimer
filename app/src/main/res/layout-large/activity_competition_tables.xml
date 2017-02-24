@@ -30,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/title_text_size"
-            android:text="Тут таймер"
+            android:text="00:00"
             android:textColor="@color/timerStart"
             android:id="@+id/competitionTimer"
             android:typeface="serif"

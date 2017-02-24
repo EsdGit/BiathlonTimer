@@ -1,27 +1,20 @@
 package com.esd.esd.biathlontimer.Activities;
 
-import android.app.ActivityManager;
-import android.app.AlarmManager;
+
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.app.Service;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.PaintDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.CountDownTimer;
-import android.os.Handler;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.Time;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -30,12 +23,10 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.SeekBar;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.esd.esd.biathlontimer.Adapters.FineAdapter;
 import com.esd.esd.biathlontimer.ChangeColorEvent;
 import com.esd.esd.biathlontimer.Competition;
@@ -49,17 +40,12 @@ import com.esd.esd.biathlontimer.PagerAdapterHelper;
 import com.esd.esd.biathlontimer.R;
 import com.esd.esd.biathlontimer.Sportsman;
 import com.esd.esd.biathlontimer.SportsmanDeleteEvent;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 
@@ -87,18 +73,18 @@ public class CompetitionsActivity extends AppCompatActivity {
 
     private static MegaSportsman[] _megaSportsmen;
     private FineAdapter _fineAdapter;
-    private int _currentTable = 0;
+    private static int _currentTable = 0;
     private int lapsCount;
     private int _currentSportsman;
     private boolean _isFirstLoad = true;
-    private ArrayList<RecyclerView> _arrayRecycleView;
+    private static  ArrayList<RecyclerView> _arrayRecycleView;
     private ArrayList<CompetitionTableAdapter> _arrayAdapters;
 
     private View _dialogOwnerView;
-    private static Context _context;
 
     private static boolean _isPaused = true;
     private boolean _save = true;
+    private static boolean _isTablet;
 
     private static CompetitionTableAdapter _tableAdapter;
     private static RecyclerView _table;
@@ -106,6 +92,8 @@ public class CompetitionsActivity extends AppCompatActivity {
     private Thread checkLapNumberThread;
 
     private EventBus _event;
+
+    private static int _colorTimer;
 
     public enum CompetitionState {
         NotStarted,
@@ -123,8 +111,8 @@ public class CompetitionsActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         _fragmentManager = this.getFragmentManager();
         _tableAdapter = new CompetitionTableAdapter(this, this.getFragmentManager());
-
-
+        _colorTimer = getResources().getColor(R.color.red);
+        _isTablet = getResources().getBoolean(R.bool.isTablet);
         RealmCompetitionSaver saverComp = new RealmCompetitionSaver(this, "COMPETITIONS");
         _currentCompetition = saverComp.GetCompetition(getIntent().getStringExtra("Name"), getIntent().getStringExtra("Date"));
         saverComp.Dispose();
@@ -292,6 +280,10 @@ public class CompetitionsActivity extends AppCompatActivity {
                 _lastTable.removeAllViews();
                 TestService.AdapterClearList();
                 _competitionState = CompetitionState.NotStarted;
+                _competitionTimer.setTextColor(getResources().getColor(R.color.red));
+                _timerParticipantTable.setTextColor(getResources().getColor(R.color.red));
+                _competitionTimer.setText("00:00");
+                _timerParticipantTable.setText("00:00");
                 Toast.makeText(getApplicationContext(), "Сброс", Toast.LENGTH_SHORT).show();
             }
         });
@@ -355,19 +347,19 @@ public class CompetitionsActivity extends AppCompatActivity {
         //_tableAdapter = new CompetitionTableAdapter(this, this.getFragmentManager());
         if(!getResources().getBoolean(R.bool.isTablet))
         {
-            _table.setAdapter(TestService.GetCompetitionTableAdapter());
+            _table.setAdapter(_tableAdapter);
             _table.setItemAnimator(new DefaultItemAnimator());
             _table.setLayoutManager(new LinearLayoutManager(this));
         }
         else
         {
-            for(int i = 0; i < lapsCount; i++)
-            {
+//            for(int i = 0; i < lapsCount; i++)
+//            {
 //                _tableAdapter.ClearList();
 //                _tableAdapter.AddSportsmen(_arrayMegaSportsmen[i]);
 //                _tableAdapter.notifyDataSetChanged();
 //                _arrayRecycleView.get(i).setAdapter(_tableAdapter);
-            }
+//            }
         }
         //TimerStartPosition();
 
@@ -624,7 +616,9 @@ public class CompetitionsActivity extends AppCompatActivity {
 //                        _tableAdapter.AddSportsmen(_arrayMegaSportsmen[lap]);
 //                        _tableAdapter.notifyDataSetChanged();
                     }
-                } else {
+                }
+                else
+                {
                     //Видимо тут код добавления
                     _arrayAdapters.get(lap).ClearList();
                     _arrayAdapters.get(lap).AddSportsmen(_arrayMegaSportsmen[lap]);
@@ -955,8 +949,9 @@ public class CompetitionsActivity extends AppCompatActivity {
                     TestService.ResetService();
                     stopService(serviceIntent);
                     _save = false;
-                    startActivity(intent);
                     CompetitionsActivity.this.finish();
+                    startActivity(intent);
+
                 }
             });
             dialog.setNegativeButton(getResources().getString(R.string.no), new DialogInterface.OnClickListener() {
@@ -971,6 +966,12 @@ public class CompetitionsActivity extends AppCompatActivity {
         return super.onKeyDown(keyCode, event);
     }
 
+
+    public static void SetColorTimer()
+    {
+        _competitionTimer.setTextColor(_colorTimer);
+        _timerParticipantTable.setTextColor(_colorTimer);
+    }
 
     public void pauseBtnClick(View view)
     {
@@ -1034,7 +1035,14 @@ public class CompetitionsActivity extends AppCompatActivity {
 
     public static CompetitionTableAdapter GetAdapterFromCompetitionTable()
     {
-        return (CompetitionTableAdapter) _table.getAdapter();
+        if(!_isTablet)
+        {
+            return (CompetitionTableAdapter) _table.getAdapter();
+        }
+        else
+        {
+            return (CompetitionTableAdapter) (_arrayRecycleView.get(_currentTable)).getAdapter();
+        }
     }
 
     public  static void SetAdapterToTableCompetition(CompetitionTableAdapter adapter)
@@ -1095,6 +1103,7 @@ public class CompetitionsActivity extends AppCompatActivity {
         protected void onProgressUpdate(Integer... values)
         {
             super.onProgressUpdate(values);
+
             dialog.setProgress(values[0]);
         }
 
