@@ -258,6 +258,11 @@ public class TestService extends Service {
         return _viewAdapter.getFinished(number);
     }
 
+    public static void NotifyViewAdapter()
+    {
+        _viewAdapter.notifyDataSetChanged();
+    }
+
     public static void ChangeSportsmanLap(int number, int lap)
     {
         _viewAdapter.ChangeSportsmanLap(number, lap);

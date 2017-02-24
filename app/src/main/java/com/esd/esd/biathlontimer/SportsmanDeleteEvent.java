@@ -18,4 +18,5 @@ public class SportsmanDeleteEvent
     {
         return sportsmanNumber;
     }
+    public int GetLapNumber(){return lapNumber;}
 }

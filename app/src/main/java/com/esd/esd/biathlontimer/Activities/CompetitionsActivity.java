@@ -363,23 +363,35 @@ public class CompetitionsActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
     }
 
-//    @Subscribe
-//    public void OnSportsmanDelete(SportsmanDeleteEvent sportsmanDeleteEvent)
-//    {
-//        int number = sportsmanDeleteEvent.GetSportsmanNumber();
-//        for(int i = 0; i < _megaSportsmen.length; i++)
-//        {
-//            if(number == _megaSportsmen[i].getNumber())
-//            {
-//                _tableAdapter.RemoveSportsman(_megaSportsmen[i]);
-//                _tableAdapter.notifyDataSetChanged();
-//                _viewAdapter.ChangeSportsmanLap(number, _megaSportsmen[i].getCurrentLap() - 1);
-//                _viewAdapter.notifyDataSetChanged();
-//                _megaSportsmen[i].setCurrentLap(_megaSportsmen[i].getCurrentLap() - 1);
-//                break;
-//            }
-//        }
-//    }
+    @Subscribe
+    public void OnSportsmanDelete(SportsmanDeleteEvent sportsmanDeleteEvent)
+    {
+        int number = sportsmanDeleteEvent.GetSportsmanNumber();
+        int lap = sportsmanDeleteEvent.GetLapNumber();
+        for(int i = lap - 1; i < _arrayMegaSportsmen.length; i++)
+        {
+            for(int j = 0; j < _arrayMegaSportsmen[i].size(); j++)
+            {
+                if(number == _arrayMegaSportsmen[i].get(j).getNumber())
+                {
+                    _arrayMegaSportsmen[i].remove(j);
+                    break;
+                }
+            }
+        }
+        for(int i = 0; i < _megaSportsmen.length; i++)
+        {
+            if(number == _megaSportsmen[i].getNumber())
+            {
+                _megaSportsmen[i].setCurrentLap(lap-1);
+                _tableAdapter.RemoveSportsman(_megaSportsmen[i]);
+                _tableAdapter.ChangePlacesAfterDelete();
+                break;
+            }
+        }
+        TestService.ChangeSportsmanLap(number, lap-1);
+
+    }
 
     @Subscribe
     public void OnColorChanged(ChangeColorEvent changeColorEvent)
@@ -408,6 +420,7 @@ public class CompetitionsActivity extends AppCompatActivity {
             }
         }
         _tableAdapter.notifyDataSetChanged();
+        TestService.NotifyViewAdapter();
 
     }
 
@@ -439,7 +452,7 @@ public class CompetitionsActivity extends AppCompatActivity {
         newTextView3.setLayoutParams(new TableRow.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 30f));
         ((TableRow.LayoutParams) newTextView3.getLayoutParams()).setMargins(0, 0, 2, 2);
         final TextView newTextView4 = new TextView(this);
-        newTextView4.setText("0-0-0-0-0");
+        newTextView4.setText(megaSportsman.getFineCountArrString());
         newTextView4.setGravity(Gravity.CENTER);
         newTextView4.setTextColor(Color.BLACK);
         newTextView4.setBackground(new PaintDrawable(Color.WHITE));

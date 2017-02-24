@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.Time;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,8 @@ import org.apache.poi.ss.formula.functions.Even;
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -64,6 +67,7 @@ public class CompetitionTableAdapter extends RecyclerView.Adapter<CompetitionTab
         holder.lagTextView.setText(megaSportsman.getLag());
         //holder.fineTextView.setText(String.valueOf(megaSportsman.getFineCount()));
         holder.fineTextView.setText(megaSportsman.getFineCountArrString());
+        holder.lapNumber = megaSportsman.getCurrentLap();
 
         holder.numberTextView.setTextColor(megaSportsman.getColor());
         holder.nameTextView.setTextColor(megaSportsman.getColor());
@@ -83,7 +87,19 @@ public class CompetitionTableAdapter extends RecyclerView.Adapter<CompetitionTab
     {
         if(sportsmen.contains(sportsman)) return;
         sportsmen.add(sportsman);
-        //notifyDataSetChanged();
+        notifyDataSetChanged();
+    }
+
+    public void ChangePlacesAfterDelete()
+    {
+        for(int i = 0; i < sportsmen.size(); i++)
+        {
+            if(sportsmen.get(i).getPlace() != i+1)
+            {
+                sportsmen.get(i).setPlace(i+1);
+            }
+        }
+        notifyDataSetChanged();
     }
 
     public void ClearList(){sportsmen.clear();}
@@ -97,7 +113,9 @@ public class CompetitionTableAdapter extends RecyclerView.Adapter<CompetitionTab
     @Override
     public void RemoveSportsman(MegaSportsman sportsman)
     {
-
+        if(!sportsmen.contains(sportsman)) return;
+        sportsmen.remove(sportsman);
+        notifyDataSetChanged();
     }
 
     @Override
@@ -126,7 +144,6 @@ public class CompetitionTableAdapter extends RecyclerView.Adapter<CompetitionTab
 
     }
 
-
     class ViewHolder extends RecyclerView.ViewHolder
     {
         private TextView nameTextView;
@@ -135,6 +152,7 @@ public class CompetitionTableAdapter extends RecyclerView.Adapter<CompetitionTab
         private TextView timeTextView;
         private TextView lagTextView;
         private TextView fineTextView;
+        private int lapNumber;
 
         private AlertDialog.Builder _builderChooseDialog;
         private AlertDialog _chooseDialog;
@@ -164,8 +182,8 @@ public class CompetitionTableAdapter extends RecyclerView.Adapter<CompetitionTab
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i)
                 {
-                    //SportsmanDeleteEvent event = new SportsmanDeleteEvent(Integer.valueOf(numberTextView.getText().toString()),2);
-                    //eventBus.post(event);
+                    SportsmanDeleteEvent event = new SportsmanDeleteEvent(Integer.valueOf(numberTextView.getText().toString()),lapNumber);
+                    eventBus.post(event);
                     Toast.makeText(_localContext, "удалить", Toast.LENGTH_SHORT).show();
                 }
             });
