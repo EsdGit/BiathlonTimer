@@ -65,8 +65,8 @@ public class TestService extends Service {
     {
         super.onCreate();
         _lastStep = new ArrayList<>();
+        _arrayMegaSportsmen = null;
         _megaSportsmen = CompetitionsActivity.GetMegaSportsmanArray();
-        _tableAdapter = new CompetitionTableAdapter(this, CompetitionsActivity.GetFragmentManager());
         threadFlag = false;
         thread.start();
         Notification.Builder builder = new Notification.Builder(this)
@@ -139,6 +139,7 @@ public class TestService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId)
     {
         if(_myIntent == null) _myIntent = intent;
+        _tableAdapter = CompetitionsActivity.GetCompetitionTableAdapter();
         RealmCompetitionSaver compSaver = new RealmCompetitionSaver(this, "COMPETITIONS");
         _currentCompetition = compSaver.GetCompetition(intent.getStringExtra("CompetitionName"), intent.getStringExtra("CompetitionDate"));
         SingleStart = getResources().getString(R.string.item_type_single_start);
@@ -235,6 +236,8 @@ public class TestService extends Service {
     {
         super.onTaskRemoved(rootIntent);
         if(_timer != null) _timer.cancel();
+        _tableAdapter.ClearList();
+        _viewAdapter.ClearList();
         if(Build.VERSION.SDK_INT == 19)
         {
             Intent restartIntent = new Intent(this, getClass());
@@ -314,6 +317,8 @@ public class TestService extends Service {
         _viewAdapter.ClearList();
         ms = 0;
         _number = 0;
+        _tableAdapter.ClearList();
+        _viewAdapter.ClearList();
         _currentTime = new Time();
         CompetitionsActivity.SetTime(_currentTime, ms);
     }
@@ -361,6 +366,12 @@ public class TestService extends Service {
             _tableAdapter.AddSportsmen(megaSportsmanList);
         }
         _tableAdapter.notifyDataSetChanged();
+    }
+
+    public static void RemoveSportsman(MegaSportsman megaSportsman)
+    {
+        _tableAdapter.RemoveSportsman(megaSportsman);
+        _tableAdapter.ChangePlacesAfterDelete();
     }
     class MyTimerTask extends AsyncTask<Integer, Integer, Integer>
     {
