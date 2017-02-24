@@ -5,6 +5,7 @@ import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.app.Service;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -94,12 +95,12 @@ public class CompetitionsActivity extends AppCompatActivity {
     private ArrayList<CompetitionTableAdapter> _arrayAdapters;
 
     private View _dialogOwnerView;
-
+    private static Context _context;
 
     private static boolean _isPaused = true;
     private boolean _save = true;
 
-    private CompetitionTableAdapter _tableAdapter;
+    private static CompetitionTableAdapter _tableAdapter;
     private static RecyclerView _table;
     private RecyclerView _currentRecyclerView;
     private Thread checkLapNumberThread;
@@ -121,7 +122,7 @@ public class CompetitionsActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getSupportActionBar().hide();
         _fragmentManager = this.getFragmentManager();
-
+        _tableAdapter = new CompetitionTableAdapter(this, this.getFragmentManager());
 
 
         RealmCompetitionSaver saverComp = new RealmCompetitionSaver(this, "COMPETITIONS");
@@ -404,8 +405,9 @@ public class CompetitionsActivity extends AppCompatActivity {
             if(number == _megaSportsmen[i].getNumber())
             {
                 _megaSportsmen[i].setCurrentLap(lap-1);
-                _tableAdapter.RemoveSportsman(_megaSportsmen[i]);
-                _tableAdapter.ChangePlacesAfterDelete();
+                TestService.RemoveSportsman(_megaSportsmen[i]);
+//                _tableAdapter.RemoveSportsman(_megaSportsmen[i]);
+//                _tableAdapter.ChangePlacesAfterDelete();
                 break;
             }
         }
@@ -654,9 +656,12 @@ public class CompetitionsActivity extends AppCompatActivity {
     @Override
     protected void onStop()
     {
-        TestService.SetCurrentState(_competitionState);
-        TestService.SetArrayMegaSportsman(_arrayMegaSportsmen);
-        TestService.SetLastStep(_lastTable);
+        if(_save)
+        {
+            TestService.SetCurrentState(_competitionState);
+            TestService.SetArrayMegaSportsman(_arrayMegaSportsmen);
+            TestService.SetLastStep(_lastTable);
+        }
         super.onStop();
     }
 
@@ -675,6 +680,8 @@ public class CompetitionsActivity extends AppCompatActivity {
             AddRowZeroColumn(megaSportsman, null);
         }
     }
+
+
 
 //    private void TimerStartPosition()
 //    {
@@ -945,9 +952,10 @@ public class CompetitionsActivity extends AppCompatActivity {
                     Intent intent = new Intent(CompetitionsActivity.this, ViewPagerActivity.class);
                     intent.putExtra("CompetitionName", _currentCompetition.getName());
                     intent.putExtra("CompetitionDate", _currentCompetition.getDate());
-                    startActivity(intent);
+                    TestService.ResetService();
                     stopService(serviceIntent);
                     _save = false;
+                    startActivity(intent);
                     CompetitionsActivity.this.finish();
                 }
             });
@@ -982,6 +990,11 @@ public class CompetitionsActivity extends AppCompatActivity {
     public static android.app.FragmentManager GetFragmentManager()
     {
         return _fragmentManager;
+    }
+
+    public static CompetitionTableAdapter GetCompetitionTableAdapter()
+    {
+        return _tableAdapter;
     }
     public static CompetitionState GetCompetitionState()
     {
