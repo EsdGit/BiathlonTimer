@@ -49,7 +49,8 @@
                   android:screenOrientation="landscape"
                   android:theme="@style/AppTheme"
                      android:configChanges="keyboardHidden|orientation"/>
-        <service android:name=".Activities.TestService" />
+        <service android:name=".Activities.TestService"
+            android:stopWithTask="true"/>
     </application>
 
 </manifest>

@@ -111,15 +111,13 @@ public class CompetitionsActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         _fragmentManager = this.getFragmentManager();
         _tableAdapter = new CompetitionTableAdapter(this, this.getFragmentManager());
-        _colorTimer = getResources().getColor(R.color.red);
+        TestService.SetAdapterTableCompetition(_tableAdapter);
+        _colorTimer = getResources().getColor(R.color.white);
         _isTablet = getResources().getBoolean(R.bool.isTablet);
         RealmCompetitionSaver saverComp = new RealmCompetitionSaver(this, "COMPETITIONS");
         _currentCompetition = saverComp.GetCompetition(getIntent().getStringExtra("Name"), getIntent().getStringExtra("Date"));
         saverComp.Dispose();
-        if(_competitionState == null)
-        {
-            _competitionState = CompetitionState.NotStarted;
-        }
+
 
         LayoutInflater inflater = LayoutInflater.from(this);
         List<View> pages = new ArrayList<>();
@@ -217,6 +215,10 @@ public class CompetitionsActivity extends AppCompatActivity {
             _isFirstLoad = savedInstanceState.getBoolean("IsFirstLoading");
             _currentTable = savedInstanceState.getInt("CurrentTable");
             _competitionState = TestService.GetCurrentState();
+            if(_competitionState == CompetitionState.Running || _competitionState == CompetitionState.Started)
+            {
+                SetColorTimer();
+            }
             _arrayMegaSportsmen = TestService.GetArrayMegaSportsman();
             ArrayList<String[]> localArray = new ArrayList<>();
             localArray = TestService.GetRowFromLastTable();
@@ -232,7 +234,10 @@ public class CompetitionsActivity extends AppCompatActivity {
                 }
             }
         }
-
+        if(_competitionState == null)
+        {
+            _competitionState = CompetitionState.NotStarted;
+        }
         _timerDialogBuilder = new AlertDialog.Builder(this);
         _timerDialogBuilder.setTitle("Выберите действие для продолжения.");
         _timerDialogBuilder.setPositiveButton(getResources().getString(R.string.finish), new DialogInterface.OnClickListener() {
@@ -242,7 +247,9 @@ public class CompetitionsActivity extends AppCompatActivity {
                 if (_competitionState == CompetitionState.Running)
                 {
                     if(serviceIntent != null)
-                        stopService(serviceIntent);
+                    {
+                        (TestService.GetContext()).stopService(serviceIntent);
+                    }
                     SaveResultsToDatabase();
                     Intent intent = new Intent(CompetitionsActivity.this, FinalActivity.class);
                     intent.putExtra("Name", _currentCompetition.getName());
@@ -277,8 +284,13 @@ public class CompetitionsActivity extends AppCompatActivity {
                     _megaSportsmen[j].clearFineCount();
                     _megaSportsmen[j].setFineTime(null);
                 }
+                TestService.SetArrayMegaSportsman(_arrayMegaSportsmen);
                 _lastTable.removeAllViews();
                 TestService.AdapterClearList();
+                for(int i = 0; i < _arrayAdapters.size(); i++)
+                {
+                    _arrayAdapters.get(i).ClearList();
+                }
                 _competitionState = CompetitionState.NotStarted;
                 _competitionTimer.setTextColor(getResources().getColor(R.color.red));
                 _timerParticipantTable.setTextColor(getResources().getColor(R.color.red));
@@ -655,6 +667,7 @@ public class CompetitionsActivity extends AppCompatActivity {
             TestService.SetCurrentState(_competitionState);
             TestService.SetArrayMegaSportsman(_arrayMegaSportsmen);
             TestService.SetLastStep(_lastTable);
+            TestService.SaveCurrentListMegasportsman(_arrayMegaSportsmen[_currentTable]);
         }
         super.onStop();
     }
@@ -790,8 +803,9 @@ public class CompetitionsActivity extends AppCompatActivity {
             _isPaused = false;
             _competitionState = CompetitionState.Started;
             //_startBtn.setText(getResources().getString(R.string.stop_timer));
-            startService(serviceIntent);
-//
+            this.startService(serviceIntent);
+            TestService.SetContext(this);
+            TestService.SetArrayMegaSportsman(_arrayMegaSportsmen);
 //            final android.text.format.Time timeCountDown = new android.text.format.Time();
 //            timeCountDown.minute = Integer.valueOf(_currentCompetition.getTimeToStart().split(":")[0]);
 //            timeCountDown.second = Integer.valueOf(_currentCompetition.getTimeToStart().split(":")[1]);
@@ -942,12 +956,12 @@ public class CompetitionsActivity extends AppCompatActivity {
             dialog.setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    if(serviceIntent != null) stopService(serviceIntent);
+                    if(serviceIntent != null) (TestService.GetContext()).stopService(serviceIntent);
                     Intent intent = new Intent(CompetitionsActivity.this, ViewPagerActivity.class);
                     intent.putExtra("CompetitionName", _currentCompetition.getName());
                     intent.putExtra("CompetitionDate", _currentCompetition.getDate());
-                    TestService.ResetService();
-                    stopService(serviceIntent);
+                    TestService.ResetAllParameters();
+                    (TestService.GetContext()).stopService(serviceIntent);
                     _save = false;
                     CompetitionsActivity.this.finish();
                     startActivity(intent);

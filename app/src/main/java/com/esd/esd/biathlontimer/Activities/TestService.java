@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -49,6 +50,8 @@ public class TestService extends Service {
     private static CompetitionTableAdapter _tableAdapter;
 
     private static ArrayList<String> _lastStep;
+    private static List<MegaSportsman> _megaSportsmanCurrentList;
+    private static Context _context;
 
      static int ms;
 
@@ -243,6 +246,15 @@ public class TestService extends Service {
         }
     }
 
+    public static void SetAdapterTableCompetition(CompetitionTableAdapter adapter)
+    {
+        _tableAdapter = adapter;
+        if(_megaSportsmanCurrentList!=null)
+        {
+            _tableAdapter.AddSportsmen(_megaSportsmanCurrentList);
+        }
+    }
+
     public static void SetLastStep(TableLayout table)
     {
         TableRow row;
@@ -260,6 +272,20 @@ public class TestService extends Service {
             resultString = "";
         }
 
+    }
+
+    public static void SetContext(Context context)
+    {
+        _context = context;
+    }
+
+    public static Context GetContext()
+    {
+        return _context;
+    }
+    public static void SaveCurrentListMegasportsman(List<MegaSportsman> megaSportsmanList)
+    {
+        _megaSportsmanCurrentList = megaSportsmanList;
     }
 
     public static ArrayList<String[]> GetRowFromLastTable()
@@ -298,6 +324,23 @@ public class TestService extends Service {
         _currentState = state;
     }
 
+    public static void ResetAllParameters()
+    {
+        _timer = null;
+        _currentTime = null;
+        SingleStart = null;
+        PairStart= null;
+        _currentState= null;
+        _arrayMegaSportsmen= null;
+        _number= 0;
+        _viewAdapter= null;
+        _tableAdapter= null;
+        _lastStep= null;
+        _megaSportsmanCurrentList= null;
+        ms = 0;
+    }
+
+
     public static CompetitionsActivity.CompetitionState GetCurrentState()
     {
         return _currentState;
@@ -311,7 +354,6 @@ public class TestService extends Service {
         ms = 0;
         _number = 0;
         _tableAdapter.ClearList();
-        _viewAdapter.ClearList();
         _currentTime = new Time();
         _currentState = CompetitionsActivity.CompetitionState.NotStarted;
         CompetitionsActivity.SetCompetitionState(_currentState);
