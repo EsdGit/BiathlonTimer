@@ -658,6 +658,7 @@ public class CompetitionsActivity extends AppCompatActivity {
             LoadingTask loadingTask = new LoadingTask();
             loadingTask.execute();
             serviceIntent = new Intent(this, TestService.class);
+            TestService.SetContext(this);
             serviceIntent.putExtra("CompetitionName", _currentCompetition.getName());
             serviceIntent.putExtra("CompetitionDate", _currentCompetition.getDate());
             _isFirstLoad = false;
@@ -808,7 +809,6 @@ public class CompetitionsActivity extends AppCompatActivity {
             _isPaused = false;
             _competitionState = CompetitionState.Started;
             this.startService(serviceIntent);
-            TestService.SetContext(this);
             TestService.SetArrayMegaSportsman(_arrayMegaSportsmen);
 //            final android.text.format.Time timeCountDown = new android.text.format.Time();
 //            timeCountDown.minute = Integer.valueOf(_currentCompetition.getTimeToStart().split(":")[0]);
@@ -960,7 +960,8 @@ public class CompetitionsActivity extends AppCompatActivity {
             dialog.setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    if(serviceIntent != null) (TestService.GetContext()).stopService(serviceIntent);
+                    if(serviceIntent != null)
+                        (TestService.GetContext()).stopService(serviceIntent);
                     Intent intent = new Intent(CompetitionsActivity.this, ViewPagerActivity.class);
                     intent.putExtra("CompetitionName", _currentCompetition.getName());
                     intent.putExtra("CompetitionDate", _currentCompetition.getDate());

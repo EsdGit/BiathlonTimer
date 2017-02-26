@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Таймер для биатлона</string>
+    <string name="app_name">Биатлонный таймер</string>
 
     //Активити
     <string name="folder_activity_name">Выберите папку</string>
