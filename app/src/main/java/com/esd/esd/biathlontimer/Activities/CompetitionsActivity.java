@@ -286,10 +286,15 @@ public class CompetitionsActivity extends AppCompatActivity {
                 }
                 TestService.SetArrayMegaSportsman(_arrayMegaSportsmen);
                 _lastTable.removeAllViews();
-                TestService.AdapterClearList();
-                for(int i = 0; i < _arrayAdapters.size(); i++)
+                if(!getResources().getBoolean(R.bool.isTablet))
                 {
-                    _arrayAdapters.get(i).ClearList();
+                    TestService.AdapterClearList();
+                }
+                else
+                {
+                    for (int i = 0; i < _arrayAdapters.size(); i++) {
+                        _arrayAdapters.get(i).ClearList();
+                    }
                 }
                 _competitionState = CompetitionState.NotStarted;
                 _competitionTimer.setTextColor(getResources().getColor(R.color.red));
@@ -667,7 +672,7 @@ public class CompetitionsActivity extends AppCompatActivity {
             TestService.SetCurrentState(_competitionState);
             TestService.SetArrayMegaSportsman(_arrayMegaSportsmen);
             TestService.SetLastStep(_lastTable);
-            TestService.SaveCurrentListMegasportsman(_arrayMegaSportsmen[_currentTable]);
+            TestService.SaveCurrentListMegaSportsman(_arrayMegaSportsmen[_currentTable]);
         }
         super.onStop();
     }
@@ -802,7 +807,6 @@ public class CompetitionsActivity extends AppCompatActivity {
         {
             _isPaused = false;
             _competitionState = CompetitionState.Started;
-            //_startBtn.setText(getResources().getString(R.string.stop_timer));
             this.startService(serviceIntent);
             TestService.SetContext(this);
             TestService.SetArrayMegaSportsman(_arrayMegaSportsmen);
@@ -960,8 +964,8 @@ public class CompetitionsActivity extends AppCompatActivity {
                     Intent intent = new Intent(CompetitionsActivity.this, ViewPagerActivity.class);
                     intent.putExtra("CompetitionName", _currentCompetition.getName());
                     intent.putExtra("CompetitionDate", _currentCompetition.getDate());
-                    TestService.ResetAllParameters();
                     (TestService.GetContext()).stopService(serviceIntent);
+                    TestService.ResetAllStaticParameters();
                     _save = false;
                     CompetitionsActivity.this.finish();
                     startActivity(intent);
@@ -1002,19 +1006,12 @@ public class CompetitionsActivity extends AppCompatActivity {
         Toast.makeText(getApplicationContext(),"Стоп",Toast.LENGTH_SHORT).show();
     }
 
-    public static android.app.FragmentManager GetFragmentManager()
-    {
-        return _fragmentManager;
-    }
 
     public static CompetitionTableAdapter GetCompetitionTableAdapter()
     {
         return _tableAdapter;
     }
-    public static CompetitionState GetCompetitionState()
-    {
-        return _competitionState;
-    }
+
 
     public static void SetCompetitionState(CompetitionState state)
     {

@@ -219,7 +219,7 @@ public class TestService extends Service {
     public void onDestroy()
     {
         if(_timer != null) _timer.cancel();
-        _viewAdapter.ClearList();
+        if(_viewAdapter != null) _viewAdapter.ClearList();
         ms = 0;
         _number = 0;
         _currentTime = new Time();
@@ -234,16 +234,16 @@ public class TestService extends Service {
         if(_timer != null) _timer.cancel();
         _tableAdapter.ClearList();
         _viewAdapter.ClearList();
-        if(Build.VERSION.SDK_INT == 19)
-        {
-            Intent restartIntent = new Intent(this, getClass());
-            AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
-            PendingIntent pi = PendingIntent.getService(this, 1, restartIntent,
-                    PendingIntent.FLAG_ONE_SHOT);
-            //restartIntent.putExtra("RESTART");
-            am.setExact(AlarmManager.RTC, System.currentTimeMillis() + 3000, pi);
-            startService(restartIntent);
-        }
+//        if(Build.VERSION.SDK_INT == 19)
+//        {
+//            Intent restartIntent = new Intent(this, getClass());
+//            AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
+//            PendingIntent pi = PendingIntent.getService(this, 1, restartIntent,
+//                    PendingIntent.FLAG_ONE_SHOT);
+//            //restartIntent.putExtra("RESTART");
+//            am.setExact(AlarmManager.RTC, System.currentTimeMillis() + 3000, pi);
+//            startService(restartIntent);
+//        }
     }
 
     public static void SetAdapterTableCompetition(CompetitionTableAdapter adapter)
@@ -283,9 +283,32 @@ public class TestService extends Service {
     {
         return _context;
     }
-    public static void SaveCurrentListMegasportsman(List<MegaSportsman> megaSportsmanList)
+    public static void SaveCurrentListMegaSportsman(List<MegaSportsman> megaSportsmanList)
     {
         _megaSportsmanCurrentList = megaSportsmanList;
+    }
+
+    public static void ResetAllStaticParameters()
+    {
+        _timer = null;
+
+        _currentTime = null;
+
+        threadFlag = false;
+        SingleStart = null;
+        PairStart = null;
+        _currentState = null;
+        _arrayMegaSportsmen = null;
+
+        _number = 0;
+        _viewAdapter = null;
+        _tableAdapter = null;
+
+        _lastStep = null;
+        _megaSportsmanCurrentList = null;
+        _context = null;
+        ms = 0;
+
     }
 
     public static ArrayList<String[]> GetRowFromLastTable()
@@ -302,15 +325,6 @@ public class TestService extends Service {
 
     public static void SetArrayMegaSportsman(ArrayList<MegaSportsman>[] arrayMegaSportsmen)
     {
-//        _arrayMegaSportsmen = new ArrayList[arrayMegaSportsmen.length];
-//        for (int i = 0; i < arrayMegaSportsmen.length; i++)
-//        {
-//            _arrayMegaSportsmen[i] = new ArrayList<MegaSportsman>();
-//            for(int j = 0; j < arrayMegaSportsmen[i].size(); j++)
-//            {
-//                _arrayMegaSportsmen[i].add(arrayMegaSportsmen[i].get(j));
-//            }
-//        }
         _arrayMegaSportsmen = arrayMegaSportsmen;
     }
 
@@ -322,22 +336,6 @@ public class TestService extends Service {
     public static void SetCurrentState(CompetitionsActivity.CompetitionState state)
     {
         _currentState = state;
-    }
-
-    public static void ResetAllParameters()
-    {
-        _timer = null;
-        _currentTime = null;
-        SingleStart = null;
-        PairStart= null;
-        _currentState= null;
-        _arrayMegaSportsmen= null;
-        _number= 0;
-        _viewAdapter= null;
-        _tableAdapter= null;
-        _lastStep= null;
-        _megaSportsmanCurrentList= null;
-        ms = 0;
     }
 
 
@@ -410,6 +408,7 @@ public class TestService extends Service {
         _tableAdapter.RemoveSportsman(megaSportsman);
         _tableAdapter.ChangePlacesAfterDelete();
     }
+
     class MyTimerTask extends AsyncTask<Integer, Integer, Integer>
     {
         @Override
