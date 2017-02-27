@@ -118,6 +118,25 @@ public class CompetitionTableAdapter extends RecyclerView.Adapter<CompetitionTab
         notifyDataSetChanged();
     }
 
+    public void RemoveSportsmanByNumber(int number)
+    {
+        int p = 0;
+        for(int i = 0; i < sportsmen.size(); i++)
+        {
+            if(sportsmen.get(i).getNumber() == number)
+            {
+                sportsmen.remove(i);
+                p = i;
+                break;
+            }
+        }
+        for(int i = p; i < sportsmen.size(); i++)
+        {
+            sportsmen.get(i).setPlace(i+1);
+        }
+        notifyDataSetChanged();
+    }
+
     @Override
     public void RemoveSportsmen(List<MegaSportsman> sportsmen) {
 
@@ -184,7 +203,7 @@ public class CompetitionTableAdapter extends RecyclerView.Adapter<CompetitionTab
                 {
                     SportsmanDeleteEvent event = new SportsmanDeleteEvent(Integer.valueOf(numberTextView.getText().toString()),lapNumber);
                     eventBus.post(event);
-                    Toast.makeText(_localContext, "удалить", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(_localContext, "удалить", Toast.LENGTH_SHORT).show();
                 }
             });
             _builderChooseDialog.setMessage(_localContext.getResources().getString(R.string.dialog_choose_title));
@@ -195,13 +214,13 @@ public class CompetitionTableAdapter extends RecyclerView.Adapter<CompetitionTab
                     new int[] {
                             Color.RED,
                             Color.BLACK,
-                            Color.BLUE,
-                            Color.CYAN,
-                            Color.DKGRAY,
-                            Color.GRAY,
-                            Color.YELLOW,
-                            Color.parseColor("#0b8722")
-                    }, Color.BLACK, 4, 30);//Изменить на текущий цвет
+                            _localContext.getResources().getColor(R.color.darkBlue),
+                            _localContext.getResources().getColor(R.color.orange),
+                            _localContext.getResources().getColor(R.color.brown),
+                            _localContext.getResources().getColor(R.color.violet),
+                            _localContext.getResources().getColor(R.color.green),
+                            _localContext.getResources().getColor(R.color.yellow)
+                    }, Color.BLACK, 4, 30);
 
             _chooseColorDialog.setOnColorSelectedListener(new ColorPickerSwatch.OnColorSelectedListener() {
                 @Override
@@ -209,7 +228,7 @@ public class CompetitionTableAdapter extends RecyclerView.Adapter<CompetitionTab
                 {
                     ChangeColorEvent event = new ChangeColorEvent(color, Integer.valueOf(numberTextView.getText().toString()));
                     eventBus.post(event);
-                    Toast.makeText(_localContext, "Выюран цвет", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(_localContext, "Выбран цвет", Toast.LENGTH_SHORT).show();
                 }
             });
             itemView.setOnLongClickListener(new View.OnLongClickListener()

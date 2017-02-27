@@ -2,6 +2,7 @@ package com.esd.esd.biathlontimer.Activities;
 
 import android.app.AlarmManager;
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
@@ -55,6 +56,9 @@ public class TestService extends Service {
 
      static int ms;
 
+    private static Notification.Builder builder;
+    private static NotificationManager notificationManager;
+
     @Override
     public void onCreate()
     {
@@ -64,14 +68,11 @@ public class TestService extends Service {
         _megaSportsmen = CompetitionsActivity.GetMegaSportsmanArray();
         threadFlag = false;
         thread.start();
-        Notification.Builder builder = new Notification.Builder(this)
-                .setSmallIcon(R.drawable.ic_launcher);
-        Notification notification;
-        if (Build.VERSION.SDK_INT < 16)
-            notification = builder.getNotification();
-        else
-            notification = builder.build();
-        startForeground(777, notification);
+        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        builder = new Notification.Builder(this)
+                .setSmallIcon(R.drawable.launcher).setContentTitle(getApplicationContext().getResources().getString(R.string.app_name));
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, CompetitionsActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP), PendingIntent.FLAG_UPDATE_CURRENT);
+        builder.setContentIntent(pendingIntent);
 
     }
 
@@ -83,6 +84,7 @@ public class TestService extends Service {
         {
             while(true)
             {
+                if(thread.isInterrupted()) break;
                 if(!threadFlag) continue;
                 if (android.text.format.Time.compare(_currentTime, _timeNextParticipant) == 0 && _number < _megaSportsmen.length) {
 
@@ -172,7 +174,7 @@ public class TestService extends Service {
                     timeCountDown.minute--;
                     timeCountDown.second = 59;
                 }
-                CompetitionsActivity.SetTime(timeCountDown, ms);
+                CompetitionsActivity.SetTime(timeCountDown, ms, true);
             }
 
             @Override
@@ -184,7 +186,7 @@ public class TestService extends Service {
                 {
                     threadFlag = true;
                 }
-                CompetitionsActivity.SetTime(_currentTime, ms);
+                CompetitionsActivity.SetTime(_currentTime, ms, false);
                 CompetitionsActivity.SetCompetitionState(CompetitionsActivity.CompetitionState.Running);
                 CompetitionsActivity.SetColorTimer();
                 if(_currentCompetition.getStartType().equals(getResources().getString(R.string.item_type_mas_start)))
@@ -219,11 +221,14 @@ public class TestService extends Service {
     public void onDestroy()
     {
         if(_timer != null) _timer.cancel();
+        if(_countDownTimer != null) _countDownTimer.cancel();
         if(_viewAdapter != null) _viewAdapter.ClearList();
         ms = 0;
         _number = 0;
         _currentTime = new Time();
-        CompetitionsActivity.SetTime(_currentTime, ms);
+        thread.interrupt();
+        notificationManager.cancelAll();
+        CompetitionsActivity.SetTime(_currentTime, ms, true);
         super.onDestroy();
     }
 
@@ -348,14 +353,16 @@ public class TestService extends Service {
     {
         if(_timer != null) _timer.cancel();
         threadFlag = false;
-        _viewAdapter.ClearList();
+        if(_viewAdapter != null) _viewAdapter.ClearList();
         ms = 0;
         _number = 0;
         _tableAdapter.ClearList();
         _currentTime = new Time();
         _currentState = CompetitionsActivity.CompetitionState.NotStarted;
+        builder.setContentText("00:00:00");
+        notificationManager.notify(1,builder.build());
         CompetitionsActivity.SetCompetitionState(_currentState);
-        CompetitionsActivity.SetTime(_currentTime, ms);
+        CompetitionsActivity.SetTime(_currentTime, ms,true);
     }
 
     public static boolean IsFinished(int number)
@@ -405,8 +412,8 @@ public class TestService extends Service {
 
     public static void RemoveSportsman(MegaSportsman megaSportsman)
     {
-        _tableAdapter.RemoveSportsman(megaSportsman);
-        _tableAdapter.ChangePlacesAfterDelete();
+            _tableAdapter.RemoveSportsman(megaSportsman);
+            _tableAdapter.ChangePlacesAfterDelete();
     }
 
     class MyTimerTask extends AsyncTask<Integer, Integer, Integer>
@@ -437,7 +444,9 @@ public class TestService extends Service {
         protected void onPostExecute(Integer integer)
         {
             super.onPostExecute(integer);
-            CompetitionsActivity.SetTime(_currentTime, ms);
+            builder.setContentText(_currentTime.format("%H:%M:%S"));
+            notificationManager.notify(1, builder.build());
+            CompetitionsActivity.SetTime(_currentTime, ms, false);
         }
     }
 }

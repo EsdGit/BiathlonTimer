@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="00:00"
-            android:textColor="@color/timerStart"
+            android:textColor="@color/red"
             android:id="@+id/competitionTimer"
             android:typeface="serif"
             android:layout_gravity="center"

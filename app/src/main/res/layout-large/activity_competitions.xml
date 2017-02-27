@@ -29,7 +29,7 @@
                 android:id="@+id/competitionTimer"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:typeface="serif"
-                android:textColor="@color/timerStart"
+                android:textColor="@color/red"
                 android:layout_gravity="center"
                 android:gravity="center"/>
 
@@ -148,7 +148,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/title_text_size_double_table"
                 android:text="00:00"
-                android:textColor="@color/timerStart"
+                android:textColor="@color/red"
                 android:id="@+id/competitionTimerTable"
                 android:typeface="serif"
                 android:layout_gravity="center"

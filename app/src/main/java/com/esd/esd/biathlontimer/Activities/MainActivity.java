@@ -154,6 +154,7 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra("Name", localList.get(0).getName());
             intent.putExtra("Date", localList.get(0).getDate());
             startActivity(intent);
+            this.finish();
         }
     }
 

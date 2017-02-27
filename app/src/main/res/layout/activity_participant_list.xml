@@ -261,7 +261,6 @@
         android:layout_alignParentRight="true"
         app:fabSize = "normal"
         app:backgroundTint = "@color/colorPrimary"
-        android:onClick="OnClick"
-        android:layout_above="@+id/scrollViewParticipantList"/>
+        android:onClick="OnClick" />
 
 </RelativeLayout>

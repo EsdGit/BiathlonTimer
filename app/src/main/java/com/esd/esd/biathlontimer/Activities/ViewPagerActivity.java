@@ -296,12 +296,12 @@ public class ViewPagerActivity extends AppCompatActivity
                 new int[] {
                         Color.RED,
                         Color.BLACK,
-                        Color.BLUE,
-                        Color.CYAN,
-                        Color.DKGRAY,
-                        Color.GRAY,
-                        Color.YELLOW,
-                        Color.parseColor("#0b8722")
+                        getResources().getColor(R.color.darkBlue),
+                        getResources().getColor(R.color.orange),
+                        getResources().getColor(R.color.brown),
+                        getResources().getColor(R.color.violet),
+                        getResources().getColor(R.color.green),
+                        getResources().getColor(R.color.yellow)
                 }, Color.BLACK, 4, 30);
 
         _addColorToParticipantDialog.setOnColorSelectedListener(new ColorPickerSwatch.OnColorSelectedListener() {
@@ -860,7 +860,6 @@ public class ViewPagerActivity extends AppCompatActivity
         mainSaver.Dispose();
         if(_needDeleteTables)
         {
-            // Удаляем соревнование
             saver.DeleteTable();
         }
     }
