@@ -359,8 +359,11 @@ public class TestService extends Service {
         _tableAdapter.ClearList();
         _currentTime = new Time();
         _currentState = CompetitionsActivity.CompetitionState.NotStarted;
-        builder.setContentText("00:00:00");
-        notificationManager.notify(1,builder.build());
+        if(builder != null)
+        {
+            builder.setContentText("00:00:00");
+            if (notificationManager != null) notificationManager.notify(1, builder.build());
+        }
         CompetitionsActivity.SetCompetitionState(_currentState);
         CompetitionsActivity.SetTime(_currentTime, ms,true);
     }
