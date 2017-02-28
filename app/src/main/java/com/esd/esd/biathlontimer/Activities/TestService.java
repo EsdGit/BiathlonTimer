@@ -239,16 +239,6 @@ public class TestService extends Service {
         if(_timer != null) _timer.cancel();
         _tableAdapter.ClearList();
         _viewAdapter.ClearList();
-//        if(Build.VERSION.SDK_INT == 19)
-//        {
-//            Intent restartIntent = new Intent(this, getClass());
-//            AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
-//            PendingIntent pi = PendingIntent.getService(this, 1, restartIntent,
-//                    PendingIntent.FLAG_ONE_SHOT);
-//            //restartIntent.putExtra("RESTART");
-//            am.setExact(AlarmManager.RTC, System.currentTimeMillis() + 3000, pi);
-//            startService(restartIntent);
-//        }
     }
 
     public static void SetAdapterTableCompetition(CompetitionTableAdapter adapter)

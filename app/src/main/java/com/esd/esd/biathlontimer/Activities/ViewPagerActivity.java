@@ -188,6 +188,7 @@ public class ViewPagerActivity extends AppCompatActivity
                     saver.SaveSportsman(sportsman);
                     sportsman.setColor(Color.BLACK);
                     sportsman.setNumber(0);
+                    sportsman.setGroup(getResources().getString(R.string.default_group));
                     mainSaver.SaveSportsman(sportsman);
                     _recyclerViewLocalDatabaseAdapter.SortList(saver.GetSportsmen("number", true));
                     _recyclerViewDatabaseAdapter.AddSportsman(sportsman);
@@ -271,6 +272,7 @@ public class ViewPagerActivity extends AppCompatActivity
                     }
                     sportsman.setColor(Color.BLACK);
                     sportsman.setNumber(0);
+                    sportsman.setGroup(getResources().getString(R.string.default_group));
                     mainSaver.SaveSportsman(sportsman);
                     _recyclerViewDatabaseAdapter.AddSportsman(sportsman);
                     _colorDialog.setBackgroundColor(Color.BLACK);
@@ -562,23 +564,23 @@ public class ViewPagerActivity extends AppCompatActivity
                             switch (item.getItemId())
                             {
                                 case R.id.groupSort:
-                                    Toast.makeText(getApplicationContext(),"Сортировка списка участников по группам",Toast.LENGTH_SHORT).show();
+                                    //Toast.makeText(getApplicationContext(),"Сортировка списка участников по группам",Toast.LENGTH_SHORT).show();
                                     return true;
                                 case R.id.nameSort:
                                     SortTableBy(_recyclerView, "name" , item.isChecked());
-                                    Toast.makeText(getApplicationContext(),"Сортировка списка участников по имени",Toast.LENGTH_SHORT).show();
+                                    //Toast.makeText(getApplicationContext(),"Сортировка списка участников по имени",Toast.LENGTH_SHORT).show();
                                     return true;
                                 case R.id.dataSort:
                                     SortTableBy(_recyclerView, "year", item.isChecked());
-                                    Toast.makeText(getApplicationContext(),"Сортировка списка участников по дате",Toast.LENGTH_SHORT).show();
+                                    //Toast.makeText(getApplicationContext(),"Сортировка списка участников по дате",Toast.LENGTH_SHORT).show();
                                     return true;
                                 case R.id.countrySort:
                                     SortTableBy(_recyclerView, "country", item.isChecked());
-                                    Toast.makeText(getApplicationContext(),"Сортировка списка участников по региону",Toast.LENGTH_SHORT).show();
+                                    //Toast.makeText(getApplicationContext(),"Сортировка списка участников по региону",Toast.LENGTH_SHORT).show();
                                     return true;
                                 case R.id.numberSort:
                                     SortTableBy(_recyclerView, "number", item.isChecked());
-                                    Toast.makeText(getApplicationContext(),"Сортировка списка участников по номеру",Toast.LENGTH_SHORT).show();
+                                    //Toast.makeText(getApplicationContext(),"Сортировка списка участников по номеру",Toast.LENGTH_SHORT).show();
                                     return true;
                                 default:
                                     return false;
@@ -606,15 +608,15 @@ public class ViewPagerActivity extends AppCompatActivity
                             {
                                 case R.id.nameSort:
                                     SortTableBy(_recyclerViewDatabase, "name", item.isChecked());
-                                    Toast.makeText(getApplicationContext(),"Сортировка базы данных по имени",Toast.LENGTH_SHORT).show();
+                                    //Toast.makeText(getApplicationContext(),"Сортировка базы данных по имени",Toast.LENGTH_SHORT).show();
                                     return true;
                                 case R.id.dataSort:
                                     SortTableBy(_recyclerViewDatabase, "year", item.isChecked());
-                                    Toast.makeText(getApplicationContext(),"Сортировка базы данных по дате",Toast.LENGTH_SHORT).show();
+                                    //Toast.makeText(getApplicationContext(),"Сортировка базы данных по дате",Toast.LENGTH_SHORT).show();
                                     return true;
                                 case R.id.countrySort:
                                     SortTableBy(_recyclerViewDatabase, "country", item.isChecked());
-                                    Toast.makeText(getApplicationContext(),"Сортировка базы данных по региону",Toast.LENGTH_SHORT).show();
+                                    //Toast.makeText(getApplicationContext(),"Сортировка базы данных по региону",Toast.LENGTH_SHORT).show();
                                     return true;
                                 default:
                                     return false;
@@ -630,13 +632,31 @@ public class ViewPagerActivity extends AppCompatActivity
 
     public void OnClickAcceptParticipant(View view)
     {
+        // проверка нет ли повторяющихся номеров
+        if(HaveParticipantsZeroNumber())
+        {
+            Toast.makeText(this, "В соревнование не могут быть спортсмены с нулевым номером", Toast.LENGTH_SHORT).show();
+            return;
+        }
         _needDeleteTables = false;
-        Toast.makeText(getApplicationContext(),"Сохранить список и перейти к соревнованию",Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, CompetitionsActivity.class);
         intent.putExtra("Name", _currentCompetition.getName());
         intent.putExtra("Date", _currentCompetition.getDate());
         startActivity(intent);
         this.finish();
+    }
+
+    private boolean HaveParticipantsZeroNumber()
+    {
+        List<Sportsman> arr = saver.GetSportsmen("number", true);
+        for(int i = 0; i < arr.size(); i++)
+        {
+            if(arr.get(i).getNumber() == 0)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void OnClickEditParticipant(View view)
@@ -658,7 +678,7 @@ public class ViewPagerActivity extends AppCompatActivity
             }
         }
         _renameDialog.show();
-        Toast.makeText(getApplicationContext(),"Редактировать участника",Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplicationContext(),"Редактировать участника",Toast.LENGTH_SHORT).show();
     }
 
     public void OnClickDeleteParticipant(View view)
@@ -668,7 +688,7 @@ public class ViewPagerActivity extends AppCompatActivity
         saver.DeleteSportsmen(listToDelete);
         _recyclerViewLocalDatabaseAdapter.ResetHaveMarkedFlag();
         SetStartPosition(1,_recyclerViewLocalDatabaseAdapter.getItemCount());
-        Toast.makeText(getApplicationContext(),"Удаление участника",Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplicationContext(),"Удаление участника",Toast.LENGTH_SHORT).show();
     }
 
     public void OnClickDeleteDataBAse(View view)
@@ -686,7 +706,7 @@ public class ViewPagerActivity extends AppCompatActivity
                 _recyclerViewDatabaseAdapter.RemoveSportsmen(listToDelete);
                 _recyclerViewDatabaseAdapter.ResetHaveMarkedFlag();
                 SetStartPosition(2, _recyclerViewDatabaseAdapter.getItemCount());
-                Toast.makeText(getApplicationContext(),"Участники удалены",Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(),"Участники удалены",Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -712,7 +732,7 @@ public class ViewPagerActivity extends AppCompatActivity
         _renameRecyclerView = _recyclerViewDatabase;
         _renameSportsman = sportsmanToEdit;
         _renameDialog.show();
-        Toast.makeText(getApplicationContext(),"Редактировать участника в базе данных",Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplicationContext(),"Редактировать участника в базе данных",Toast.LENGTH_SHORT).show();
     }
 
     public void OnClickAcceptDataBase(View view)
@@ -723,7 +743,7 @@ public class ViewPagerActivity extends AppCompatActivity
         _recyclerViewLocalDatabaseAdapter.SortList(saver.GetSportsmen("number", true));
         _recyclerViewLocalDatabaseAdapter.AddSportsmen(checkedList);
         SetStartPosition(2, _recyclerViewDatabaseAdapter.getItemCount());
-        Toast.makeText(getApplicationContext(),"Участники были добавлены в соревнование",Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplicationContext(),"Участники были добавлены в соревнование",Toast.LENGTH_SHORT).show();
         EmptyDataBaseCompetition();
         EmptyParticipantCompetition();
     }
@@ -999,12 +1019,8 @@ public class ViewPagerActivity extends AppCompatActivity
         @Override
         protected void onProgressUpdate(Sportsman... values) {
             super.onProgressUpdate(values);
-            //_progressDialog.setProgress(values[0]);
             _progressDialog.incrementProgressBy(1);
             saver.SaveSportsman(values[0]);
-            //_progressDialog.setSecondaryProgress(values[0]);
-//            _progressDialog.incrementProgressBy(1);
-//            _progressDialog.incrementSecondaryProgressBy(1);
         }
 
         private void SleepProgress(int floor) throws InterruptedException {
