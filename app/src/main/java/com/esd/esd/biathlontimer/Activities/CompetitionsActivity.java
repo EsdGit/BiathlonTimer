@@ -475,12 +475,13 @@ public class CompetitionsActivity extends AppCompatActivity {
     }
 
     private void AddRowAsTableCompetitions(MegaSportsman megaSportsman, String[] textRow) {
+        int color = megaSportsman.getColor();
         final TableRow newRow = new TableRow(this);
         newRow.setWeightSum(100);
         final TextView newTextView = new TextView(this);
 
         newTextView.setGravity(Gravity.CENTER);
-        newTextView.setTextColor(Color.BLACK);
+        newTextView.setTextColor(color);
         newTextView.setBackground(new PaintDrawable(Color.WHITE));
         newTextView.setTextSize(getResources().getDimension(R.dimen.text_size_last_step));
         newTextView.setLayoutParams(new TableRow.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 8f));
@@ -488,7 +489,7 @@ public class CompetitionsActivity extends AppCompatActivity {
         final TextView newTextView2 = new TextView(this);
 
         newTextView2.setGravity(Gravity.CENTER);
-        newTextView2.setTextColor(Color.BLACK);
+        newTextView2.setTextColor(color);
         newTextView2.setBackground(new PaintDrawable(Color.WHITE));
         newTextView2.setTextSize(getResources().getDimension(R.dimen.text_size_last_step));
         newTextView2.setLayoutParams(new TableRow.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 8f));
@@ -496,7 +497,7 @@ public class CompetitionsActivity extends AppCompatActivity {
         final TextView newTextView3 = new TextView(this);
 
         newTextView3.setGravity(Gravity.CENTER);
-        newTextView3.setTextColor(Color.BLACK);
+        newTextView3.setTextColor(color);
         newTextView3.setBackground(new PaintDrawable(Color.WHITE));
         newTextView3.setTextSize(getResources().getDimension(R.dimen.text_size_last_step));
         newTextView3.setLayoutParams(new TableRow.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 30f));
@@ -504,7 +505,7 @@ public class CompetitionsActivity extends AppCompatActivity {
         final TextView newTextView4 = new TextView(this);
 
         newTextView4.setGravity(Gravity.CENTER);
-        newTextView4.setTextColor(Color.BLACK);
+        newTextView4.setTextColor(color);
         newTextView4.setBackground(new PaintDrawable(Color.WHITE));
         newTextView4.setTextSize(getResources().getDimension(R.dimen.text_size_last_step));
         newTextView4.setLayoutParams(new TableRow.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 14f));
@@ -512,7 +513,7 @@ public class CompetitionsActivity extends AppCompatActivity {
         final TextView newTextView5 = new TextView(this);
 
         newTextView5.setGravity(Gravity.CENTER);
-        newTextView5.setTextColor(Color.BLACK);
+        newTextView5.setTextColor(color);
         newTextView5.setBackground(new PaintDrawable(Color.WHITE));
         newTextView5.setTextSize(getResources().getDimension(R.dimen.text_size_last_step));
         newTextView5.setLayoutParams(new TableRow.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 20f));
@@ -520,7 +521,7 @@ public class CompetitionsActivity extends AppCompatActivity {
         final TextView newTextView6 = new TextView(this);
 
         newTextView6.setGravity(Gravity.CENTER);
-        newTextView6.setTextColor(Color.BLACK);
+        newTextView6.setTextColor(color);
         newTextView6.setBackground(new PaintDrawable(Color.WHITE));
         newTextView6.setTextSize(getResources().getDimension(R.dimen.text_size_last_step));
         newTextView6.setLayoutParams(new TableRow.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 20f));
@@ -567,7 +568,7 @@ public class CompetitionsActivity extends AppCompatActivity {
             newTextView.setText(textRow[0]);
         }
         newTextView.setGravity(Gravity.CENTER);
-        newTextView.setTextColor(Color.BLACK);
+        newTextView.setTextColor(megaSportsman.getColor());
         newTextView.setBackground(new PaintDrawable(Color.WHITE));
         newTextView.setTextSize(getResources().getDimension(R.dimen.text_size_last_step));
         newTextView.setLayoutParams(new TableRow.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT,100f));
