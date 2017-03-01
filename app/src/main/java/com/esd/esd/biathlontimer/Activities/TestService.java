@@ -252,6 +252,7 @@ public class TestService extends Service {
 
     public static void SetLastStep(TableLayout table)
     {
+        if(_lastStep == null) return;
         TableRow row;
         String resultString = "";
         _lastStep.clear();

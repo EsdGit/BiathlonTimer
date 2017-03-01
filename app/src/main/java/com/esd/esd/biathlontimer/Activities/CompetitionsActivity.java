@@ -184,6 +184,7 @@ public class CompetitionsActivity extends AppCompatActivity {
                 {
                     while(true)
                     {
+                        if(checkLapNumberThread.isInterrupted()) break;
                         final int lapNumber = _viewPagerLap.getCurrentItem();
                         if (!_currentRecyclerView.equals(_arrayRecycleView.get(lapNumber)))
                         {
@@ -371,17 +372,7 @@ public class CompetitionsActivity extends AppCompatActivity {
             _table.setItemAnimator(new DefaultItemAnimator());
             _table.setLayoutManager(new LinearLayoutManager(this));
         }
-        else
-        {
-//            for(int i = 0; i < lapsCount; i++)
-//            {
-//                _tableAdapter.ClearList();
-//                _tableAdapter.AddSportsmen(_arrayMegaSportsmen[i]);
-//                _tableAdapter.notifyDataSetChanged();
-//                _arrayRecycleView.get(i).setAdapter(_tableAdapter);
-//            }
-        }
-        //TimerStartPosition();
+
         SetTime(timeCountDown, 0, true);
     }
 
@@ -470,18 +461,17 @@ public class CompetitionsActivity extends AppCompatActivity {
         else
         {
             ((CompetitionTableAdapter) TestService.GetCompetitionTableAdapter()).notifyDataSetChanged();
-            TestService.NotifyViewAdapter();
         }
+        TestService.NotifyViewAdapter();
     }
 
     private void AddRowAsTableCompetitions(MegaSportsman megaSportsman, String[] textRow) {
-        int color = megaSportsman.getColor();
         final TableRow newRow = new TableRow(this);
         newRow.setWeightSum(100);
         final TextView newTextView = new TextView(this);
 
         newTextView.setGravity(Gravity.CENTER);
-        newTextView.setTextColor(color);
+        newTextView.setTextColor(Color.BLACK);
         newTextView.setBackground(new PaintDrawable(Color.WHITE));
         newTextView.setTextSize(getResources().getDimension(R.dimen.text_size_last_step));
         newTextView.setLayoutParams(new TableRow.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 8f));
@@ -489,7 +479,7 @@ public class CompetitionsActivity extends AppCompatActivity {
         final TextView newTextView2 = new TextView(this);
 
         newTextView2.setGravity(Gravity.CENTER);
-        newTextView2.setTextColor(color);
+        newTextView2.setTextColor(Color.BLACK);
         newTextView2.setBackground(new PaintDrawable(Color.WHITE));
         newTextView2.setTextSize(getResources().getDimension(R.dimen.text_size_last_step));
         newTextView2.setLayoutParams(new TableRow.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 8f));
@@ -497,7 +487,7 @@ public class CompetitionsActivity extends AppCompatActivity {
         final TextView newTextView3 = new TextView(this);
 
         newTextView3.setGravity(Gravity.CENTER);
-        newTextView3.setTextColor(color);
+        newTextView3.setTextColor(Color.BLACK);
         newTextView3.setBackground(new PaintDrawable(Color.WHITE));
         newTextView3.setTextSize(getResources().getDimension(R.dimen.text_size_last_step));
         newTextView3.setLayoutParams(new TableRow.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 30f));
@@ -505,7 +495,7 @@ public class CompetitionsActivity extends AppCompatActivity {
         final TextView newTextView4 = new TextView(this);
 
         newTextView4.setGravity(Gravity.CENTER);
-        newTextView4.setTextColor(color);
+        newTextView4.setTextColor(Color.BLACK);
         newTextView4.setBackground(new PaintDrawable(Color.WHITE));
         newTextView4.setTextSize(getResources().getDimension(R.dimen.text_size_last_step));
         newTextView4.setLayoutParams(new TableRow.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 14f));
@@ -513,7 +503,7 @@ public class CompetitionsActivity extends AppCompatActivity {
         final TextView newTextView5 = new TextView(this);
 
         newTextView5.setGravity(Gravity.CENTER);
-        newTextView5.setTextColor(color);
+        newTextView5.setTextColor(Color.BLACK);
         newTextView5.setBackground(new PaintDrawable(Color.WHITE));
         newTextView5.setTextSize(getResources().getDimension(R.dimen.text_size_last_step));
         newTextView5.setLayoutParams(new TableRow.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 20f));
@@ -521,7 +511,7 @@ public class CompetitionsActivity extends AppCompatActivity {
         final TextView newTextView6 = new TextView(this);
 
         newTextView6.setGravity(Gravity.CENTER);
-        newTextView6.setTextColor(color);
+        newTextView6.setTextColor(Color.BLACK);
         newTextView6.setBackground(new PaintDrawable(Color.WHITE));
         newTextView6.setTextSize(getResources().getDimension(R.dimen.text_size_last_step));
         newTextView6.setLayoutParams(new TableRow.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 20f));
@@ -801,7 +791,7 @@ public class CompetitionsActivity extends AppCompatActivity {
     protected void onDestroy()
     {
         super.onDestroy();
-        //if(_timer != null) _timer.cancel();
+
     }
 
 
@@ -857,9 +847,25 @@ public class CompetitionsActivity extends AppCompatActivity {
             dialog.setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
+
+                    if(checkLapNumberThread != null)
+                    {
+                        while (checkLapNumberThread.isAlive()) {
+                            checkLapNumberThread.interrupt();
+                        }
+                    }
                     TestService.ResetService();
                     if(serviceIntent != null)
                         (TestService.GetContext()).stopService(serviceIntent);
+                    if(getResources().getBoolean(R.bool.isTablet))
+                    {
+                        _arrayAdapters.clear();
+                        _arrayAdapters = null;
+                        _arrayRecycleView.clear();
+                    }
+                    for (int j = 0; j < lapsCount; j++) {
+                        _arrayMegaSportsmen[j].clear();
+                    }
                     Intent intent = new Intent(CompetitionsActivity.this, ViewPagerActivity.class);
                     intent.putExtra("CompetitionName", _currentCompetition.getName());
                     intent.putExtra("CompetitionDate", _currentCompetition.getDate());
@@ -1023,6 +1029,7 @@ public class CompetitionsActivity extends AppCompatActivity {
 
             dialog.setProgress(values[0]);
         }
+
 
         @Override
         protected void onPostExecute(Void aVoid)
