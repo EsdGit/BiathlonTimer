@@ -260,7 +260,7 @@ public class CompetitionsActivity extends AppCompatActivity {
                     startActivity(intent);
                     CompetitionsActivity.this.finish();
                 }
-                Toast.makeText(getApplicationContext(), "Завершить соревнование", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "Завершить соревнование", Toast.LENGTH_SHORT).show();
             }
         });
         _timerDialogBuilder.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
@@ -461,13 +461,17 @@ public class CompetitionsActivity extends AppCompatActivity {
                 }
             }
         }
-        for(int i = 0; i < _arrayAdapters.size(); i++)
+        if(getResources().getBoolean(R.bool.isTablet))
         {
-            _arrayAdapters.get(i).notifyDataSetChanged();
+            for (int i = 0; i < _arrayAdapters.size(); i++) {
+                _arrayAdapters.get(i).notifyDataSetChanged();
+            }
         }
-
-        ((CompetitionTableAdapter)TestService.GetCompetitionTableAdapter()).notifyDataSetChanged();
-        TestService.NotifyViewAdapter();
+        else
+        {
+            ((CompetitionTableAdapter) TestService.GetCompetitionTableAdapter()).notifyDataSetChanged();
+            TestService.NotifyViewAdapter();
+        }
     }
 
     private void AddRowAsTableCompetitions(MegaSportsman megaSportsman, String[] textRow) {
