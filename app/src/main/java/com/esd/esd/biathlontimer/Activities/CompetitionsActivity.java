@@ -15,6 +15,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.Time;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -47,6 +48,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import static com.esd.esd.biathlontimer.R.id.image;
 
 
 public class CompetitionsActivity extends AppCompatActivity {
@@ -518,8 +521,8 @@ public class CompetitionsActivity extends AppCompatActivity {
         ((TableRow.LayoutParams) newTextView6.getLayoutParams()).setMargins(0, 0, 2, 2);
         if(megaSportsman != null)
         {
-            newTextView.setText(String.valueOf(megaSportsman.getNumber()));
-            newTextView2.setText(String.valueOf(megaSportsman.getPlace()));
+            newTextView.setText(String.valueOf(megaSportsman.getPlace()));
+            newTextView2.setText(String.valueOf(megaSportsman.getNumber()));
             newTextView3.setText(megaSportsman.getName());
             newTextView4.setText(megaSportsman.getFineCountArrString());
             newTextView5.setText(megaSportsman.getResult());
