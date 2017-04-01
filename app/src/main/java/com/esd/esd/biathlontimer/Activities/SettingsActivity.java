@@ -151,9 +151,11 @@ public class SettingsActivity extends PreferenceActivity
                     realmSaver.SaveSportsmen(sportsmenList);
                     realmSaver.Dispose();
                     saver.Dispose();
-                    SettingsChangedEvent event = new SettingsChangedEvent();
-                    _eventBus.post(event);
+//                    SettingsChangedEvent event = new SettingsChangedEvent();
+//                    _eventBus.post(event);
                     this.finish();
+                    Intent mainActInt = new Intent(this, MainActivity.class);
+                    startActivity(mainActInt);
                 }
             }
         }

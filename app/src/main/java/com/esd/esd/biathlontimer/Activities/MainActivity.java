@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
         Intent settingPager = new Intent(this, SettingsActivity.class);
         settingPager.putExtra("isEditMode", "false");
         startActivity(settingPager);
-
+        this.finish();
 
 //        Intent finalPage = new Intent(this, FinalActivity.class);
 //        startActivity(finalPage);
@@ -154,6 +154,7 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra("Name", localList.get(0).getName());
             intent.putExtra("Date", localList.get(0).getDate());
             startActivity(intent);
+            this.finish();
         }
     }
 
