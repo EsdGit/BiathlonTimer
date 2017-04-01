@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:orientation="horizontal"
+              android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:gravity="center"
-              android:background="#ffffff"
-              android:weightSum="2">
+              android:background="#ffffff">
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:orientation="vertical">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/headCompetitionActivityLarge"
+        android:orientation="horizontal"
+        android:layout_gravity="top">
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -20,6 +20,18 @@
             android:id="@+id/headCompetitionActivity"
             android:orientation="horizontal"
             android:background="@color/colorPrimary">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:textSize="@dimen/title_text_size_double_table"
+                android:text="@string/current_round"
+                android:textColor="@color/white"
+                android:id="@+id/currentRound"
+                android:typeface="serif"
+                android:layout_gravity="left|center_vertical"
+                android:gravity="center" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -80,342 +92,202 @@
             </FrameLayout>
 
         </FrameLayout>
-
-        <!--<ScrollView-->
-        <!--android:layout_marginTop="5dp"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:scrollbars="vertical"-->
-        <!--android:id="@+id/competitionScrollView">-->
-
-        <!--<GridLayout-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_gravity="center_horizontal"-->
-        <!--android:columnCount="6"-->
-        <!--android:orientation="horizontal"-->
-        <!--android:id="@+id/competitionGridLayout"-->
-        <!--android:useDefaultMargins="true">-->
-
-        <!--</GridLayout>-->
-
-        <!--</ScrollView>-->
-
-        <GridView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="60dp"
-            android:layout_marginRight="60dp"
-            android:id="@+id/gridView"
-            android:columnWidth="90dp"
-            android:gravity="center"
-            android:horizontalSpacing="10dp"
-            android:numColumns="auto_fit"
-            android:stretchMode="columnWidth"
-            android:verticalSpacing="10dp">
-
-        </GridView>
-
     </LinearLayout>
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:orientation="vertical">
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="?android:attr/actionBarSize"
-            android:id="@+id/headCompetitionTableActivity"
-            android:orientation="horizontal"
-            android:background="@color/colorPrimary">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="2">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:textSize="@dimen/title_text_size_double_table"
-                android:text="@string/current_round"
-                android:textColor="@color/white"
-                android:id="@+id/currentRound"
-                android:typeface="serif"
-                android:layout_gravity="left|center_vertical"
-                android:gravity="center" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/title_text_size_double_table"
-                android:text="00:00"
-                android:textColor="@color/timerStart"
-                android:id="@+id/competitionTimerTable"
-                android:typeface="serif"
-                android:layout_gravity="center"
-                android:gravity="center"/>
-
-        </FrameLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/headTablesCompetitions"
-            android:orientation="horizontal"
-            android:layout_below="@id/headCompetitionTableActivity"
-            android:background="#000000"
-            android:weightSum="100">
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-            <TextView
-                android:layout_width="0dp"
+
+            <GridView
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/numberParticipantCompetitionTable"
+                android:layout_marginLeft="60dp"
+                android:layout_marginRight="60dp"
+                android:id="@+id/gridView"
+                android:columnWidth="90dp"
                 android:gravity="center"
-                android:textColor="#000000"
-                android:text="@string/position"
-                android:textStyle="bold"
-                android:textSize="@dimen/title_text_size_double_table"
-                android:background="#ffffff"
-                android:layout_margin="1dp"
-                android:layout_weight="8"/>
+                android:horizontalSpacing="10dp"
+                android:numColumns="auto_fit"
+                android:stretchMode="columnWidth"
+                android:verticalSpacing="10dp">
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:id="@+id/positionParticipantCompetitionTable"
-                android:gravity="center"
-                android:textColor="#000000"
-                android:textSize="@dimen/title_text_size_double_table"
-                android:text="№"
-                android:textStyle="bold"
-                android:background="#ffffff"
-                android:layout_weight="8"
-                android:layout_marginTop="1dp"
-                android:layout_marginRight="1dp"
-                android:layout_marginBottom="1dp"/>
-
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:id="@+id/nameParticipantCompetitionTable"
-                android:gravity="center"
-                android:textColor="#000000"
-                android:textSize="@dimen/title_text_size_double_table"
-                android:text="@string/fio_col_title"
-                android:textStyle="bold"
-                android:background="#ffffff"
-                android:layout_weight="30"
-                android:layout_marginTop="1dp"
-                android:layout_marginRight="1dp"
-                android:layout_marginBottom="1dp"/>
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:id="@+id/countFineParticipantCompetitionTable"
-                android:gravity="center"
-                android:textColor="#000000"
-                android:textSize="@dimen/title_text_size_double_table"
-                android:text="@string/count_fine"
-                android:textStyle="bold"
-                android:background="#ffffff"
-                android:layout_weight="14"
-                android:layout_marginTop="1dp"
-                android:layout_marginRight="1dp"
-                android:layout_marginBottom="1dp"/>
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:id="@+id/timeParticipantCompetitionTable"
-                android:gravity="center"
-                android:textColor="#000000"
-                android:textSize="@dimen/title_text_size_double_table"
-                android:text="@string/time"
-                android:textStyle="bold"
-                android:background="#ffffff"
-                android:layout_weight="20"
-                android:layout_marginTop="1dp"
-                android:layout_marginRight="1dp"
-                android:layout_marginBottom="1dp"/>
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:id="@+id/lagParticipantCompetitionTable"
-                android:gravity="center"
-                android:textColor="#000000"
-                android:textSize="@dimen/title_text_size_double_table"
-                android:text="@string/lag"
-                android:textStyle="bold"
-                android:background="#ffffff"
-                android:layout_weight="20"
-                android:layout_marginTop="1dp"
-                android:layout_marginRight="1dp"
-                android:layout_marginBottom="1dp"/>
+            </GridView>
 
         </LinearLayout>
 
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/headTablesCompetitions"
-            android:layout_above="@+id/toolBarTablesCompetition">
-
-            <android.support.v4.view.ViewPager
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/viewPagerTableCompetition"/>
-
-            <!--<android.support.v7.widget.RecyclerView-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:id="@+id/recyclerViewTableCompetition"-->
-                <!--android:scrollbars="vertical"-->
-                <!--android:elevation="2dp"/>-->
-
-            <!--<android.support.design.widget.FloatingActionButton-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:src="@drawable/ic_back"-->
-                <!--android:tint="@color/white"-->
-                <!--app:fabSize = "normal"-->
-                <!--app:backgroundTint = "@color/colorPrimary"-->
-                <!--android:layout_marginLeft="5dp"-->
-                <!--android:layout_gravity="left|center_vertical"-->
-                <!--android:id="@+id/back"-->
-                <!--android:onClick="OnClickPreviousTable"-->
-                <!--android:alpha="0.5"/>-->
-
-            <!--<android.support.design.widget.FloatingActionButton-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:src="@drawable/ic_forward"-->
-                <!--android:tint="@color/white"-->
-                <!--app:fabSize = "normal"-->
-                <!--app:backgroundTint = "@color/colorPrimary"-->
-                <!--android:layout_marginRight="5dp"-->
-                <!--android:layout_gravity="right|center_vertical"-->
-                <!--android:id="@+id/forward"-->
-                <!--android:onClick="OnClickNextTable"-->
-                <!--android:alpha="0.5"/>-->
-        </FrameLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:id="@+id/toolBarTablesCompetition"
-            android:layout_above="@+id/tableLast"
-            android:background="@color/black">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/headTablesCompetitions"
                 android:orientation="horizontal"
-                android:weightSum="5"
-                android:background="@color/colorPrimary"
-                android:layout_margin="1dp">
-
-
-                <!--<ImageButton-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:id="@+id/tableBack"-->
-                <!--android:src="@drawable/ic_back"-->
-                <!--android:background="@null"-->
-                <!--android:tint="#000000"-->
-                <!--android:layout_weight="0.5"-->
-                <!--android:layout_gravity="right"-->
-                <!--android:onClick="OnClickPreviousTable"/>-->
+                android:background="#000000"
+                android:weightSum="100">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/title_text_size_double_table"
-                    android:text="Последние действия"
-                    android:textColor="@color/white"
-                    android:typeface="serif"
-                    android:layout_gravity="center"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/numberParticipantCompetitionTable"
                     android:gravity="center"
-                    android:layout_weight="5"/>
+                    android:textColor="#000000"
+                    android:text="@string/position"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/title_text_size_double_table"
+                    android:background="#ffffff"
+                    android:layout_margin="1dp"
+                    android:layout_weight="8"/>
 
-                <!--<ImageButton-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:src="@drawable/ic_forward"-->
-                <!--android:id="@+id/tableForward"-->
-                <!--android:layout_weight="0.5"-->
-                <!--android:layout_gravity="left"-->
-                <!--android:tint="#000000"-->
-                <!--android:background="@null"-->
-                <!--android:onClick="OnClickNextTable"/>-->
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/positionParticipantCompetitionTable"
+                    android:gravity="center"
+                    android:textColor="#000000"
+                    android:textSize="@dimen/title_text_size_double_table"
+                    android:text="№"
+                    android:textStyle="bold"
+                    android:background="#ffffff"
+                    android:layout_weight="8"
+                    android:layout_marginTop="1dp"
+                    android:layout_marginRight="1dp"
+                    android:layout_marginBottom="1dp"/>
 
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/nameParticipantCompetitionTable"
+                    android:gravity="center"
+                    android:textColor="#000000"
+                    android:textSize="@dimen/title_text_size_double_table"
+                    android:text="@string/fio_col_title"
+                    android:textStyle="bold"
+                    android:background="#ffffff"
+                    android:layout_weight="30"
+                    android:layout_marginTop="1dp"
+                    android:layout_marginRight="1dp"
+                    android:layout_marginBottom="1dp"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/countFineParticipantCompetitionTable"
+                    android:gravity="center"
+                    android:textColor="#000000"
+                    android:textSize="@dimen/title_text_size_double_table"
+                    android:text="@string/count_fine"
+                    android:textStyle="bold"
+                    android:background="#ffffff"
+                    android:layout_weight="14"
+                    android:layout_marginTop="1dp"
+                    android:layout_marginRight="1dp"
+                    android:layout_marginBottom="1dp"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/timeParticipantCompetitionTable"
+                    android:gravity="center"
+                    android:textColor="#000000"
+                    android:textSize="@dimen/title_text_size_double_table"
+                    android:text="@string/time"
+                    android:textStyle="bold"
+                    android:background="#ffffff"
+                    android:layout_weight="20"
+                    android:layout_marginTop="1dp"
+                    android:layout_marginRight="1dp"
+                    android:layout_marginBottom="1dp"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/lagParticipantCompetitionTable"
+                    android:gravity="center"
+                    android:textColor="#000000"
+                    android:textSize="@dimen/title_text_size_double_table"
+                    android:text="@string/lag"
+                    android:textStyle="bold"
+                    android:background="#ffffff"
+                    android:layout_weight="20"
+                    android:layout_marginTop="1dp"
+                    android:layout_marginRight="1dp"
+                    android:layout_marginBottom="1dp"/>
 
             </LinearLayout>
 
-        </LinearLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/headTablesCompetitions"
+                android:layout_above="@+id/toolBarTablesCompetition">
+
+                <android.support.v4.view.ViewPager
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/viewPagerTableCompetition"/>
+
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/toolBarTablesCompetition"
+                android:layout_above="@+id/tableLast"
+                android:background="@color/black">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:weightSum="5"
+                    android:background="@color/colorPrimary"
+                    android:layout_margin="1dp">
 
 
-        <TableLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/tableLast"
-            android:layout_alignParentBottom="true"
-            android:background="@color/black">
 
-            <!--<TableRow-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_margin="1dp"-->
-            <!--android:weightSum="1">-->
-            <!--<TextView-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:gravity="center"-->
-            <!--android:text="skvjdfkjvnjdfkv"-->
-            <!--android:typeface="serif"-->
-            <!--android:textSize="20sp"-->
-            <!--android:background="@color/white"-->
-            <!--android:textColor="@color/black"-->
-            <!--android:layout_weight="1"/>-->
-            <!--</TableRow>-->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/title_text_size_double_table"
+                        android:text="Последние действия"
+                        android:textColor="@color/white"
+                        android:typeface="serif"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:layout_weight="5"/>
 
-            <!--<TableRow-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_marginLeft="1dp"-->
-            <!--android:layout_marginRight="1dp"-->
-            <!--android:layout_marginBottom="1dp"-->
-            <!--android:weightSum="1">-->
-            <!--<TextView-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:gravity="center"-->
-            <!--android:text="skvjdfkjvnjdfkv"-->
-            <!--android:typeface="serif"-->
-            <!--android:textSize="20sp"-->
-            <!--android:background="@color/white"-->
-            <!--android:textColor="@color/black"-->
-            <!--android:layout_weight="1"/>-->
-            <!--</TableRow>-->
+                </LinearLayout>
 
-            <!--<TableRow-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_marginLeft="1dp"-->
-            <!--android:layout_marginRight="1dp"-->
-            <!--android:layout_marginBottom="1dp"-->
-            <!--android:weightSum="1">-->
-            <!--<TextView-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:gravity="center"-->
-            <!--android:text="skvjdfkjvnjdfkv"-->
-            <!--android:typeface="serif"-->
-            <!--android:textSize="20sp"-->
-            <!--android:background="@color/white"-->
-            <!--android:textColor="@color/black"-->
-            <!--android:layout_weight="1"/>-->
-            <!--</TableRow>-->
+            </LinearLayout>
 
-        </TableLayout>
 
-    </RelativeLayout>
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/tableLast"
+                android:layout_alignParentBottom="true"
+                android:background="@color/black">
 
+            </TableLayout>
+
+        </RelativeLayout>
+    </LinearLayout>
 </LinearLayout>

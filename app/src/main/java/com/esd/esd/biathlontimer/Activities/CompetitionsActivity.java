@@ -153,7 +153,7 @@ public class CompetitionsActivity extends AppCompatActivity {
         {
             _lastTable = (TableLayout) page1.findViewById(R.id.tableLast);
             _currentRound = (TextView) page1.findViewById(R.id.currentRound);
-            _timerParticipantTable = (TextView) page1.findViewById(R.id.competitionTimerTable);
+            _timerParticipantTable = (TextView) page1.findViewById(R.id.competitionTimer);
             _table = (RecyclerView) page1.findViewById(R.id.recyclerViewTableCompetition);
             _viewPagerLap = (ViewPager) page1.findViewById(R.id.viewPagerTableCompetition);
             lapsCount = _currentCompetition.getCheckPointsCount();
