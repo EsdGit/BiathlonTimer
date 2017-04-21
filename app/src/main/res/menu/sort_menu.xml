@@ -12,7 +12,11 @@
         android:checked="false"/>
     <item android:title="@string/participant_list_group_sort"
           android:id="@+id/groupSort"
-          android:checked="false"/>
+          android:checked="false">
+            <menu >
+
+            </menu>
+    </item>
     <item android:title="@string/participant_list_country_sort"
         android:id="@+id/countrySort"
         android:checked="false"/>

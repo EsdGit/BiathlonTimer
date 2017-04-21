@@ -2,43 +2,32 @@ package com.esd.esd.biathlontimer.Activities;
 
 import android.annotation.TargetApi;
 import android.app.ActionBar;
-import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
-import android.icu.text.MessagePattern;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.EditTextPreference;
-import android.preference.ListPreference;
-import android.preference.Preference;
 import android.preference.PreferenceActivity;
-import android.preference.PreferenceFragment;
-import android.preference.PreferenceScreen;
 import android.text.Html;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.WindowManager;
-import android.widget.DatePicker;
-import android.widget.TimePicker;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import com.esd.esd.biathlontimer.Competition;
-import com.esd.esd.biathlontimer.DatabaseClasses.CompetitionSaver;
-import com.esd.esd.biathlontimer.DatabaseClasses.DatabaseProvider;
-import com.esd.esd.biathlontimer.DatabaseClasses.ParticipantSaver;
-import com.esd.esd.biathlontimer.DatabaseClasses.SettingsSaver;
-import com.esd.esd.biathlontimer.Participant;
+import com.esd.esd.biathlontimer.DatabaseClasses.RealmCompetitionSaver;
+import com.esd.esd.biathlontimer.DatabaseClasses.RealmMegaSportsmanSaver;
+import com.esd.esd.biathlontimer.DatabaseClasses.RealmSportsmenSaver;
+import com.esd.esd.biathlontimer.MegaSportsman;
 import com.esd.esd.biathlontimer.R;
 import com.esd.esd.biathlontimer.SettingsChangedEvent;
 import com.esd.esd.biathlontimer.SettingsFragment;
+import com.esd.esd.biathlontimer.Sportsman;
 
 import org.greenrobot.eventbus.EventBus;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class SettingsActivity extends PreferenceActivity
@@ -102,10 +91,17 @@ public class SettingsActivity extends PreferenceActivity
         {
             String name = _localIntent.getStringExtra("Name");
             String date = _localIntent.getStringExtra("Date");
+<<<<<<< HEAD
             _oldCompetititon = new Competition(name, date, this);
             _oldCompetititon.GetAllSettingsToComp();
             SettingsFragment.SetAllSummaries(this, name, date, _oldCompetititon.GetInterval(), _oldCompetititon.GetStartType(), _oldCompetititon.GetGroups(),
                     _oldCompetititon.GetCheckPointsCount(), _oldCompetititon.GetTimeToStart(), _oldCompetititon.GetSecondInterval(), _oldCompetititon.GetNumberSecondInterval(), _oldCompetititon.GetFineTime(), _oldCompetititon.GetStartNumber(), _oldCompetititon.GetMaxParticipantCount());
+=======
+            RealmCompetitionSaver saver = new RealmCompetitionSaver(this, "COMPETITIONS");
+            _oldCompetititon = saver.GetCompetition(name, date);
+            saver.Dispose();
+            SettingsFragment.SetAllSummaries(this, _oldCompetititon);
+>>>>>>> testDatabase
             isFirstLoad = false;
         }
     }
@@ -123,8 +119,8 @@ public class SettingsActivity extends PreferenceActivity
     {
         if(item.getItemId() == R.id.accept_setting)
         {
-            CompetitionSaver saver = new CompetitionSaver(this);
-            Competition[] localArr = saver.GetAllCompetitions(DatabaseProvider.DbCompetitions.COLUMN_COMPETITION_NAME);
+            RealmCompetitionSaver saver = new RealmCompetitionSaver(this, "COMPETITIONS");
+            List<Competition> localList = saver.GetAllCompetitions(true);
             Competition newComp = SettingsFragment.GetCurrentCompetition(this);
             if(newComp == null)
             {
@@ -134,8 +130,8 @@ public class SettingsActivity extends PreferenceActivity
             boolean _canAddCompetition = true;
             if(!isEditMode)
             {
-                for (int i = 0; i < localArr.length; i++) {
-                    if (newComp.equals(localArr[i])) {
+                for (int i = 0; i < localList.size(); i++) {
+                    if (newComp.equals(localList.get(i))) {
                         _canAddCompetition = false;
                         Toast.makeText(this, getResources().getString(R.string.competition_already_exists), Toast.LENGTH_LONG).show();
                         break;
@@ -144,27 +140,29 @@ public class SettingsActivity extends PreferenceActivity
             }
             if(_canAddCompetition)
             {
-                if(!isEditMode) {
+                if(!isEditMode)
+                {
+                    saver.SaveCompetition(newComp);
                     Intent myIntent = SettingsFragment.GetIntent(this);
                     startActivity(myIntent);
                 }
                 else
                 {
-                    ParticipantSaver partSaver = new ParticipantSaver(this);
-                    Participant[] participants = partSaver.GetAllParticipants(_oldCompetititon.GetDbParticipantPath(), DatabaseProvider.DbParticipant.COLUMN_NAME);
-                    DatabaseProvider dbProvider = new DatabaseProvider(this);
-                    dbProvider.DeleteTable(_oldCompetititon.GetDbParticipantPath());
-                    dbProvider.DeleteTable(_oldCompetititon.GetSettingsPath());
-                    saver.DeleteCompetitionFromDatabase(_oldCompetititon);
-                    Competition newCompetition = SettingsFragment.GetCurrentCompetition(this);
-                    for(int i = 0; i<participants.length;i++)
-                    {
-                        newCompetition.AddParticipant(participants[i]);
-                    }
-                    saver.SaveCompetitionToDatabase(newCompetition);
-                    SettingsChangedEvent event = new SettingsChangedEvent();
-                    _eventBus.post(event);
+                    // Проверяем количество участников
+                    RealmSportsmenSaver realmSaver = new RealmSportsmenSaver(this, _oldCompetititon.getDbParticipantPath());
+                    List<Sportsman> sportsmenList = realmSaver.GetSportsmen("number", true);
+                    realmSaver.DeleteTable();
+                    saver.DeleteCompetition(_oldCompetititon);
+                    saver.SaveCompetition(newComp);
+                    realmSaver = new RealmSportsmenSaver(this, newComp.getDbParticipantPath());
+                    realmSaver.SaveSportsmen(sportsmenList);
+                    realmSaver.Dispose();
+                    saver.Dispose();
+//                    SettingsChangedEvent event = new SettingsChangedEvent();
+//                    _eventBus.post(event);
                     this.finish();
+                    Intent mainActInt = new Intent(this, MainActivity.class);
+                    startActivity(mainActInt);
                 }
             }
         }

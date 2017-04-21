@@ -15,7 +15,7 @@
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="Номер участника"
+            android:hint="@string/dialog_second_interval"
             android:id="@+id/startPositionWithSecondInterval"
             android:inputType="number"
             android:layout_weight="0.5"

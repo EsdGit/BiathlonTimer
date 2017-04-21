@@ -4,11 +4,12 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryLong</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="actionOverflowButtonStyle">@style/OverFlow</item>
         <item name="actionOverflowMenuStyle">@style/popupMenuActionBar</item>
         <item name="popupMenuStyle">@style/popupMenu</item>
+
     </style>
 
     <style name="PreferenceScreen" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -24,7 +25,7 @@
         <item name="android:windowDisablePreview">true</item>
         <item name="overlapAnchor">false</item>
         <item name="android:dropDownVerticalOffset">-10.dp</item>
-        <item name="android:dropDownHorizontalOffset">10.dp</item>
+        <item name="android:dropDownHorizontalOffset">5.dp</item>
     </style>
 
     <style name="popupMenu" parent="Widget.AppCompat.PopupMenu">
@@ -32,6 +33,17 @@
         <item name="overlapAnchor">false</item>
     </style>
 
+    <style name="MyColorPicker" parent="AlertDialog.AppCompat.Light">
+        <item name="android:alignmentMode">alignBounds</item>
+    </style>
 
+    <style name="Fab" parent="Widget.Design.FloatingActionButton">
+        <item name="android:scaleX">1.5</item>
+        <item name="android:scaleY">1.5</item>
+    </style>
+
+    <style name="DialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:background">#FFFFFF</item>
+    </style>
 
 </resources>

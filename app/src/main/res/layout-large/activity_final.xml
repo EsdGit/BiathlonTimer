@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:id="@+id/headFinalTable"
+        android:layout_below="@id/headFinalTable"
+        android:background="#000000"
+        android:weightSum="4">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dp"
+            android:id="@+id/place_final_activity"
+            android:textColor="#000000"
+            android:text="Поз."
+            android:gravity="center"
+            android:textSize="@dimen/title_text_size"
+            android:textStyle="bold"
+            android:background="#ffffff"
+            android:typeface="serif"
+            android:layout_weight="0.4"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/number_final_activity"
+            android:typeface="serif"
+            android:textColor="#000000"
+            android:layout_marginRight="1dp"
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="1dp"
+            android:text="№"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textSize="@dimen/title_text_size"
+            android:layout_weight="0.3"
+            android:background="#ffffff"/>
+
+        <TextView
+            android:layout_marginRight="1dp"
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="1dp"
+            android:id="@+id/name_final_activity"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="#000000"
+            android:typeface="serif"
+            android:text="@string/fio_col_title"
+            android:gravity="center"
+            android:textSize="@dimen/title_text_size"
+            android:textStyle="bold"
+            android:layout_weight="1.8"
+            android:background="#ffffff"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/group_final_activity"
+            android:typeface="serif"
+            android:textColor="#000000"
+            android:layout_marginRight="1dp"
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="1dp"
+            android:text="@string/group_col_title"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textSize="@dimen/title_text_size"
+            android:layout_weight="0.7"
+            android:background="#ffffff"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/time_final_activity"
+            android:typeface="serif"
+            android:layout_marginRight="1dp"
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="1dp"
+            android:textColor="#000000"
+            android:text="@string/time_column_final_activity"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textSize="@dimen/title_text_size"
+            android:layout_weight="0.8"
+            android:background="#ffffff"/>
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/headFinalTable">
+
+        <android.support.v4.view.ViewPager
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:id="@+id/tableContainer"
+            android:inAnimation="@anim/flipnext"
+            android:outAnimation="@anim/fliplast">
+
+
+        </android.support.v4.view.ViewPager>
+
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="@dimen/fab_margin"
+            android:layout_marginLeft="@dimen/fab_margin">
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/addFileBtn"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                app:fabSize = "normal"
+                app:backgroundTint = "@color/colorPrimary"
+                android:alpha="0.5" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textColor="#ffffff"
+                android:textSize="@dimen/title_text_size"
+                android:textStyle="bold"
+                android:elevation="16dp"
+                android:id="@+id/currentRoundFinalActivity"/>
+
+        </FrameLayout>
+
+    </FrameLayout>
+
+    <!--<android.support.v7.widget.RecyclerView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:id="@+id/tableFinalActivity"-->
+        <!--android:scrollbars="vertical"-->
+        <!--android:layout_below="@id/headFinalTable"-->
+        <!--android:elevation="2dp">-->
+
+
+    <!--</android.support.v7.widget.RecyclerView>-->
+
+</RelativeLayout>

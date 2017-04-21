@@ -1,49 +1,293 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:gravity="center"
+              android:background="#ffffff">
+
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <ImageButton
-            android:id="@+id/imgBtnSettings"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/ic_settings"
-            android:onClick="imgBtnSettings_OnClick"/>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/headCompetitionActivityLarge"
         android:orientation="horizontal"
-        android:layout_gravity="center">
-        <Button
-            android:id="@+id/btnResult"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:text="Результат" />
+        android:layout_gravity="top">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="?android:attr/actionBarSize"
+            android:id="@+id/headCompetitionActivity"
+            android:orientation="horizontal"
+            android:background="@color/colorPrimary">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:textSize="@dimen/title_text_size_double_table"
+                android:text="@string/current_round"
+                android:textColor="@color/white"
+                android:id="@+id/currentRound"
+                android:typeface="serif"
+                android:layout_gravity="left|center_vertical"
+                android:gravity="center" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/title_text_size_double_table"
+                android:text="00:00"
+                android:id="@+id/competitionTimer"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:typeface="serif"
+                android:textColor="@color/red"
+                android:layout_gravity="center"
+                android:gravity="center"/>
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginRight="5dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent">
+
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_start"
+                        android:background="@null"
+                        android:layout_gravity="center_vertical"
+                        android:tint="@color/white"
+                        android:onClick="startBtnClick"
+                        android:id="@+id/competitionStart"
+                        android:layout_marginRight="2.5dp"/>
+
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_pause"
+                        android:layout_gravity="center_vertical"
+                        android:background="@null"
+                        android:tint="@color/white"
+                        android:layout_marginRight="2.5dp"
+                        android:layout_marginLeft="2.5dp"
+                        android:onClick="pauseBtnClick"/>
+
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_stop"
+                        android:layout_gravity="center_vertical"
+                        android:background="@null"
+                        android:tint="@color/white"
+                        android:layout_marginLeft="2.5dp"
+                        android:onClick="stopBtnClick"/>
+
+                </LinearLayout>
+
+            </FrameLayout>
+
+        </FrameLayout>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="2">
+
+
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
             android:orientation="vertical">
-            <Button
-                android:id="@+id/btnStart"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:text="Старт"/>
-            <Button
-                android:id="@+id/btnReset"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:text="Сброс"/>
+
+
+            <GridView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="60dp"
+                android:layout_marginRight="60dp"
+                android:id="@+id/gridView"
+                android:columnWidth="90dp"
+                android:gravity="center"
+                android:horizontalSpacing="10dp"
+                android:numColumns="auto_fit"
+                android:stretchMode="columnWidth"
+                android:verticalSpacing="10dp">
+
+            </GridView>
+
         </LinearLayout>
-        <Button
-            android:id="@+id/btnTiming"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:text="Отсечки"/>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/headTablesCompetitions"
+                android:orientation="horizontal"
+                android:background="#000000"
+                android:weightSum="100">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/numberParticipantCompetitionTable"
+                    android:gravity="center"
+                    android:textColor="#000000"
+                    android:text="@string/position"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/title_text_size_double_table"
+                    android:background="#ffffff"
+                    android:layout_margin="1dp"
+                    android:layout_weight="8"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/positionParticipantCompetitionTable"
+                    android:gravity="center"
+                    android:textColor="#000000"
+                    android:textSize="@dimen/title_text_size_double_table"
+                    android:text="№"
+                    android:textStyle="bold"
+                    android:background="#ffffff"
+                    android:layout_weight="8"
+                    android:layout_marginTop="1dp"
+                    android:layout_marginRight="1dp"
+                    android:layout_marginBottom="1dp"/>
+
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/nameParticipantCompetitionTable"
+                    android:gravity="center"
+                    android:textColor="#000000"
+                    android:textSize="@dimen/title_text_size_double_table"
+                    android:text="@string/fio_col_title"
+                    android:textStyle="bold"
+                    android:background="#ffffff"
+                    android:layout_weight="30"
+                    android:layout_marginTop="1dp"
+                    android:layout_marginRight="1dp"
+                    android:layout_marginBottom="1dp"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/countFineParticipantCompetitionTable"
+                    android:gravity="center"
+                    android:textColor="#000000"
+                    android:textSize="@dimen/title_text_size_double_table"
+                    android:text="@string/count_fine"
+                    android:textStyle="bold"
+                    android:background="#ffffff"
+                    android:layout_weight="14"
+                    android:layout_marginTop="1dp"
+                    android:layout_marginRight="1dp"
+                    android:layout_marginBottom="1dp"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/timeParticipantCompetitionTable"
+                    android:gravity="center"
+                    android:textColor="#000000"
+                    android:textSize="@dimen/title_text_size_double_table"
+                    android:text="@string/time"
+                    android:textStyle="bold"
+                    android:background="#ffffff"
+                    android:layout_weight="20"
+                    android:layout_marginTop="1dp"
+                    android:layout_marginRight="1dp"
+                    android:layout_marginBottom="1dp"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/lagParticipantCompetitionTable"
+                    android:gravity="center"
+                    android:textColor="#000000"
+                    android:textSize="@dimen/title_text_size_double_table"
+                    android:text="@string/lag"
+                    android:textStyle="bold"
+                    android:background="#ffffff"
+                    android:layout_weight="20"
+                    android:layout_marginTop="1dp"
+                    android:layout_marginRight="1dp"
+                    android:layout_marginBottom="1dp"/>
+
+            </LinearLayout>
+
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/headTablesCompetitions"
+                android:layout_above="@+id/toolBarTablesCompetition">
+
+                <android.support.v4.view.ViewPager
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/viewPagerTableCompetition"/>
+
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/toolBarTablesCompetition"
+                android:layout_above="@+id/tableLast"
+                android:background="@color/black">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:weightSum="5"
+                    android:background="@color/colorPrimary"
+                    android:layout_margin="1dp">
+
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/title_text_size_double_table"
+                        android:text="Последние действия"
+                        android:textColor="@color/white"
+                        android:typeface="serif"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:layout_weight="5"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/tableLast"
+                android:layout_alignParentBottom="true"
+                android:background="@color/black">
+
+            </TableLayout>
+
+        </RelativeLayout>
     </LinearLayout>
 </LinearLayout>

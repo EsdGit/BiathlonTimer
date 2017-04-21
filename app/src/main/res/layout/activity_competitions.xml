@@ -16,49 +16,95 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Тут таймер"
+            android:text="00:00"
             android:id="@+id/competitionTimer"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:typeface="serif"
-            android:textColor="@color/timerStart"
+            android:textColor="@color/red"
             android:layout_gravity="center"
             android:gravity="center"/>
 
-        <Button
+        <FrameLayout
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:background="@drawable/rounded_button"
-            android:id="@+id/competitionStart"
-            android:layout_marginRight="5dp"
+            android:layout_height="match_parent"
             android:layout_gravity="right|center_vertical"
-            android:text="Cтарт"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:typeface="serif"
-            android:textColor="@color/white"
-            android:textStyle="bold|italic"
-            android:onClick="startBtnClick"/>
+            android:layout_marginRight="5dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_start"
+                    android:background="@null"
+                    android:layout_gravity="center_vertical"
+                    android:tint="@color/white"
+                    android:onClick="startBtnClick"
+                    android:id="@+id/competitionStart"
+                    android:layout_marginRight="2.5dp"/>
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_pause"
+                    android:layout_gravity="center_vertical"
+                    android:background="@null"
+                    android:tint="@color/white"
+                    android:layout_marginRight="2.5dp"
+                    android:layout_marginLeft="2.5dp"
+                    android:onClick="pauseBtnClick"/>
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_stop"
+                    android:layout_gravity="center_vertical"
+                    android:background="@null"
+                    android:tint="@color/white"
+                    android:layout_marginLeft="2.5dp"
+                    android:onClick="stopBtnClick"/>
+
+            </LinearLayout>
+
+        </FrameLayout>
 
     </FrameLayout>
 
-    <ScrollView
-        android:layout_marginTop="5dp"
+    <!--<ScrollView-->
+        <!--android:layout_marginTop="5dp"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:scrollbars="vertical"-->
+        <!--android:id="@+id/competitionScrollView">-->
+
+        <!--<GridLayout-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center_horizontal"-->
+            <!--android:columnCount="6"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:id="@+id/competitionGridLayout"-->
+            <!--android:useDefaultMargins="true">-->
+
+        <!--</GridLayout>-->
+
+    <!--</ScrollView>-->
+
+    <GridView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="vertical"
-        android:id="@+id/competitionScrollView">
+        android:layout_marginLeft="60dp"
+        android:layout_marginRight="60dp"
+        android:id="@+id/gridView"
+        android:columnWidth="90dp"
+        android:gravity="center"
+        android:horizontalSpacing="10dp"
+        android:numColumns="auto_fit"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="10dp">
 
-        <GridLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:columnCount="6"
-            android:orientation="horizontal"
-            android:id="@+id/competitionGridLayout"
-            android:useDefaultMargins="true">
-
-
-        </GridLayout>
-
-    </ScrollView>
+    </GridView>
 
 </LinearLayout>

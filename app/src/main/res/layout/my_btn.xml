@@ -8,63 +8,82 @@
 
 
     <FrameLayout
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_margin="7.5dp"
-        android:id="@+id/backgroundMyButton"
-        android:background="#ff0000">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/first_layout">
+
+        <FrameLayout
+            android:layout_width="59dp"
+            android:layout_height="59dp"
+            android:layout_margin="8dp"
+            android:id="@+id/backgroundMyButton"
+            android:background="#ff0000">
+
+            <ImageView
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:id="@+id/imageMyButton"
+                android:src="@drawable/ic_launcher"
+                android:tint="#ffffff"
+                android:layout_gravity="center"/>
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="63dp"
+            android:layout_height="63dp"
+            android:layout_margin="6dp">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:background="@drawable/round_btn"/>
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                android:typeface="serif"
+                android:id="@+id/numberParticipantMyButton"
+                android:textSize="@dimen/title_text_size"
+                android:text="543"
+                android:layout_gravity="center"
+                android:gravity="center"/>
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:background="@drawable/oval_text"
+            android:layout_gravity="right">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/lapParticipantMyButton"
+                android:background="@drawable/round_text"
+                android:text="15"
+                android:textSize="14sp"
+                android:textColor="#000000"
+                android:gravity="center"/>
+
+        </FrameLayout>
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/second_layout"
+        android:visibility="gone">
 
         <ImageView
-            android:layout_width="55dp"
-            android:layout_height="55dp"
-            android:id="@+id/imageMyButton"
-            android:src="@drawable/ic_launcher"
-            android:tint="#ffffff"
-            android:layout_gravity="center"/>
-
-    </FrameLayout>
-
-    <FrameLayout
-        android:layout_width="62dp"
-        android:layout_height="62dp"
-        android:layout_margin="6.5dp">
-
-        <View
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:background="@drawable/round_btn"/>
-
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textColor="#000000"
-            android:textStyle="bold"
-            android:typeface="serif"
-            android:id="@+id/numberParticipantMyButton"
-            android:textSize="@dimen/title_text_size"
-            android:text="543"
-            android:layout_gravity="center"
-            android:gravity="center"/>
-    </FrameLayout>
-
-    <FrameLayout
-        android:layout_width="22dp"
-        android:layout_height="22dp"
-        android:background="@drawable/oval_text"
-        android:layout_gravity="right">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/lapParticipantMyButton"
-            android:background="@drawable/round_text"
-            android:text="15"
-            android:textSize="14sp"
-            android:textColor="#000000"
-            android:gravity="center"/>
-
+            android:src="@drawable/finished"
+            android:scaleType="fitCenter"/>
     </FrameLayout>
 
 </FrameLayout>

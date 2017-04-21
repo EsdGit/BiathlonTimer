@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--<selector-->
+    <!--xmlns:android="http://schemas.android.com/apk/res/android">-->
+    <!--<item>-->
+        <!--<shape>-->
+            <!--<solid android:color="#B902B0"/>-->
+            <!--<corners android:radius="10.0dip" />-->
+        <!--</shape>-->
+    <!--</item>-->
+<!--</selector>-->
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
-       android:shape="oval">
+       android:shape="rectangle">
     <solid android:color="#ffffff"/>
+    <corners android:radius="5dip" />
 </shape>

@@ -8,6 +8,7 @@
                 android:orientation="vertical"
                 tools:context="com.esd.esd.biathlontimer.Activities.MainActivity">
 
+
     <TextView
         android:id="@+id/emptyListTextView"
         android:layout_width="wrap_content"
@@ -18,7 +19,9 @@
         android:layout_centerHorizontal="true"
         android:visibility="gone"/>
 
+
     <LinearLayout
+        android:visibility="invisible"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/headTable"
@@ -31,12 +34,13 @@
             android:id="@+id/CompetitionsNameTextView"
             android:layout_margin="1dp"
             android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:gravity="center"
-            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="@dimen/title_text_size"
+            android:textColor="#000000"
             android:text="@string/main_activity_name_col"
-            android:typeface="serif"
-            android:layout_weight="2.5"
+            android:textStyle="bold"
+            android:layout_weight="2.2"
             android:background="#ffffff">
         </TextView>
 
@@ -46,49 +50,42 @@
             android:layout_marginTop="1dp"
             android:layout_marginBottom="1dp"
             android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:gravity="center"
-            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#000000"
+            android:textSize="@dimen/title_text_size"
             android:text="@string/main_activity_date_col"
-            android:typeface="serif"
-            android:layout_weight="0.5"
+            android:textStyle="bold"
+            android:layout_weight="0.8"
             android:background="#ffffff">
         </TextView>
 
     </LinearLayout>
 
-        <ScrollView
+        <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerHorizontal="true"
-            android:id="@+id/scrollView"
+            android:id="@+id/recyclerView"
             android:scrollbars="vertical"
             android:layout_below="@+id/headTable"
             android:elevation="2dp">
 
-            <TableLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#000000"
-                android:id="@+id/table"
-                android:scrollbars="vertical"
-                android:elevation="4dp">
-
-            </TableLayout>
-        </ScrollView>
+        </android.support.v7.widget.RecyclerView>
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/addFileBtn"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:src="@drawable/ic_add_file"
-            android:layout_marginBottom="@dimen/fab_margin"
-            android:layout_marginRight="@dimen/fab_margin"
+            android:layout_marginBottom="@dimen/large_fab_margin"
+            android:layout_marginRight="@dimen/large_fab_margin"
             app:fabSize = "normal"
             app:backgroundTint = "@color/colorPrimary"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:onClick="OnClick"
-            android:layout_above="@+id/scrollView"/>
+            android:layout_above="@+id/scrollView"
+            style="@style/Fab"/>
 
 </RelativeLayout>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/container_file_path"
+        android:background="#aaaaaa">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:textSize="@dimen/normal_text_size"
+                android:id="@+id/path_file"
+                android:textColor="@color/black"
+                android:text="Тут путь к файлу"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:layout_marginTop="1dp"
+                android:layout_marginBottom="1dp"/>
+
+    </LinearLayout>
+
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:id="@+id/list_file"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/container_file_path">
+    </android.support.v7.widget.RecyclerView>
+
+
+</RelativeLayout>

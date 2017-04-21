@@ -6,7 +6,6 @@
               android:layout_height="match_parent"
                 android:id="@+id/dataBaseListLayout"
                 tools:context="com.esd.esd.biathlontimer.Activities.ViewPagerActivity">
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -30,7 +29,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginLeft="@dimen/small_indent"
-            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="@dimen/title_text_size"
+            android:text="@string/db_list_activity_head"
             android:textColor="#ffffff"
             android:id="@+id/database_list_head"
             android:layout_weight="2.7"/>
@@ -119,62 +119,56 @@
 
         <TextView
             android:layout_margin="1dp"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/nameDataBase"
+            android:textColor="#000000"
             android:text="@string/fio_col_title"
             android:gravity="center"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:layout_weight="3"
-            android:typeface="serif"
+            android:textSize="@dimen/title_text_size"
+            android:textStyle="bold"
+            android:layout_weight="2.6"
             android:background="#ffffff"/>
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:textColor="#000000"
             android:layout_marginRight="1dp"
             android:layout_marginTop="1dp"
             android:layout_marginBottom="1dp"
             android:text="@string/year_col_title"
             android:id="@+id/birthdayDataBase"
             android:gravity="center"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:layout_weight="0.5"
-            android:typeface="serif"
+            android:textSize="@dimen/title_text_size"
+            android:textStyle="bold"
+            android:layout_weight="0.7"
             android:background="#ffffff"/>
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:textColor="#000000"
             android:layout_marginRight="1dp"
             android:layout_marginTop="1dp"
             android:layout_marginBottom="1dp"
             android:id="@+id/countryDataBase"
             android:text="@string/country_col_title"
+            android:textStyle="bold"
             android:gravity="center"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:layout_weight="0.5"
-            android:typeface="serif"
+            android:textSize="@dimen/title_text_size"
+            android:layout_weight="0.7"
             android:background="#ffffff"/>
     </LinearLayout>
 
-    <ScrollView
+    <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerHorizontal="true"
-        android:id="@+id/scrollViewDataBaseLayout"
+        android:id="@+id/gridViewDataBaseLayout"
         android:scrollbars="vertical"
         android:layout_below="@+id/headTableDataBaseLayout"
         android:elevation="2dp">
 
-        <TableLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#000000"
-            android:id="@+id/tableDataBaseLayout"
-            android:scrollbars="vertical"
-            android:elevation="4dp">
-
-        </TableLayout>
-    </ScrollView>
+    </android.support.v7.widget.RecyclerView>
 </RelativeLayout>

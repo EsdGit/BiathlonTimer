@@ -79,15 +79,30 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
     private static ArrayList<String> _dialogItemsList;
     private static String[] _dialogItems;
     private int _indexDelGroup;
+    private int _minuteInterval;
+    private int _secondsInterval;
+    private int _minuteStart;
+    private int _secondsStart;
+    private int _minuteFine;
+    private int _secondFine;
 
     private static final int MIN_VALUE_MINUTE_AND_SECONDS = 0;
     private static final int MAX_VALUE_MINUTE_AND_SECONDS = 59;
+
+
 
     @Override
     public void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.activity_setting);
+
+        _minuteInterval = 0;
+        _secondsInterval = 0;
+        _minuteStart = 0;
+        _secondsStart = 0;
+        _minuteFine = 0;
+        _secondFine = 0;
 
         _dialogItemsList = new ArrayList<>();
         _dialogItemsList.add(getResources().getString(R.string.add_dialog_item_group));
@@ -99,12 +114,21 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
         _setInterval = (Preference) findPreference("intervalSetting");
         _setSecondInterval = (Preference) findPreference("secondIntervalSetting");
         _countCheckPoint = (EditTextPreference) findPreference("countCheckPointSetting");
+        if(_countCheckPoint.getSummary().equals(getResources().getString(R.string.summary_checkpoint)))
+        {
+            _countCheckPoint.setText("");
+        }
         _nameCompetition = (EditTextPreference) findPreference("nameCompetitionSetting");
+        if(_nameCompetition.getSummary().equals(getResources().getString(R.string.main_activity_name_col)))
+        {
+            _nameCompetition.setText("");
+        }
         _typeStart = (ListPreference) findPreference("typeStartSetting");
         _numberStart = (Preference) findPreference("firstNumberStart");
         _setStartTimer = (Preference) findPreference("startTimer");
         _group = (Preference) findPreference("group");
         _fine = (Preference) findPreference("fine");
+
 
         //Диалог установки интервала
         LayoutInflater inflater = LayoutInflater.from(getActivity());
@@ -126,6 +150,8 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
                 {
                     _setStartTimer.setSummary(SetNormalFormatDataTime(_minute.getValue() + ":" + _seconds.getValue(), true));
                     _dialogInterval.setTitle(getResources().getString(R.string.interval_dialog_title));
+                    //_minuteStart = _minute.getValue();
+                    //_secondsStart = _seconds.getValue();
                     _isStartTimer = false;
                 }
                 else
@@ -134,11 +160,15 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
                     {
                         _fine.setSummary(getResources().getString(R.string.summary_fine_after_set) + SetNormalFormatDataTime(_minute.getValue() + ":" + _seconds.getValue(), true));
                         _dialogInterval.setTitle(getResources().getString(R.string.interval_dialog_title));
+                        //_minuteFine = _minute.getValue();
+                        //_secondFine = _seconds.getValue();
                         _isFine = false;
                     }
                     else
                     {
                         _setInterval.setSummary(SetNormalFormatDataTime(_minute.getValue() + ":" + _seconds.getValue(), true));
+                        //_minuteInterval = _minute.getValue();
+                        //_secondsInterval = _seconds.getValue();
                     }
                 }
             }
@@ -198,7 +228,18 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
                 String getString = _nameAddGroup.getText().toString().replace(" ","");
                 if((!getString.isEmpty()) && (!_dialogItemsList.contains(getString)))
                 {
-                    _dialogItemsList.add(_dialogItemsList.size() - 1,getString);
+                    if(getString.contains(","))
+                    {
+                        String[] localArray = getString.split(",");
+                        for (int i =0; i < localArray.length; i++)
+                        {
+                            _dialogItemsList.add(_dialogItemsList.size() - 1,localArray[i]);
+                        }
+                    }
+                    else
+                    {
+                        _dialogItemsList.add(_dialogItemsList.size() - 1, getString);
+                    }
                     _dialogItems = _dialogItemsList.toArray(new String[_dialogItemsList.size()]);
                 }
                 _nameAddGroup.setText("");
@@ -283,11 +324,24 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
             ShowDataDialog();
             return false;
         }});
+
         _setInterval.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
         @Override
         public boolean onPreferenceClick(Preference preference)
         {
-            SetStartPositionInTimeDialog();
+            //SetStartPositionInTimeDialog();
+            String[] currentTime;
+            if(!_setInterval.getSummary().equals(getResources().getString(R.string.summary_interval)))
+            {
+                currentTime = _setInterval.getSummary().toString().split(":");
+                _minute.setValue(Integer.valueOf(currentTime[0]));
+                _seconds.setValue(Integer.valueOf(currentTime[1]));
+            }
+            else
+            {
+                _minute.setValue(0);
+                _seconds.setValue(0);
+            }
             _dialogInterval.show();
             return false;
         }});
@@ -316,8 +370,8 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
                         }
                     }
                 });
-                SetStartPositionInTimeDialog();
-                _setNumberStartWithSecondInterval.setText("");
+                //SetStartPositionInTimeDialog();
+                //_setNumberStartWithSecondInterval.setText("");
                 return false;
             }
         });
@@ -330,6 +384,8 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
                 if(!getString.isEmpty())
                 {
                     _nameCompetition.setSummary((String) newValue);
+                    _nameCompetition.setText((String) newValue);
+
                 }
                 return false;
             }
@@ -343,6 +399,7 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
                 if(!getString.isEmpty())
                 {
                     _countCheckPoint.setSummary(getResources().getString(R.string.summary_count_checkpoint) + (String) newValue);
+                    _countCheckPoint.setText((String) newValue);
                 }
                 return false;
             }
@@ -380,8 +437,8 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
             @Override
             public boolean onPreferenceClick(Preference preference)
             {
-                _startNumber.setText("");
-                _countParticipant.setText("");
+                //_startNumber.setText("");
+                //_countParticipant.setText("");
                 _dialogStartNumber.show();
                 return false;
             }
@@ -391,7 +448,19 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
             @Override
             public boolean onPreferenceClick(Preference preference)
             {
-                SetStartPositionInTimeDialog();
+                //SetStartPositionInTimeDialog();
+                String[] currentTime;
+                if(!_setStartTimer.getSummary().equals(getResources().getString(R.string.summary_time_to_start)))
+                {
+                    currentTime = _setStartTimer.getSummary().toString().split(":");
+                    _minute.setValue(Integer.valueOf(currentTime[0]));
+                    _seconds.setValue(Integer.valueOf(currentTime[1]));
+                }
+                else
+                {
+                    _minute.setValue(0);
+                    _seconds.setValue(0);
+                }
                 _isStartTimer = true;
                 _dialogInterval.setTitle(getResources().getString(R.string.dialog_time_to_start_title));
                 _dialogInterval.show();
@@ -403,7 +472,20 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
             @Override
             public boolean onPreferenceClick(Preference preference)
             {
-                SetStartPositionInTimeDialog();
+                //SetStartPositionInTimeDialog();
+                String[] currentTime;
+                if(!_fine.getSummary().equals(getResources().getString(R.string.summary_fine)))
+                {
+                    currentTime = _fine.getSummary().toString().split(" ");
+                    currentTime = currentTime[2].split(":");
+                    _minute.setValue(Integer.valueOf(currentTime[0]));
+                    _seconds.setValue(Integer.valueOf(currentTime[1]));
+                }
+                else
+                {
+                    _minute.setValue(0);
+                    _seconds.setValue(0);
+                }
                 _isFine = true;
                 _dialogInterval.setTitle(getResources().getString(R.string.dialog_fine_title));
                 _dialogInterval.show();
@@ -498,11 +580,12 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
         }
         int startNumber = Integer.valueOf(_numberStart.getSummary().toString().split("- ")[1].split("\\.")[0]);
         int maxPartCount = Integer.valueOf(_numberStart.getSummary().toString().split("- ")[2].split("\\.")[0]);
-        String countCheckPoints = _countCheckPoint.getSummary().toString().split(":")[1];
+        String countCheckPoints = _countCheckPoint.getSummary().toString().split(": ")[1];
         if(Integer.valueOf(countCheckPoints) <= 0) return null;
         Competition localCompetition = new Competition(_nameCompetition.getSummary().toString(),_setData.getSummary().toString(), context);
         localCompetition.SetCompetitionSettings(_typeStart.getSummary().toString(), _setInterval.getSummary().toString(),
-                countCheckPoints,_setStartTimer.getSummary().toString(),groups, secondInterval[0], secondInterval[1],fine, startNumber, maxPartCount);
+                Integer.valueOf(countCheckPoints),_setStartTimer.getSummary().toString(),groups, secondInterval[0], secondInterval[1],fine, startNumber, maxPartCount);
+        localCompetition.setFinished(false);
         return localCompetition;
     }
 
@@ -528,13 +611,13 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
         return result;
     }
 
-    private void SetStartPositionInTimeDialog()
-    {
-        _minute.setValue(MIN_VALUE_MINUTE_AND_SECONDS);
-        _seconds.setValue(MIN_VALUE_MINUTE_AND_SECONDS);
-        _minuteSecondInterval.setValue(MIN_VALUE_MINUTE_AND_SECONDS);
-        _secondsSecondInterval.setValue(MIN_VALUE_MINUTE_AND_SECONDS);
-    }
+//    private void SetStartPositionInTimeDialog()
+//    {
+//        _minute.setValue(MIN_VALUE_MINUTE_AND_SECONDS);
+//        _seconds.setValue(MIN_VALUE_MINUTE_AND_SECONDS);
+//        _minuteSecondInterval.setValue(MIN_VALUE_MINUTE_AND_SECONDS);
+//        _secondsSecondInterval.setValue(MIN_VALUE_MINUTE_AND_SECONDS);
+//    }
 
     private String SetSummaryPreferenceGroup()
     {
@@ -554,6 +637,7 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
         return result;
     }
 
+<<<<<<< HEAD
     public static void SetAllSummaries(Context context,String name, String date, String interval, String startType, String groups, String checkPointsCount, String timeToStart, String secondInterval, String numberSecondInterval, String fine, int startNumber, int count)
     {
         _nameCompetition.setSummary(name);
@@ -567,19 +651,43 @@ public class SettingsFragment extends PreferenceFragment implements DatePickerDi
         else _setSecondInterval.setSummary(secondInterval+context.getResources().getString(R.string.summary_second_interval_helper)+numberSecondInterval);
         _fine.setSummary(context.getResources().getString(R.string.summary_fine_after_set)+fine);
         if(!groups.isEmpty())
+=======
+    public static void SetAllSummaries(Context context,Competition competition)
+    {
+        _nameCompetition.setSummary(competition.getName());
+        _setData.setSummary(competition.getDate());
+        _setInterval.setSummary(competition.getInterval());
+        _setStartTimer.setSummary(competition.getTimeToStart());
+        if(competition.getSecondInterval().isEmpty())
         {
-            _group.setSummary(context.getResources().getString(R.string.aftter_add_summary_group)+groups);
-            String[] allGroups = groups.split(",");
+            _setSecondInterval.setSummary(context.getResources().getString(R.string.summary_interval));
+        }
+        else
+        {
+            _setSecondInterval.setSummary(competition.getSecondInterval() + context.getResources().getString(R.string.summary_second_interval_helper) + String.valueOf(competition.getNumberSecondInterval()));
+        }
+        _fine.setSummary(context.getResources().getString(R.string.summary_fine_after_set)+competition.getFineTime());
+        if(!competition.getGroups().isEmpty())
+>>>>>>> testDatabase
+        {
+            _group.setSummary(context.getResources().getString(R.string.aftter_add_summary_group) + competition.getGroups());
+            String[] allGroups = competition.getGroups().split(",");
             for(int i = 0; i < allGroups.length; i++)
             {
                 _dialogItemsList.add(i ,allGroups[i]);
             }
             _dialogItems = _dialogItemsList.toArray(new String[_dialogItemsList.size()]);
         }
+<<<<<<< HEAD
         _typeStart.setSummary(startType);
         _countCheckPoint.setSummary(context.getResources().getString(R.string.summary_count_checkpoint)+checkPointsCount);
         _numberStart.setSummary(context.getResources().getString(R.string.summary_after_set_start_nmber)+String.valueOf(startNumber)+
                 context.getResources().getString(R.string.summary_after_set_count_participant)+String.valueOf(count)+".");
+=======
+        _typeStart.setSummary(competition.getStartType());
+        _numberStart.setSummary(context.getResources().getString(R.string.summary_after_set_start_nmber) + String.valueOf(competition.getStartNumber()) + context.getResources().getString(R.string.summary_after_set_count_participant) + String.valueOf(competition.getMaxParticipantCount()) + "." );
+        _countCheckPoint.setSummary(context.getResources().getString(R.string.summary_count_checkpoint)+String.valueOf(competition.getCheckPointsCount()));
+>>>>>>> testDatabase
     }
 
 }
